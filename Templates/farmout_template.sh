@@ -3,8 +3,8 @@
 #     ${command}
 #
 # To resubmit failed jobs: ./farmout.sh --resubmit-failed-jobs
-#DATE=`date +%Y-%m-%d`
-DATE=2019-09-11
+DATE=`date +%Y-%m-%d`
+#DATE=2019-09-11
 pushd ${base_dir}
 if [ ! -f ${job_dir}/analysis_code.tar.gz ]; then
     tar \
@@ -32,6 +32,7 @@ farmoutAnalysisJobs \
     --assume-input-files-exist \
     --extra-inputs=${job_dir}/analysis_code.tar.gz \
     --input-basenames-not-unique \
+    --opsys=CentOS7 \
     $$1 \
     ${job_name} \
     $$CMSSW_BASE \
