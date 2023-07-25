@@ -28,7 +28,7 @@ void ZZSelector::Init(TTree *tree)
   //      "Z2lep2_Eta","Z2lep2_Phi","Z2lep2_Pt","Z2lep2_PdgId","Mass","nJets",
   // };
 
-  hists1D_ = {"yield","Mass","MassFull","nJets","jetPt[1]","jetPt[0]","jetEta[0]","jetEta[1]","absjetEta[0]","absjetEta[1]","mjj","dEtajj","Mass0j","Mass1j","Mass2j","Mass3j","Mass34j","Mass4j","Mass0jFull","Mass1jFull","Mass2jFull","Mass3jFull","Mass34jFull","Mass4jFull"};
+  hists1D_ = {"yield","Mass","MassFull","nJets","jetPt[1]","jetPt[0]","jetEta[0]","jetEta[1]","absjetEta[0]","absjetEta[1]","mjj","dEtajj","Mass0j","Mass1j","Mass2j","Mass3j","Mass34j","Mass4j","Mass0jFull","Mass1jFull","Mass2jFull","Mass3jFull","Mass34jFull","Mass4jFull","nJets_central"};
 
   jetTest2D_ = {}; // also defined in hists1D_ to pass checks in InitializeHistogramsFromConfig()
   jethists1D_ = {"Mass","MassFull","nJets","jetPt[1]","jetPt[0]","jetEta[0]","jetEta[1]","absjetEta[0]","absjetEta[1]","mjj","dEtajj","Mass0j","Mass1j","Mass2j","Mass3j","Mass34j","Mass4j","Mass0jFull","Mass1jFull","Mass2jFull","Mass3jFull","Mass34jFull","Mass4jFull"};
@@ -1612,6 +1612,16 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
 //  SafeHistFill(histMap1D_, getHistName("LepEta", variation.second), l4Eta, weight);
   SafeHistFill(histMap1D_, getHistName("nJets", variation.second), jetPt->size(), weight);
   
+  int central_nJets = 0;
+  for (unsigned int cind = 0; cind < jetPt->size(); cind++)
+  {
+      if (std::abs(jetEta->at(cind))<2.4){
+        central_nJets = central_nJets + 1;
+      }
+
+  }
+
+  SafeHistFill(histMap1D_, getHistName("nJets_central", variation.second), central_nJets, weight);
 
   if (jetPt->size() == 0 && jetPt->size() == jetEta->size())
   {
