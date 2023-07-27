@@ -1182,6 +1182,24 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
     return;
   }
 
+//Fill variables for full mass range
+int nJets_tmp2 = jetPt->size();
+if (writeNtp_){
+    SafeSetBranch(ftntp_, getBranchName("weightFull", variation.second), &weight);
+    SafeSetBranch(ftntp_, getBranchName("MassFull", variation.second), &Mass); 
+    SafeSetBranch(ftntp_, getBranchName("nJetsFull", variation.second), &nJets_tmp2); 
+
+    SafeSetBranch(ftntp_, getBranchName("runFull", variation.second), &run); 
+    SafeSetBranch(ftntp_, getBranchName("lumiFull", variation.second), &lumi); 
+    SafeSetBranch(ftntp_, getBranchName("evtFull", variation.second), &evt); 
+
+    if (nJets_tmp2 >=2){
+    SafeSetBranch(ftntp_, getBranchName("mjjFull", variation.second), &mjj);   
+    SafeSetBranch(ftntp_, getBranchName("dEtajjFull", variation.second), &dEtajj);
+    }
+
+    ftntp_->Fill();
+}
   // if (!Passes2e2mExtraCut(entry)) //Apply extra 23/12 GeV cut to electrons in 2e2m channel
   //   {
   //  return;
@@ -1551,7 +1569,7 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
     SafeSetBranch(ftntp_, getBranchName("mjj", variation.second), &mjj);   
     SafeSetBranch(ftntp_, getBranchName("dEtajj", variation.second), &dEtajj);
     }
-    ftntp_->Fill();
+    //ftntp_->Fill();
   }
   
   SafeHistFill(histMap1D_, getHistName("Mass", variation.second), Mass, weight);
