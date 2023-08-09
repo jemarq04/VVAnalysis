@@ -39,6 +39,8 @@ public:
     Float_t genWeight;
     Float_t originalXWGTUP;
     Float_t L1prefiringWeight;
+    Float_t L1prefiringWeightUp;
+    Float_t L1prefiringWeightDn;
     Float_t nTruePU;
     Float_t Z1mass;
     Float_t Z2mass;
@@ -113,6 +115,8 @@ public:
     TBranch *b_genWeight;
     TBranch *b_originalXWGTUP;
     TBranch *b_L1prefiringWeight;
+    TBranch *b_L1prefiringWeightUp;
+    TBranch *b_L1prefiringWeightDn;
     TBranch *b_Z1mass;
     TBranch *b_Z2mass;
     //Smart cut on 4e/4mu

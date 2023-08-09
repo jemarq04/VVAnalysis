@@ -1183,7 +1183,7 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
   }
 
 //Fill variables for full mass range
-bool writeNtpFullRange = true;
+bool writeNtpFullRange = false;
 int nJets_tmp2 = jetPt->size();
 if (writeNtp_ && writeNtpFullRange){
     SafeSetBranch(ftntp_, getBranchName("weightFull", variation.second), &weight);
@@ -1556,19 +1556,37 @@ if (writeNtp_ && writeNtpFullRange){
 
   //=====================A place where the on-shell selections have been applied and we fill the ntuple====================================================
   int nJets_tmp = jetPt->size();
+  float jpt0_tmp = jetPt->at(0);
+  float jeta0_tmp = jetEta->at(0);
+  
 
   if (writeNtp_ && !writeNtpFullRange){
     SafeSetBranch(ftntp_, getBranchName("weight", variation.second), &weight);
     SafeSetBranch(ftntp_, getBranchName("Mass", variation.second), &Mass); 
     SafeSetBranch(ftntp_, getBranchName("nJets", variation.second), &nJets_tmp); 
+    SafeSetBranch(ftntp_, getBranchName("jetPt[0]", variation.second), &jpt0_tmp); 
+    SafeSetBranch(ftntp_, getBranchName("jetEta[0]", variation.second), &jeta0_tmp); 
 
     SafeSetBranch(ftntp_, getBranchName("run", variation.second), &run); 
     SafeSetBranch(ftntp_, getBranchName("lumi", variation.second), &lumi); 
     SafeSetBranch(ftntp_, getBranchName("evt", variation.second), &evt); 
 
     if (nJets_tmp >=2){
+    float jpt1_tmp = jetPt->at(1);
+    float jeta1_tmp = jetEta->at(1);
+    SafeSetBranch(ftntp_, getBranchName("jetPt[1]", variation.second), &jpt1_tmp); 
+    SafeSetBranch(ftntp_, getBranchName("jetEta[1]", variation.second), &jeta1_tmp); 
+
     SafeSetBranch(ftntp_, getBranchName("mjj", variation.second), &mjj);   
     SafeSetBranch(ftntp_, getBranchName("dEtajj", variation.second), &dEtajj);
+    }
+
+    if (isMC_){
+    SafeSetBranch(ftntp_, getBranchName("genWeight", variation.second), &genWeight);
+    SafeSetBranch(ftntp_, getBranchName("L1prefiringWeight", variation.second), &L1prefiringWeight);
+    SafeSetBranch(ftntp_, getBranchName("L1prefiringWeightUp", variation.second), &L1prefiringWeightUp);
+    SafeSetBranch(ftntp_, getBranchName("L1prefiringWeightDn", variation.second), &L1prefiringWeightDn);
+
     }
     ftntp_->Fill();
   }

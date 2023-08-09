@@ -65,6 +65,9 @@ void ZZSelectorBase::SetBranchesUWVV()
     if (year_ == yr2016 || year_ == yr2017)
     {
       fChain->SetBranchAddress("L1prefiringWeight", &L1prefiringWeight, &b_L1prefiringWeight);
+      fChain->SetBranchAddress("L1prefiringWeightUp", &L1prefiringWeightUp, &b_L1prefiringWeightUp);
+      fChain->SetBranchAddress("L1prefiringWeightDn", &L1prefiringWeightDn, &b_L1prefiringWeightDn);
+      
     }
   }
   else
@@ -592,6 +595,8 @@ void ZZSelectorBase::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std:
     if (year_ == yr2016 || year_ == yr2017)
     {
       b_L1prefiringWeight->GetEntry(entry);
+      b_L1prefiringWeightUp->GetEntry(entry);
+      b_L1prefiringWeightDn->GetEntry(entry);
       weight *= L1prefiringWeight;
       //std::cout<<"PrefiredWeight: "<<weight<<std::endl;
     }
