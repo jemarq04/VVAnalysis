@@ -137,6 +137,10 @@ unsigned int ZZSelector::GetLheWeightInfo()
     return 2;
   if (std::find(allLheWeights.begin(), allLheWeights.end(), name_) != allLheWeights.end())
     return 3;
+  
+  if (isUL_L1check){
+    return 0;
+  }
   return 1;
 }
 void ZZSelector::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::string> variation)

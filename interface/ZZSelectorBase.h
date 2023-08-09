@@ -73,6 +73,8 @@ public:
     Bool_t l3IsGap;
     Bool_t l4IsGap;
 
+    Bool_t isUL_L1check = true;
+
     Float_t l1Pt;
     Float_t l2Pt;
     Float_t l3Pt;
