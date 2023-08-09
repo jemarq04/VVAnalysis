@@ -1571,15 +1571,24 @@ if (writeNtp_ && writeNtpFullRange){
     SafeSetBranch(ftntp_, getBranchName("lumi", variation.second), &lumi); 
     SafeSetBranch(ftntp_, getBranchName("evt", variation.second), &evt); 
 
+    float jpt1_tmp;
+    float jeta1_tmp;
+
+    //mjj and dEtajj has default values already (but dEtajj=-1 is still physical... unlike -9999), but need to assign values for temporary jetPt[1] and jetEta[1] 
     if (nJets_tmp >=2){
-    float jpt1_tmp = jetPt->at(1);
-    float jeta1_tmp = jetEta->at(1);
+    jpt1_tmp = jetPt->at(1);
+    jeta1_tmp = jetEta->at(1);}
+    else{
+      jpt1_tmp = -9999.;
+      jeta1_tmp = -9999.;
+    }
+
     SafeSetBranch(ftntp_, getBranchName("jetPt[1]", variation.second), &jpt1_tmp); 
     SafeSetBranch(ftntp_, getBranchName("jetEta[1]", variation.second), &jeta1_tmp); 
 
     SafeSetBranch(ftntp_, getBranchName("mjj", variation.second), &mjj);   
     SafeSetBranch(ftntp_, getBranchName("dEtajj", variation.second), &dEtajj);
-    }
+    
 
     if (isMC_){
     SafeSetBranch(ftntp_, getBranchName("genWeight", variation.second), &genWeight);
