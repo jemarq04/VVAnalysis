@@ -1560,9 +1560,16 @@ if (writeNtp_ && writeNtpFullRange){
 
   //=====================A place where the on-shell selections have been applied and we fill the ntuple====================================================
   int nJets_tmp = jetPt->size();
-  float jpt0_tmp = jetPt->at(0);
-  float jeta0_tmp = jetEta->at(0);
+  float jpt0_tmp;
+  float jeta0_tmp;
   
+  if (nJets_tmp >=1){
+    jpt0_tmp = jetPt->at(0);
+    jeta0_tmp = jetEta->at(0);}
+    else{
+      jpt0_tmp = -9999.;
+      jeta0_tmp = -9999.;
+    }
 
   if (writeNtp_ && !writeNtpFullRange){
     SafeSetBranch(ftntp_, getBranchName("weight", variation.second), &weight);
