@@ -50,16 +50,17 @@ fUL = ROOT.TFile("TreeFile_ZZSelector_Hists09Aug2023-ZZ4l2016_Moriondsel_Inclusi
 fhUL = ROOT.TFile("Hists09Aug2023-ZZ4l2016_Moriond.root")
 #fpre = ROOT.TFile("TreeFile_ZZSelector_Hists25Jul2023-ZZ4l2016_Moriondsel_Inclusive.root")
 #fhpre = ROOT.TFile("CentralJet_Hists25Jul2023-ZZ4l2016_Moriond.root")
-varstr="nJets Mass mjj dEtajj jetPt[0] jetPt[1] absjetEta[0] absjetEta[1] Mass0j Mass1j Mass2j Mass34j"
+varstr="nJets Mass mjj dEtajj Mass0j Mass1j Mass2j Mass3j Mass4j"
 vars = varstr.split(" ")
 #vars = ["Mass","nJets","mjj"]
-#vars = ["nJets"]
+vars = ["jetPt[0]"]
 treetag = "_fTreeNtuple_"
 channels = ["eeee","eemm","mmee","mmmm"]
 lumi = 36.31
 hdict = {}
 initBins = {}
-weightExpr = "genWeight" #weight
+#weightExpr = "genWeight"
+weightExpr = "weight"
 
 #=========================================
 initBins["nJets"] = "8,0,8"
@@ -117,10 +118,20 @@ for var in vars:
                 sumweights = h_sumw.Integral(0,h_sumw.GetNbinsX()+1)
                 if not tree:
                     print("something wrong getting tree %s"%treename)
-                
+                pdb.set_trace()
                 for evt in tree:
-                    
-                    exec("h.Fill(evt.%s,evt.%s*xsecs[j]*lumi*1000/sumweights%s)"%(var,weightExpr,additional))
+                    if "abs" in var:
+                        exec("h.Fill(abs(evt.%s),evt.%s*xsecs[j]*lumi*1000/sumweights%s)"%(var.replace("abs",""),weightExpr,additional))
+                    elif "Mass" in var and "j" in var:
+                        tmp_nj = int(var.replace("Mass","").replace("j",""))
+                        if tmp_nj == 4:
+                            if evt.nJets>=4:    
+                                exec("h.Fill(evt.Mass,evt.%s*xsecs[j]*lumi*1000/sumweights%s)"%(weightExpr,additional))
+                        else:
+                            if evt.nJets == tmp_nj:
+                                exec("h.Fill(evt.Mass,evt.%s*xsecs[j]*lumi*1000/sumweights%s)"%(weightExpr,additional))
+                    else:
+                        exec("h.Fill(evt.%s,evt.%s*xsecs[j]*lumi*1000/sumweights%s)"%(var,weightExpr,additional))
             
             h = rebin(h,var)
             hdict[var][chan].append(h)

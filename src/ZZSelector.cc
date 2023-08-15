@@ -1575,8 +1575,8 @@ if (writeNtp_ && writeNtpFullRange){
     SafeSetBranch(ftntp_, getBranchName("weight", variation.second), &weight);
     SafeSetBranch(ftntp_, getBranchName("Mass", variation.second), &Mass); 
     SafeSetBranch(ftntp_, getBranchName("nJets", variation.second), &nJets_tmp); 
-    SafeSetBranch(ftntp_, getBranchName("jetPt[0]", variation.second), &jpt0_tmp); 
-    SafeSetBranch(ftntp_, getBranchName("jetEta[0]", variation.second), &jeta0_tmp); 
+    SafeSetBranch(ftntp_, getBranchName("jetPt0", variation.second), &jpt0_tmp); 
+    SafeSetBranch(ftntp_, getBranchName("jetEta0", variation.second), &jeta0_tmp); 
 
     SafeSetBranch(ftntp_, getBranchName("run", variation.second), &run); 
     SafeSetBranch(ftntp_, getBranchName("lumi", variation.second), &lumi); 
@@ -1594,8 +1594,8 @@ if (writeNtp_ && writeNtpFullRange){
       jeta1_tmp = -9999.;
     }
 
-    SafeSetBranch(ftntp_, getBranchName("jetPt[1]", variation.second), &jpt1_tmp); 
-    SafeSetBranch(ftntp_, getBranchName("jetEta[1]", variation.second), &jeta1_tmp); 
+    SafeSetBranch(ftntp_, getBranchName("jetPt1", variation.second), &jpt1_tmp); 
+    SafeSetBranch(ftntp_, getBranchName("jetEta1", variation.second), &jeta1_tmp); 
 
     SafeSetBranch(ftntp_, getBranchName("mjj", variation.second), &mjj);   
     SafeSetBranch(ftntp_, getBranchName("dEtajj", variation.second), &dEtajj);
