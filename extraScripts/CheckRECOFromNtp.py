@@ -9,7 +9,10 @@ with open('varsFile.json') as var_json_file:
 
 _binning = {}
 for key in myvar_dict.keys(): #key is the variable
-    _binning[key] = myvar_dict[key]["_binning"]
+    if "Mass" in key and not "Full" in key:
+        _binning[key] = myvar_dict["MassAllj"]["_binning"]
+    else:
+        _binning[key] = myvar_dict[key]["_binning"]
 _binning["Mass"] = _binning["MassAllj"]
 
 def rebin(hist,varName):
@@ -42,21 +45,24 @@ def percentDiff(h1,h2):
 def printr(l,ro):
     print([round(x,ro) for x in l])
 
-VFP = "preVFP"
+#VFP = "preVFP"
 legacy_datasets = ["ZZTo4L","GluGluToContinToZZTo4e","GluGluToContinToZZTo2e2mu","GluGluToContinToZZTo4mu"]
 pre_datasets = ["zz4l-powheg","ggZZ4e","ggZZ2e2mu","ggZZ4m"]
 xsecs = [1.256*1.0835,0.001586*1.7,0.003194*1.7,0.001586*1.7]
-fUL = ROOT.TFile("TreeFile_ZZSelector_Hists09Aug2023-ZZ4l2016_Moriondsel_Inclusive.root")
-fhUL = ROOT.TFile("Hists09Aug2023-ZZ4l2016_Moriond.root")
+fUL = ROOT.TFile("TreeFile_ZZSelector_Hists15Aug2023-ZZ4l2016_Moriondsel_Inclusive.root")
+fhUL = ROOT.TFile("Hists15Aug2023-ZZ4l2016_Moriond.root")
 #fpre = ROOT.TFile("TreeFile_ZZSelector_Hists25Jul2023-ZZ4l2016_Moriondsel_Inclusive.root")
 #fhpre = ROOT.TFile("CentralJet_Hists25Jul2023-ZZ4l2016_Moriond.root")
-varstr="nJets Mass mjj dEtajj Mass0j Mass1j Mass2j Mass3j Mass4j"
+varstr="nJets Mass mjj dEtajj jetPt[0] jetPt[1] absjetEta[0] absjetEta[1] Mass0j Mass1j Mass2j Mass3j Mass4j"
 vars = varstr.split(" ")
 #vars = ["Mass","nJets","mjj"]
-vars = ["jetPt[0]"]
+#vars = ["nJets"]
 treetag = "_fTreeNtuple_"
 channels = ["eeee","eemm","mmee","mmmm"]
-lumi = 36.31
+#Using older lumi values since this is what is available in the table
+lumitot = 36.33
+lumi1 = 19.52
+lumi2 = 16.81
 hdict = {}
 initBins = {}
 #weightExpr = "genWeight"
@@ -100,38 +106,48 @@ for var in vars:
                 datasets = pre_datasets
                 fin = fUL
                 fh = fhUL
-                tag = ""
+                #tag = ""
                 additional = ""
+                lumipairs = [(lumitot,"")]
             else:
                 datasets = legacy_datasets
                 fin = fUL
                 fh = fhUL
-                tag = VFP + ("L1Full" if i==1 else "L1ECAL")
+                #tag = VFP + ("L1Full" if i==1 else "L1ECAL")
                 additional = ""
+                lumipairs = [(lumi1,"preVFP"),(lumi2,"postVFP")]
                 #additional = "/evt.L1prefiringWeight"
 
-            for j,ds in enumerate(datasets):
-                treename = ds + tag + treetag + chan
-                foldername = ds + tag
-                tree = fin.Get(treename)
-                h_sumw = fh.Get(foldername+"/"+"sumweights")
-                sumweights = h_sumw.Integral(0,h_sumw.GetNbinsX()+1)
-                if not tree:
-                    print("something wrong getting tree %s"%treename)
-                pdb.set_trace()
-                for evt in tree:
-                    if "abs" in var:
-                        exec("h.Fill(abs(evt.%s),evt.%s*xsecs[j]*lumi*1000/sumweights%s)"%(var.replace("abs",""),weightExpr,additional))
-                    elif "Mass" in var and "j" in var:
-                        tmp_nj = int(var.replace("Mass","").replace("j",""))
-                        if tmp_nj == 4:
-                            if evt.nJets>=4:    
-                                exec("h.Fill(evt.Mass,evt.%s*xsecs[j]*lumi*1000/sumweights%s)"%(weightExpr,additional))
+            for lumi,VFP in lumipairs:
+                if i == 0:
+                    tag = ""
+                else:
+                    tag = VFP + ("L1Full" if i==1 else "L1ECAL")
+
+                for j,ds in enumerate(datasets):
+                    treename = ds + tag + treetag + chan
+                    foldername = ds + tag
+                    tree = fin.Get(treename)
+                    h_sumw = fh.Get(foldername+"/"+"sumweights")
+                    sumweights = h_sumw.Integral(0,h_sumw.GetNbinsX()+1)
+                    if not tree:
+                        print("something wrong getting tree %s"%treename)
+                    #pdb.set_trace()
+                    for evt in tree:
+                        varp = var.replace("[0]","0").replace("[1]","1")
+                        
+                        if "abs" in varp:
+                            exec("h.Fill(abs(evt.%s),evt.%s*xsecs[j]*lumi*1000/sumweights%s)"%(varp.replace("abs",""),weightExpr,additional))
+                        elif "Mass" in var and "j" in var:
+                            tmp_nj = int(var.replace("Mass","").replace("j",""))
+                            if tmp_nj == 4:
+                                if evt.nJets>=4:    
+                                    exec("h.Fill(evt.Mass,evt.%s*xsecs[j]*lumi*1000/sumweights%s)"%(weightExpr,additional))
+                            else:
+                                if evt.nJets == tmp_nj:
+                                    exec("h.Fill(evt.Mass,evt.%s*xsecs[j]*lumi*1000/sumweights%s)"%(weightExpr,additional))
                         else:
-                            if evt.nJets == tmp_nj:
-                                exec("h.Fill(evt.Mass,evt.%s*xsecs[j]*lumi*1000/sumweights%s)"%(weightExpr,additional))
-                    else:
-                        exec("h.Fill(evt.%s,evt.%s*xsecs[j]*lumi*1000/sumweights%s)"%(var,weightExpr,additional))
+                            exec("h.Fill(evt.%s,evt.%s*xsecs[j]*lumi*1000/sumweights%s)"%(varp,weightExpr,additional))
             
             h = rebin(h,var)
             hdict[var][chan].append(h)
@@ -156,8 +172,10 @@ for var in vars:
             continue
         print(chan)
         print(percentDiff(hdict[var][chan][1],hdict[var][chan][2]))
-        if var == "nJets" or var == "Mass":
-            print(hdict[var]["total"][0].Integral(1,hdict[var]["total"][0].GetNbinsX()))
+        
+        print("Weighted events prelegacy and legacy for ECAL weight")
+        print(hdict[var][chan][0].Integral(1,hdict[var][chan][0].GetNbinsX()))
+        print(hdict[var][chan][2].Integral(1,hdict[var][chan][0].GetNbinsX()))
     
 fout = ROOT.TFile("L1HistOutput.root","RECREATE")
 fout.cd()

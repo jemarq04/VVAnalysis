@@ -104,7 +104,8 @@ def extraTex(x,y,tex):
     texf.Draw()
     return texf
 
-varstr="nJets Mass mjj" #dEtajj jetPt[0] jetPt[1] absjetEta[0] absjetEta[1] MassAllj Mass0j Mass1j Mass2j Mass34j MassFull Mass0jFull Mass1jFull Mass2jFull Mass34jFull"
+#varstr="nJets Mass mjj" #dEtajj jetPt[0] jetPt[1] absjetEta[0] absjetEta[1] MassAllj Mass0j Mass1j Mass2j Mass34j MassFull Mass0jFull Mass1jFull Mass2jFull Mass34jFull"
+varstr="nJets Mass mjj dEtajj jetPt[0] jetPt[1] absjetEta[0] absjetEta[1] Mass0j Mass1j Mass2j Mass3j Mass4j"
 vars = varstr.split(" ")
 
 outdir = "2016L1Plots"
@@ -183,6 +184,12 @@ for var in vars:
             #texEty = extraTex(0.65,0.6,str(hR.GetEntries()))
         elif "Mass" in var:
             texf = extraTex(0.65,0.68,"On-shell ZZ")
+            if "j" in var:
+                tmp_nj = int(var.replace("Mass","").replace("j",""))
+                geq = ""
+                if tmp_nj ==4:
+                    geq = "#geq"
+                texf2 = extraTex(0.65,0.5,"Events with %s%s jet(s)"%(geq,tmp_nj))
         if "[0]" in var:
             texf = extraTex(0.65,0.68,"Events with #geq 1 jet")    
         if "[1]" in var:
@@ -191,8 +198,8 @@ for var in vars:
        
         c1.SaveAs(os.path.join(outdir,"%s_%s.png"%(var,chan)))
 
-        #if chan == "Total":
-        pdfcommand.append(os.path.join(outdir,"%s_%s.png"%(var,chan)))
+        if chan == "total":
+            pdfcommand.append(os.path.join(outdir,"%s_%s.png"%(var,chan)))
         #else:
         #    pdfcommand2.append(os.path.join(outdir,"%s_%s.png"%(var,chan)))
 
