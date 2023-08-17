@@ -1187,22 +1187,59 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
   }
 
 //Fill variables for full mass range
-bool writeNtpFullRange = false;
-int nJets_tmp2 = jetPt->size();
-if (writeNtp_ && writeNtpFullRange){
-    SafeSetBranch(ftntp_, getBranchName("weightFull", variation.second), &weight);
-    SafeSetBranch(ftntp_, getBranchName("MassFull", variation.second), &Mass); 
-    SafeSetBranch(ftntp_, getBranchName("nJetsFull", variation.second), &nJets_tmp2); 
-
-    SafeSetBranch(ftntp_, getBranchName("runFull", variation.second), &run); 
-    SafeSetBranch(ftntp_, getBranchName("lumiFull", variation.second), &lumi); 
-    SafeSetBranch(ftntp_, getBranchName("evtFull", variation.second), &evt); 
-
-    if (nJets_tmp2 >=2){
-    SafeSetBranch(ftntp_, getBranchName("mjjFull", variation.second), &mjj);   
-    SafeSetBranch(ftntp_, getBranchName("dEtajjFull", variation.second), &dEtajj);
+  int nJets_tmp = jetPt->size();
+  float jpt0_tmp;
+  float jeta0_tmp;
+  
+  if (nJets_tmp >=1){
+    jpt0_tmp = jetPt->at(0);
+    jeta0_tmp = jetEta->at(0);}
+    else{
+      jpt0_tmp = -9999.;
+      jeta0_tmp = -9999.;
     }
 
+  float jpt1_tmp;
+  float jeta1_tmp;
+
+  //mjj and dEtajj has default values already (but dEtajj=-1 is small although unphysical... unlike -9999), but need to assign values for temporary jetPt[1] and jetEta[1] 
+  if (nJets_tmp >=2){
+    jpt1_tmp = jetPt->at(1);
+    jeta1_tmp = jetEta->at(1);}
+  else{
+      jpt1_tmp = -9999.;
+      jeta1_tmp = -9999.;
+    }
+
+bool writeNtpFullRange = false;
+//int nJets_tmp2 = jetPt->size();
+if (writeNtp_ && writeNtpFullRange){
+    SafeSetBranch(ftntp_, getBranchName("weight", variation.second), &weight);
+    SafeSetBranch(ftntp_, getBranchName("Mass", variation.second), &Mass); 
+    SafeSetBranch(ftntp_, getBranchName("nJets", variation.second), &nJets_tmp); 
+    SafeSetBranch(ftntp_, getBranchName("jetPt0", variation.second), &jpt0_tmp); 
+    SafeSetBranch(ftntp_, getBranchName("jetEta0", variation.second), &jeta0_tmp); 
+
+    SafeSetBranch(ftntp_, getBranchName("run", variation.second), &run); 
+    SafeSetBranch(ftntp_, getBranchName("lumi", variation.second), &lumi); 
+    SafeSetBranch(ftntp_, getBranchName("evt", variation.second), &evt); 
+
+
+
+    SafeSetBranch(ftntp_, getBranchName("jetPt1", variation.second), &jpt1_tmp); 
+    SafeSetBranch(ftntp_, getBranchName("jetEta1", variation.second), &jeta1_tmp); 
+
+    SafeSetBranch(ftntp_, getBranchName("mjj", variation.second), &mjj);   
+    SafeSetBranch(ftntp_, getBranchName("dEtajj", variation.second), &dEtajj);
+    
+
+    if (isMC_){
+    SafeSetBranch(ftntp_, getBranchName("genWeight", variation.second), &genWeight);
+    SafeSetBranch(ftntp_, getBranchName("L1prefiringWeight", variation.second), &L1prefiringWeight);
+    SafeSetBranch(ftntp_, getBranchName("L1prefiringWeightUp", variation.second), &L1prefiringWeightUp);
+    SafeSetBranch(ftntp_, getBranchName("L1prefiringWeightDn", variation.second), &L1prefiringWeightDn);
+
+    }
     ftntp_->Fill();
 }
   // if (!Passes2e2mExtraCut(entry)) //Apply extra 23/12 GeV cut to electrons in 2e2m channel
@@ -1559,17 +1596,7 @@ if (writeNtp_ && writeNtpFullRange){
   // std::cout << "variation.second: "<<variation.second;
 
   //=====================A place where the on-shell selections have been applied and we fill the ntuple====================================================
-  int nJets_tmp = jetPt->size();
-  float jpt0_tmp;
-  float jeta0_tmp;
-  
-  if (nJets_tmp >=1){
-    jpt0_tmp = jetPt->at(0);
-    jeta0_tmp = jetEta->at(0);}
-    else{
-      jpt0_tmp = -9999.;
-      jeta0_tmp = -9999.;
-    }
+ 
 
   if (writeNtp_ && !writeNtpFullRange){
     SafeSetBranch(ftntp_, getBranchName("weight", variation.second), &weight);
@@ -1582,17 +1609,7 @@ if (writeNtp_ && writeNtpFullRange){
     SafeSetBranch(ftntp_, getBranchName("lumi", variation.second), &lumi); 
     SafeSetBranch(ftntp_, getBranchName("evt", variation.second), &evt); 
 
-    float jpt1_tmp;
-    float jeta1_tmp;
 
-    //mjj and dEtajj has default values already (but dEtajj=-1 is still physical... unlike -9999), but need to assign values for temporary jetPt[1] and jetEta[1] 
-    if (nJets_tmp >=2){
-    jpt1_tmp = jetPt->at(1);
-    jeta1_tmp = jetEta->at(1);}
-    else{
-      jpt1_tmp = -9999.;
-      jeta1_tmp = -9999.;
-    }
 
     SafeSetBranch(ftntp_, getBranchName("jetPt1", variation.second), &jpt1_tmp); 
     SafeSetBranch(ftntp_, getBranchName("jetEta1", variation.second), &jeta1_tmp); 
