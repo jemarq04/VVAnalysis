@@ -22,9 +22,10 @@ fi
 popd
 #--output-dir=gsiftp://cms-lvs-gridftp.hep.wisc.edu:2811//hdfs/store/user/$$USER/ZZ4l2016AnalysisJobs_$$DATE/${job_name} \
 chmod +x ${job_dir}/skim.sh
+#NOTE: Changed $$USER to marquez below
 farmoutAnalysisJobs \
     --fwklite \
-    --output-dir=/store/user/$$USER/${Analysis}AnalysisJobs_$$DATE/${job_name} \
+    --output-dir=/store/user/marquez/${Analysis}AnalysisJobs_$$DATE/${job_name} \
     --input-file-list=${job_dir}/input_file_list.txt \
     --submit-dir=${job_dir}/submit \
     --input-files-per-job=1 \
