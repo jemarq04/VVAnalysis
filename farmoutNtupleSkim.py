@@ -86,18 +86,18 @@ def farmoutNtupleSkim(sample_name, path, selection, analysis, version, scaleFacs
     first_selection = selection.split(",")[0].strip()
     #pdb.set_trace()
     if first_selection=="4lCRBase":
-        submission_dir = ("/nfs_scratch/hehe/%s") \
+        submission_dir = ("/nfs_scratch/marquez5/%s") \
             % '{:%Y-%m-%d}_%sAnalysisJobs'.format(datetime.date.today()) %analysis
     elif first_selection=="ZplusLBase":
-        #submission_dir = ("/nfs_scratch/hehe/%s") \
+        #submission_dir = ("/nfs_scratch/marquez5/%s") \
         #    % '{:%Y-%m-%d}_%sAnalysisJobs'.format(datetime.date.today()) %analysis
-        submission_dir = ("/nfs_scratch/hehe/%s") \
+        submission_dir = ("/nfs_scratch/marquez5/%s") \
             % '2019-09-12_%sAnalysisJobs' %analysis
 
     else:
-        submission_dir = ("/nfs_scratch/hehe/%s") \
+        submission_dir = ("/nfs_scratch/marquez5/%s") \
             % '{:%Y-%m-%d}_%sAnalysisJobs'.format(datetime.date.today()) %analysis
-        #submission_dir = ("/nfs_scratch/hehe/%s") \
+        #submission_dir = ("/nfs_scratch/marquez5/%s") \
         #    % '2019-09-12_%sAnalysisJobs' %analysis
     try:
         os.mkdir(submission_dir)
@@ -151,8 +151,12 @@ def createRunJob(base_dir, job_dir, selection, analysis, trigger_name, addScaleF
 def main():
     #for selection in selection_map.iteritems():
     args = getComLineArgs()
-    path = "/afs/hep.wisc.edu/home/hhe62/vvanalysis_skim/CMSSW_10_3_1/src/Data_manager" if "hep.wisc.edu" in os.environ['HOSTNAME'] else \
-            "/afs/cern.ch/user/h/hehe/work"
+    if not "CMSSW_BASE" in os.environ:
+        print("cmsenv not found")
+        return
+    path = "%s/src/Data_manager" % os.environ["CMSSW_BASE"]
+    #path = "/afs/hep.wisc.edu/home/hhe62/vvanalysis_skim/CMSSW_10_3_1/src/Data_manager" if "hep.wisc.edu" in os.environ['HOSTNAME'] else \
+    #        "/afs/cern.ch/user/h/hehe/work"
     print(os.environ['HOSTNAME'])
     print(path)
    # pdb.set_trace()
