@@ -1,0 +1,10 @@
+[Setup]
+user = marquez5
+analysis = ZZ
+dataset_manager_path = /afs/hep.wisc.edu/home/marquez5/public/SMEFTsim/uwvv_analysis/histograms/src/Data_manager
+dataset_manager_name = ZZ4lRun2DatasetManager
+combine_path = %(dataset_manager_path)s/HiggsCombine/CMSSW_10_2_13/src/HiggsAnalysis/CombinedLimit
+output_path = /eos/user/u/%(user)s/%(analysis)sAnalysisData
+fakeRate_output = %(output_path)s/FakesRates
+hist_output = %(output_path)s/HistFiles
+combine_output = %(output_path)s/CombineData
