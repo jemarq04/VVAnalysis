@@ -17,6 +17,7 @@ ldict = {}
 mapdict = {}
 odict = {}
 
+writeNtuple = True
 baseList = ["yield", "Mass", "MassFull", "nJets", "jetPt[1]", "jetPt[0]", "jetEta[0]", "jetEta[1]", "absjetEta[0]", "absjetEta[1]", "mjj", "dEtajj", "Mass0j", "Mass1j", "Mass2j", "Mass3j", "Mass34j", "Mass4j", "Mass0jFull", "Mass1jFull", "Mass2jFull", "Mass3jFull", "Mass34jFull", "Mass4jFull"]
 baseList2 = baseList[1:]
 testList = ["yield", "Mass"]
@@ -182,6 +183,12 @@ with open("src/ZZSelectorTemplateFilledTmp.cc","r") as fout2:
         for line in fout2:
 
             #For suppressing not used variables warning in compiling
+            if not writeNtuple:
+                if "//Begin filling ntuple" in line:
+                    line = "/*" + line
+                elif "//End filling ntuple" in line:
+                    line = line + "*/\n"
+
             if not "LepPtFull" in hists1DList:
                 if "// sort lepton pt" in line:
                     line = "/*" + line

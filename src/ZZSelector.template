@@ -137,6 +137,10 @@ unsigned int ZZSelector::GetLheWeightInfo()
     return 2;
   if (std::find(allLheWeights.begin(), allLheWeights.end(), name_) != allLheWeights.end())
     return 3;
+  
+  if (isUL_L1check){
+    return 0;
+  }
   return 1;
 }
 void ZZSelector::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::string> variation)
@@ -1182,6 +1186,63 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
     return;
   }
 
+//Begin filling ntuple
+//Fill variables for full mass range
+  int nJets_tmp = jetPt->size();
+  float jpt0_tmp;
+  float jeta0_tmp;
+  
+  if (nJets_tmp >=1){
+    jpt0_tmp = jetPt->at(0);
+    jeta0_tmp = jetEta->at(0);}
+    else{
+      jpt0_tmp = -9999.;
+      jeta0_tmp = -9999.;
+    }
+
+  float jpt1_tmp;
+  float jeta1_tmp;
+
+  //mjj and dEtajj has default values already (but dEtajj=-1 is small although unphysical... unlike -9999), but need to assign values for temporary jetPt[1] and jetEta[1] 
+  if (nJets_tmp >=2){
+    jpt1_tmp = jetPt->at(1);
+    jeta1_tmp = jetEta->at(1);}
+  else{
+      jpt1_tmp = -9999.;
+      jeta1_tmp = -9999.;
+    }
+
+bool writeNtpFullRange = false;
+//int nJets_tmp2 = jetPt->size();
+if (writeNtp_ && writeNtpFullRange){
+    SafeSetBranch(ftntp_, getBranchName("weight", variation.second), &weight);
+    SafeSetBranch(ftntp_, getBranchName("Mass", variation.second), &Mass); 
+    SafeSetBranch(ftntp_, getBranchName("nJets", variation.second), &nJets_tmp); 
+    SafeSetBranch(ftntp_, getBranchName("jetPt0", variation.second), &jpt0_tmp); 
+    SafeSetBranch(ftntp_, getBranchName("jetEta0", variation.second), &jeta0_tmp); 
+
+    SafeSetBranch(ftntp_, getBranchName("run", variation.second), &run); 
+    SafeSetBranch(ftntp_, getBranchName("lumi", variation.second), &lumi); 
+    SafeSetBranch(ftntp_, getBranchName("evt", variation.second), &evt); 
+
+
+
+    SafeSetBranch(ftntp_, getBranchName("jetPt1", variation.second), &jpt1_tmp); 
+    SafeSetBranch(ftntp_, getBranchName("jetEta1", variation.second), &jeta1_tmp); 
+
+    SafeSetBranch(ftntp_, getBranchName("mjj", variation.second), &mjj);   
+    SafeSetBranch(ftntp_, getBranchName("dEtajj", variation.second), &dEtajj);
+    
+
+    if (isMC_){
+    SafeSetBranch(ftntp_, getBranchName("genWeight", variation.second), &genWeight);
+    SafeSetBranch(ftntp_, getBranchName("L1prefiringWeight", variation.second), &L1prefiringWeight);
+    SafeSetBranch(ftntp_, getBranchName("L1prefiringWeightUp", variation.second), &L1prefiringWeightUp);
+    SafeSetBranch(ftntp_, getBranchName("L1prefiringWeightDn", variation.second), &L1prefiringWeightDn);
+
+    }
+    ftntp_->Fill();
+}
   // if (!Passes2e2mExtraCut(entry)) //Apply extra 23/12 GeV cut to electrons in 2e2m channel
   //   {
   //  return;
@@ -1303,6 +1364,7 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
       SafeHistFill(histMap1D_, getHistName("Mass4jFull", variation.second), Mass, weight);
     }
   }
+//End filling ntuple
 
   // sort lepton pt
   float lpt_array[] = {l1Pt, l2Pt, l3Pt, l4Pt};
@@ -1533,6 +1595,42 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
   // std::cout<<"isNonPrompt_ in FillHistograms after ZZSelection:"<<isNonPrompt_<<std::endl;
   // std::cout<<run<<":"<<lumi<<":"<<evt<<std::endl;
   // std::cout << "variation.second: "<<variation.second;
+
+//Begin filling ntuple
+  //=====================A place where the on-shell selections have been applied and we fill the ntuple====================================================
+ 
+
+  if (writeNtp_ && !writeNtpFullRange){
+    SafeSetBranch(ftntp_, getBranchName("weight", variation.second), &weight);
+    SafeSetBranch(ftntp_, getBranchName("Mass", variation.second), &Mass); 
+    SafeSetBranch(ftntp_, getBranchName("nJets", variation.second), &nJets_tmp); 
+    SafeSetBranch(ftntp_, getBranchName("jetPt0", variation.second), &jpt0_tmp); 
+    SafeSetBranch(ftntp_, getBranchName("jetEta0", variation.second), &jeta0_tmp); 
+
+    SafeSetBranch(ftntp_, getBranchName("run", variation.second), &run); 
+    SafeSetBranch(ftntp_, getBranchName("lumi", variation.second), &lumi); 
+    SafeSetBranch(ftntp_, getBranchName("evt", variation.second), &evt); 
+
+
+
+    SafeSetBranch(ftntp_, getBranchName("jetPt1", variation.second), &jpt1_tmp); 
+    SafeSetBranch(ftntp_, getBranchName("jetEta1", variation.second), &jeta1_tmp); 
+
+    SafeSetBranch(ftntp_, getBranchName("mjj", variation.second), &mjj);   
+    SafeSetBranch(ftntp_, getBranchName("dEtajj", variation.second), &dEtajj);
+    
+
+    if (isMC_){
+    SafeSetBranch(ftntp_, getBranchName("genWeight", variation.second), &genWeight);
+    SafeSetBranch(ftntp_, getBranchName("L1prefiringWeight", variation.second), &L1prefiringWeight);
+    SafeSetBranch(ftntp_, getBranchName("L1prefiringWeightUp", variation.second), &L1prefiringWeightUp);
+    SafeSetBranch(ftntp_, getBranchName("L1prefiringWeightDn", variation.second), &L1prefiringWeightDn);
+
+    }
+    ftntp_->Fill();
+  }
+//End filling ntuple
+  
   SafeHistFill(histMap1D_, getHistName("Mass", variation.second), Mass, weight);
   SafeHistFill(histMap1D_, getHistName("PVDZ", variation.second), l1PVDZ, weight);
   SafeHistFill(histMap1D_, getHistName("PVDZ", variation.second), l2PVDZ, weight);
@@ -1590,6 +1688,17 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
   SafeHistFill(histMap1D_, getHistName("LepEta", variation.second), l3Eta, weight);
   SafeHistFill(histMap1D_, getHistName("LepEta", variation.second), l4Eta, weight);
   SafeHistFill(histMap1D_, getHistName("nJets", variation.second), jetPt->size(), weight);
+  
+  int central_nJets = 0;
+  for (unsigned int cind = 0; cind < jetPt->size(); cind++)
+  {
+      if (std::abs(jetEta->at(cind))<2.4){
+        central_nJets = central_nJets + 1;
+      }
+
+  }
+
+  SafeHistFill(histMap1D_, getHistName("nJets_central", variation.second), central_nJets, weight);
 
   if (jetPt->size() == 0 && jetPt->size() == jetEta->size())
   {
