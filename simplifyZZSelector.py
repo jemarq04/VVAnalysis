@@ -1,5 +1,8 @@
 import string,os,sys,pdb
 
+#Overwrite: If true, the filled template file will be copied and overwrite the respective Selector.cc file
+overwrite = False
+
 def listToStr(list):
 #Do something like ['a','b','c'] -> "{\"a\",\"b\",\"c\"}"
     empty = ""
@@ -351,6 +354,7 @@ with open("src/ZZGenSelectorTemplateFilledTmp.cc","r") as fout2Gen:
 print("src/ZZGenSelectorFilled.template produced")
 os.remove("src/ZZGenSelectorTemplateFilledTmp.cc")
 
-os.system("cp src/ZZSelectorFilled.template src/ZZSelector.cc")
-os.system("cp src/ZZGenSelectorFilled.template src/ZZGenSelector.cc")
-print("Copied filled template to source codes")
+if overwrite:
+    os.system("cp src/ZZSelectorFilled.template src/ZZSelector.cc")
+    os.system("cp src/ZZGenSelectorFilled.template src/ZZGenSelector.cc")
+    print("Copied filled template to source codes")
