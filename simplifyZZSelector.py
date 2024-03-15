@@ -77,7 +77,12 @@ hist1D_Ori =[
       "absjetEtaN1", "jetPtN1", "jetPtN2", "jetPtN3", "absjetEtaN1_100", "jetHEM_AB", "jetHEM_CD", "jetHEM2_AB", "jetHEM2_CD",
       "PVDZ", "deltaPVDZ_sameZ", "deltaPVDZ_diffZ"]
 
-hists1DList = baseList
+#hists1DList = baseList
+hists1DList = [
+      "yield", "Z1Mass", "Z2Mass", "ZMass", "ZZPt", "ZZEta", "dPhiZ1Z2", "dRZ1Z2", "ZPt", "LepPt", "LepPtFull", "LepEta", "PassTriggerFull",
+      "LepPt1", "LepPt2", "LepPt3", "LepPt4", "LepPt1Full", "LepPt2Full", "LepPt3Full", "LepPt4Full", "e1PtSortedFull", "e2PtSortedFull", "e1PtSorted", "e2PtSorted",
+      "Mass", "nJets", "MassFull", "SIP3D", "PVDZ", "deltaPVDZ_sameZ", "deltaPVDZ_diffZ"
+]
 #hists1DList = [ "yield", "Mass", "Mass0j", "Mass1j", "Mass2j", "Mass3j", "Mass34j", "Mass4j", "nJets", "MassFull", "Mass0jFull", "Mass1jFull", "Mass2jFull", "Mass3jFull", "Mass34jFull", "Mass4jFull", "jetPt[0]", "jetPt[1]","jetEta[0]", "jetEta[1]", "absjetEta[0]", "absjetEta[1]", "mjj", "dEtajj" ]
 
 jetTest2D_Ori = ["jetPtN1", "jetPtN2", "jetPtN3", "jetHEM_AB", "jetHEM_CD", "jetHEM2_AB", "jetHEM2_CD"]
@@ -315,6 +320,11 @@ with open("src/ZZGenSelectorTemplateFilledTmp.cc","r") as fout2Gen:
     with open("src/ZZGenSelectorFilled.template","w") as foutfGen:
         for line in fout2Gen:
 
+            if not writeNtuple:
+                if "//Begin filling ntuple" in line:
+                    line = "/*" + line
+                elif "//End filling ntuple" in line:
+                    line = line + "*/\n"
             #For suppressing not used variables warning in compiling
             #if not "LepPtFull" in hists1DList:
             #    if "// sort lepton pt" in line:
