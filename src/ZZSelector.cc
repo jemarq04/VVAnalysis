@@ -48,6 +48,7 @@ void ZZSelector::Init(TTree *tree)
 void ZZSelector::SetBranchesUWVV()
 {
   ZZSelectorBase::SetBranchesUWVV();
+	//std::cout << "NOTE: " << isMC_ << std::endl;
   if (isMC_)
   {
     weight_info_ = GetLheWeightInfo();
@@ -55,6 +56,8 @@ void ZZSelector::SetBranchesUWVV()
       fChain->SetBranchAddress("scaleWeights", &scaleWeights, &b_scaleWeights);
     if ((weight_info_ == 2 || weight_info_ == 3) && doSystematics_ && !isNonPrompt_)
       fChain->SetBranchAddress("pdfWeights", &pdfWeights, &b_pdfWeights);
+		//if (weight_info_ > 0) std::cout << "NOTE: Weight info stored!" << std::endl;
+		//else std::cout << "NOTE: Weight info not stored!" << std::endl;
   }
   fChain->SetBranchAddress("Mass", &Mass, &b_Mass);
   fChain->SetBranchAddress("Pt", &Pt, &b_Pt);
@@ -124,7 +127,8 @@ unsigned int ZZSelector::GetLheWeightInfo()
       "wz3lnu-powheg", "wz3lnu-mg5amcnlo",
       "ZZZ", "WZZ", "WWZ",
       "zz4l-powheg", "zz4l-amcatnlo",
-      "ZZJJTo4L-EWK"};
+      "ZZJJTo4L-EWK",
+			"pp_eemm-cHWB_massless", "pp_eemm-cHG_massless", "pp_eemm-cll1_massless"};
   std::vector<std::string> allLheWeights = {
       //"wzjj-aqgcft", "wzjj-aqgcfm", "wzjj-aqgcfs",
       //"wz-atgc_pt0-200", "wz-atgc_pt200-300",
@@ -342,6 +346,7 @@ void ZZSelector::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::str
       {
         b_scaleWeights->GetEntry(entry);
         lheWeights = *scaleWeights;
+				//std::cout << "NOTE: LHE Weights found = " << lheWeights.size() << std::endl;
         if (weight_info_ == 2)
         {
           b_pdfWeights->GetEntry(entry);
