@@ -14,8 +14,10 @@ public:
     bool doaTGC_ = false;
     bool applyPUSF_ = false;
     bool applyPUSFNtp_ = true;
+		bool hasScaleWeightIDs_ = false;
 
     std::vector<float> *scaleWeights = NULL;
+		std::vector<float> *scaleWeightIDs = NULL;
     std::vector<float> *pdfWeights = NULL;
     std::vector<float> lheWeights;
     unsigned int weight_info_;
@@ -72,6 +74,8 @@ public:
 
     std::vector<int> *jetPUID = NULL;
     std::vector<int> *isGenJetMatched = NULL;
+
+		TBranch *b_scaleWeightIDs;
 
     TBranch *b_jetPUID;
     TBranch *b_isGenJetMatched;

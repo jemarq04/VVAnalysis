@@ -53,8 +53,14 @@ void ZZSelector::SetBranchesUWVV()
   if (isMC_)
   {
     weight_info_ = GetLheWeightInfo();
-    if (weight_info_ > 0)
+    if (weight_info_ > 0){
       fChain->SetBranchAddress("scaleWeights", &scaleWeights, &b_scaleWeights);
+			if (weight_info_ == 4){
+				hasScaleWeightIDs_ = true;
+				fChain->SetBranchAddress("scaleWeightIDs", &scaleWeightIDs, &b_scaleWeightIDs);
+			}
+			else hasScaleWeightIDs_ = false;
+		}
     if ((weight_info_ == 2 || weight_info_ == 3) && doSystematics_ && !isNonPrompt_)
       fChain->SetBranchAddress("pdfWeights", &pdfWeights, &b_pdfWeights);
 		//if (weight_info_ > 0) std::cout << "NOTE: Weight info stored!" << std::endl;
@@ -125,7 +131,7 @@ unsigned int ZZSelector::GetLheWeightInfo()
   std::vector<std::string> noLheWeights = {
       "ggZZ2e2mu", "ggZZ4e", "ggZZ4m", "ggZZ4t", "ggZZ2e2tau", "ggZZ2mu2tau", "zz4l-sherpa", "ZZJJTo2e2mu-EWK-phantom", "ZZJJTo4e-EWK-phantom", "ZZJJTo4mu-EWK-phantom"
   };
-  std::vector<std::string> scaleWeights = {
+  std::vector<std::string> scaleWeightsAndIDs = {
       "pp_eemm-cHWB_massless", "pp_eemm-cHG_massless", "pp_eemm-cll1_massless"
   };
   std::vector<std::string> scaleAndPdfWeights = {
@@ -142,12 +148,12 @@ unsigned int ZZSelector::GetLheWeightInfo()
 
   if ((std::find(noLheWeights.begin(), noLheWeights.end(), name_) != noLheWeights.end()) || (isaTGC_))
     return 0;
-  if (std::find(scaleWeights.begin(), scaleWeights.end(), name_) != scaleWeights.end())
-    return 1;
   if (std::find(scaleAndPdfWeights.begin(), scaleAndPdfWeights.end(), name_) != scaleAndPdfWeights.end())
     return 2;
   if (std::find(allLheWeights.begin(), allLheWeights.end(), name_) != allLheWeights.end())
     return 3;
+  if (std::find(scaleWeightsAndIDs.begin(), scaleWeightsAndIDs.end(), name_) != scaleWeightsAndIDs.end())
+    return 4;
   
   if (isUL_L1check){
     return 0;
