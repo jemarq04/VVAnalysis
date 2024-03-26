@@ -152,7 +152,8 @@ weighthists1D_Ori = [
       "Mass34jFull",
       "Mass4jFull"]
 
-weighthists1DList = baseList
+weighthists1DList = hists1DList
+#weighthists1DList = baseList
 #weighthists1DList = ["yield", "Mass", "MassFull", "nJets", "jetPt[1]", "jetPt[0]", "jetEta[0]", "jetEta[1]", "absjetEta[0]", "absjetEta[1]", "mjj", "dEtajj", "Mass0j", "Mass1j", "Mass2j", "Mass3j", "Mass34j", "Mass4j", "Mass0jFull", "Mass1jFull", "Mass2jFull", "Mass3jFull", "Mass34jFull", "Mass4jFull"]
 
 dict["systHists"] = listToStr(systHistList)
