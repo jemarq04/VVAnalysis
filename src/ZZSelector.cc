@@ -28,7 +28,7 @@ void ZZSelector::Init(TTree *tree)
   //      "Z2lep2_Eta","Z2lep2_Phi","Z2lep2_Pt","Z2lep2_PdgId","Mass","nJets",
   // };
 
-  hists1D_ = {"yield","Z1Mass","Z2Mass","ZMass","ZZPt","ZZEta","dPhiZ1Z2","dRZ1Z2","ZPt","LepPt","LepPtFull","LepEta","PassTriggerFull","LepPt1","LepPt2","LepPt3","LepPt4","LepPt1Full","LepPt2Full","LepPt3Full","LepPt4Full","e1PtSortedFull","e2PtSortedFull","e1PtSorted","e2PtSorted","Mass","nJets","MassFull","SIP3D","PVDZ","deltaPVDZ_sameZ","deltaPVDZ_diffZ"};
+  hists1D_ = {"yield","Z1Mass","Z2Mass","ZMass","ZZPt","ZZEta","dPhiZ1Z2","dRZ1Z2","ZPt","LepPt","LepPtFull","LepEta","PassTriggerFull","LepPt1","LepPt2","LepPt3","LepPt4","LepPt1Full","LepPt2Full","LepPt3Full","LepPt4Full","e1PtSortedFull","e2PtSortedFull","e1PtSorted","e2PtSorted","Mass","nJets","MassFull","SIP3D","PVDZ","deltaPVDZ_sameZ","deltaPVDZ_diffZ", "scaleWeightIDs"};
 
   jetTest2D_ = {}; // also defined in hists1D_ to pass checks in InitializeHistogramsFromConfig()
   jethists1D_ = {"Mass","MassFull","nJets","jetPt[1]","jetPt[0]","jetEta[0]","jetEta[1]","absjetEta[0]","absjetEta[1]","mjj","dEtajj","Mass0j","Mass1j","Mass2j","Mass3j","Mass34j","Mass4j","Mass0jFull","Mass1jFull","Mass2jFull","Mass3jFull","Mass34jFull","Mass4jFull"};
@@ -49,18 +49,21 @@ void ZZSelector::Init(TTree *tree)
 void ZZSelector::SetBranchesUWVV()
 {
   ZZSelectorBase::SetBranchesUWVV();
-	//std::cout << "NOTE: " << isMC_ << std::endl;
   if (isMC_)
   {
     weight_info_ = GetLheWeightInfo();
-    if (weight_info_ > 0){
+    if (weight_info_ > 0)
+    {
       fChain->SetBranchAddress("scaleWeights", &scaleWeights, &b_scaleWeights);
 			if (weight_info_ == 4){
-				hasScaleWeightIDs_ = true;
 				fChain->SetBranchAddress("scaleWeightIDs", &scaleWeightIDs, &b_scaleWeightIDs);
+        b_scaleWeightIDs->GetEntry(0);
+        for (size_t i=0; i<scaleWeightIDs->size(); i++)
+        {
+          SafeHistFill(histMap1D_, getHistName("scaleWeightIDs", ""), i, scaleWeightIDs->at(i));
+        }
 			}
-			else hasScaleWeightIDs_ = false;
-		}
+    }
     if ((weight_info_ == 2 || weight_info_ == 3) && doSystematics_ && !isNonPrompt_)
       fChain->SetBranchAddress("pdfWeights", &pdfWeights, &b_pdfWeights);
 		//if (weight_info_ > 0) std::cout << "NOTE: Weight info stored!" << std::endl;
