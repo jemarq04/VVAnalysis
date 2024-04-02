@@ -14,7 +14,6 @@ public:
     bool doaTGC_ = false;
     bool applyPUSF_ = false;
     bool applyPUSFNtp_ = true;
-		bool hasScaleWeightIDs_ = false;
 
     std::vector<float> *scaleWeights = NULL;
 		std::vector<float> *scaleWeightIDs = NULL;
