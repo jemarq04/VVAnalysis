@@ -1621,7 +1621,7 @@ if (writeNtp_ && writeNtpFullRange){
       {
 //        SafeHistFill(weighthistMap1D_, getHistName("jetPt[1]", variation.second), jetPt->at(1), i, lheWeights[i] / lheWeights[0] * weight);
 
-//        SafeHistFill(weighthistMap1D_, getHistName("jetEta[1]", variation.second), jetEta->at(1), i, lheWeights[i] / lheWeights[0] * weight); //}
+//        SafeHistFill(weighthistMap1D_, getHistName("jetEta[1]", variation.second), jetEta->at(1), i, lheWeights[i] / lheWeights[0] * weight);
 //        SafeHistFill(weighthistMap1D_, getHistName("absjetEta[1]", variation.second), std::abs(jetEta->at(1)), i, lheWeights[i] / lheWeights[0] * weight);
 
 //        SafeHistFill(weighthistMap1D_, getHistName("dEtajj", variation.second), dEtajj, i, lheWeights[i] / lheWeights[0] * weight);
