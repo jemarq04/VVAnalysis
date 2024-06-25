@@ -5,6 +5,9 @@
 #include "Analysis/VVAnalysis/interface/ZZSelectorBase.h"
 #include <TH3.h>
 #include <TTreeFormula.h>
+#include <Math/Vector4D.h>
+#include <Math/Boost.h>
+#include <Math/GenVector/GenVector_exception.h>
 
 class ZZSelector : public ZZSelectorBase
 {
