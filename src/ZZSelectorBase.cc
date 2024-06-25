@@ -80,7 +80,7 @@ void ZZSelectorBase::SetBranchesUWVV()
   //std::cout<<"channelName: "<<channelName_<<std::endl;
   //std::cout<<"enum channel_: "<<channel_<<std::endl;
   //std::cout<<"isMC: "<<isMC_<<std::endl;
-  //if (channelName_ == "eeee") {
+  //if (channelName_ == "eeee") 
   if (channel_ == eeee)
   {
     //std::cout<<"enum channel_: "<<channel_<<std::endl;
@@ -554,6 +554,9 @@ void ZZSelectorBase::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std:
   b_l1PVDZ->GetEntry(entry);
   b_l2PVDZ->GetEntry(entry);
   b_l3PVDZ->GetEntry(entry);
+  b_l1Energy->GetEntry(entry);
+  b_l2Energy->GetEntry(entry);
+  b_l3Energy->GetEntry(entry);
   b_l1Eta->GetEntry(entry);
   b_l2Eta->GetEntry(entry);
   b_l3Eta->GetEntry(entry);
@@ -573,6 +576,7 @@ void ZZSelectorBase::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std:
   {
     b_l4Pt->GetEntry(entry);
     b_l4PVDZ->GetEntry(entry);
+    b_l4Energy->GetEntry(entry);
     b_l4Eta->GetEntry(entry);
     b_l4Phi->GetEntry(entry);
     b_l4SIP3D->GetEntry(entry);
