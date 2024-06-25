@@ -52,6 +52,8 @@ public:
     Float_t Z2Phi;
     Float_t Z1Eta;
     Float_t Z2Eta;
+	Float_t Z1PolCos;
+	Float_t Z2PolCos;
     Float_t type1_pfMETEt;
     Float_t type1_pfMETPhi;
     Float_t l1GenPt;
@@ -79,6 +81,10 @@ public:
     Float_t l2Pt;
     Float_t l3Pt;
     Float_t l4Pt;
+    Float_t l1Energy;
+    Float_t l2Energy;
+    Float_t l3Energy;
+    Float_t l4Energy;
     Float_t l1Eta;
     Float_t l2Eta;
     Float_t l3Eta;
@@ -164,6 +170,10 @@ public:
     TBranch *b_l2PVDZ;
     TBranch *b_l3PVDZ;
     TBranch *b_l4PVDZ;
+    TBranch *b_l1Energy;
+    TBranch *b_l2Energy;
+    TBranch *b_l3Energy;
+    TBranch *b_l4Energy;
     TBranch *b_l1Eta;
     TBranch *b_l2Eta;
     TBranch *b_l3Eta;
