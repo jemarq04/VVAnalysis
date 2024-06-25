@@ -85,7 +85,8 @@ hist1D_Ori =[
 hists1DList = [
       "yield", "Z1Mass", "Z2Mass", "ZMass", "ZZPt", "ZZEta", "dPhiZ1Z2", "dRZ1Z2", "ZPt", "LepPt", "LepPtFull", "LepEta", "PassTriggerFull",
       "LepPt1", "LepPt2", "LepPt3", "LepPt4", "LepPt1Full", "LepPt2Full", "LepPt3Full", "LepPt4Full", "e1PtSortedFull", "e2PtSortedFull", "e1PtSorted", "e2PtSorted",
-      "Mass", "nJets", "MassFull", "SIP3D", "PVDZ", "deltaPVDZ_sameZ", "deltaPVDZ_diffZ", "scaleWeightIDs"
+      "Mass", "nJets", "MassFull", "SIP3D", "PVDZ", "deltaPVDZ_sameZ", "deltaPVDZ_diffZ", "scaleWeightIDs", "Z1PolCos", "Z2PolCos", "Lep1Energy", "Lep2Energy",
+      "Lep3Energy", "Lep4Energy"
 ]
 #hists1DList = [ "yield", "Mass", "Mass0j", "Mass1j", "Mass2j", "Mass3j", "Mass34j", "Mass4j", "nJets", "MassFull", "Mass0jFull", "Mass1jFull", "Mass2jFull", "Mass3jFull", "Mass34jFull", "Mass4jFull", "jetPt[0]", "jetPt[1]","jetEta[0]", "jetEta[1]", "absjetEta[0]", "absjetEta[1]", "mjj", "dEtajj" ]
 
