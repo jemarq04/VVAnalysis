@@ -24,9 +24,10 @@ yrtl = 0.02
 
 crossDrawOpt = "PESAME"
 #style = Style()
-#ROOT.gStyle.SetLineScalePS(1.8)
+ROOT.gStyle.SetLineScalePS(1.8)
 ROOT.gStyle.SetOptDate(False)
 ROOT.gStyle.SetLineWidth(3)
+ROOT.gStyle.SetLineStyleString(3,"2 3")
 #channels = ["eeee","eemm","mmmm"]
 channels = []
 def getComLineArgs():
@@ -551,7 +552,7 @@ def getLumiTextBox():
     texS.SetTextSize(0.04)
     texS.SetTextColor(ROOT.kBlack)
     texS.Draw()
-    texS1 = ROOT.TLatex(0.14,0.945,"#bf{CMS}")
+    texS1 = ROOT.TLatex(0.14,0.943,"#bf{CMS}")
     texS1.SetNDC()
     texS1.SetTextFont(42)
     texS1.SetTextColor(ROOT.kBlack)
@@ -628,8 +629,8 @@ def RatioErrorBand(Ratio,hUncUp,hUncDn,hTrueNoErrs,varName):
 
             ratioGraph.SetPointEYhigh(i-1, errorUp)
             ratioGraph.SetPointEYlow(i-1, errorDn)
-        ratioGraph.SetFillColorAlpha(1,0.3)
-        ratioGraph.SetFillStyle(3001)
+        ratioGraph.SetFillColorAlpha(1,0.2)
+        ratioGraph.SetFillStyle(3002)
         ratioGraph.GetXaxis().SetLabelSize(0)
         ratioGraph.GetXaxis().SetTitleSize(0)
         if ratioBand_count ==1:
@@ -673,9 +674,9 @@ def MainErrorBand(hMain,hUncUp,hUncDn,varName,norm,normFb):
             #print "TotErrorUp: ",errorUp, "","TotErrorDn: ",errorDn
             MainGraph.SetPointEYhigh(i-1, errorUp)
             MainGraph.SetPointEYlow(i-1, errorDn)
-        MainGraph.SetFillColorAlpha(1,0.3)
+        MainGraph.SetFillColorAlpha(1,0.2)
 #        MainGraph.SetFillColorAlpha(1,0.7)
-        MainGraph.SetFillStyle(3001)
+        MainGraph.SetFillStyle(3002)
         if norm:
             drawyTitle = _yTitle[varName]
         elif normFb:
@@ -790,13 +791,13 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
         hTrue.SetFillStyle(0)
         #AltSignal
         hTrueAlt.SetFillColor(2)
-        hTrueAlt.SetLineStyle(10)#dashes
+        hTrueAlt.SetLineStyle(7)#dashes
         hTrueAlt.SetFillStyle(0)#hollow
         hTrueAlt.SetLineColor(ROOT.kRed)
         hTrueAlt.SetMarkerColor(ROOT.kRed)
         if include_MiNNLO:
             hTrueNNLO.SetFillColor(8)
-            hTrueNNLO.SetLineStyle(2)# special dashes
+            hTrueNNLO.SetLineStyle(3)# special dashes
             hTrueNNLO.SetFillStyle(0)#hollow
             hTrueNNLO.SetLineColor(ROOT.kViolet)
             hTrueNNLO.SetMarkerColor(ROOT.kViolet)
@@ -1357,8 +1358,15 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
         #c.Print("%s/Ratio_%s.eps" % (unfoldDir,varName))
         c.Print(output_name+".eps")
         c.Print(output_name+".png")
-        subprocess.call(["epstopdf", "--outfile=%s" % output_name+".pdf", output_name+".eps"],env={})
-        os.remove(output_name+".eps")
+        #Currently in singularity there is no epstopdf
+        #subprocess.call(["epstopdf", "--outfile=%s" % output_name+".pdf", output_name+".eps"],env={})
+        #os.remove(output_name+".eps")
+
+        #*Uncomment to create a conversion script*
+        #with open("pdfConversionTemp.sh","a") as fpdfcomm:
+        #    pdf_conversion_comm = "epstopdf --outfile=%s "%(output_name+".pdf") + output_name+".eps"
+        #    fpdfcomm.write(pdf_conversion_comm+"\n")
+        #    fpdfcomm.write("rm "+output_name+".eps\n")
         del c
 
     if reset_include_MiNNLO:
