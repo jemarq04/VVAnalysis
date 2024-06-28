@@ -445,46 +445,15 @@ void ZZSelector::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::str
     ln2 = ROOT::Math::PtEtaPhiEVector(l3Pt, l3Eta, l3Phi, l3Energy);
     lp2 = ROOT::Math::PtEtaPhiEVector(l4Pt, l4Eta, l4Phi, l4Energy);
   }
-  auto PolCosTheta = [&](const ROOT::Math::PtEtaPhiEVector& lp, const ROOT::Math::PtEtaPhiEVector& ln, bool verbose=false)
+  auto PolCosTheta = [&](const ROOT::Math::PtEtaPhiEVector& lp, const ROOT::Math::PtEtaPhiEVector& ln)
   {
     ROOT::Math::PtEtaPhiEVector z = lp + ln;
     ROOT::Math::Boost boost(z.BoostToCM());
     ROOT::Math::PtEtaPhiEVector lep_boost = boost(ln);
-    if (verbose){
-      if (lep_boost.Vect().Mag2() != lep_boost.Vect().Mag2()){
-        std::cout << "========" << std::endl;
-        ROOT::Math::PtEtaPhiEVector lep_boost2 = boost(lp);
-        std::cout << "NOTE: Boost lp.E()=" << lep_boost2.E() << std::endl;
-        std::cout << "NOTE: Boost lp.Mag2()=" << lep_boost2.Vect().Mag2() << std::endl;
-        std::cout << "NOTE: Boost ln.E()=" << lep_boost.E() << std::endl;
-        std::cout << "NOTE: Boost ln.Mag2()=" << lep_boost.Vect().Mag2() << std::endl;
-        std::cout << "NOTE: lp.pdgid=" << (l1PdgId>0? l1PdgId : l2PdgId) << std::endl;
-        std::cout << "NOTE: ln.pdgid=" << (l1PdgId<0? l1PdgId : l2PdgId) << std::endl;
-        std::cout << "NOTE: z.Pt()=" << z.Pt() << std::endl;
-        std::cout << "NOTE: z.Eta()=" << z.Eta() << std::endl;
-        std::cout << "NOTE: z.Phi()=" << z.Phi() << std::endl;
-        std::cout << "NOTE: z.E()=" << z.E() << std::endl;
-        std::cout << "NOTE: z.Mag2()=" << z.Vect().Mag2() << std::endl;
-        ROOT::Math::PtEtaPhiEVector z_boost = boost(z);
-        std::cout << "NOTE: Boost z.E()=" << z_boost.E() << std::endl;
-        std::cout << "NOTE: Boost z.Mag2()=" << z_boost.Vect().Mag2() << std::endl;
-      }
-      else if (false){
-        std::cout << "========NICE" << std::endl;
-        ROOT::Math::PtEtaPhiEVector z_boost = boost(z);
-        std::cout << "NOTE: Boost z.Pt()=" << z_boost.Pt() << std::endl;
-        std::cout << "NOTE: Boost z.Px()=" << z_boost.Px() << std::endl;
-        std::cout << "NOTE: Boost z.Py()=" << z_boost.Py() << std::endl;
-        std::cout << "NOTE: Boost z.Pz()=" << z_boost.Pz() << std::endl;
-        std::cout << "NOTE: Boost z.E()=" << z_boost.E() << std::endl;
-        std::cout << "NOTE: Boost z.Mag2()=" << z_boost.Vect().Mag2() << std::endl;
-      }
-    }
     return lep_boost.Vect().Dot(z.Vect()) / std::sqrt( lep_boost.Vect().Mag2() * z.Vect().Mag2() );
   };
 
-  Z1PolCos = PolCosTheta(lp1, ln1, false);
-  //std::cout << "NOTE: Z1PolCos=" << Z1PolCos << std::endl;
+  Z1PolCos = PolCosTheta(lp1, ln1);
   Z2PolCos = PolCosTheta(lp2, ln2);
 }
 
@@ -775,6 +744,12 @@ void ZZSelector::SetVariables(Long64_t entry)
     float templ2PVDZ = l2PVDZ;
     l2PVDZ = l4PVDZ;
     l4PVDZ = templ2PVDZ;
+    float templ1Energy = l1Energy;
+    l1Energy = l3Energy;
+    l3Energy = templ1Energy;
+    float templ2Energy = l2Energy;
+    l2Energy = l4Energy;
+    l4Energy = templ2Energy;
     float templ1Eta = l1Eta;
     l1Eta = l3Eta;
     l3Eta = templ1Eta;
