@@ -4,7 +4,7 @@ import glob
 import argparse
 import datetime
 from collections import OrderedDict
-import ConfigureJobs
+from . import ConfigureJobs
 import sys
 import ROOT
 import imp
@@ -78,14 +78,14 @@ def readJson(json_file_name):
         try:
             json_info = json.load(json_file)
         except ValueError as err:
-            print "Error reading JSON file %s. The error message was:" % json_file_name 
+            print("Error reading JSON file %s. The error message was:" % json_file_name )
             print(err)
     return json_info
 
 # Depends on ZZ4lRun2DatasetManagerModule
 def getHistInfo(analysis, input_hists, noConfig=False):
     if noConfig:
-        print "INFO: assuming histogram information is specified in selector"
+        print("INFO: assuming histogram information is specified in selector")
         return (input_hists, [])
 
     manager_path = ConfigureJobs.getManagerPath()
@@ -96,7 +96,7 @@ def getHistInfo(analysis, input_hists, noConfig=False):
     config_hists = ConfigHistTools.getAllHistNames(manager_path, analysis) \
         if "all" in input_hists else input_hists
 
-    hists = filter(lambda x : all(y not in x for y in excludedHistPatterns), config_hists)
+    hists = [x for x in config_hists if all(y not in x for y in excludedHistPatterns)]
     hist_inputs = [getHistExpr(hists, analysis)]
 
     return hists, hist_inputs

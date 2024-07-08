@@ -119,7 +119,7 @@ with open('varsFile.json') as var_json_file:
     myvar_dict = json.load(var_json_file)
 units = {}
 prettyVars = {}
-for key in myvar_dict.keys(): #key is the variable
+for key in list(myvar_dict.keys()): #key is the variable
     
     units[key] = myvar_dict[key]["units"]
     prettyVars[key] = myvar_dict[key]["prettyVars"]

@@ -2,13 +2,13 @@
 import ROOT
 import glob
 import datetime
-import ConfigureJobs, OutputTools
+from . import ConfigureJobs, OutputTools
 import sys
 import os
 import multiprocessing
 import subprocess
 import logging
-import UserInput
+from . import UserInput
 
 class SelectorDriver(object):
     def __init__(self, analysis, selection, input_tier, year):
@@ -32,7 +32,7 @@ class SelectorDriver(object):
         self.analysis = analysis
         self.selection = selection
         self.input_tier = input_tier
-        if analysis not in selector_map.keys():
+        if analysis not in list(selector_map.keys()):
             raise ValueError("Analysis does not point to " \
                 "a defined selector. Please edit "
                 "Utilities/python/SelectorTools.py to add it.")
@@ -111,7 +111,7 @@ class SelectorDriver(object):
             raise ValueError("%s is not a valid file." % list_of_files)
         filelist = [f.split("#")[0].strip() for f in open(list_of_files).readlines()]
         # Remove empty/commented lines
-        filelist = filter(lambda  x: len(x) > 2, filelist)
+        filelist = [x for x in filelist if len(x) > 2]
         nPerJob = int(nPerJob)
         if nPerJob < 1:
             raise ValueError("Number of files per job must be >= 1.")
@@ -130,7 +130,7 @@ class SelectorDriver(object):
             else:
                 # Intended for running specified files, use the format name:file
                 dataset, file_path = line.split("@")
-            if dataset not in self.datasets.keys():
+            if dataset not in list(self.datasets.keys()):
                 self.datasets[dataset] = [file_path]
             else:
                 self.datasets[dataset].append(file_path)
@@ -160,7 +160,7 @@ class SelectorDriver(object):
             if self.numCores > 1:
                 self.processParallelByDataset(self.datasets, chan)
             else: 
-                for dataset, file_path in self.datasets.iteritems():
+                for dataset, file_path in self.datasets.items():
                     self.processDataset(dataset, file_path, chan)
 
                 #Multiple files in 1-thread case also, and do the combination here instead of inside processParallel
@@ -183,7 +183,7 @@ class SelectorDriver(object):
         # Only add for one channel
         addSumweights = self.addSumweights and self.channels.index(chan) == 0 and "data" not in dataset and "Background" not in self.selector_name and "Gen" not in self.selector_name
         if addSumweights:
-            #print "Should only go here once!"
+            #print("Should only go here once!")
             sumweights_hist = ROOT.gROOT.FindObject("sumweights")
             # Avoid accidentally combining sumweights across datasets
             if sumweights_hist:
@@ -265,18 +265,18 @@ class SelectorDriver(object):
         return "Events" if self.ntupleType == "NanoAOD" else ("%s/ntuple" % channel)
 
     def combineParallelFiles(self, tempfiles, chan):
-        tempfiles = filter(os.path.isfile, tempfiles)
+        tempfiles = list(filter(os.path.isfile, tempfiles))
         outfile = self.outfile_name
         if chan != "Inclusive" and len(self.channels) != 1:
             outfile = self.outfile_name.replace(".root", "_%s.root" % chan)
         rval = subprocess.call(["hadd", "-f", outfile] + tempfiles)
         if rval == 0:
-            map(os.remove, tempfiles)
+            list(map(os.remove, tempfiles))
         else:
             raise RuntimeError("Failed to collect data from parallel run")
 
     def combineParallelTreeFiles(self, tempfiles, chan):
-        tempfiles = filter(os.path.isfile, tempfiles)
+        tempfiles = list(filter(os.path.isfile, tempfiles))
         
         if chan != "Inclusive":
             outfile = "FilledNtuples/TreeFile_"+self.outfile_name.replace(".root", "_%s.root" % chan)
@@ -289,13 +289,13 @@ class SelectorDriver(object):
             os.system("rootcp %s:* %s"%(f,outfile))
         
        
-        map(os.remove, tempfiles)
+        list(map(os.remove, tempfiles))
        
 
     def processParallelByDataset(self, datasets, chan):
         numCores = min(self.numCores, len(datasets))
         p = multiprocessing.Pool(processes=self.numCores)
-        p.map(self, [[dataset, f, chan] for dataset, f in datasets.iteritems()])
+        p.map(self, [[dataset, f, chan] for dataset, f in datasets.items()])
         # Store arrays in temp files, since it can get way too big to keep around in memory
         tempfiles = [self.tempfileName(d) for d in datasets] 
         tempTreeFiles = ["FilledNtuples/TreeFile_"+self.tempfileName(d) for d in datasets]

@@ -104,7 +104,7 @@ def skimNtuple(selections, analysis, trigger, filelist, output_file_name, dedupl
             cuts.append(ApplySelection.buildCutString(state, 
                 selection_group.split(","), analysis, trigger if i == 0 else "").getString())
             cut_string = cuts.getString()
-            print "INFO: Cut string for channel %s is: %s" % (state, cut_string)
+            print("INFO: Cut string for channel %s is: %s" % (state, cut_string))
             ApplySelection.setAliases(tree, state, "Cuts/%s/aliases.json" % analysis)
 
             isFirstOfMultistep = (i == 0 and len(selection_groups) > 1)
@@ -123,15 +123,15 @@ def skimNtuple(selections, analysis, trigger, filelist, output_file_name, dedupl
             tmpfile.Close()
     writeMetaTreeToFile(output_file, metaTree)
     event_info = PrettyTable(["Selection", "eee", "eem", "emm", "mmm"])
-    for selection, events in event_counts.iteritems():
+    for selection, events in event_counts.items():
         event_info.add_row([selection, events["eee"], events["eem"], events["emm"], events["mmm"]])
-    print "\nResults for selection: %s" % selections
+    print("\nResults for selection: %s" % selections)
     if deduplicate:
-        print "NOTE: Events deduplicated by choosing the ordering with m_l1_l2 " \
-                "closest to m_{Z}^{PDG} \n      after selection: %s" % selections.split(";")[0]
+        print("NOTE: Events deduplicated by choosing the ordering with m_l1_l2 " \
+                "closest to m_{Z}^{PDG} \n      after selection: %s" % selections.split(";")[0])
     else:
-        print "NOTE: Events NOT deduplicated! Event may appear in multiple rows of ntuple!\n"
-    print event_info.get_string()
+        print("NOTE: Events NOT deduplicated! Event may appear in multiple rows of ntuple!\n")
+    print(event_info.get_string())
     
     if tmpfile != 0:
         os.remove(tmpfile.GetName())

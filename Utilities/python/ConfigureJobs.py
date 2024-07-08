@@ -1,5 +1,5 @@
 import datetime
-import UserInput
+from . import UserInput
 import fnmatch
 import glob
 import subprocess
@@ -201,14 +201,14 @@ def getListOfHDFSFiles(file_path):
 # TODO: Would be good to switch the order of the last two arguments
 # completely deprecate manager_path without breaking things
 def getListOfFiles(filelist, selection, manager_path="", analysis=""):
-    if manager_path is "":
+    if manager_path == "":
         manager_path = getManagerPath()
     data_path = "%s/%s/FileInfo" % (manager_path, getManagerName())
     data_info = UserInput.readAllInfo("/".join([data_path, "data/*"]))
     mc_info = UserInput.readAllInfo("/".join([data_path, "montecarlo/*"]))
     analysis_info = UserInput.readInfo("/".join([data_path, analysis, selection])) \
         if analysis != "" else []
-    valid_names = (data_info.keys() + mc_info.keys()) if not analysis_info else analysis_info.keys()
+    valid_names = (list(data_info.keys()) + list(mc_info.keys())) if not analysis_info else list(analysis_info.keys())
     names = []
     for name in filelist:
         if ".root" in name:
@@ -216,7 +216,7 @@ def getListOfFiles(filelist, selection, manager_path="", analysis=""):
         elif "WZxsec2016" in name:
             dataset_file = manager_path + \
                 "%s/FileInfo/WZxsec2016/%s.json" % (getManagerPath(), selection)
-            allnames = json.load(open(dataset_file)).keys()
+            allnames = list(json.load(open(dataset_file)).keys())
             if "nodata" in name:
                 nodata = [x for x in allnames if "data" not in x]
                 names += nodata
@@ -227,7 +227,7 @@ def getListOfFiles(filelist, selection, manager_path="", analysis=""):
         elif "ZZ4l2016" in name:
             dataset_file = manager_path + \
                 "ZZ4lRun2DatasetManager/FileInfo/ZZ4l2016/%s.json" % selection
-            allnames = json.load(open(dataset_file)).keys()
+            allnames = list(json.load(open(dataset_file)).keys())
             if "nodata" in name:
                 nodata = [x for x in allnames if "data" not in x]
                 names += nodata
@@ -238,7 +238,7 @@ def getListOfFiles(filelist, selection, manager_path="", analysis=""):
         elif "ZZ4l2017" in name:
             dataset_file = manager_path + \
                 "ZZ4lRun2DatasetManager/FileInfo/ZZ4l2017/%s.json" % selection
-            allnames = json.load(open(dataset_file)).keys()
+            allnames = list(json.load(open(dataset_file)).keys())
             if "nodata" in name:
                 nodata = [x for x in allnames if "data" not in x]
                 names += nodata
@@ -249,7 +249,7 @@ def getListOfFiles(filelist, selection, manager_path="", analysis=""):
         elif "ZZ4l2018" in name:
             dataset_file = manager_path + \
                 "ZZ4lRun2DatasetManager/FileInfo/ZZ4l2018/%s.json" % selection
-            allnames = json.load(open(dataset_file)).keys()
+            allnames = list(json.load(open(dataset_file)).keys())
             if "nodata" in name:
                 nodata = [x for x in allnames if "data" not in x]
                 names += nodata
@@ -261,8 +261,8 @@ def getListOfFiles(filelist, selection, manager_path="", analysis=""):
             names += fnmatch.filter(valid_names, name)
         else:
             if name.split("__")[0] not in valid_names:
-                print "%s is not a valid name" % name
-                print "Valid names must be defined in AnalysisDatasetManager/FileInfo/(data/montecarlo)*"
+                print("%s is not a valid name" % name)
+                print("Valid names must be defined in AnalysisDatasetManager/FileInfo/(data/montecarlo)*")
                 continue
             names += [name]
     return [str(i) for i in names]
@@ -284,7 +284,7 @@ def fillTemplatedFile(template_file_name, out_file_name, template_dict):
         outFile.write(result)
 
 def getListOfFilesWithXSec(filelist, manager_path="", selection="ntuples"):
-    if manager_path is "":
+    if manager_path == "":
         manager_path = getManagerPath()
     data_path = "%s/%s/FileInfo" % (manager_path, getManagerName())
     files = getListOfFiles(filelist, selection, manager_path)
@@ -295,20 +295,20 @@ def getListOfFilesWithXSec(filelist, manager_path="", selection="ntuples"):
             info.update({file_name : 1})
         else:
             file_info = mc_info[file_name.split("__")[0]]
-            kfac = file_info["kfactor"] if "kfactor" in file_info.keys() else 1
+            kfac = file_info["kfactor"] if "kfactor" in list(file_info.keys()) else 1
             info.update({file_name : file_info["cross_section"]*kfac})
     return info
 
 def getListOfFilesWithDASPath(filelist, analysis, selection, manager_path=""):
-    if manager_path is "":
+    if manager_path == "":
         manager_path = getManagerPath()
     data_path = "%s/%s/FileInfo" % (manager_path, getManagerName())
     files = getListOfFiles(filelist, selection, manager_path, analysis)
     selection_info = UserInput.readInfo("/".join([data_path, analysis, selection]))
     info = {}
     for file_name in files:
-        if "DAS" not in selection_info[file_name].keys():
-            print "ERROR: DAS path not defined for file %s in analysis %s/%s" % (file_name, analysis, selection)
+        if "DAS" not in list(selection_info[file_name].keys()):
+            print("ERROR: DAS path not defined for file %s in analysis %s/%s" % (file_name, analysis, selection))
             continue
         info.update({file_name : selection_info[file_name]["DAS"]})
     return info
@@ -343,12 +343,12 @@ def getPreviousStep(selection, analysis):
         }
     selection = selection.replace(";",",")
     first_selection = selection.split(",")[0].strip()
-    if first_selection not in selection_map.keys():
+    if first_selection not in list(selection_map.keys()):
         if "preselection" in first_selection:
             first_selection = "preselection"
         else:
             raise ValueError("Invalid selection '%s'. Valid selections are:"
-                "%s" % (first_selection, selection_map.keys()))
+                "%s" % (first_selection, list(selection_map.keys())))
     return selection_map[first_selection]
 
 def getConfigFileName(config_file_name):
@@ -359,16 +359,16 @@ def getConfigFileName(config_file_name):
             config_file_name)
 
 def getInputFilesPath(sample_name, selection, analysis, manager_path=""):
-    if manager_path is "":
+    if manager_path == "":
         manager_path = getManagerPath()
     if ".root" in sample_name:
-        print "INFO: using simple file %s" % sample_name
+        print("INFO: using simple file %s" % sample_name)
         return sample_name
     data_path = "%s/%s/FileInfo" % (manager_path, getManagerName())
     input_file_base_name = "/".join([data_path, analysis, selection])
     input_file_name = getConfigFileName(input_file_base_name)
     input_files = UserInput.readInfo(input_file_name)
-    if sample_name not in input_files.keys():
+    if sample_name not in list(input_files.keys()):
         raise ValueError("Invalid input file %s. Input file must correspond"
                " to a definition in %s" % (sample_name, input_file_name))
     filename = input_files[sample_name]['file_path']

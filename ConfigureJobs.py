@@ -151,19 +151,19 @@ def getListOfHDFSFiles(file_path):
             files.append("/"+split[1])
     return files
 def getListOfFiles(filelist, selection, manager_path=""):
-    if manager_path is "":
+    if manager_path == "":
         manager_path = getManagerPath()
     data_path = "%s/ZZ4lRun2DatasetManager/FileInfo" % manager_path
     data_info = UserInput.readAllJson("/".join([data_path, "%s.json" % "data/*"]))
     mc_info = UserInput.readAllJson("/".join([data_path, "%s.json" % "montecarlo/*"]))
-    valid_names = data_info.keys() + mc_info.keys()
+    valid_names = list(data_info.keys()) + list(mc_info.keys())
     names = []
     for name in filelist:
         if "ZZ4l2016" in name:
             dataset_file = manager_path + \
                 "ZZ4lRun2DatasetManager/FileInfo/ZZ4l2016/%s.json" % selection
-            allnames = json.load(open(dataset_file)).keys()
-            print allnames
+            allnames = list(json.load(open(dataset_file)).keys())
+            print(allnames)
             if "nodata" in name:
                 nodata = [x for x in allnames if "data" not in x]
                 names += nodata
@@ -174,8 +174,8 @@ def getListOfFiles(filelist, selection, manager_path=""):
         elif "ZZ4l2017" in name:
             dataset_file = manager_path + \
                 "ZZ4lRun2DatasetManager/FileInfo/ZZ4l2017/%s.json" % selection
-            allnames = json.load(open(dataset_file)).keys()
-            print allnames
+            allnames = list(json.load(open(dataset_file)).keys())
+            print(allnames)
             if "nodata" in name:
                 nodata = [x for x in allnames if "data" not in x]
                 names += nodata
@@ -186,8 +186,8 @@ def getListOfFiles(filelist, selection, manager_path=""):
         elif "ZZ4l2018" in name:
             dataset_file = manager_path + \
                 "ZZ4lRun2DatasetManager/FileInfo/ZZ4l2018/%s.json" % selection
-            allnames = json.load(open(dataset_file)).keys()
-            print allnames
+            allnames = list(json.load(open(dataset_file)).keys())
+            print(allnames)
             if "nodata" in name:
                 nodata = [x for x in allnames if "data" not in x]
                 names += nodata
@@ -199,7 +199,7 @@ def getListOfFiles(filelist, selection, manager_path=""):
             names += fnmatch.filter(valid_names, name)
         else:
             if name.split("__")[0] not in valid_names:
-                print "%s is not a valid name" % name
+                print("%s is not a valid name" % name)
                 continue
             names += [name]
     return [str(i) for i in names]
@@ -210,7 +210,7 @@ def fillTemplatedFile(template_file_name, out_file_name, template_dict):
     with open(out_file_name, "w") as outFile:
         outFile.write(result)
 def getListOfFilesWithXSec(filelist, manager_path=""):
-    if manager_path is "":
+    if manager_path == "":
         manager_path = getManagerPath()
     data_path = "%s/ZZ4lRun2DatasetManager/FileInfo" % manager_path
     files = getListOfFiles(filelist, "ntuples", manager_path)
@@ -222,7 +222,7 @@ def getListOfFilesWithXSec(filelist, manager_path=""):
             info.update({file_name : 1})
         else:
             file_info = mc_info[file_name.split("__")[0]]
-            kfac = file_info["kfactor"] if "kfactor" in file_info.keys() else 1
+            kfac = file_info["kfactor"] if "kfactor" in list(file_info.keys()) else 1
             info.update({file_name : file_info["cross_section"]*kfac})
     return info
 def getPreviousStep(selection, analysis):
@@ -256,21 +256,21 @@ def getPreviousStep(selection, analysis):
         }
     selection = selection.replace(";",",")
     first_selection = selection.split(",")[0].strip()
-    if first_selection not in selection_map.keys():
+    if first_selection not in list(selection_map.keys()):
         if "preselection" in first_selection:
             first_selection = "preselection"
         else:
             raise ValueError("Invalid selection '%s'. Valid selections are:"
-                "%s" % (first_selection, selection_map.keys()))
+                "%s" % (first_selection, list(selection_map.keys())))
     return selection_map[first_selection]
 def getInputFilesPath(sample_name, selection, analysis, manager_path=""):
-    if manager_path is "":
+    if manager_path == "":
         manager_path = getManagerPath()
     data_path = "%s/ZZ4lRun2DatasetManager/FileInfo" % manager_path
     input_file_name = "/".join([data_path, analysis, "%s.json" %
         selection])
     input_files = UserInput.readJson(input_file_name)
-    if sample_name not in input_files.keys():
+    if sample_name not in list(input_files.keys()):
         raise ValueError("Invalid input file %s. Input file must correspond"
                " to a definition in %s" % (sample_name, input_file_name))
     filename = input_files[sample_name]['file_path']

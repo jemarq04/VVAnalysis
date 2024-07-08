@@ -15,8 +15,8 @@ for e in events:
     weights = {}
     for i,weight in enumerate(prod.weights()):
         if first:
-            print "index %i, ID: %s" % (i, weight.id)
-            print "Weight: %f" % weight.wgt
+            print("index %i, ID: %s" % (i, weight.id))
+            print("Weight: %f" % weight.wgt)
         weights[weight.id] = weight.wgt
     first=False
     norm += 1

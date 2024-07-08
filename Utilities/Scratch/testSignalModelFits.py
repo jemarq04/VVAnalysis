@@ -40,7 +40,7 @@ for chan in ["eee", "eem", "emm", "mmm"]:
             hist.SetBinContent(i, numpy.random.poisson(val))
     hist.Sumw2(False)
     ROOT.SetOwnership(hist, False)
-print new_dir.Write()
+print(new_dir.Write())
 combine_file.cd()
 combine_dir = combine_file.Get("AllData")
 combine_dir.cd() 
@@ -49,4 +49,4 @@ if not combine_dir:
 for i in new_dir.GetListOfKeys():
     hist = new_dir.Get(i.GetName()).Clone()
     ROOT.SetOwnership(hist, False)
-print combine_dir.Write()
+print(combine_dir.Write())

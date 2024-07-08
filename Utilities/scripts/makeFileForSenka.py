@@ -24,7 +24,7 @@ outputFolder = "ForSenka/%sFullRunII" % fitvar
 if not os.path.isdir(outputFolder):
     os.makedirs(outputFolder)
 
-for year in fileMap.keys():
+for year in list(fileMap.keys()):
 #for year in ["2016"]:
     fileName=fileMap[year]
     if type(fileName) == str: hist_file = ROOT.TFile.Open(fileName)
@@ -54,8 +54,8 @@ for year in fileMap.keys():
                 for var in theorVariations:
                     histNames.append("Mass_%s_%sUp_%s" % (var,process,chan))
                     histNames.append("Mass_%s_%sDown_%s" % (var,process,chan))
-            print "plot_group: ",process
-            print "histNames: ",histNames
+            print("plot_group: ",process)
+            print("histNames: ",histNames)
             for name in histNames:
                 tmphist = hist_file.Get("/".join([process, name]))
                 if not tmphist: 
@@ -64,11 +64,11 @@ for year in fileMap.keys():
                     ##combine eemm and mmee channels
                     secname = name.replace("eemm","mmee")
                     tmphist2 = hist_file.Get("/".join([process, secname]))
-                    #print tmphist.GetName(),": ",tmphist.Integral()
-                    #print tmphist2.GetName(),": ",tmphist2.Integral()
+                    #print(tmphist.GetName(),": ",tmphist.Integral())
+                    #print(tmphist2.GetName(),": ",tmphist2.Integral())
                     tmphist.Add(tmphist2)
                 hist = tmphist.Clone()
-                #print "total: ",hist.Integral()
+                #print("total: ",hist.Integral())
                 tmphist.Delete()
                 newName = name.replace("Mass",process)
                 newName = newName.replace("_"+chan,"")

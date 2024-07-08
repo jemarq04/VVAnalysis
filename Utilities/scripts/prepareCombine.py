@@ -55,7 +55,7 @@ def combineChannels(group, chans, variations=[], central=True):
     if central:
         variations.append("")
     for var in variations:
-        name = variable if var is "" else "_".join([variable, var])
+        name = variable if var == "" else "_".join([variable, var])
         hist_name = name + "_" + chans[0]
         hist = group.FindObject(hist_name)
         if not hist:
@@ -143,17 +143,17 @@ card_info = {
 
 pdf_entries = {
     "wzjj-vbfnlo" : 0,
-    "EW-WZjj" : [1]+range(11,112),
-    "wzjj-aqgcfm" : [1]+range(11,112),
-    "wzjj-aqgcfs" : [1]+range(11,112),
-    "wzjj-aqgcft" : [1]+range(11,112),
-    "QCD-WZjj" : [1]+range(11,112),
-    "wz-powheg" : [1]+range(11,112),
-    "wz" : [1]+range(11,112),
-    "vv-powheg" : [1]+range(11,112),
-    "top-ewk" : [1]+range(11,112),
+    "EW-WZjj" : [1]+list(range(11,112)),
+    "wzjj-aqgcfm" : [1]+list(range(11,112)),
+    "wzjj-aqgcfs" : [1]+list(range(11,112)),
+    "wzjj-aqgcft" : [1]+list(range(11,112)),
+    "QCD-WZjj" : [1]+list(range(11,112)),
+    "wz-powheg" : [1]+list(range(11,112)),
+    "wz" : [1]+list(range(11,112)),
+    "vv-powheg" : [1]+list(range(11,112)),
+    "top-ewk" : [1]+list(range(11,112)),
     "zg" : 0,
-    "vv" : [1]+range(11,112),
+    "vv" : [1]+list(range(11,112)),
     "AllData" : 0,
 }
 
@@ -191,7 +191,7 @@ isVBS = "VBS" in args['selection']
 #variable = "mjj" if isVBS else "yield"
 #variable = "yield"
 #variable = "mjj_etajj_unrolled" if isVBS else "yield"
-if args['fit_variable'] is "":
+if args['fit_variable'] == "":
     variable = "mjj_etajj_unrolled" if isVBS else "yield"
     if isVBS and (args['aqgc'] or args['higgs']):
         variable = "MTWZ"
@@ -256,7 +256,7 @@ if args['aqgc']:
     base_name = manager_path +"AnalysisDatasetManager/PlotGroups/"
     for filename in ["WZxsec2016_aQGC-FM.json", "WZxsec2016_aQGC-FS.json", "WZxsec2016_aQGC-FT.json",]:
         aqgc_names = json.load(open(base_name+filename))
-        aqgc_groups.extend([str(n) for n in aqgc_names.keys()])
+        aqgc_groups.extend([str(n) for n in list(aqgc_names.keys())])
     plot_groups.extend(aqgc_groups)
 
 if args['higgs']:
@@ -275,7 +275,7 @@ for plot_group in plot_groups:
 
     group = HistTools.makeCompositeHists(fIn, plot_group, ConfigureJobs.getListOfFilesWithXSec(
         config_factory.getPlotGroupMembers(plot_group), manager_path), args['lumi'], plots, rebin=rebin)
-    if scaleWZ and plot_group in wz_scalefacs.keys():
+    if scaleWZ and plot_group in list(wz_scalefacs.keys()):
         for h in group:
             if h.InheritsFrom("TH1"):
                 h.Scale(wz_scalefacs[plot_group])
@@ -304,7 +304,7 @@ for plot_group in plot_groups:
                     try:
                         pdf_hists = HistTools.getPDFHists(weight_hist, pdf_entries[plot_group], plot_group, threbin)
                     except RuntimeError as e:
-                        print e 
+                        print(e )
                         pass
             elif "TH3" in weight_hist.ClassName(): 
                 scale_hists = HistTools.getTransformed3DScaleHists(weight_hist, 
@@ -325,7 +325,7 @@ for plot_group in plot_groups:
                 
             # Account for gg component which doesn't have weights
             if "vv" in plot_group:
-                print "INFO: Scaling VV theory hists by 1.1!"
+                print("INFO: Scaling VV theory hists by 1.1!")
             for hist in scale_hists+pdf_hists:
                 HistTools.addOverflowAndUnderflow(hist,underflow=False)
                 if "vv" in plot_group:
@@ -377,10 +377,10 @@ output_info.add_row(["nonprompt", card_info["eee"]["nonprompt"],
     sum([card_info[c]["nonprompt"] for c in chans])]
 )
 background = {c : 0 for c in chans}
-for chan,yields in card_info.iteritems():
+for chan,yields in card_info.items():
     if chan == "all":
         continue
-    for name,value in yields.iteritems():
+    for name,value in yields.items():
         if "data" in name:
             continue
         if name not in ["EW_WZjj", "wz", 
@@ -434,7 +434,7 @@ with open("/".join([output_dir, "Yields%s.out" % signal_abv]), "w") as yields:
 if not args['noCards']:
     if args['combineChannels']:
         card_info["all"]["output_file"] = args['output_file']
-    for chan, chan_dict in card_info.iteritems():
+    for chan, chan_dict in card_info.items():
         chan_dict["signal_name"] = signal.replace("_", "-")
         chan_dict["fit_variable"] = variable
         chan_dict["signal_yield"] = chan_dict[signal]

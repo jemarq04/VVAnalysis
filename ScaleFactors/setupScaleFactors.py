@@ -58,7 +58,7 @@ fScales = ROOT.TFile(args['output_file'], 'recreate')
 
 # For nTruePU reweighting
 if year=="2016":
-    print "2016 PU reweighting"
+    print("2016 PU reweighting")
     pileupSF = ROOT.ScaleFactor("pileupSF", "Run2016B-H 35.9/fb Pileup profile over RunIISummer16 MC Scale Factor, x=NTruePU")
     pileupFile = ROOT.TFile.Open('PileupWeights16/PU_Central.root')
     pileupFileUp = ROOT.TFile.Open('PileupWeights16/PU_minBiasUP.root')
@@ -74,7 +74,7 @@ elif year=="2018":
     pileupFileUp = ROOT.TFile.Open('PileupWeights18/PU_minBiasUP.root')
     pileupFileDown = ROOT.TFile.Open('PileupWeights18/PU_minBiasDOWN.root')
 else:
-    print "You forgot to specify the year for which you want scale factors"
+    print("You forgot to specify the year for which you want scale factors")
     sys.exit()
 pileupSF.Set1DHist(pileupFile.Get('pileup'), pileupFileUp.Get('pileup'), pileupFileDown.Get('pileup'))
 fScales.cd()
@@ -82,7 +82,7 @@ pileupSF.Write()
 
 
 if year=="2016":
-    print "Doing 2016 Lepton SF"
+    print("Doing 2016 Lepton SF")
     electronLowReco16SF = ROOT.ScaleFactor("electronLowReco16SF", "Run '16 Electron Low Reco SF, x=Eta, y=Pt")
     eLowRecoFile = ROOT.TFile.Open('data/Ele_Reco_LowEt_2016.root')
     electronLowReco16SF.Set2DHist(float2double(eLowRecoFile.Get('EGamma_SF2D')))
@@ -179,7 +179,7 @@ elif year=="2018":
 
 #For every year there is a separate fakeRate file
 if os.path.isfile(frfile):
-    print "INFO: Adding tight fake rates to %s" % args["output_file"]
+    print("INFO: Adding tight fake rates to %s" % args["output_file"])
     fakeRateFile = ROOT.TFile.Open(frfile)
     eZZTightFakeRate = ROOT.ScaleFactor("eZZTightFakeRate", "Fake rate from Z+jet")
     eZZTightFakeRate.Set2DHist(fakeRateFile.Get('DataEWKCorrected/ratioE2D_allE'), 0, 0, ROOT.ScaleFactor.AsInHist)

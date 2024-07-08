@@ -11,7 +11,7 @@ def chunks(l, n):
         yield l[i:i + n]
 
 for chan in ["eee", "eem", "emm", "mmm"]:
-    print "Info for chan", chan
+    print("Info for chan", chan)
     chain = ROOT.TChain("%s/ntuple" % chan)
     #for root_file in glob.glob("/data/kelong/DibosonAnalysisData/3LooseLeptons/2017-08-29-data_MuonEG_Run2016*/*"):
     for root_file in (glob.glob("/data/kelong/DibosonAnalysisData/3LooseLeptons/2017-08-17-data_Single*/*")

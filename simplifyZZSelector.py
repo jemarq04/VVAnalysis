@@ -214,7 +214,7 @@ with open("src/ZZSelectorTemplateFilledTmp.cc","r") as fout2:
                 line+= "\n"
 
             if "SafeHistFill" in line:
-                for key in mapdict.keys():
+                for key in list(mapdict.keys()):
                     if mapdict[key] in line:
                         for item in odict[key]:
                             if item in line and line.find(item) < line.find("variation") and not item in ldict[key]:
@@ -346,7 +346,7 @@ with open("src/ZZGenSelectorTemplateFilledTmp.cc","r") as fout2Gen:
                 line+= "\n"
 
             if "SafeHistFill" in line:
-                for key in Genmapdict.keys():
+                for key in list(Genmapdict.keys()):
                     if Genmapdict[key] in line:
                         for item in Genodict[key]:
                             if item in line and line.find(item) < line.find("variation") and not item in Genldict[key]:

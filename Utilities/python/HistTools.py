@@ -41,7 +41,7 @@ def makeUnrolledHist(init_2D_hist, xbins, ybins, name=""):
         ybinned_hist = ybinned_hist.Rebin(len(xbins)-1, hist_name+"_rebin", xbins)
         hists_half_rolled.append(ybinned_hist)
 
-    if name is "":
+    if name == "":
         name = init_2D_hist.GetName().replace("2D", "unrolled")
     unrolled_hist = ROOT.TH1D(name, "Unrolled", nbins, 0, nbins)
     unrolled_hist.SetDirectory(init_2D_hist.GetDirectory())
@@ -60,7 +60,7 @@ def makeUnrolledHist(init_2D_hist, xbins, ybins, name=""):
 
 def make1DaQGCHists(orig_file, input2D_hists, plot_info, rebin=None):
     output_folders = []
-    for name, data in plot_info.iteritems():
+    for name, data in plot_info.items():
         entry = data["lheWeightEntry"]
         file_name = str(data["Members"][0])
 
@@ -271,7 +271,7 @@ def addOverflowAndUnderflow(hist, underflow=True, overflow=True):
 def makeCompositeHists(hist_file, name, members, lumi, hists=[], hist_filter=0, underflow=False, overflow=True, rebin=None):
     composite = ROOT.TList()
     composite.SetName(name)
-    for directory in [str(i) for i in members.keys()]:
+    for directory in [str(i) for i in list(members.keys())]:
         # For aQGC, the different plot groups should already be in their own files
         if "aqgc" in directory:
             directory = name
@@ -281,7 +281,7 @@ def makeCompositeHists(hist_file, name, members, lumi, hists=[], hist_filter=0, 
         if hists == []:
             hists = [i.GetName() for i in hist_file.Get(directory).GetListOfKeys()]
         if hist_filter:
-            hists = filter(hist_filter, hists)
+            hists = list(filter(hist_filter, hists))
         sumweights = 0
         if "data" not in directory.lower() and "nonprompt" not in directory.lower():
             sumweights_hist = hist_file.Get("/".join([directory, "sumweights"]))
@@ -300,7 +300,7 @@ def makeCompositeHists(hist_file, name, members, lumi, hists=[], hist_filter=0, 
             if hist:
                 sumhist = composite.FindObject(hist.GetName())
                 if sumweights:
-                    xsec = members[directory if directory in members.keys() else directory.split("__")[0]]
+                    xsec = members[directory if directory in list(members.keys()) else directory.split("__")[0]]
                     hist.Scale(xsec*1000*lumi/sumweights)
                 addOverflowAndUnderflow(hist, underflow, overflow)
             else:
@@ -325,7 +325,7 @@ def getTransformedHists(orig_file, folders, input_hists, transformation, transfo
             if not orig_hist:
                 if "Fakes" not in input_hist_name and \
                     "Up" not in input_hist_name and "Down" not in input_hist_name:
-                    print "WARNING: Histogram %s not found for dataset %s. Skipping." % (input_hist_name, folder)
+                    print("WARNING: Histogram %s not found for dataset %s. Skipping." % (input_hist_name, folder))
                 continue
             new_hist = transformation(orig_hist, *transform_inputs)
             ROOT.SetOwnership(new_hist, False)

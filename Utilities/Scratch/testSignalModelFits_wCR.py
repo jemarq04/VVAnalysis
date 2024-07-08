@@ -55,7 +55,7 @@ for chan in chans:
     ROOT.SetOwnership(hist, False)
 if not noWrite:
     plot_file.cd()
-    print new_dir.Write()
+    print(new_dir.Write())
     combine_file.cd()
     combine_dir = combine_file.Get("AllData")
     if not combine_dir:
@@ -64,10 +64,10 @@ if not noWrite:
     for chan in chans:
         hist = new_dir.Get(hist_name+chan).Clone()
         ROOT.SetOwnership(hist, False)
-    print combine_dir.Write()
+    print(combine_dir.Write())
 else:
-    print new_dir.ls()
-    print "Dir is", new_dir
+    print(new_dir.ls())
+    print("Dir is", new_dir)
     for chan in chans:
         hist = new_dir.Get(hist_name+chan).Clone()
-        print "Hist is", hist.GetName(), "Integral is", hist.Integral()
+        print("Hist is", hist.GetName(), "Integral is", hist.Integral())

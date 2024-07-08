@@ -11,13 +11,13 @@ with open("controlevent.txt", "w") as outfile:
     file_info = json.load(open("/afs/cern.ch/user/k/kelong/work/AnalysisDatasetManager/FileInfo/WZxsec2016/WselectionMediumLeptonsNoEIP.json"))
     for i, chan in enumerate(["mmm", "eem", "emm", "eee"]):
         chain = ROOT.TChain("%s/ntuple" % chan)
-        for key, value in file_info.iteritems():
+        for key, value in file_info.items():
             if "data" in key:
                 chain.Add(value["file_path"])
-        print "Chan is", chan
+        print("Chan is", chan)
         ApplySelection.setAliases(chain, chan, "Cuts/WZxsec2016/aliases.json")
         cut_chain = chain.CopyTree(selection) 
-        print cut_chain.GetEntries()
+        print(cut_chain.GetEntries())
         for row in cut_chain:
             outfile.write("DATA "+" ".join([str(v) for v in [row.run,row.lumi,row.evt]]) + " " +
                 " ".join([str(round(v,2)) for v in [row.jetPt[0],row.jetEta[0],row.jetPhi[0],

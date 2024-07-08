@@ -131,7 +131,7 @@ def makeHistFile(args):
                 jetPUeff = fjetPUeff.Get("h2_eff_mc2017_T")
                 jetPUeff.SetName("jetPUeff")
             else: 
-                print "what scale factors you want?"
+                print("what scale factors you want?")
                 sys.exit()
             pileupSF = fScales.Get('pileupSF')
             jetPUSF.SetDirectory(0)
@@ -180,7 +180,7 @@ def makeHistFile(args):
 
     if selection == "Inclusive2Jet":
         selection = "Wselection"
-        print "Info: Using Wselection for hist defintions"
+        print("Info: Using Wselection for hist defintions")
     analysis = "/".join([args['analysis'], selection])
     hists, hist_inputs = UserInput.getHistInfo(analysis, args['hist_names'], args['noHistConfig'])
 
@@ -231,7 +231,7 @@ def makeHistFile(args):
     if len(combinedNames) > 1:
         rval = subprocess.call(["hadd", "-f", tmpFileName] + combinedNames)
         if rval == 0:
-            map(os.remove, combinedNames)
+            list(map(os.remove, combinedNames))
 
     if args['test']:
         fOut.Close()

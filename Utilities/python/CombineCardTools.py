@@ -1,7 +1,7 @@
 import logging
-import ConfigureJobs
-import HistTools
-import OutputTools
+from . import ConfigureJobs
+from . import HistTools
+from . import OutputTools
 from prettytable import PrettyTable
 import os
 import ROOT
@@ -47,7 +47,7 @@ class CombineCardTools(object):
     def setVariations(self, variations, exclude=[]):
         if not self.processes:
             raise ValueError("No processes defined, can't set variations")
-        for process in self.processes.keys():
+        for process in list(self.processes.keys()):
             if process in exclude:
                 self.setVariationsByProcess(process, [])
                 continue
@@ -57,7 +57,7 @@ class CombineCardTools(object):
         return self.variations
 
     def getVariationsForProcess(self, process):
-        if process not in self.variations.keys():
+        if process not in list(self.variations.keys()):
             raise ValueError("Variations not defined for process %s" % process)
         return self.variations[process]
 
@@ -133,7 +133,7 @@ class CombineCardTools(object):
             variations.append("")
         for var in variations:
             # TODO: Remove these two replace statements, it's WZ/ZZ specific
-            name = fitVariable if var is "" else "_".join([fitVariable, var])
+            name = fitVariable if var == "" else "_".join([fitVariable, var])
             hist_name = name + "_" + self.channels[0]
             hist = group.FindObject(hist_name)
             if not hist:
@@ -153,7 +153,7 @@ class CombineCardTools(object):
         plots = ["_".join([fitVariable, chan]) for chan in self.channels]
         variations = self.getVariationsForProcess(processName)
         plots += ["_".join([fitVariable, var, c]) for var in variations for c in self.channels]
-        if processName in self.theoryVariations.keys():
+        if processName in list(self.theoryVariations.keys()):
             plots += [self.weightHistName(c, processName) for c in self.channels]
         return plots
 
@@ -198,15 +198,15 @@ class CombineCardTools(object):
         #TODO: You may want to combine channels before removing zeros
         self.combineChannels(group)
         #TODO: Make optional
-        map(HistTools.addOverflow, filter(lambda x: (x.GetName() not in processedHists), group))
+        list(map(HistTools.addOverflow, [x for x in group if (x.GetName() not in processedHists)]))
         if "data" not in group.GetName().lower():
-            map(HistTools.removeZeros, filter(lambda x: (x.GetName() not in processedHists), group))
+            list(map(HistTools.removeZeros, [x for x in group if (x.GetName() not in processedHists)]))
         self.histData[processName] = group
 
     # It's best to call this function for process, otherwise you can end up
     # storing many large histograms in memory
     def writeProcessHistsToOutput(self, processName):
-        if processName not in self.histData.keys() or not self.histData[processName]:
+        if processName not in list(self.histData.keys()) or not self.histData[processName]:
             raise ValueError("Hists for process %s not found" % processName)
         processHists = self.histData[processName]
         OutputTools.writeOutputListItem(processHists, self.outputFile)

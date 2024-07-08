@@ -53,7 +53,7 @@ else:
     prefit_err = math.sqrt(prefit_err)
     postfit_err = math.sqrt(postfit_err)
     
-print "Prefit integral across all bins = %0.2f +/- %0.2f (stat)" % (prefit_sum, prefit_err)
-print "Postfit integral across all bins = %0.2f +/- %0.2f (syst)" % (postfit_sum, postfit_err)
-print "    Ratio = %0.3f +/- %0.3f" % ((postfit_sum/prefit_sum), (postfit_err/prefit_sum))
+print("Prefit integral across all bins = %0.2f +/- %0.2f (stat)" % (prefit_sum, prefit_err))
+print("Postfit integral across all bins = %0.2f +/- %0.2f (syst)" % (postfit_sum, postfit_err))
+print("    Ratio = %0.3f +/- %0.3f" % ((postfit_sum/prefit_sum), (postfit_err/prefit_sum)))
 

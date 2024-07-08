@@ -8,7 +8,7 @@ with open('varsFile.json') as var_json_file:
     myvar_dict = json.load(var_json_file)
 
 _binning = {}
-for key in myvar_dict.keys(): #key is the variable
+for key in list(myvar_dict.keys()): #key is the variable
     _binning[key] = myvar_dict[key]["_binning"]
 
 def rebin(hist,varName):

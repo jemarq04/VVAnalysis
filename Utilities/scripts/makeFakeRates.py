@@ -53,14 +53,14 @@ def makeCompositeHists(hist_file,name, members, addRatios=True, overflow=False):
     composite = ROOT.TList()
     composite.SetName(name)
     if name=="AllEWK":
-        print "EWK members: ",members
-    for directory in [str(i) for i in members.keys()]:
+        print("EWK members: ",members)
+    for directory in [str(i) for i in list(members.keys())]:
         for histname in getHistNames(["eee", "eem", "emm", "mmm"]):
-            print "histname:", histname
-            print "hist_file:", hist_file
-            print "directory:",directory
+            print("histname:", histname)
+            print("hist_file:", hist_file)
+            print("directory:",directory)
             hist = hist_file.Get("/".join([directory, str(histname)]))
-            print "hist:", hist
+            print("hist:", hist)
             if hist:
                 sumhist = composite.FindObject(hist.GetName())
                 if "data" not in directory and hist.GetEntries() > 0:
@@ -141,11 +141,11 @@ if not args['test']:
     
     if selection == "Inclusive2Jet":
         selection = "Wselection"
-        print "Info: Using Wselection for hist defintions"
+        print("Info: Using Wselection for hist defintions")
     analysis = "/".join([args['analysis'], selection])
     hists, hist_inputs = UserInput.getHistInfo(analysis, args['hist_names'], args['noHistConfig'])
-    print "hists: ",hists
-    print "hist_inputs: ", hist_inputs
+    print("hists: ",hists)
+    print("hist_inputs: ", hist_inputs)
     selector = SelectorTools.SelectorDriver(args['analysis'], args['selection'], args['input_tier'], args['year'])
     selector.setOutputfile(fOut.GetName())
     selector.setInputs(sf_inputs+hist_inputs)

@@ -24,7 +24,7 @@ names.update({ "Higgs_M%i" % m : "chargedHiggsWZ-m%i" % m for m in [300,400,500,
 flatScaleFac=True
 
 corrections_file.cd()
-for folder in names.values():
+for folder in list(names.values()):
     nonprompt = "DataEWKCorrected" in folder
     hist_name = var if not nonprompt else var + "_Fakes"
     corr_hist = corr_file.Get("/".join([folder, hist_name]))
@@ -40,7 +40,7 @@ for folder in names.values():
 
     cr_ratio = corr_hist.GetBinContent(1)/uncorr_hist.GetBinContent(1)
     cr_err = cr_ratio*math.sqrt((corr_hist.GetBinError(1)/corr_hist.GetBinContent(1))**2 + (uncorr_hist.GetBinError(1)/uncorr_hist.GetBinContent(1))**2)
-    print "Overall correction to yield for sample %s is %0.3f in CR and %0.3f in signal" % (folder, cr_ratio, int_ratio)
+    print("Overall correction to yield for sample %s is %0.3f in CR and %0.3f in signal" % (folder, cr_ratio, int_ratio))
     ratio = corr_hist.Clone(folder +"_ratio")
     ROOT.SetOwnership(ratio, False)
     # These seem too unstable to take bin-by-bin corrections
@@ -57,7 +57,7 @@ for folder in names.values():
             if ratio.GetBinError(i)/ratio.GetBinContent(i) > 0.5:
                 ratio.SetBinContent(i, int_ratio)
                 ratio.SetBinError(i, int_error)
-                print "WARNING! Setting bin %i of hist %s to total ratio" % (i, folder)
+                print("WARNING! Setting bin %i of hist %s to total ratio" % (i, folder))
     ratio.Write()
     canvas_name = folder+"_canvas"
     canvas = ROOT.TCanvas(canvas_name, canvas_name)
@@ -79,12 +79,12 @@ for hist_key in jakobs_file.GetListOfKeys():
     corrected_hist = hist.Clone()
     isHiggs = "Higgs" in corrected_hist.GetName()
     name = "_".join(corrected_hist.GetName().split("_")[1:2+isHiggs])
-    if name in names.keys():
+    if name in list(names.keys()):
         correction_hist = corrections_file.Get(names[name]+"_ratio")
-    elif name in names.values():
+    elif name in list(names.values()):
         correction_hist = corrections_file.Get(name+"_ratio")
     else:
-        print "WARNING: Found no correction for process %s" % name
+        print("WARNING: Found no correction for process %s" % name)
         continue
     if not correction_hist.GetNbinsX() == hist.GetNbinsX():
         raise RuntimeError("Unequal number of bins for correction and central hist" \
