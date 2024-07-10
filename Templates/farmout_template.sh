@@ -33,7 +33,7 @@ farmoutAnalysisJobs \
     --assume-input-files-exist \
     --extra-inputs=${job_dir}/analysis_code.tar.gz \
     --input-basenames-not-unique \
-    --opsys=CentOS7 \
+    --opsys=AlmaLinux9 \
     $$1 \
     ${job_name} \
     $$CMSSW_BASE \
