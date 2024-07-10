@@ -34,8 +34,8 @@ def getFilesPerJob(path_to_files):
         num, tot_size = getattr(ConfigureJobs, "getNumberAndSizeOf%sFiles" % file_type)(path_to_files)
         if num == 0:
             raise ValueError("Size of file list is zero for path: %s" % path_to_files)
-        print "Number: ",num
-        print "TotSize: ",tot_size
+        print("Number: ",num)
+        print("TotSize: ",tot_size)
         return 1
     else:
         num, tot_size = getattr(ConfigureJobs, "getNumberAndSizeOf%sFiles" % file_type)(path_to_files)
@@ -70,7 +70,7 @@ def callFarmout(output_dir, script_name, noSubmit):
     with open(log_file_name, 'a') as log:
         status = subprocess.call(farmout_command, stdout=log, stderr=log)
     if status != 0:
-        print "Error in submitting files to condor. Check the log file: %s" % log_file_name
+        print("Error in submitting files to condor. Check the log file: %s" % log_file_name)
     if noSubmit: status = -1
     return status
 def farmoutNtupleSkim(sample_name, path, selection, analysis, version, scaleFacs, deduplicateAcrossChannels, noSubmit, extraArgs):
@@ -131,11 +131,11 @@ def farmoutNtupleSkim(sample_name, path, selection, analysis, version, scaleFacs
     )
     status = callFarmout(farmout_dict['job_dir'], script_name, noSubmit)
     if status == 0:
-        print "Submitted jobs for %s file set to condor." % sample_name
+        print("Submitted jobs for %s file set to condor." % sample_name)
     elif status == -1: 
-        print "Test run: submit directory created but not submitted"
+        print("Test run: submit directory created but not submitted")
     else:
-        print "Jobs not submitted"
+        print("Jobs not submitted")
 def createRunJob(base_dir, job_dir, selection, analysis, trigger_name, addScaleFacs, addDuplicatedFlag, extraArgs):
     fill_dict = {'selection' : selection,
         'analysis' : analysis,

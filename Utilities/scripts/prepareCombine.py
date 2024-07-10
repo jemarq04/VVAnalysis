@@ -21,8 +21,8 @@ def writeOutputListItem(item, directory):
         directory.cd()
         item.Write()
     else:
-        print "Couldn't write output item:"
-        print repr(item)
+        print("Couldn't write output item:")
+        print(repr(item))
     directory.cd()
 
 def getComLineArgs():
@@ -47,9 +47,9 @@ def getComLineArgs():
 def makeCompositeHists(hist_file, name, members, lumi, hists=[]):
     composite = ROOT.TList()
     composite.SetName(name)
-    for directory in [str(i) for i in members.keys()]:
+    for directory in [str(i) for i in list(members.keys())]:
         if not hist_file.Get(directory):
-            print "Skipping invalid filename %s" % directory
+            print("Skipping invalid filename %s" % directory)
             continue
         if hists == []:
             hists = [i.GetName() for i in hist_file.Get(directory).GetListOfKeys()]
@@ -185,8 +185,8 @@ output_info.add_row(["nonprompt", card_info["eee"]["nonprompt"],
     sum([card_info[c]["nonprompt"] for c in chans])]
 )
 background = {c : 0 for c in chans}
-for chan,yields in card_info.iteritems():
-    for name,value in yields.iteritems():
+for chan,yields in card_info.items():
+    for name,value in yields.items():
         if name not in ["wzjj_ewk", "wzjj_vbfnlo", "output_file"]:
             background[chan] += float(value)
 output_info.add_row(["Total background", 
@@ -213,7 +213,7 @@ output_dir = '/'.join([combine_dir,args['selection'], folder_name])
 try:
     os.makedirs(output_dir)
 except OSError as e:
-    print e
+    print(e)
     pass
 with open("/".join([output_dir, "Yields.out"]), "w") as yields:
     yields.write("\n" + " "*30 + "Event Yields")
@@ -223,7 +223,7 @@ with open("/".join([output_dir, "Yields.out"]), "w") as yields:
 
 signal = "wzjj_vbfnlo" if args['vbfnlo'] else "wzjj_ewk"
 signal_abv = "vbfnlo" if args['vbfnlo'] else "MG"
-for chan, chan_dict in card_info.iteritems():
+for chan, chan_dict in card_info.items():
     chan_dict["signal_name"] = signal.replace("_", "-")
     chan_dict["signal_yield"] = chan_dict[signal]
     ConfigureJobs.fillTemplatedFile(

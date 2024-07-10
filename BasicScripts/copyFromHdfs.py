@@ -15,7 +15,7 @@ parser.add_argument("-s", "--selection", type=str, default="FinalSelection",
 args = parser.parse_args()
 maindir = glob.glob(args.path)
 subdir=[]
-print maindir
+print(maindir)
 #os.mkdir("/data/%s/ZZAnalysis_{:%Y-%m-%d}".format(datetime.date.today())%(os.getlogin()))
 #os.mkdir("/data/%s/ZZAnalysis_{:%Y-%m-%d}/%s".format(datetime.date.today())%(os.getlogin(), args.selection.strip("/")))
 for Dir in maindir:
@@ -23,9 +23,9 @@ for Dir in maindir:
 #for directory in glob.glob(args.path):
 for subDir in subdir:
     directory=os.path.join(maindir[0],subDir)
-    print "Copying directory", directory
+    print("Copying directory", directory)
     if not os.path.isdir(directory):
-        print "Invalid filename: %s" % directory
+        print("Invalid filename: %s" % directory)
         exit(1)
     dirs = directory.split("/")
     dir_name = dirs[-1]
@@ -47,7 +47,7 @@ for subDir in subdir:
     try:
         os.mkdir(new_dir)
     except OSError as e:
-        print e
+        print(e)
         continue
     filenames = [f if "hdfs" not in f else f[5:] for f in glob.glob(directory + "/*.root")]
     p = multiprocessing.Pool(processes=10)

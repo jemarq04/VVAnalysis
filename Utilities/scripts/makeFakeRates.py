@@ -28,8 +28,8 @@ def writeOutputListItem(item, directory):
         directory.cd()
         item.Write()
     else:
-        print "Couldn't write output item:"
-        print repr(item)
+        print("Couldn't write output item:")
+        print(repr(item))
     directory.cd()
 
 def getHistNames(channels):
@@ -42,7 +42,7 @@ def getHistNames(channels):
 def makeCompositeHists(name, members, addRatios=True, overflow=True):
     composite = ROOT.TList()
     composite.SetName(name)
-    for directory in [str(i) for i in members.keys()]:
+    for directory in [str(i) for i in list(members.keys())]:
         for histname in getHistNames(["eee", "eem", "emm", "mmm"]):
             hist = fOut.Get("/".join([directory, histname]))
             if hist:
@@ -161,7 +161,7 @@ for dataset in ConfigureJobs.getListOfFiles(args['filenames'], path, args['selec
             try:
                 file_path = ConfigureJobs.getInputFilesPath(dataset, 
                     path, args['selection'], args['analysis'])
-                print file_path
+                print(file_path)
                 chain.Add(file_path)
                 chain.Process(select, "")
                 if "data" not in dataset and chan == "eee":
@@ -169,7 +169,7 @@ for dataset in ConfigureJobs.getListOfFiles(args['filenames'], path, args['selec
                     meta_chain.Draw("1>>sumweights", "summedWeights")
                     sumweights_hist.SetDirectory(0)
             except ValueError as e:
-                print e
+                print(e)
                 sumweights_hist.Delete()
                 continue
         output = select.GetOutputList()

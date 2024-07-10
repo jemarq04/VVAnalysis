@@ -22,7 +22,7 @@ for i in range(100) :
     dummyTree.Fill()
 
 ROOT.gInterpreter.Declare("double globalFunc(double x) { return 1/(100+x); }")
-print "globalFunc(3) = ", ROOT.globalFunc(3)
+print("globalFunc(3) = ", ROOT.globalFunc(3))
 dummyTree.Scan('randVal : globalFunc(randVal)', '', '', 10)
 
 # Generate with setupScaleFactors.py
@@ -43,13 +43,13 @@ eCBTightFakeRate = fScales.Get("eCBTightFakeRate")
 del fScales # Make sure we don't rely on file being open
 
 pu.RegisterGlobalFunction()
-print "pileupSF(3) = ", ROOT.pileupSF(3)
+print("pileupSF(3) = ", ROOT.pileupSF(3))
 dummyTree.Scan('10+10*randVal : pileupSF(10+10*randVal)', '', '', 10)
 
 muonIso.RegisterGlobalFunction(2) # 2D function
 muonId.RegisterGlobalFunction(2) # 2D function
-print "muonIsoSF(1.1, 30) = ", ROOT.muonIsoSF(1.1, 30)
-print "muonTightIdSF(1.1, 30) = ", ROOT.muonTightIdSF(1.1, 30)
+print("muonIsoSF(1.1, 30) = ", ROOT.muonIsoSF(1.1, 30))
+print("muonTightIdSF(1.1, 30) = ", ROOT.muonTightIdSF(1.1, 30))
 dummyTree.Scan('abs(randVal*2) : randVal2*5+30 : muonIsoSF(abs(randVal*2), randVal2*5+30)', '', '', 10)
 dummyTree.Scan('abs(randVal*2) : randVal2*5+30 : muonTightIdSF(abs(randVal*2), randVal2*5+30)', '', '', 10)
 
@@ -59,9 +59,9 @@ dummyTree.Scan('abs(randVal*2) : randVal2*5+30 : electronMediumIdSF(abs(randVal*
 dummyTree.Scan('abs(randVal*2) : randVal2*5+30 : electronTightIdSF(abs(randVal*2), randVal2*5+30)', '', '', 10)
 
 mCBTightFakeRate.RegisterGlobalFunction(2) # 2D function
-print "mCBTightFakeRate(1.1, 30) = ", ROOT.mCBTightFakeRate(30, 1.1)
+print("mCBTightFakeRate(1.1, 30) = ", ROOT.mCBTightFakeRate(30, 1.1))
 dummyTree.Scan('abs(randVal*2) : randVal2*10+30 : mCBTightFakeRate(randVal2*10+30, abs(randVal*2))', '', '', 10)
 
 eCBTightFakeRate.RegisterGlobalFunction(2) # 2D function
-print "eCBTightFakeRate(1.1, 30) = ", ROOT.eCBTightFakeRate(30, 1.1)
+print("eCBTightFakeRate(1.1, 30) = ", ROOT.eCBTightFakeRate(30, 1.1))
 dummyTree.Scan('abs(randVal*2) : randVal2*10+30 : eCBTightFakeRate(randVal2*10+30, abs(randVal*2))', '', '', 10)

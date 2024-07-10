@@ -29,7 +29,7 @@ proof = ROOT.gProof
 current_path = os.getcwd()
 os.chdir(sys.path[0])
 datasets = user_input.readJson("../MetaData/ntuple_info.json")
-for name, info in datasets.iteritems():
+for name, info in datasets.items():
     proof_name = '_'.join([name, args.selection])
     if proof.GetDataSet(proof_name) == None or reRegister :
         filelist = ROOT.TFileCollection(proof_name, proof_name)

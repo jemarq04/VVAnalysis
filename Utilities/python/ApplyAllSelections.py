@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 import ROOT
 from collections import OrderedDict
-import ConfigureJobs
+from . import ConfigureJobs
 import os
 import sys
-import UserInput
+from . import UserInput
 import time
 
 class CutString(object):
@@ -39,9 +39,9 @@ def buildCutString(state, selections, analysis, trigger):
     return cut_string
 def setAliases(tree, state, aliases_json):
     aliases = UserInput.readJson(aliases_json)
-    for name, value in aliases["State"][state].iteritems():
+    for name, value in aliases["State"][state].items():
         tree.SetAlias(name, value)
-    for name, value in aliases["Event"].iteritems():
+    for name, value in aliases["Event"].items():
         tree.SetAlias(name, value)
 def getTriggerCutString(trigger, analysis):
     triggers = UserInput.readJson("Cuts/%s/triggers.json" % analysis)

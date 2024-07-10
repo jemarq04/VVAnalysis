@@ -6,9 +6,9 @@ from array import array
 
 def eventsbyChannel(setList):
     #print "Number of not deduplicated events in all datasets", len(events)
-    print "Number of events in eeee ntuple", len(setList[0])
-    print "Number of events in eemm ntuple", len(setList[1])
-    print "Number of events in mmmm ntuple", len(setList[2])
+    print("Number of events in eeee ntuple", len(setList[0]))
+    print("Number of events in eemm ntuple", len(setList[1]))
+    print("Number of events in mmmm ntuple", len(setList[2]))
 
 def getEventScore(original_file):
     states = ['eeee', 'eemm','mmmm']
@@ -180,18 +180,18 @@ events,events_score = getEventScore(original_file)
 #eeee_eemm,eemm_mmmm,eeee_mmmm => SetIntersectionList[0],[1],[2] respectively
 IntersectionList = getSetIntersections(events) 
 eventsbyChannel(events)
-print "No.of events in eeee_eemm intersection: ",len(IntersectionList[0])
-print "No.of events in eemm_mmmm intersection: ",len(IntersectionList[1])
-print "No.of events in eeee_mmmm intersection: ",len(IntersectionList[2])
+print("No.of events in eeee_eemm intersection: ",len(IntersectionList[0]))
+print("No.of events in eemm_mmmm intersection: ",len(IntersectionList[1]))
+print("No.of events in eeee_mmmm intersection: ",len(IntersectionList[2]))
 #Apply flagduplicates function
 #FinalEventList is a list of 3 sets containining unique events corresponding to the three states
 FlaggedEventList = flagduplicates(IntersectionList,events_score)
-print "No.of events flagged from eeee: ",len(FlaggedEventList[0])
-print FlaggedEventList[0]
-print "No.of events flagged from eemm: ",len(FlaggedEventList[1])
+print("No.of events flagged from eeee: ",len(FlaggedEventList[0]))
+print(FlaggedEventList[0])
+print("No.of events flagged from eemm: ",len(FlaggedEventList[1]))
 #print FlaggedEventList[1]
-print "No.of events flagged from mmmm: ",len(FlaggedEventList[2])
-print FlaggedEventList[2]
+print("No.of events flagged from mmmm: ",len(FlaggedEventList[2]))
+print(FlaggedEventList[2])
 
 states = ['eeee', 'eemm','mmmm']
 for state in states:

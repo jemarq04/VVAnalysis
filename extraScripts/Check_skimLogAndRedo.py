@@ -33,7 +33,7 @@ with open("/hdfs/store/user/hehe/newNtuples%s.json"%year) as json_file:
 
 #remove dataset that doesn't need resubmit from josn file 
 match = False
-for key in obj.keys():
+for key in list(obj.keys()):
     match = False
     for item in redolist:
         if key in item:

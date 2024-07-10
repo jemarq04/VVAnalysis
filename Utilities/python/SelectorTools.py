@@ -2,7 +2,7 @@
 import ROOT
 import glob
 import datetime
-import ConfigureJobs
+from . import ConfigureJobs
 
 def writeOutputListItem(item, directory):
     if item.ClassName() == "TList":
@@ -16,8 +16,8 @@ def writeOutputListItem(item, directory):
         directory.cd()
         item.Write()
     else:
-        print "Couldn't write output item:"
-        print repr(item)
+        print("Couldn't write output item:")
+        print(repr(item))
     directory.cd()
 
 def applySelector(filelist, selector_name, selection, 
@@ -53,20 +53,20 @@ def applySelector(filelist, selector_name, selection,
                 try:
                     file_path = ConfigureJobs.getInputFilesPath(dataset, 
                         path, selection, analysis)
-                    print "File path is", file_path
+                    print("File path is", file_path)
                     chain.Add(file_path)
                     chain.Process(select, "")
                     if "data" not in dataset and addsumweights and chan == "eee":
                         sumweights_hist = ROOT.TH1D("sumweights", "sumweights", 1,0,100)
                         meta_chain.Add(file_path)
-                        print file_path
+                        print(file_path)
                         meta_chain.Draw("1>>sumweights", "summedWeights")
                         if sumweights_hist.Integral() <= 0:
                             raise ValueError("Sum of weights <= 0 found for file"
                                     "%s. Probably the file is empty." % dataset)
                         sumweights_hist.SetDirectory(0)
                 except ValueError as e:
-                    print e
+                    print(e)
                     if sumweights_hist:
                         sumweights_hist.Delete()
                     continue

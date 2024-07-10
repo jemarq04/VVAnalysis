@@ -28,7 +28,7 @@ def createDataH1(ch,channels):
             #print 'dataDir: ',dataDir
             dataFiles+=glob(dataDir+"/*.root")
             #print 'dataFiles added'
-    print 'Length of dataFiles: ',len(dataFiles)
+    print('Length of dataFiles: ',len(dataFiles))
     #print type(dataFiles[len(dataFiles)-1])
     chain = ROOT.TChain(ch+"/ntuple")
     for f in dataFiles:
@@ -44,7 +44,7 @@ def createDataH1(ch,channels):
     #print "can it draw"
     if (ch=="eeee" or ch=="mmmm"):
         chain.Draw(channels[ch]+">>"+data_hist,"nZZTightIsoElec+nZZTightIsoMu==4")
-        print "chain Draw Successful"
+        print("chain Draw Successful")
     #Function to retrieve mZ1 in ch=eemm
     else:
         chain.Draw("(( abs(e1_e2_Mass-91.1876)<abs(m1_m2_Mass-91.1876) ) ? e1_e2_Mass : m1_m2_Mass)>>"+data_hist, "nZZTightIsoElec+nZZTightIsoMu==4")
@@ -68,11 +68,11 @@ def createMCStack(ch,channels):
     #channels = ["eeee/ntuple","eemm/ntuple", "eeee/ntuple"]  
     MCStack = ROOT.THStack("stack", "stack")
     ROOT.SetOwnership(MCStack, False)
-    for mc_Sample in mcSamples.keys():
+    for mc_Sample in list(mcSamples.keys()):
         #print "mcSample is: ", mc_Sample
         mcPath = Date+'-'+mc_Sample+'-'+analysis+'-'+selection
         mcDir = os.path.join(Dir,mcPath)
-        print 'mcDir: ',mcDir
+        print('mcDir: ',mcDir)
         mcFiles=glob(mcDir+"/*.root")
         MCchain = ROOT.TChain(ch+"/ntuple")
         MetaChain = ROOT.TChain("metaInfo/metaInfo")
@@ -103,7 +103,7 @@ def createMCStack(ch,channels):
         #print hist.Integral()
         
     #ROOT.SetOwnership(MCStack, False)
-    for i in MCStack.GetHists(): print i.GetName(), "Integral is", i.Integral()
+    for i in MCStack.GetHists(): print(i.GetName(), "Integral is", i.Integral())
     return MCStack
 def createRatio(h1, h2):
     Nbins = h1.GetNbinsX()
@@ -114,7 +114,7 @@ def createRatio(h1, h2):
         stackerror = hStackLast.GetBinError(i)
         datacontent = h1.GetBinContent(i)
         dataerror = h1.GetBinError(i)
-        print "stackcontent: ",stackcontent," and data content: ",datacontent
+        print("stackcontent: ",stackcontent," and data content: ",datacontent)
         ratiocontent=0
         if(datacontent!=0):
             ratiocontent = datacontent/stackcontent
@@ -122,7 +122,7 @@ def createRatio(h1, h2):
             error = ratiocontent*(math.sqrt(math.pow((dataerror/datacontent),2) + math.pow((stackerror/stackcontent),2)))
         else:
             error = 2.07
-        print "ratio content: ",ratiocontent," and error: ",error
+        print("ratio content: ",ratiocontent," and error: ",error)
         Ratio.SetBinContent(i,ratiocontent)
         Ratio.SetBinError(i,error)
 
@@ -201,12 +201,12 @@ def stackplot(ch,channels):
 
     c,pad1 = createCanvasPads()
     h1 = createDataH1(ch,channels)
-    print "Data Integral: ", h1.Integral()
+    print("Data Integral: ", h1.Integral())
     Datamaximum = h1.GetMaximum()
     hStack = createMCStack(ch,channels)
     h2 = hStack.GetStack().Last()
     h2.SetFillColor(ROOT.kBlue)
-    print "Total Stack Integral",h2.Integral()
+    print("Total Stack Integral",h2.Integral())
     Stackmaximum = h2.GetMaximum()
     hStack.SetTitle("mZ1_"+ch)
     hStack.Draw("HIST")
@@ -260,7 +260,7 @@ def stackplot(ch,channels):
     yaxis.Draw("SAME")
 
     c.Update()
-    print hStack.ls()
+    print(hStack.ls())
     #hStack.GetYaxis().SetTitle("Events / 2 GeV")
     #hStack.GetYaxis().SetTitleOffset(1.0)
     #c, pad1, pad2 = createCanvasPads()
@@ -288,5 +288,5 @@ def stackplot(ch,channels):
 
 if __name__ == "__main__":
     for ch in channels:
-        print "Plotting channel: ",ch
+        print("Plotting channel: ",ch)
         stackplot(ch,channels)

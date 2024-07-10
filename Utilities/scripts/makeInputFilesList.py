@@ -40,7 +40,7 @@ def makeHDFSFileList(output_file, file_path, only_root_files):
             file_list.write(file_name+"\n")
 def makeLocalFileList(output_file, file_path, only_root_files):
     files = [f for f in listdir(file_path) if isfile(join(file_path, f))]
-    print file_path
+    print(file_path)
     with open(output_file, "w") as file_list:
         for file_name in files:
             if only_root_files and ".root" not in file_name:

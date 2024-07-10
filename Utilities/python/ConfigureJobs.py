@@ -1,5 +1,5 @@
 import datetime
-import UserInput
+from . import UserInput
 import fnmatch
 import glob
 import subprocess
@@ -77,10 +77,10 @@ def getListOfFiles(filelist, manager_path):
     data_path = "%s/ZZ4lRun2DatasetManager/FileInfo" % manager_path
     data_info = UserInput.readAllJson("/".join([data_path, "%s.json" % "data/*"]))
     mc_info = UserInput.readAllJson("/".join([data_path, "%s.json" % "montecarlo/*"]))
-    valid_names = data_info.keys() + mc_info.keys()
+    valid_names = list(data_info.keys()) + list(mc_info.keys())
     names = []
     for name in filelist:
-        print "name in filelist: ",name
+        print("name in filelist: ",name)
         zz4l="ZZ4l"
         Zl="ZplusL"
         if (zz4l in name) or (Zl in name):
@@ -120,7 +120,7 @@ def getListOfFiles(filelist, manager_path):
                     dataset_file = "/afs/cern.ch/user/u/uhussain/work/" + \
                         "ZZ4lRun2DatasetManager/FileInfo/ZplusL2018/%s.json" % "ntuples"
             print(dataset_file)
-            allnames = json.load(open(dataset_file)).keys()
+            allnames = list(json.load(open(dataset_file)).keys())
             print(allnames)
             if "nodata" in name:
                 nodata = [x for x in allnames if "Run" not in x]
@@ -133,7 +133,7 @@ def getListOfFiles(filelist, manager_path):
             names += fnmatch.filter(valid_names, name)
         else:
             if name.split("__")[0] not in valid_names:
-                print "%s is not a valid name" % name
+                print("%s is not a valid name" % name)
                 continue
             names += [name]
     return names
@@ -153,7 +153,7 @@ def getListOfFilesWithXSec(filelist, manager_path):
             info.update({file_name : 1})
         else:
             file_info = mc_info[file_name.split("__")[0]]
-            kfac = file_info["kfactor"] if "kfactor" in file_info.keys() else 1
+            kfac = file_info["kfactor"] if "kfactor" in list(file_info.keys()) else 1
             info.update({file_name : file_info["cross_section"]*kfac})
     return info
 def getPreviousStep(selection, analysis):
@@ -194,19 +194,19 @@ def getPreviousStep(selection, analysis):
                 "ZplusLBase" : "ntuples"
         }
     first_selection = selection.split(",")[0].strip()
-    if first_selection not in selection_map.keys():
+    if first_selection not in list(selection_map.keys()):
         if "preselection" in first_selection:
             first_selection = "preselection"
         else:
             raise ValueError("Invalid selection '%s'. Valid selections are:"
-                "%s" % (first_selection, selection_map.keys()))
+                "%s" % (first_selection, list(selection_map.keys())))
     return selection_map[first_selection]
 def getInputFilesPath(sample_name, manager_path,selection, analysis):
     data_path = "%s/ZZ4lRun2DatasetManager/FileInfo" % manager_path
     input_file_name = "/".join([data_path, analysis, "%s.json" %
         selection])
     input_files = UserInput.readJson(input_file_name)
-    if sample_name not in input_files.keys():
+    if sample_name not in list(input_files.keys()):
         raise ValueError("Invalid input file %s. Input file must correspond"
                " to a definition in %s" % (sample_name, input_file_name))
     filename = input_files[sample_name]['file_path']

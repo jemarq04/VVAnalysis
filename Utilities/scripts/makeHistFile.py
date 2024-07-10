@@ -18,8 +18,8 @@ def writeOutputListItem(item, directory):
         directory.cd()
         item.Write()
     else:
-        print "Couldn't write output item:"
-        print repr(item)
+        print("Couldn't write output item:")
+        print(repr(item))
     directory.cd()
 
 def getComLineArgs():
@@ -52,11 +52,11 @@ def getDifference(name, dir1, dir2, addRatios=True):
             diff = hist1.Clone()
             diff.Add(hist2, -1)
         elif not hist1:
-            print "WARNING: Hist %s was not produced for " \
-                "dataset(s) %s" % (histname, dir1)
+            print("WARNING: Hist %s was not produced for " \
+                "dataset(s) %s" % (histname, dir1))
         elif not hist2:
-            print "WARNING: Hist %s was not produced for " \
-                "dataset(s) %s" % (histname, dir2)
+            print("WARNING: Hist %s was not produced for " \
+                "dataset(s) %s" % (histname, dir2))
         differences.Add(diff)
     if addRatios:
         ratios = getRatios(differences)
@@ -67,9 +67,9 @@ def getDifference(name, dir1, dir2, addRatios=True):
 def makeCompositeHists(name, members, lumi):
     composite = ROOT.TList()
     composite.SetName(name)
-    for directory in [str(i) for i in members.keys()]:
+    for directory in [str(i) for i in list(members.keys())]:
         if not fOut.Get(directory):
-            print "Skipping invalid filename %s" % directory
+            print("Skipping invalid filename %s" % directory)
             continue
         for histname in [i.GetName() for i in fOut.Get(directory).GetListOfKeys()]:
             if histname == "sumweights": continue

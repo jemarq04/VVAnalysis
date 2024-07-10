@@ -55,7 +55,7 @@ for name in filelist:
             file_path = ConfigureJobs.getInputFilesPath(name, path,
                 args.selection, "ZZ4l2018")
         except ValueError as e:
-            print e
+            print(e)
             continue
     else:
         file_path = name
@@ -63,11 +63,11 @@ for name in filelist:
         try:
             os.makedirs(output_dir + "/" + name)
         except OSError as e:
-            print e
+            print(e)
             pass
-    print "Length of eventArray: ",len(eventArray)
-    print "Results for file %s" % name
-    print "File path is %s" % file_path
+    print("Length of eventArray: ",len(eventArray))
+    print("Results for file %s" % name)
+    print("File path is %s" % file_path)
     metaChain.Add(file_path)
     state_yields["processed"] = 0
     for state in states:
@@ -77,7 +77,7 @@ for name in filelist:
         ApplySelection.setAliases(chain, state, "Cuts/ZZ4l2018/aliases.json")
         cut_tree = chain
         num_events = cut_tree.GetEntries(args.cut_string)
-        print "Number of events in state %s is %i" % (state, num_events)
+        print("Number of events in state %s is %i" % (state, num_events))
         if args.printEventNums or args.printDetail or args.printTrigger or args.checkDuplicates:
             cut_tree = chain.CopyTree(args.cut_string) if args.cut_string != "" \
                 else chain
@@ -93,26 +93,26 @@ for name in filelist:
                 #if args.printEventNums:
                 #    outfile.write(eventId+'\n')
                 if args.printTrigger or args.printDetail:
-                    print "-"*20 + eventId + "_"*20
+                    print("-"*20 + eventId + "_"*20)
                     if args.printTrigger:
-                        print "singleMu: ", row.singleMuPass
-                        print "singleIsoMu: ", row.singleIsoMuPass
-                        print "singleE: ", row.singleEPass
-                        print "doubleE: ", row.doubleEPass
-                        print "doubleMu: ", row.doubleMuPass
+                        print("singleMu: ", row.singleMuPass)
+                        print("singleIsoMu: ", row.singleIsoMuPass)
+                        print("singleE: ", row.singleEPass)
+                        print("doubleE: ", row.doubleEPass)
+                        print("doubleMu: ", row.doubleMuPass)
                     if args.printDetail:
                         if state == "mmmm":
-                            print "m1Pt :", row.m1Pt
-                            print "m2Pt :", row.m2Pt
-                            print "Z1mass :", row.m1_m2_Mass
+                            print("m1Pt :", row.m1Pt)
+                            print("m2Pt :", row.m2Pt)
+                            print("Z1mass :", row.m1_m2_Mass)
                 if args.checkDuplicates:
                     if eventId in eventArray:
-                        print "Duplicate: %s" % eventId
+                        print("Duplicate: %s" % eventId)
                         outfile.write(eventId+'\n')
                         if state == "eeee":
-                            print "e1Pt :", row.e1Pt
-                            print "e2Pt :", row.e2Pt
-                            print "Z1mass :", row.e1_e2_Mass
+                            print("e1Pt :", row.e1Pt)
+                            print("e2Pt :", row.e2Pt)
+                            print("Z1mass :", row.e1_e2_Mass)
                     else:
                         eventArray.append(eventId)
         state_yields[state] = num_events
@@ -121,23 +121,23 @@ for name in filelist:
     for row in metaChain:
         state_yields["processed"] += row.nevents
         totals["processed"] += row.nevents
-    event_info.add_row([name, state_yields["eeee"], state_yields["eemm"],state_yields["mmmm"], sum(state_yields.values()[:-1]), state_yields["processed"]])
-    print "Number of events in all states is %i" % total
-event_info.add_row(["All files", totals["eeee"], totals["eemm"], totals["mmmm"], sum(totals.values()[:-1]), totals["processed"]])
+    event_info.add_row([name, state_yields["eeee"], state_yields["eemm"],state_yields["mmmm"], sum(list(state_yields.values())[:-1]), state_yields["processed"]])
+    print("Number of events in all states is %i" % total)
+event_info.add_row(["All files", totals["eeee"], totals["eemm"], totals["mmmm"], sum(list(totals.values())[:-1]), totals["processed"]])
 
-print ""
-print "Results for all files:"
+print("")
+print("Results for all files:")
 total = 0
-for state, count in totals.iteritems():
+for state, count in totals.items():
     if state == "processed": continue
-    print "Summed events for all files in %s state is %i" % (state, count)
+    print("Summed events for all files in %s state is %i" % (state, count))
     total += count
-print "Summed events for all files in all states is %i" % total
-print "A total of %i events were processed from the dataset" % totals["processed"]
+print("Summed events for all files in all states is %i" % total)
+print("A total of %i events were processed from the dataset" % totals["processed"])
 if args.latex:
-    print event_info.get_latex_string(hrules=0)
+    print(event_info.get_latex_string(hrules=0))
 else:
-    print event_info
+    print(event_info)
 
 if args.printEventNums:
     file_name = "summary.txt"

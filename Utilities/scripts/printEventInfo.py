@@ -2,7 +2,7 @@
 import ROOT
 import argparse
 import os
-from python import ConfigureJobs
+from .python import ConfigureJobs
 import datetime
 
 parser = argparse.ArgumentParser() 
