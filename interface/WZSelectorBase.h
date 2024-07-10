@@ -9,6 +9,7 @@
 #include <TH2.h>
 #include <exception>
 #include <iostream>
+#include <set>
 
 // Headers needed by this particular selector
 #include <vector>
