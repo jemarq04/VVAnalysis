@@ -24,7 +24,7 @@ def getComLineArgs():
                         help="Only list .root files")
     return vars(parser.parse_args())
 def makeFileList(output_file, file_path, only_root_files):
-    out = subprocess.check_output(["hdfs", "dfs", "-ls", file_path.replace("/hdfs", "")])
+    out = subprocess.check_output(["hdfs", "dfs", "-ls", file_path.replace("/hdfs", "")], encoding="utf8")
     files = []
     for line in out.splitlines():
         split = line.split("/", 1)

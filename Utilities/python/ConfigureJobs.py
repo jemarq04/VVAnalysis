@@ -185,7 +185,7 @@ def getNumberAndSizeOfHDFSFiles(file_path):
     return (0,0) if len(file_info) == 0 else (len(file_info), sum(file_info))
 def getListOfHDFSFiles(file_path):
     try:
-        out = subprocess.check_output(["hdfs", "dfs", "-ls", file_path.replace("/hdfs", "")])
+        out = subprocess.check_output(["hdfs", "dfs", "-ls", file_path.replace("/hdfs", "")], encoding="utf8")
     except subprocess.CalledProcessError as error:
         logging.warning(error)
         return []
