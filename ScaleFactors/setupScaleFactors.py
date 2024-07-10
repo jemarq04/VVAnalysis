@@ -5,7 +5,7 @@
 # Modified from N. Smith, U. Wisconsin
 # 
 
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import ROOT
 import argparse
 ROOT.gROOT.SetBatch(True)

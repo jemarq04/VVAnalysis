@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import ROOT
 
 #myfile = ROOT.TFile("/data/kelong/DibosonAnalysisData/Preselection/2016-11-02-wz3lnu-powheg-WZxsec2016-preselection-v1/skim-ntuplize_cfg-086609CA-D81B-E611-BF6C-002590D9D896.root")
