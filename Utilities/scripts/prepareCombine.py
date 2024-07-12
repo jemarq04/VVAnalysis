@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import ROOT
 from python import SelectorTools, HistTools
 from python import UserInput,OutputTools,ConfigureJobs

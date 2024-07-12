@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # Register datasets with proof to avoid loading files each time
 # Only needs to be done once, valied until the file is modified

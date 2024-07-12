@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # This script takes a directory as input and creates a new file (name 
 # specifed by the user) with a list of filenames in the format required by 

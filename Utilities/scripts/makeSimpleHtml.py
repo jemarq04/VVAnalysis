@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
   Modified from T. Ruggles and D. Taylor, U. Wisconsin
   Changes by K.Long, https://github.com/kdlong/WZConfigPlotting/commit/14d492fe266f87991395aaf188cb25c9116e9cf1
