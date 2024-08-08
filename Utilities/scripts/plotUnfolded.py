@@ -333,7 +333,7 @@ def createRatio(h1, h2):
     Ratio.SetStats(0)
     Ratio.GetYaxis().CenterTitle()
     Ratio.SetMarkerStyle(20)
-    Ratio.SetMarkerSize(0.7)
+    Ratio.SetMarkerSize(2)
 
     line = ROOT.TLine(h1.GetXaxis().GetXmin(), 1.,h1.GetXaxis().GetXmax(), 1.)
     line.SetLineStyle(7)
@@ -629,7 +629,7 @@ def RatioErrorBand(Ratio,hUncUp,hUncDn,hTrueNoErrs,varName):
 
             ratioGraph.SetPointEYhigh(i-1, errorUp)
             ratioGraph.SetPointEYlow(i-1, errorDn)
-        ratioGraph.SetFillColorAlpha(1,0.2)
+        ratioGraph.SetFillColorAlpha(1,0.1)
         ratioGraph.SetFillStyle(3002)
         ratioGraph.GetXaxis().SetLabelSize(0)
         ratioGraph.GetXaxis().SetTitleSize(0)
@@ -674,7 +674,7 @@ def MainErrorBand(hMain,hUncUp,hUncDn,varName,norm,normFb):
             #print "TotErrorUp: ",errorUp, "","TotErrorDn: ",errorDn
             MainGraph.SetPointEYhigh(i-1, errorUp)
             MainGraph.SetPointEYlow(i-1, errorDn)
-        MainGraph.SetFillColorAlpha(1,0.2)
+        MainGraph.SetFillColorAlpha(1,0.1)
 #        MainGraph.SetFillColorAlpha(1,0.7)
         MainGraph.SetFillStyle(3002)
         if norm:
@@ -956,7 +956,7 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
         #hUnf.SetBinErrorOption(ROOT.TH1.kPoisson)
         hUnf.SetLineColor(ROOT.kBlack)
         hUnf.SetMarkerStyle(20)
-        hUnf.SetMarkerSize(0.7)
+        hUnf.SetMarkerSize(2)
         hUnf.GetXaxis().SetTitle("")
         hUnf.GetXaxis().SetLabelSize(0)
         hUnf.GetXaxis().SetTitleSize(0)
@@ -1363,10 +1363,10 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
         #os.remove(output_name+".eps")
 
         #*Uncomment to create a conversion script*
-        #with open("pdfConversionTemp.sh","a") as fpdfcomm:
-        #    pdf_conversion_comm = "epstopdf --outfile=%s "%(output_name+".pdf") + output_name+".eps"
-        #    fpdfcomm.write(pdf_conversion_comm+"\n")
-        #    fpdfcomm.write("rm "+output_name+".eps\n")
+        with open("pdfConversionTemp.sh","a") as fpdfcomm:
+            pdf_conversion_comm = "epstopdf --outfile=%s "%(output_name+".pdf") + output_name+".eps"
+            fpdfcomm.write(pdf_conversion_comm+"\n")
+            fpdfcomm.write("rm "+output_name+".eps\n")
         del c
 
     if reset_include_MiNNLO:
