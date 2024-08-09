@@ -84,8 +84,10 @@ args = getComLineArgs()
 
 today = datetime.date.today().strftime("%d%b%Y")
 
+logo_ht = 0.943
 if "Full" in args['variable']:
     include_MiNNLO = False
+    logo_ht = 0.945
 #manager_path = ConfigureJobs.getManagerPath()
 #Only MassAllj should plot EWK correction
 EW_P4 = ("MassAllj" in args['variable'] and not "Full" in args['variable'] ) #or (args['variable'] == "nJets")
@@ -557,7 +559,7 @@ def getRYaxis(hUnf1,ratioErrorBand1,lastP):
     return Ryaxis
     
 def getLumiTextBox():
-    texS = ROOT.TLatex(0.68,0.945, str(int(round(args['lumi'])))+" fb^{-1} (13 TeV)")
+    texS = ROOT.TLatex(0.68,logo_ht, str(int(round(args['lumi'])))+" fb^{-1} (13 TeV)")
     texS.SetNDC()
     texS.SetTextFont(42)
     texS.SetTextSize(0.04)
