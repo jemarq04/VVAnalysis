@@ -346,7 +346,7 @@ def createRatio(h1, h2):
     Ratio.SetStats(0)
     Ratio.GetYaxis().CenterTitle()
     Ratio.SetMarkerStyle(20)
-    Ratio.SetMarkerSize(2)
+    Ratio.SetMarkerSize(1.7)
 
     line = ROOT.TLine(h1.GetXaxis().GetXmin(), 1.,h1.GetXaxis().GetXmax(), 1.)
     line.SetLineStyle(7)
@@ -956,14 +956,15 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
         #hTrue.GetYaxis().SetTitleOffset(1.0)
         hTrueAlt.GetXaxis().SetLabelSize(0)
         hTrueAlt.GetXaxis().SetTitleSize(0)
-        hTrueAlt.Draw("E1 SAME") #drawing second time, for updating?
+        #hTrueAlt.Draw("E1 SAME") #drawing second time, for updating?
         
         #UnfErrBand.SetLineColor(error_color)
         #UnfErrBand.SetLineWidth(error_width)
         setErrGrStyle(UnfErrBand)
-        UnfErrBand.Draw(error_drawopt)#"a2")
+        UnfErrBand.Draw("a2")
+        UnfErrBand.Draw(error_drawopt) #somehow have to draw "a2" first to draw the frame, then draw with the desired option
 
-        hTrueAlt.Draw("E1 SAME") # This redraw is to make it on top of the syst error 
+        hTrueAlt.Draw("E1 SAME") 
         hTrue.Draw("E1 SAME") #("PE1SAME")
 
         if include_MiNNLO:
@@ -982,7 +983,7 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
         #hUnf.SetBinErrorOption(ROOT.TH1.kPoisson)
         hUnf.SetLineColor(ROOT.kBlack)
         hUnf.SetMarkerStyle(20)
-        hUnf.SetMarkerSize(2)
+        hUnf.SetMarkerSize(1.7)
         hUnf.GetXaxis().SetTitle("")
         hUnf.GetXaxis().SetLabelSize(0)
         hUnf.GetXaxis().SetTitleSize(0)
