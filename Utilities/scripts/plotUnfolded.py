@@ -22,12 +22,23 @@ EW_corr = True
 yrdiv = 503
 yrtl = 0.02
 
-crossDrawOpt = "PESAME"
+crossDrawOpt = "PEX0 SAME"
 #style = Style()
 ROOT.gStyle.SetLineScalePS(1.8)
 ROOT.gStyle.SetOptDate(False)
 ROOT.gStyle.SetLineWidth(3)
 ROOT.gStyle.SetLineStyleString(3,"2 3")
+ROOT.gStyle.SetEndErrorSize(5)
+
+error_color = ROOT.kGreen+1
+error_width = 4
+error_drawopt = "0 SAME"
+
+def setErrGrStyle(errg):
+    errg.SetLineWidth(error_width)
+    errg.SetLineColor(error_color)
+
+#ROOT.gStyle.SetErrorX(0.)
 #channels = ["eeee","eemm","mmmm"]
 channels = []
 def getComLineArgs():
@@ -372,8 +383,8 @@ def getPrettyLegend(hTrue, data_hist, hAltTrue, error_hist, coords,hTrueNNLO=Non
     sigLabel = mylist_dict["sigLabel"] #"POWHEG+MCFM+Pythia8" 
     sigLabelAlt = mylist_dict["sigLabelAlt"] #"MG5_aMC@NLO+MCFM+Pythia8"
     if data_hist:
-        legend.AddEntry(data_hist, "Data + stat. unc.", "lep")
-    legend.AddEntry(error_hist, "Stat. #oplus syst. unc.", "f")
+        legend.AddEntry(data_hist, "Data + stat. unc.", "PE")#"lep")
+    legend.AddEntry(error_hist, "Stat. #oplus syst. unc.", "E")#"f")
     legend.AddEntry(hTrue, sigLabel,"lep")
     legend.AddEntry(hAltTrue, sigLabelAlt,"lep")
     if include_MiNNLO:
@@ -629,6 +640,8 @@ def RatioErrorBand(Ratio,hUncUp,hUncDn,hTrueNoErrs,varName):
 
             ratioGraph.SetPointEYhigh(i-1, errorUp)
             ratioGraph.SetPointEYlow(i-1, errorDn)
+            ratioGraph.SetPointEXhigh(i-1, 0.0)
+            ratioGraph.SetPointEXlow(i-1, 0.0)
         ratioGraph.SetFillColorAlpha(1,0.1)
         ratioGraph.SetFillStyle(3002)
         ratioGraph.GetXaxis().SetLabelSize(0)
@@ -674,6 +687,9 @@ def MainErrorBand(hMain,hUncUp,hUncDn,varName,norm,normFb):
             #print "TotErrorUp: ",errorUp, "","TotErrorDn: ",errorDn
             MainGraph.SetPointEYhigh(i-1, errorUp)
             MainGraph.SetPointEYlow(i-1, errorDn)
+            MainGraph.SetPointEXhigh(i-1, 0.0)
+            MainGraph.SetPointEXlow(i-1, 0.0)
+
         MainGraph.SetFillColorAlpha(1,0.1)
 #        MainGraph.SetFillColorAlpha(1,0.7)
         MainGraph.SetFillStyle(3002)
@@ -931,7 +947,7 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
         UnfErrBand = MainErrorBand(hUnf,hUncUp,hUncDn,varName,norm,normFb)
         if varName=="mass":
             UnfErrBand.SetMaximum(0.01*args['scaleymax']*ymax_fac)
-        UnfErrBand.Draw("a2")
+        
         hTrue.GetXaxis().SetLabelSize(0)
         hTrue.GetXaxis().SetTitleSize(0)
         #hTrue.GetYaxis().SetTitle("Events")
@@ -939,7 +955,15 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
         hTrueAlt.GetXaxis().SetLabelSize(0)
         hTrueAlt.GetXaxis().SetTitleSize(0)
         hTrueAlt.Draw("E1 SAME") #drawing second time, for updating?
+        
+        #UnfErrBand.SetLineColor(error_color)
+        #UnfErrBand.SetLineWidth(error_width)
+        setErrGrStyle(UnfErrBand)
+        UnfErrBand.Draw(error_drawopt)#"a2")
+
+        hTrueAlt.Draw("E1 SAME") # This redraw is to make it on top of the syst error 
         hTrue.Draw("E1 SAME") #("PE1SAME")
+
         if include_MiNNLO:
             hTrueNNLO.GetXaxis().SetLabelSize(0)
             hTrueNNLO.GetXaxis().SetTitleSize(0)
@@ -1105,10 +1129,15 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
         ratioErrorBand.GetYaxis().SetTitleSize(0)
         Ratio.GetYaxis().SetLabelSize(0)
         Ratio.GetYaxis().SetTitleSize(0)
-        ratioErrorBand.Draw("a2")
+        Ratio.Draw(crossDrawOpt)
+        #ratioErrorBand.SetLineColor(ROOT.kGreen+1)
+        #ratioErrorBand.SetLineWidth(4)
+        setErrGrStyle(ratioErrorBand)
+        ratioErrorBand.Draw(error_drawopt) #a2
+        Ratio.Draw(crossDrawOpt) # This redraw is to make it on top of the syst error 
         
         sigTex = getSigTextBox(0.15,0.8,sigLabel,0.14) #used?
-        Ratio.Draw(crossDrawOpt)
+        
         line.SetLineColor(ROOT.kBlack)
         #line.SetLineColor(ROOT.TColor.GetColor('#377eb8'))
         line.Draw("same")
@@ -1165,13 +1194,14 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
 
         #Currently this is the line that will change bottom tick length
         #AltRatioErrorBand.GetXaxis().SetTickLength(0.1)
-        
-        AltRatioErrorBand.Draw("a2")
+        AltRatio.Draw(crossDrawOpt)
+        setErrGrStyle(AltRatioErrorBand)
+        AltRatioErrorBand.Draw(error_drawopt)#"a2")
         #if varName == "nJets":
         #    AltRatio.GetXaxis().SetNdivisions(505)
         #    AltRatio.GetXaxis().CenterLabels(True)
         
-        AltRatio.Draw(crossDrawOpt)
+        AltRatio.Draw(crossDrawOpt) # This redraw is to make it on top of the syst error 
         #ratioErrorBand.Draw("p")
         Altline.SetLineColor(ROOT.kBlack)
         Altline.Draw("same")
@@ -1226,8 +1256,10 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
             NNLORatioErrorBand = RatioErrorBand(NNLORatio,hUncUp,hUncDn,hTrueNNLONoErrs,varName) 
             NNLORatioErrorBand.GetYaxis().SetLabelSize(0)
             NNLORatioErrorBand.GetYaxis().SetTitleSize(0)
-            NNLORatioErrorBand.Draw("a2")
             NNLORatio.Draw(crossDrawOpt)
+            setErrGrStyle(NNLORatioErrorBand)
+            NNLORatioErrorBand.Draw(error_drawopt)#"a2")
+            NNLORatio.Draw(crossDrawOpt) # This redraw is to make it on top of the syst error 
 
             if EW_P4 and EW_corr:
                 EWCRatioErrorBand = RatioErrorBand(EWCRatio,hUncUp,hUncDn,hTrueEWCNoErrs,varName) 
@@ -1272,8 +1304,10 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
             if EW_P4 and EW_corr:
                 pad5 = createPad5(c)
 
-                EWCRatioErrorBand.Draw("a2")
                 EWCRatio.Draw(crossDrawOpt)
+                setErrGrStyle(EWCRatioErrorBand)
+                EWCRatioErrorBand.Draw(error_drawopt)#"a2")
+                EWCRatio.Draw(crossDrawOpt) # This redraw is to make it on top of the syst error 
                 EWCline.SetLineColor(ROOT.kBlack)
                 EWCline.Draw("same")
 
