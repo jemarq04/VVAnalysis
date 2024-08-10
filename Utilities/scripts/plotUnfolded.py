@@ -28,10 +28,10 @@ ROOT.gStyle.SetLineScalePS(1.8)
 ROOT.gStyle.SetOptDate(False)
 ROOT.gStyle.SetLineWidth(3)
 ROOT.gStyle.SetLineStyleString(3,"2 3")
-ROOT.gStyle.SetEndErrorSize(5)
+ROOT.gStyle.SetEndErrorSize(10)
 
 error_color = ROOT.kGreen+1
-error_width = 4
+error_width = 5
 error_drawopt = "0 SAME"
 
 def setErrGrStyle(errg):
@@ -387,12 +387,12 @@ def getPrettyLegend(hTrue, data_hist, hAltTrue, error_hist, coords,hTrueNNLO=Non
     if data_hist:
         legend.AddEntry(data_hist, "Data + stat. unc.", "PE")#"lep")
     legend.AddEntry(error_hist, "Stat. #oplus syst. unc.", "E")#"f")
-    legend.AddEntry(hTrue, sigLabel,"lep")
-    legend.AddEntry(hAltTrue, sigLabelAlt,"lep")
+    legend.AddEntry(hTrue, sigLabel,"le")#p")
+    legend.AddEntry(hAltTrue, sigLabelAlt,"le")#p")
     if include_MiNNLO:
-        legend.AddEntry(hTrueNNLO, "nNNLO+PS","lep")   
+        legend.AddEntry(hTrueNNLO, "nNNLO+PS","le")#p")   
         if EW_corr:
-            legend.AddEntry(hTrueEWC, "(nNNLO+PS)#times K_{EW}","lep")  
+            legend.AddEntry(hTrueEWC, "(nNNLO+PS)#times K_{EW}","le")#p")  
             #legend.AddEntry(hTrueEWC, "(nNNLO+PS) no GenWgt","lep")  
 
     #legend.AddEntry(hTrue, sigLabel,"lf")
@@ -964,18 +964,18 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
         UnfErrBand.Draw("a2")
         UnfErrBand.Draw(error_drawopt) #somehow have to draw "a2" first to draw the frame, then draw with the desired option
 
-        hTrueAlt.Draw("E1 SAME") 
-        hTrue.Draw("E1 SAME") #("PE1SAME")
+        hTrueAlt.Draw("E SAME") 
+        hTrue.Draw("E SAME") #("PE1SAME")
 
         if include_MiNNLO:
             hTrueNNLO.GetXaxis().SetLabelSize(0)
             hTrueNNLO.GetXaxis().SetTitleSize(0)
-            hTrueNNLO.Draw("E1 SAME") 
+            hTrueNNLO.Draw("E SAME") 
            
             if EW_corr:
                 hTrueEWC.GetXaxis().SetLabelSize(0)
                 hTrueEWC.GetXaxis().SetTitleSize(0)
-                hTrueEWC.Draw("E1 SAME") 
+                hTrueEWC.Draw("E SAME") 
                 
 #        hTrueAlt.Draw("HISTSAME") #drawing second time, for updating?
 #        hTrue.Draw("HISTSAME")
