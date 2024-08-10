@@ -387,12 +387,12 @@ def getPrettyLegend(hTrue, data_hist, hAltTrue, error_hist, coords,hTrueNNLO=Non
     if data_hist:
         legend.AddEntry(data_hist, "Data + stat. unc.", "PE")#"lep")
     legend.AddEntry(error_hist, "Stat. #oplus syst. unc.", "E")#"f")
-    legend.AddEntry(hTrue, sigLabel,"le")#p")
-    legend.AddEntry(hAltTrue, sigLabelAlt,"le")#p")
+    legend.AddEntry(hTrue, sigLabel,"le")
+    legend.AddEntry(hAltTrue, sigLabelAlt,"le")
     if include_MiNNLO:
-        legend.AddEntry(hTrueNNLO, "nNNLO+PS","le")#p")   
+        legend.AddEntry(hTrueNNLO, "nNNLO+PS","le")   
         if EW_corr:
-            legend.AddEntry(hTrueEWC, "(nNNLO+PS)#times K_{EW}","le")#p")  
+            legend.AddEntry(hTrueEWC, "(nNNLO+PS)#times K_{EW}","le")  
             #legend.AddEntry(hTrueEWC, "(nNNLO+PS) no GenWgt","lep")  
 
     #legend.AddEntry(hTrue, sigLabel,"lf")
@@ -805,6 +805,7 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
         hTrue.SetFillColor(ROOT.TColor.GetColor("#add8e6"))
         hTrue.SetLineColor(ROOT.TColor.GetColor('#377eb8'))
         hTrue.SetMarkerColor(ROOT.TColor.GetColor('#377eb8'))
+        hTrue.SetMarkerSize(0.)
         hTrue.SetLineStyle(1)
         hTrue.SetFillStyle(0)
         #AltSignal
@@ -813,12 +814,14 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
         hTrueAlt.SetFillStyle(0)#hollow
         hTrueAlt.SetLineColor(ROOT.kRed)
         hTrueAlt.SetMarkerColor(ROOT.kRed)
+        hTrueAlt.SetMarkerSize(0.)
         if include_MiNNLO:
             hTrueNNLO.SetFillColor(8)
             hTrueNNLO.SetLineStyle(3)# special dashes
             hTrueNNLO.SetFillStyle(0)#hollow
             hTrueNNLO.SetLineColor(ROOT.kViolet)
             hTrueNNLO.SetMarkerColor(ROOT.kViolet)
+            hTrueNNLO.SetMarkerSize(0.)
 
             if EW_corr:
                 hTrueEWC.SetFillColor(8)
@@ -826,6 +829,7 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
                 hTrueEWC.SetFillStyle(0)#hollow
                 hTrueEWC.SetLineColor(ROOT.kOrange)
                 hTrueEWC.SetMarkerColor(ROOT.kOrange)
+                hTrueEWC.SetMarkerSize(0.)
                 
         print "Total Unf Data Integral",hUnf.Integral()
         Truthmaximum = hTrue.GetMaximum()
