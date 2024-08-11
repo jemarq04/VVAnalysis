@@ -84,10 +84,10 @@ args = getComLineArgs()
 
 today = datetime.date.today().strftime("%d%b%Y")
 
-logo_ht = 0.943
+logo_ht = 0.945
 if "Full" in args['variable']:
     include_MiNNLO = False
-    logo_ht = 0.945
+    logo_ht = 0.943
 #manager_path = ConfigureJobs.getManagerPath()
 #Only MassAllj should plot EWK correction
 EW_P4 = ("MassAllj" in args['variable'] and not "Full" in args['variable'] ) #or (args['variable'] == "nJets")
@@ -388,7 +388,7 @@ def getPrettyLegend(hTrue, data_hist, hAltTrue, error_hist, coords,hTrueNNLO=Non
         legend.AddEntry(data_hist, "Data + stat. unc.", "PE")#"lep")
     legend.AddEntry(error_hist, "Stat. #oplus syst. unc.", "E")#"f")
     legend.AddEntry(hTrue, sigLabel,"le")
-    legend.AddEntry(hAltTrue, sigLabelAlt,"le")
+    legend.AddEntry(hAltTrue, sigLabelAlt,"lep") #intended to use "le" but this makes the legend ugly in pdf, but with "lep" looks ok
     if include_MiNNLO:
         legend.AddEntry(hTrueNNLO, "nNNLO+PS","le")   
         if EW_corr:
@@ -559,13 +559,13 @@ def getRYaxis(hUnf1,ratioErrorBand1,lastP):
     return Ryaxis
     
 def getLumiTextBox():
-    texS = ROOT.TLatex(0.68,logo_ht, str(int(round(args['lumi'])))+" fb^{-1} (13 TeV)")
+    texS = ROOT.TLatex(0.68,0.945, str(int(round(args['lumi'])))+" fb^{-1} (13 TeV)")
     texS.SetNDC()
     texS.SetTextFont(42)
     texS.SetTextSize(0.04)
     texS.SetTextColor(ROOT.kBlack)
     texS.Draw()
-    texS1 = ROOT.TLatex(0.14,0.943,"#bf{CMS}")
+    texS1 = ROOT.TLatex(0.14,logo_ht,"#bf{CMS}")
     texS1.SetNDC()
     texS1.SetTextFont(42)
     texS1.SetTextColor(ROOT.kBlack)
@@ -1136,10 +1136,11 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
         ratioErrorBand.GetYaxis().SetTitleSize(0)
         Ratio.GetYaxis().SetLabelSize(0)
         Ratio.GetYaxis().SetTitleSize(0)
-        Ratio.Draw(crossDrawOpt)
+        #Ratio.Draw(crossDrawOpt)
         #ratioErrorBand.SetLineColor(ROOT.kGreen+1)
         #ratioErrorBand.SetLineWidth(4)
         setErrGrStyle(ratioErrorBand)
+        ratioErrorBand.Draw("a2")
         ratioErrorBand.Draw(error_drawopt) #a2
         Ratio.Draw(crossDrawOpt) # This redraw is to make it on top of the syst error 
         
@@ -1201,8 +1202,9 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
 
         #Currently this is the line that will change bottom tick length
         #AltRatioErrorBand.GetXaxis().SetTickLength(0.1)
-        AltRatio.Draw(crossDrawOpt)
+        #AltRatio.Draw(crossDrawOpt)
         setErrGrStyle(AltRatioErrorBand)
+        AltRatioErrorBand.Draw("a2")
         AltRatioErrorBand.Draw(error_drawopt)#"a2")
         #if varName == "nJets":
         #    AltRatio.GetXaxis().SetNdivisions(505)
@@ -1263,8 +1265,9 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
             NNLORatioErrorBand = RatioErrorBand(NNLORatio,hUncUp,hUncDn,hTrueNNLONoErrs,varName) 
             NNLORatioErrorBand.GetYaxis().SetLabelSize(0)
             NNLORatioErrorBand.GetYaxis().SetTitleSize(0)
-            NNLORatio.Draw(crossDrawOpt)
+            #NNLORatio.Draw(crossDrawOpt)
             setErrGrStyle(NNLORatioErrorBand)
+            NNLORatioErrorBand.Draw("a2")
             NNLORatioErrorBand.Draw(error_drawopt)#"a2")
             NNLORatio.Draw(crossDrawOpt) # This redraw is to make it on top of the syst error 
 
@@ -1311,8 +1314,9 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
             if EW_P4 and EW_corr:
                 pad5 = createPad5(c)
 
-                EWCRatio.Draw(crossDrawOpt)
+                #EWCRatio.Draw(crossDrawOpt)
                 setErrGrStyle(EWCRatioErrorBand)
+                EWCRatioErrorBand.Draw("a2")
                 EWCRatioErrorBand.Draw(error_drawopt)#"a2")
                 EWCRatio.Draw(crossDrawOpt) # This redraw is to make it on top of the syst error 
                 EWCline.SetLineColor(ROOT.kBlack)
