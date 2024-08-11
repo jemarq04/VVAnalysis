@@ -22,7 +22,7 @@ EW_corr = True
 yrdiv = 503
 yrtl = 0.02
 
-crossDrawOpt = "PEX0 SAME"
+crossDrawOpt = "PE1X0 SAME"
 #style = Style()
 ROOT.gStyle.SetLineScalePS(1.8)
 ROOT.gStyle.SetOptDate(False)
@@ -30,9 +30,9 @@ ROOT.gStyle.SetLineWidth(3)
 ROOT.gStyle.SetLineStyleString(3,"2 3")
 ROOT.gStyle.SetEndErrorSize(10)
 
-error_color = ROOT.kGreen+1
-error_width = 5
-error_drawopt = "0 SAME"
+error_color = ROOT.kBlack #ROOT.kGreen+1
+error_width = 3 #5
+error_drawopt = "0Z SAME"
 
 def setErrGrStyle(errg):
     errg.SetLineWidth(error_width)
@@ -377,6 +377,7 @@ def getPrettyLegend(hTrue, data_hist, hAltTrue, error_hist, coords,hTrueNNLO=Non
     legend.SetFillColor(ROOT.kWhite)
     legend.SetBorderSize(0)
     legend.SetTextSize(0.047) #0.033 #0.025
+    #legend.SetMargin(0.1)
     if "Full" in hTrue.GetName():
         legend.SetTextSize(0.042)    
     legend.SetTextColor(ROOT.kBlack)
@@ -386,7 +387,14 @@ def getPrettyLegend(hTrue, data_hist, hAltTrue, error_hist, coords,hTrueNNLO=Non
     sigLabelAlt = mylist_dict["sigLabelAlt"] #"MG5_aMC@NLO+MCFM+Pythia8"
     if data_hist:
         legend.AddEntry(data_hist, "Data + stat. unc.", "PE")#"lep")
-    legend.AddEntry(error_hist, "Stat. #oplus syst. unc.", "E")#"f")
+    
+    #A histogram purely for adjusting total error legend behavior
+    h_legend_help = ROOT.TH1D("legendAssit","legendAssist",1,0,1)
+    h_legend_help.SetLineColor(ROOT.kBlack)
+    h_legend_help.SetLineWidth(4)
+    ROOT.SetOwnership(h_legend_help,False)
+    legend.AddEntry(h_legend_help, "Stat. #oplus syst. unc.", "E")#"f")
+    #legend.AddEntry(error_hist, "Stat. #oplus syst. unc.", "E")#"f")
     legend.AddEntry(hTrue, sigLabel,"le")
     legend.AddEntry(hAltTrue, sigLabelAlt,"lep") #intended to use "le" but this makes the legend ugly in pdf, but with "lep" looks ok
     if include_MiNNLO:
