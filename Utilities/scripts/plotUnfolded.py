@@ -391,9 +391,11 @@ def getPrettyLegend(hTrue, data_hist, hAltTrue, error_hist, coords,hTrueNNLO=Non
     #A histogram purely for adjusting total error legend behavior
     h_legend_help = ROOT.TH1D("legendAssit","legendAssist",1,0,1)
     h_legend_help.SetLineColor(ROOT.kBlack)
-    h_legend_help.SetLineWidth(4)
+    h_legend_help.SetLineWidth(3)
+    h_legend_help.SetMarkerSize(1.7)
+    h_legend_help.SetMarkerStyle(20)
     ROOT.SetOwnership(h_legend_help,False)
-    legend.AddEntry(h_legend_help, "Stat. #oplus syst. unc.", "E")#"f")
+    legend.AddEntry(h_legend_help, "Stat. #oplus syst. unc.", "PE")#"f")
     #legend.AddEntry(error_hist, "Stat. #oplus syst. unc.", "E")#"f")
     legend.AddEntry(hTrue, sigLabel,"le")
     legend.AddEntry(hAltTrue, sigLabelAlt,"lep") #intended to use "le" but this makes the legend ugly in pdf, but with "lep" looks ok
@@ -740,6 +742,8 @@ def MainErrorBand(hMain,hUncUp,hUncDn,varName,norm,normFb):
 
         #MainGraph.SetMaximum(1.2*(hMain.GetMaximum())*args["scaleymax"])
         MainGraph.SetMinimum(myvar_dict[varName]["ymin_fac"]*args['scaleymin']*(hMain.GetMinimum()))
+        if varName == "Mass1j": #avoid error bar and axis tick overlapping
+            MainGraph.SetMinimum(myvar_dict[varName]["ymin_fac"]*args['scaleymin']*(hMain.GetMinimum())*0.9)
         #if varName=="drz1z2":
         #    MainGraph.SetMinimum(0.0)
         #else:
