@@ -81,7 +81,7 @@ voms-proxy-init --voms=cms --valid=48:00
 and in VVAnalysis repository run 
 
 ```
- ./SubmitSkimJobsZZ18.sh
+ ./SubmitSkimJobsZZ22.sh
 (or the scripts with same naming for other years; the -e-gen option can be used for MC to keep gen-level results, but needs to be turned off for data)
 ```
  
