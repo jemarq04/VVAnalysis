@@ -53,7 +53,7 @@ for name in filelist:
     if not isfile:
         try:
             file_path = ConfigureJobs.getInputFilesPath(name, path,
-                args.selection, "ZZ4l2018")
+                args.selection, "ZZ4l2022")
         except ValueError as e:
             print(e)
             continue
@@ -74,7 +74,7 @@ for name in filelist:
         state = state.strip()
         chain = ROOT.TChain("%s/ntuple" % state)
         chain.Add(file_path)
-        ApplySelection.setAliases(chain, state, "Cuts/ZZ4l2018/aliases.json")
+        ApplySelection.setAliases(chain, state, "Cuts/ZZ4l2022/aliases.json")
         cut_tree = chain
         num_events = cut_tree.GetEntries(args.cut_string)
         print("Number of events in state %s is %i" % (state, num_events))

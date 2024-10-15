@@ -45,8 +45,8 @@ for key in list(obj.keys()):
 with open("/hdfs/store/user/hehe/newNtuples%sResubmit.json"%year,'w') as output_file:
         json.dump(obj,output_file,indent=4)
 
-os.system("mv /hdfs/store/user/hehe/newNtuples%sResubmit.json ~/vvanalysis_skim/CMSSW_10_3_1/src/Data_manager/ZZ4lRun2DatasetManager/FileInfo/ZZ4l%s/ntuples.json"%(year,year))
-print("New json moved to ~/vvanalysis_skim/CMSSW_10_3_1/src/Data_manager/ZZ4lRun2DatasetManager/FileInfo/ZZ4l%s/ntuples.json"%year)
+os.system("mv /hdfs/store/user/hehe/newNtuples%sResubmit.json ~/vvanalysis_skim/CMSSW_10_3_1/src/Data_manager/ZZ4lDatasetManager/FileInfo/ZZ4l%s/ntuples.json"%(year,year))
+print("New json moved to ~/vvanalysis_skim/CMSSW_10_3_1/src/Data_manager/ZZ4lDatasetManager/FileInfo/ZZ4l%s/ntuples.json"%year)
         
 
 

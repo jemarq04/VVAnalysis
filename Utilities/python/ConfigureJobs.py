@@ -74,7 +74,7 @@ def getListOfHDFSFiles(file_path):
             files.append("/"+split[1])
     return files
 def getListOfFiles(filelist, manager_path):
-    data_path = "%s/ZZ4lRun2DatasetManager/FileInfo" % manager_path
+    data_path = "%s/ZZ4lDatasetManager/FileInfo" % manager_path
     data_info = UserInput.readAllJson("/".join([data_path, "%s.json" % "data/*"]))
     mc_info = UserInput.readAllJson("/".join([data_path, "%s.json" % "montecarlo/*"]))
     valid_names = list(data_info.keys()) + list(mc_info.keys())
@@ -83,42 +83,12 @@ def getListOfFiles(filelist, manager_path):
         print("name in filelist: ",name)
         zz4l="ZZ4l"
         Zl="ZplusL"
+        isTight = "Tight" in name
+        name = name.replace("Tight","")
         if (zz4l in name) or (Zl in name):
-            if (zz4l in name):
-                if "ZZ4l2016" in name:
-                    if "Tight" in name:
-                        dataset_file = manager_path+"/" + \
-                            "ZZ4lRun2DatasetManager/FileInfo/ZZ4l2016/%s.json" % "LooseNtuples"
-                    else:                        
-                        dataset_file = manager_path+"/" + \
-                            "ZZ4lRun2DatasetManager/FileInfo/ZZ4l2016/%s.json" % "ntuples"
-                elif "ZZ4l2017" in name:
-                    if "Tight" in name:
-                        dataset_file = manager_path+"/" + \
-                            "ZZ4lRun2DatasetManager/FileInfo/ZZ4l2017/%s.json" % "LooseNtuples"
-                    else:                        
-                        dataset_file = manager_path+"/" + \
-                            "ZZ4lRun2DatasetManager/FileInfo/ZZ4l2017/%s.json" % "ntuples"
-                elif "ZZ4l2018" in name:
-                    if "Tight" in name:
-                        dataset_file = manager_path+"/" + \
-                            "ZZ4lRun2DatasetManager/FileInfo/ZZ4l2018/%s.json" % "LooseNtuples"
-                    else:                        
-                        dataset_file = manager_path+"/" + \
-                            "ZZ4lRun2DatasetManager/FileInfo/ZZ4l2018/%s.json" % "ntuples"
-            elif(Zl in name):
-                #if "Skim" in name:
-                #    dataset_file = "/afs/cern.ch/user/u/uhussain/work/" + \
-                #        "ZZ4lRun2DatasetManager/FileInfo/ZplusL2018/%s.json" % "skim"
-                if "ZplusL2016" in name:
-                    dataset_file = "/afs/cern.ch/user/u/uhussain/work/" + \
-                        "ZZ4lRun2DatasetManager/FileInfo/ZplusL2016/%s.json" % "ntuples"
-                elif "ZplusL2017" in name:
-                    dataset_file = "/afs/cern.ch/user/u/uhussain/work/" + \
-                        "ZZ4lRun2DatasetManager/FileInfo/ZplusL2017/%s.json" % "ntuples"
-                elif "ZplusL2018" in name:
-                    dataset_file = "/afs/cern.ch/user/u/uhussain/work/" + \
-                        "ZZ4lRun2DatasetManager/FileInfo/ZplusL2018/%s.json" % "ntuples"
+            dataset_file = "%s/ZZ4lDatasetManager/FileInfo/%s/%s.json" % (manager_path, name, "LooseNtuples" if isTight else "ntuples")
+            if not os.path.isfile(dataset_file):
+                raise ValueError("Invalid name in filelist. Must be a valid directory in FileInfo/. If desired, 'Tight' can also be in the name.")
             print(dataset_file)
             allnames = list(json.load(open(dataset_file)).keys())
             print(allnames)
@@ -144,7 +114,7 @@ def fillTemplatedFile(template_file_name, out_file_name, template_dict):
     with open(out_file_name, "w") as outFile:
         outFile.write(result)
 def getListOfFilesWithXSec(filelist, manager_path):
-    data_path = "%s/ZZ4lRun2DatasetManager/FileInfo" % manager_path
+    data_path = "%s/ZZ4lDatasetManager/FileInfo" % manager_path
     files = getListOfFiles(filelist, manager_path)
     mc_info = UserInput.readAllJson("/".join([data_path, "%s.json" % "montecarlo/*"]))
     info = {}
@@ -158,38 +128,13 @@ def getListOfFilesWithXSec(filelist, manager_path):
     return info
 def getPreviousStep(selection, analysis):
     selection_map = {}
-    if analysis == "ZZ4l2016":
-        selection_map = { "ntuples": "ntuples",
-                "loosePreselection" : "ntuples",
-                "preselection" : "ntuples",
-                #We need to make Tight Signal samples from the Loose skims for the ResponseClass in makeResponseMatrix.py
-                #If you make Tight skims directly, due to disambiguation step, events go out of sync.
-                "TightZZ" : "LooseNtuples",
-                "4lCRBase" : "ntuples"
-        }
-    elif analysis == "ZZ4l2017":
+    if "ZZ4l" in analysis:
         selection_map = { "ntuples": "ntuples",
                 "loosePreselection" : "ntuples",
                 "preselection" : "ntuples",
                 "TightZZ" : "LooseNtuples",
                 "4lCRBase" : "ntuples"
-        }
-    elif analysis == "ZZ4l2018":
-        selection_map = { "ntuples": "ntuples",
-                "loosePreselection" : "ntuples",
-                "preselection" : "ntuples",
-                "TightZZ" : "LooseNtuples",
-                "4lCRBase" : "ntuples"
-        }    
-    elif analysis == "ZplusL2016":
-        selection_map = { "ntuples": "ntuples",
-                "ZplusLBase" : "ntuples"
-        }
-    elif analysis == "ZplusL2017":
-        selection_map = { "ntuples": "ntuples",
-                "ZplusLBase" : "ntuples"
-        }
-    elif analysis == "ZplusL2018":
+    elif "ZplusL" in analysis:
         selection_map = { "ntuples": "ntuples",
                 "ZplusLBase" : "ntuples"
         }
@@ -202,7 +147,7 @@ def getPreviousStep(selection, analysis):
                 "%s" % (first_selection, list(selection_map.keys())))
     return selection_map[first_selection]
 def getInputFilesPath(sample_name, manager_path,selection, analysis):
-    data_path = "%s/ZZ4lRun2DatasetManager/FileInfo" % manager_path
+    data_path = "%s/ZZ4lDatasetManager/FileInfo" % manager_path
     input_file_name = "/".join([data_path, analysis, "%s.json" %
         selection])
     input_files = UserInput.readJson(input_file_name)

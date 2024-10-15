@@ -24,14 +24,14 @@ git clone https://github.com/YourGithubUsername/VVAnalysis -b Run2LegacySkims
 
 Then please fork this repository for dataset management:
 
-https://github.com/hhe62/ZZ4lRun2DatasetManager
+https://github.com/hhe62/ZZ4lDatasetManager
 
 and in the same src/ directory above do:
 
 ```
 mkdir Data_manager
 cd Data_manager
-git clone https://github.com/YourGithubUsername/ZZ4lRun2DatasetManager -b for_merging
+git clone https://github.com/YourGithubUsername/ZZ4lDatasetManager -b for_merging
 (for_merging is the latest branch)
 ```
 
@@ -49,7 +49,7 @@ Now please change to the VVAnalysis repository, and in **farmoutNtupleSkim.py**,
 path = "/afs/hep.wisc.edu/home/oldName2/vvanalysis_skim/CMSSW_10_3_1/src/Data_manager"
 to your Data_manager folder location.
 
-Next in Data_manager/ZZ4lRun2DatasetManager/FileInfo/ZZ4l2018/ntuples.json (or change 2018 to 2016/17), please clear the file and add in your ntuple information like the following, one entry for each ntuple sample:
+Next in Data_manager/ZZ4lDatasetManager/FileInfo/ZZ4l2018/ntuples.json (or change 2018 to 2016/17), please clear the file and add in your ntuple information like the following, one entry for each ntuple sample:
 
 ```
 {
