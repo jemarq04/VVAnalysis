@@ -134,6 +134,7 @@ def getPreviousStep(selection, analysis):
                 "preselection" : "ntuples",
                 "TightZZ" : "LooseNtuples",
                 "4lCRBase" : "ntuples"
+        }
     elif "ZplusL" in analysis:
         selection_map = { "ntuples": "ntuples",
                 "ZplusLBase" : "ntuples"
