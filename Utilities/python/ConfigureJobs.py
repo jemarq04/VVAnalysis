@@ -49,7 +49,8 @@ def getNumberAndSizeOfLocalFiles(path_to_files):
 def getNumberAndSizeOfHDFSFiles(file_path):
     p = subprocess.Popen(["hdfs", "dfs", "-ls", "-h", file_path.replace("/hdfs", "")],
             stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE
+            stderr=subprocess.PIPE,
+            text=True
         )
     out,err = p.communicate()
     file_info = []
@@ -87,9 +88,9 @@ def getListOfFiles(filelist, manager_path):
         name = name.replace("Tight","")
         if (zz4l in name) or (Zl in name):
             dataset_file = "%s/ZZ4lDatasetManager/FileInfo/%s/%s.json" % (manager_path, name, "LooseNtuples" if isTight else "ntuples")
-            if not os.path.isfile(dataset_file):
-                raise ValueError("Invalid name in filelist. Must be a valid directory in FileInfo/. If desired, 'Tight' can also be in the name.")
             print(dataset_file)
+            if not os.path.isfile(dataset_file):
+                raise ValueError("Invalid name in filelist: could not find '%s'. If desired, 'Tight' can also be in the name." % dataset_file)
             allnames = list(json.load(open(dataset_file)).keys())
             print(allnames)
             if "nodata" in name:
