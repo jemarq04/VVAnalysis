@@ -74,7 +74,6 @@ def makeHistFile(args):
         addScaleFacs = True
     fjetPUSF = ROOT.TFile("data/jetSF/scalefactorsPUID_81Xtraining.root")
     fjetPUeff= ROOT.TFile("data/jetSF/effcyPUID_81Xtraining.root")
-    sf_inputs = [ROOT.TParameter(bool)("applyScaleFacs", False)]
     fr_inputs = []
     if addScaleFacs:
         fScales = ROOT.TFile(args['scalefactors_file'])
@@ -85,61 +84,26 @@ def makeHistFile(args):
                 mZZTightFakeRate.SetName("fakeRate_allMu")
             if eZZTightFakeRate:
                 eZZTightFakeRate.SetName("fakeRate_allE")
+
+            yearstring = ""
+            basename = "/cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration/POG/"
             if "2018" in args['scalefactors_file']:
-                muonRunSF= fScales.Get('muonRun18SF')
-                muonRunSF.SetName("muonRunSF")
-                electronLowRecoSF = fScales.Get('electronLowReco18SF')
-                electronLowRecoSF.SetName("electronLowRecoSF")
-                electronRecoSF = fScales.Get('electronReco18SF')
-                electronRecoSF.SetName("electronRecoSF")
-                electronRunSF = fScales.Get('electronRun18SF')
-                electronRunSF.SetName("electronRunSF")
-                electronRunGapSF = fScales.Get('electronRun18GapSF')
-                electronRunGapSF.SetName("electronRunGapSF")
-                jetPUSF = fjetPUSF.Get("h2_eff_sf2018_T")
-                jetPUSF.SetName("jetPUSF")
-                jetPUeff = fjetPUeff.Get("h2_eff_mc2018_T")
-                jetPUeff.SetName("jetPUeff")
+                yearstring = "2018_UL"
             elif "2016" in args['scalefactors_file']:
-                muonRunSF= fScales.Get('muonRun16SF')
-                muonRunSF.SetName("muonRunSF")
-                electronLowRecoSF = fScales.Get('electronLowReco16SF')
-                electronLowRecoSF.SetName("electronLowRecoSF")
-                electronRecoSF = fScales.Get('electronReco16SF')
-                electronRecoSF.SetName("electronRecoSF")
-                electronRunSF = fScales.Get('electronRun16SF')
-                electronRunSF.SetName("electronRunSF")
-                electronRunGapSF = fScales.Get('electronRun16GapSF')
-                electronRunGapSF.SetName("electronRunGapSF")
-                jetPUSF = fjetPUSF.Get("h2_eff_sf2016_T")
-                jetPUSF.SetName("jetPUSF")
-                jetPUeff = fjetPUeff.Get("h2_eff_mc2016_T")
-                jetPUeff.SetName("jetPUeff")
+                yearstring = "2016preVFP_UL"
             elif "2017" in args['scalefactors_file']:
-                muonRunSF= fScales.Get('muonRun17SF')
-                muonRunSF.SetName("muonRunSF")
-                electronLowRecoSF = fScales.Get('electronLowReco17SF')
-                electronLowRecoSF.SetName("electronLowRecoSF")
-                electronRecoSF = fScales.Get('electronReco17SF')
-                electronRecoSF.SetName("electronRecoSF")
-                electronRunSF = fScales.Get('electronRun17SF')
-                electronRunSF.SetName("electronRunSF")
-                electronRunGapSF = fScales.Get('electronRun17GapSF')
-                electronRunGapSF.SetName("electronRunGapSF")
-                jetPUSF = fjetPUSF.Get("h2_eff_sf2017_T")
-                jetPUSF.SetName("jetPUSF")
-                jetPUeff = fjetPUeff.Get("h2_eff_mc2017_T")
-                jetPUeff.SetName("jetPUeff")
+                yearstring = "2017_UL"
             else: 
                 print("what scale factors you want?")
                 sys.exit()
-            pileupSF = fScales.Get('pileupSF')
-            jetPUSF.SetDirectory(0)
-            jetPUeff.SetDirectory(0)
-            ROOT.SetOwnership(jetPUSF,False)
-            ROOT.SetOwnership(jetPUeff,False)
-            fr_inputs = [eZZTightFakeRate, mZZTightFakeRate,]
-            sf_inputs = [electronLowRecoSF,electronRecoSF,electronRunSF, electronRunGapSF,muonRunSF,pileupSF,jetPUSF,jetPUeff]
+            muonRunSF = ROOT.TNamed("muonRunSF", os.path.join(basename, "MUO/%s/muon_Z.json.gz" % yearstring)
+            electronRunSF = ROOT.TNamed("electronRunSF", os.path.join(basename, "EGM/%s/electron.json.gz" % yearstring)
+            jetPUSF = ROOT.TNamed("jetPUSF", os.path.join(basename, "JME/%s/jmar.json.gz" % yearstring)
+            pileupSF = ROOT.TNamed("pileupSF", os.path.join(basename, "LUM/%s/puWeights.json.gz" % yearstring)
+            yearcfg = ROOT.TNamed("yearcfg", yearstring)
+
+            fr_inputs = [eZZTightFakeRate, mZZTightFakeRate]
+            sf_inputs = [electronRunSF,muonRunSF,pileupSF,jetPUSF,yearcfg]
         else:
             fScales = ROOT.TFile('data/scaleFactors.root')
             mCBTightFakeRate = fScales.Get("mCBTightFakeRate")

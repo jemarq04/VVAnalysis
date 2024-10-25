@@ -12,6 +12,7 @@
 
 // Headers needed by this particular selector
 #include <vector>
+#include "correction.h"
 #include "Analysis/VVAnalysis/interface/ScaleFactor.h"
 #include "Analysis/VVAnalysis/interface/SelectorBase.h"
 #include "Analysis/VVAnalysis/interface/helpers.h"
@@ -19,14 +20,11 @@
 class ZZSelectorBase : public SelectorBase
 {
 public:
-    ScaleFactor *pileupSF_;
-    ScaleFactor *eLowRecoSF_;
-    ScaleFactor *eRecoSF_;
-    ScaleFactor *eIdSF_;
-    ScaleFactor *eGapIdSF_;
-    ScaleFactor *mIdSF_;
-    TH2F *jetPUSF_;
-    TH2F *jetPUeff_;
+    std::unique_ptr<correction::CorrectionSet> pileupSF_;
+    std::unique_ptr<correction::CorrectionSet> eIdSF_;
+    std::unique_ptr<correction::CorrectionSet> mIdSF_;
+    std::unique_ptr<correction::CorrectionSet> jetPUSF_;
+    std::string yearcfg;
     //ScaleFactor* mIsoSF_;
 
     //bool isVBS_;

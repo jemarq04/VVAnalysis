@@ -14,32 +14,38 @@ std::string ZZSelectorBase::GetNameFromFile()
 }
 void ZZSelectorBase::SetScaleFactors()
 {
-  jetPUSF_ = (TH2F *) GetInputList()->FindObject("jetPUSF");
-  if (jetPUSF_ == nullptr)
-    std::invalid_argument("Must pass jet PU id SF");
+  try{
+    jetPUSF_ = correction::CorrectionSet::from_file( ((TNamed*)GetInputList()->FindObject("jetPUSF"))->GetTitle() );
+  }
+  catch (...){
+    std::invalid_argument("Must pass valid jet PU id SF");
+  }
 
-  jetPUeff_ = (TH2F *) GetInputList()->FindObject("jetPUeff");
-  if (jetPUeff_ == nullptr)
-    std::invalid_argument("Must pass jet PU id eff");
+  try{
+    pileupSF_ = correction::CorrectionSet::from_file( ((TNamed*)GetInputList()->FindObject("pileupSF"))->GetTitle() );
+  }
+  catch (...){
+    std::invalid_argument("Must pass valid pileup weights SF");
+  }
+  try{
+    eIdSF_ = correction::CorrectionSet::from_file( ((TNamed*)GetInputList()->FindObject("electronRunSF"))->GetTitle() );
+  }
+  catch (...){
+    std::invalid_argument("Must pass valid electron Run SF");
+  }
+  try{
+    mIdSF_ = correction::CorrectionSet::from_file( ((TNamed*)GetInputList()->FindObject("muonRunSF"))->GetTitle() );
+  }
+  catch (...){
+    std::invalid_argument("Must pass valid muon Run SF");
+  }
 
-  pileupSF_ = (ScaleFactor *)GetInputList()->FindObject("pileupSF");
-  if (pileupSF_ == nullptr)
-    std::invalid_argument("Must pass pileup weights SF");
-  eLowRecoSF_ = (ScaleFactor *)GetInputList()->FindObject("electronLowRecoSF");
-  if (eLowRecoSF_ == nullptr)
-    std::invalid_argument("Must pass electron LowReco SF");
-  eRecoSF_ = (ScaleFactor *)GetInputList()->FindObject("electronRecoSF");
-  if (eRecoSF_ == nullptr)
-    std::invalid_argument("Must pass electron Reco SF");
-  eIdSF_ = (ScaleFactor *)GetInputList()->FindObject("electronRunSF");
-  if (eIdSF_ == nullptr)
-    std::invalid_argument("Must pass electron Run SF");
-  eGapIdSF_ = (ScaleFactor *)GetInputList()->FindObject("electronRunGapSF");
-  if (eGapIdSF_ == nullptr)
-    std::invalid_argument("Must pass electronGap Run SF");
-  mIdSF_ = (ScaleFactor *)GetInputList()->FindObject("muonRunSF");
-  if (mIdSF_ == nullptr)
-    std::invalid_argument("Must pass muon Run SF");
+  try{
+    yearcfg = ((TNamed*)GetInputList()->FindObject("yearcfg"))->GetTitle();
+  }
+  catch (...){
+    std::invalid_argument("Must pass valid year for analysis");
+  }
 
   //There are L1Prefiring weight and uncertainity in the ZZ UWVV ntuples
   //prefireEff_ = (TEfficiency*) GetInputList()->FindObject("prefireEfficiencyMap");
