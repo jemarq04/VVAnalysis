@@ -96,10 +96,10 @@ def makeHistFile(args):
             else: 
                 print("what scale factors you want?")
                 sys.exit()
-            muonRunSF = ROOT.TNamed("muonRunSF", os.path.join(basename, "MUO/%s/muon_Z.json.gz" % yearstring)
-            electronRunSF = ROOT.TNamed("electronRunSF", os.path.join(basename, "EGM/%s/electron.json.gz" % yearstring)
-            jetPUSF = ROOT.TNamed("jetPUSF", os.path.join(basename, "JME/%s/jmar.json.gz" % yearstring)
-            pileupSF = ROOT.TNamed("pileupSF", os.path.join(basename, "LUM/%s/puWeights.json.gz" % yearstring)
+            muonRunSF = ROOT.TNamed("muonRunSF", os.path.join(basename, "MUO/%s/muon_Z.json.gz" % yearstring))
+            electronRunSF = ROOT.TNamed("electronRunSF", os.path.join(basename, "EGM/%s/electron.json.gz" % yearstring))
+            jetPUSF = ROOT.TNamed("jetPUSF", os.path.join(basename, "JME/%s/jmar.json.gz" % yearstring))
+            pileupSF = ROOT.TNamed("pileupSF", os.path.join(basename, "LUM/%s/puWeights.json.gz" % yearstring))
             yearcfg = ROOT.TNamed("yearcfg", yearstring)
 
             fr_inputs = [eZZTightFakeRate, mZZTightFakeRate]
