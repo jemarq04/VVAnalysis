@@ -100,7 +100,7 @@ def makeHistFile(args):
             electronRunSF = ROOT.TNamed("electronRunSF", os.path.join(basename, "EGM/%s/electron.json.gz" % yearstring))
             jetPUSF = ROOT.TNamed("jetPUSF", os.path.join(basename, "JME/%s/jmar.json.gz" % yearstring))
             pileupSF = ROOT.TNamed("pileupSF", os.path.join(basename, "LUM/%s/puWeights.json.gz" % yearstring))
-            yearcfg = ROOT.TNamed("yearcfg", yearstring)
+            yearcfg = ROOT.TNamed("yearcfg", yearstring.replace("_UL",""))
 
             fr_inputs = [eZZTightFakeRate, mZZTightFakeRate]
             sf_inputs = [electronRunSF,muonRunSF,pileupSF,jetPUSF,yearcfg]
