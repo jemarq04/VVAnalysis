@@ -221,8 +221,8 @@ protected:
     bool isZgamma_;
     const float FR_MAX_PT_ = 80;
     const float FR_MAX_ETA_ = 2.5;
-    const float MuSF_MAX_PT_ = 200;
-    const float EleSF_MAX_PT_ = 500;
+    const float MuSF_MIN_PT_ = 15, MuSF_MAX_PT_ = 200;
+    const float EleSF_MIN_PT_ = 10, EleSF_MAX_PT_ = 500;
     virtual std::string GetNameFromFile() override;
     virtual void SetBranchesNanoAOD() override;
     virtual void SetBranchesUWVV() override;

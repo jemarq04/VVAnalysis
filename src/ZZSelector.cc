@@ -507,15 +507,22 @@ void ZZSelector::ApplyScaleFactors()
     if (eIdSF_ != nullptr)
     {
       const auto sfref = (*eIdSF_->begin()).second;
-      weight *= sfref->evaluate({yearcfg.c_str(), "sf", "Tight", l1Eta, pt_e1});
-      weight *= sfref->evaluate({yearcfg.c_str(), "sf", "Tight", l2Eta, pt_e2});
-      weight *= sfref->evaluate({yearcfg.c_str(), "sf", "Tight", l3Eta, pt_e3});
-      weight *= sfref->evaluate({yearcfg.c_str(), "sf", "Tight", l4Eta, pt_e4});
-      // Applying Electron Reco SFs
-      weight *= sfref->evaluate({yearcfg.c_str(), "sf", (l1Pt<20)? "RecoBelow20" : "RecoAbove20", l1Eta, (l1Pt<20)? l1Pt : pt_e1});
-      weight *= sfref->evaluate({yearcfg.c_str(), "sf", (l2Pt<20)? "RecoBelow20" : "RecoAbove20", l2Eta, (l2Pt<20)? l2Pt : pt_e2});
-      weight *= sfref->evaluate({yearcfg.c_str(), "sf", (l3Pt<20)? "RecoBelow20" : "RecoAbove20", l3Eta, (l3Pt<20)? l3Pt : pt_e3});
-      weight *= sfref->evaluate({yearcfg.c_str(), "sf", (l4Pt<20)? "RecoBelow20" : "RecoAbove20", l4Eta, (l4Pt<20)? l4Pt : pt_e4});
+      if (pt_e1 > EleSF_MIN_PT_){
+        weight *= sfref->evaluate({yearcfg.c_str(), "sf", "Tight", l1Eta, pt_e1});
+        weight *= sfref->evaluate({yearcfg.c_str(), "sf", (l1Pt<20)? "RecoBelow20" : "RecoAbove20", l1Eta, pt_e1});
+      }
+      if (pt_e2 > EleSF_MIN_PT_){
+        weight *= sfref->evaluate({yearcfg.c_str(), "sf", "Tight", l2Eta, pt_e2});
+        weight *= sfref->evaluate({yearcfg.c_str(), "sf", (l2Pt<20)? "RecoBelow20" : "RecoAbove20", l2Eta, pt_e2});
+      }
+      if (pt_e3 > EleSF_MIN_PT_){
+        weight *= sfref->evaluate({yearcfg.c_str(), "sf", "Tight", l3Eta, pt_e3});
+        weight *= sfref->evaluate({yearcfg.c_str(), "sf", (l3Pt<20)? "RecoBelow20" : "RecoAbove20", l3Eta, pt_e3});
+      }
+      if (pt_e4 > EleSF_MIN_PT_){
+        weight *= sfref->evaluate({yearcfg.c_str(), "sf", "Tight", l4Eta, pt_e4});
+        weight *= sfref->evaluate({yearcfg.c_str(), "sf", (l4Pt<20)? "RecoBelow20" : "RecoAbove20", l4Eta, pt_e4});
+      }
     }
   }
   else if (channel_ == eemm)
@@ -527,16 +534,19 @@ void ZZSelector::ApplyScaleFactors()
     if (eIdSF_ != nullptr)
     {
       const auto sfref = (*eIdSF_->begin()).second;
-      weight *= sfref->evaluate({yearcfg.c_str(), "sf", "Tight", l1Eta, pt_e1});
-      weight *= sfref->evaluate({yearcfg.c_str(), "sf", "Tight", l2Eta, pt_e2});
-      // Applying Electron Reco SFs
-      weight *= sfref->evaluate({yearcfg.c_str(), "sf", (l1Pt<20)? "RecoBelow20" : "RecoAbove20", l1Eta, (l1Pt<20)? l1Pt : pt_e1});
-      weight *= sfref->evaluate({yearcfg.c_str(), "sf", (l2Pt<20)? "RecoBelow20" : "RecoAbove20", l2Eta, (l2Pt<20)? l2Pt : pt_e2});
+      if (pt_e1 > EleSF_MIN_PT_){
+        weight *= sfref->evaluate({yearcfg.c_str(), "sf", "Tight", l1Eta, pt_e1});
+        weight *= sfref->evaluate({yearcfg.c_str(), "sf", (l1Pt<20)? "RecoBelow20" : "RecoAbove20", l1Eta, pt_e1});
+      }
+      if (pt_e2 > EleSF_MIN_PT_){
+        weight *= sfref->evaluate({yearcfg.c_str(), "sf", "Tight", l2Eta, pt_e2});
+        weight *= sfref->evaluate({yearcfg.c_str(), "sf", (l2Pt<20)? "RecoBelow20" : "RecoAbove20", l2Eta, pt_e2});
+      }
     }
     if (mIdSF_ != nullptr)
     {
-      if (pt_m3 > 15.0) weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l3Eta, pt_m3, "nominal"});
-      if (pt_m4 > 15.0) weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l4Eta, pt_m4, "nominal"});
+      if (pt_m3 > MuSF_MIN_PT_) weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l3Eta, pt_m3, "nominal"});
+      if (pt_m4 > MuSF_MIN_PT_) weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l4Eta, pt_m4, "nominal"});
     }
   }
   else if (channel_ == mmee)
@@ -547,17 +557,20 @@ void ZZSelector::ApplyScaleFactors()
     float pt_e4 = l4Pt < EleSF_MAX_PT_ ? l4Pt : EleSF_MAX_PT_ - 0.01;
     if (mIdSF_ != nullptr)
     {
-      if (pt_m1 > 15.0) weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l1Eta, pt_m1, "nominal"});
-      if (pt_m2 > 15.0) weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l2Eta, pt_m2, "nominal"});
+      if (pt_m1 > MuSF_MIN_PT_) weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l1Eta, pt_m1, "nominal"});
+      if (pt_m2 > MuSF_MIN_PT_) weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l2Eta, pt_m2, "nominal"});
     }
     if (eIdSF_ != nullptr)
     {
       const auto sfref = (*eIdSF_->begin()).second;
-      weight *= sfref->evaluate({yearcfg.c_str(), "sf", "Tight", l3Eta, pt_e3});
-      weight *= sfref->evaluate({yearcfg.c_str(), "sf", "Tight", l4Eta, pt_e4});
-      // Applying Electron Reco SFs
-      weight *= sfref->evaluate({yearcfg.c_str(), "sf", (l3Pt<20)? "RecoBelow20" : "RecoAbove20", l3Eta, (l3Pt<20)? l3Pt : pt_e3});
-      weight *= sfref->evaluate({yearcfg.c_str(), "sf", (l4Pt<20)? "RecoBelow20" : "RecoAbove20", l4Eta, (l4Pt<20)? l4Pt : pt_e4});
+      if (pt_e3 > EleSF_MIN_PT_){
+        weight *= sfref->evaluate({yearcfg.c_str(), "sf", "Tight", l3Eta, pt_e3});
+        weight *= sfref->evaluate({yearcfg.c_str(), "sf", (l3Pt<20)? "RecoBelow20" : "RecoAbove20", l3Eta, pt_e3});
+      }
+      if (pt_e4 > EleSF_MIN_PT_){
+        weight *= sfref->evaluate({yearcfg.c_str(), "sf", "Tight", l4Eta, pt_e4});
+        weight *= sfref->evaluate({yearcfg.c_str(), "sf", (l4Pt<20)? "RecoBelow20" : "RecoAbove20", l4Eta, pt_e4});
+      }
     }
   }
   else
@@ -568,10 +581,10 @@ void ZZSelector::ApplyScaleFactors()
     float pt_m4 = l4Pt < MuSF_MAX_PT_ ? l4Pt : MuSF_MAX_PT_ - 0.01;
     if (mIdSF_ != nullptr)
     {
-      if (pt_m1 > 15.0) weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l1Eta, pt_m1, "nominal"});
-      if (pt_m2 > 15.0) weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l2Eta, pt_m2, "nominal"});
-      if (pt_m3 > 15.0) weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l3Eta, pt_m3, "nominal"});
-      if (pt_m4 > 15.0) weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l4Eta, pt_m4, "nominal"});
+      if (pt_m1 > MuSF_MIN_PT_) weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l1Eta, pt_m1, "nominal"});
+      if (pt_m2 > MuSF_MIN_PT_) weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l2Eta, pt_m2, "nominal"});
+      if (pt_m3 > MuSF_MIN_PT_) weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l3Eta, pt_m3, "nominal"});
+      if (pt_m4 > MuSF_MIN_PT_) weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l4Eta, pt_m4, "nominal"});
     }
   }
   if (pileupSF_ != nullptr)
@@ -675,14 +688,18 @@ void ZZSelector::ShiftEfficiencies(Systematic variation)
       {
         // Applying Electron Reco SFs Up/Down for ElectronRecoSyst
         const auto sfref = (*eIdSF_->begin()).second;
-        weight *= sfref->evaluate({yearcfg.c_str(), (shift=="up")? "sfup" : "sfdown", (l1Pt<20)? "RecoBelow20" : "RecoAbove20", l1Eta, (l1Pt<20)? l1Pt : pt_e1})
-          / sfref->evaluate({yearcfg.c_str(), "sf", (l1Pt<20)? "RecoBelow20" : "RecoAbove20", l1Eta, (l1Pt<20)? l1Pt : pt_e1});
-        weight *= sfref->evaluate({yearcfg.c_str(), (shift=="up")? "sfup" : "sfdown", (l2Pt<20)? "RecoBelow20" : "RecoAbove20", l2Eta, (l2Pt<20)? l2Pt : pt_e2})
-          / sfref->evaluate({yearcfg.c_str(), "sf", (l2Pt<20)? "RecoBelow20" : "RecoAbove20", l2Eta, (l2Pt<20)? l2Pt : pt_e2});
-        weight *= sfref->evaluate({yearcfg.c_str(), (shift=="up")? "sfup" : "sfdown", (l3Pt<20)? "RecoBelow20" : "RecoAbove20", l3Eta, (l3Pt<20)? l3Pt : pt_e3})
-          / sfref->evaluate({yearcfg.c_str(), "sf", (l3Pt<20)? "RecoBelow20" : "RecoAbove20", l3Eta, (l3Pt<20)? l3Pt : pt_e3});
-        weight *= sfref->evaluate({yearcfg.c_str(), (shift=="up")? "sfup" : "sfdown", (l4Pt<20)? "RecoBelow20" : "RecoAbove20", l4Eta, (l4Pt<20)? l4Pt : pt_e4})
-          / sfref->evaluate({yearcfg.c_str(), "sf", (l4Pt<20)? "RecoBelow20" : "RecoAbove20", l4Eta, (l4Pt<20)? l4Pt : pt_e4});
+        if (pt_e1 > EleSF_MIN_PT_)
+          weight *= sfref->evaluate({yearcfg.c_str(), (shift=="up")? "sfup" : "sfdown", (l1Pt<20)? "RecoBelow20" : "RecoAbove20", l1Eta, pt_e1})
+            / sfref->evaluate({yearcfg.c_str(), "sf", (l1Pt<20)? "RecoBelow20" : "RecoAbove20", l1Eta, pt_e1});
+        if (pt_e2 > EleSF_MIN_PT_)
+          weight *= sfref->evaluate({yearcfg.c_str(), (shift=="up")? "sfup" : "sfdown", (l2Pt<20)? "RecoBelow20" : "RecoAbove20", l2Eta, pt_e2})
+            / sfref->evaluate({yearcfg.c_str(), "sf", (l2Pt<20)? "RecoBelow20" : "RecoAbove20", l2Eta, pt_e2});
+        if (pt_e3 > EleSF_MIN_PT_)
+          weight *= sfref->evaluate({yearcfg.c_str(), (shift=="up")? "sfup" : "sfdown", (l3Pt<20)? "RecoBelow20" : "RecoAbove20", l3Eta, pt_e3})
+            / sfref->evaluate({yearcfg.c_str(), "sf", (l3Pt<20)? "RecoBelow20" : "RecoAbove20", l3Eta, pt_e3});
+        if (pt_e4 > EleSF_MIN_PT_)
+          weight *= sfref->evaluate({yearcfg.c_str(), (shift=="up")? "sfup" : "sfdown", (l4Pt<20)? "RecoBelow20" : "RecoAbove20", l4Eta, pt_e4})
+            / sfref->evaluate({yearcfg.c_str(), "sf", (l4Pt<20)? "RecoBelow20" : "RecoAbove20", l4Eta, pt_e4});
       }
     }
     // Applying Electron ID SFs Up/Down for ElectronIDEffSyst
@@ -691,14 +708,18 @@ void ZZSelector::ShiftEfficiencies(Systematic variation)
       if (eIdSF_ != nullptr)
       {
         const auto sfref = (*eIdSF_->begin()).second;
-        weight *= sfref->evaluate({yearcfg.c_str(), (shift=="up")? "sfup" : "sfdown", "Tight", l1Eta, pt_e1})
-          / sfref->evaluate({yearcfg.c_str(), "sf", "Tight", l1Eta, pt_e1});
-        weight *= sfref->evaluate({yearcfg.c_str(), (shift=="up")? "sfup" : "sfdown", "Tight", l2Eta, pt_e2})
-          / sfref->evaluate({yearcfg.c_str(), "sf", "Tight", l2Eta, pt_e2});
-        weight *= sfref->evaluate({yearcfg.c_str(), (shift=="up")? "sfup" : "sfdown", "Tight", l3Eta, pt_e3})
-          / sfref->evaluate({yearcfg.c_str(), "sf", "Tight", l3Eta, pt_e3});
-        weight *= sfref->evaluate({yearcfg.c_str(), (shift=="up")? "sfup" : "sfdown", "Tight", l4Eta, pt_e4})
-          / sfref->evaluate({yearcfg.c_str(), "sf", "Tight", l4Eta, pt_e4});
+        if (pt_e1 > EleSF_MIN_PT_)
+          weight *= sfref->evaluate({yearcfg.c_str(), (shift=="up")? "sfup" : "sfdown", "Tight", l1Eta, pt_e1})
+            / sfref->evaluate({yearcfg.c_str(), "sf", "Tight", l1Eta, pt_e1});
+        if (pt_e2 > EleSF_MIN_PT_)
+          weight *= sfref->evaluate({yearcfg.c_str(), (shift=="up")? "sfup" : "sfdown", "Tight", l2Eta, pt_e2})
+            / sfref->evaluate({yearcfg.c_str(), "sf", "Tight", l2Eta, pt_e2});
+        if (pt_e3 > EleSF_MIN_PT_)
+          weight *= sfref->evaluate({yearcfg.c_str(), (shift=="up")? "sfup" : "sfdown", "Tight", l3Eta, pt_e3})
+            / sfref->evaluate({yearcfg.c_str(), "sf", "Tight", l3Eta, pt_e3});
+        if (pt_e4 > EleSF_MIN_PT_)
+          weight *= sfref->evaluate({yearcfg.c_str(), (shift=="up")? "sfup" : "sfdown", "Tight", l4Eta, pt_e4})
+            / sfref->evaluate({yearcfg.c_str(), "sf", "Tight", l4Eta, pt_e4});
       }
     }
   } // channel eeee
@@ -714,10 +735,12 @@ void ZZSelector::ShiftEfficiencies(Systematic variation)
       if (eIdSF_ != nullptr){
         // Applying Electron Reco SFs Up/Down for ElectronRecoEffSyst
         const auto sfref = (*eIdSF_->begin()).second;
-        weight *= sfref->evaluate({yearcfg.c_str(), (shift=="up")? "sfup" : "sfdown", (l1Pt<20)? "RecoBelow20" : "RecoAbove20", l1Eta, (l1Pt<20)? l1Pt : pt_e1})
-          / sfref->evaluate({yearcfg.c_str(), "sf", (l1Pt<20)? "RecoBelow20" : "RecoAbove20", l1Eta, (l1Pt<20)? l1Pt : pt_e1});
-        weight *= sfref->evaluate({yearcfg.c_str(), (shift=="up")? "sfup" : "sfdown", (l2Pt<20)? "RecoBelow20" : "RecoAbove20", l2Eta, (l2Pt<20)? l2Pt : pt_e2})
-          / sfref->evaluate({yearcfg.c_str(), "sf", (l2Pt<20)? "RecoBelow20" : "RecoAbove20", l2Eta, (l2Pt<20)? l2Pt : pt_e2});
+        if (pt_e1 > EleSF_MIN_PT_)
+          weight *= sfref->evaluate({yearcfg.c_str(), (shift=="up")? "sfup" : "sfdown", (l1Pt<20)? "RecoBelow20" : "RecoAbove20", l1Eta, pt_e1})
+            / sfref->evaluate({yearcfg.c_str(), "sf", (l1Pt<20)? "RecoBelow20" : "RecoAbove20", l1Eta, pt_e1});
+        if (pt_e2 > EleSF_MIN_PT_)
+          weight *= sfref->evaluate({yearcfg.c_str(), (shift=="up")? "sfup" : "sfdown", (l2Pt<20)? "RecoBelow20" : "RecoAbove20", l2Eta, pt_e2})
+            / sfref->evaluate({yearcfg.c_str(), "sf", (l2Pt<20)? "RecoBelow20" : "RecoAbove20", l2Eta, pt_e2});
       }
     }
     // Applying Electron ID SFs Up/Down for ElectronIDEffSyst
@@ -725,19 +748,21 @@ void ZZSelector::ShiftEfficiencies(Systematic variation)
     {
       if (eIdSF_ != nullptr){
         const auto sfref = (*eIdSF_->begin()).second;
-        weight *= sfref->evaluate({yearcfg.c_str(), (shift=="up")? "sfup" : "sfdown", "Tight", l1Eta, pt_e1})
-          / sfref->evaluate({yearcfg.c_str(), "sf", "Tight", l1Eta, pt_e1});
-        weight *= sfref->evaluate({yearcfg.c_str(), (shift=="up")? "sfup" : "sfdown", "Tight", l2Eta, pt_e2})
-          / sfref->evaluate({yearcfg.c_str(), "sf", "Tight", l2Eta, pt_e2});
+        if (pt_e1 > EleSF_MIN_PT_)
+          weight *= sfref->evaluate({yearcfg.c_str(), (shift=="up")? "sfup" : "sfdown", "Tight", l1Eta, pt_e1})
+            / sfref->evaluate({yearcfg.c_str(), "sf", "Tight", l1Eta, pt_e1});
+        if (pt_e2 > EleSF_MIN_PT_)
+          weight *= sfref->evaluate({yearcfg.c_str(), (shift=="up")? "sfup" : "sfdown", "Tight", l2Eta, pt_e2})
+            / sfref->evaluate({yearcfg.c_str(), "sf", "Tight", l2Eta, pt_e2});
       }
     }
     else if (variation == muonEfficiencyUp || variation == muonEfficiencyDown)
     {
       if (mIdSF_ != nullptr){
-        if (pt_m3 > 15.0)
+        if (pt_m3 > MuSF_MIN_PT_)
           weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l3Eta, pt_m3, (shift=="up")? "systup" : "systdown"})
             / mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l3Eta, pt_m3, "nominal"});
-        if (pt_m4 > 15.0)
+        if (pt_m4 > MuSF_MIN_PT_)
           weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l4Eta, pt_m4, (shift=="up")? "systup" : "systdown"})
             / mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l4Eta, pt_m4, "nominal"});
       }
@@ -752,10 +777,10 @@ void ZZSelector::ShiftEfficiencies(Systematic variation)
     if (variation == muonEfficiencyUp || variation == muonEfficiencyDown)
     {
       if (mIdSF_ != nullptr){
-        if (pt_m1 > 15.0)
+        if (pt_m1 > MuSF_MIN_PT_)
           weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l1Eta, pt_m1, (shift=="up")? "systup" : "systdown"})
             / mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l1Eta, pt_m1, "nominal"});
-        if (pt_m2 > 15.0)
+        if (pt_m2 > MuSF_MIN_PT_)
           weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l2Eta, pt_m2, (shift=="up")? "systup" : "systdown"})
             / mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l2Eta, pt_m2, "nominal"});
       }
@@ -765,10 +790,12 @@ void ZZSelector::ShiftEfficiencies(Systematic variation)
       // Applying Electron Reco SFs Up/Down for ElectronRecoEffSyst
       if (eIdSF_ != nullptr){
         const auto sfref = (*eIdSF_->begin()).second;
-        weight *= sfref->evaluate({yearcfg.c_str(), (shift=="up")? "sfup" : "sfdown", (l3Pt<20)? "RecoBelow20" : "RecoAbove20", l3Eta, (l3Pt<20)? l3Pt : pt_e3})
-          / sfref->evaluate({yearcfg.c_str(), "sf", (l3Pt<20)? "RecoBelow20" : "RecoAbove20", l3Eta, (l3Pt<20)? l3Pt : pt_e3});
-        weight *= sfref->evaluate({yearcfg.c_str(), (shift=="up")? "sfup" : "sfdown", (l4Pt<20)? "RecoBelow20" : "RecoAbove20", l4Eta, (l4Pt<20)? l4Pt : pt_e4})
-          / sfref->evaluate({yearcfg.c_str(), "sf", (l4Pt<20)? "RecoBelow20" : "RecoAbove20", l4Eta, (l4Pt<20)? l4Pt : pt_e4});
+        if (pt_e3 > EleSF_MIN_PT_)
+          weight *= sfref->evaluate({yearcfg.c_str(), (shift=="up")? "sfup" : "sfdown", (l3Pt<20)? "RecoBelow20" : "RecoAbove20", l3Eta, pt_e3})
+            / sfref->evaluate({yearcfg.c_str(), "sf", (l3Pt<20)? "RecoBelow20" : "RecoAbove20", l3Eta, pt_e3});
+        if (pt_e4 > EleSF_MIN_PT_)
+          weight *= sfref->evaluate({yearcfg.c_str(), (shift=="up")? "sfup" : "sfdown", (l4Pt<20)? "RecoBelow20" : "RecoAbove20", l4Eta, pt_e4})
+            / sfref->evaluate({yearcfg.c_str(), "sf", (l4Pt<20)? "RecoBelow20" : "RecoAbove20", l4Eta, pt_e4});
       }
     }
     // Applying Electron ID SFs Up/Down for ElectronIDEffSyst
@@ -776,10 +803,12 @@ void ZZSelector::ShiftEfficiencies(Systematic variation)
     {
       if (eIdSF_ != nullptr){
         const auto sfref = (*eIdSF_->begin()).second;
-        weight *= sfref->evaluate({yearcfg.c_str(), (shift=="up")? "sfup" : "sfdown", "Tight", l3Eta, pt_e3})
-          / sfref->evaluate({yearcfg.c_str(), "sf", "Tight", l3Eta, pt_e3});
-        weight *= sfref->evaluate({yearcfg.c_str(), (shift=="up")? "sfup" : "sfdown", "Tight", l4Eta, pt_e4})
-          / sfref->evaluate({yearcfg.c_str(), "sf", "Tight", l4Eta, pt_e4});
+        if (pt_e3 > EleSF_MIN_PT_)
+          weight *= sfref->evaluate({yearcfg.c_str(), (shift=="up")? "sfup" : "sfdown", "Tight", l3Eta, pt_e3})
+            / sfref->evaluate({yearcfg.c_str(), "sf", "Tight", l3Eta, pt_e3});
+        if (pt_e4 > EleSF_MIN_PT_)
+          weight *= sfref->evaluate({yearcfg.c_str(), (shift=="up")? "sfup" : "sfdown", "Tight", l4Eta, pt_e4})
+            / sfref->evaluate({yearcfg.c_str(), "sf", "Tight", l4Eta, pt_e4});
       }
     }
   }
@@ -790,16 +819,16 @@ void ZZSelector::ShiftEfficiencies(Systematic variation)
     float pt_m3 = l3Pt < MuSF_MAX_PT_ ? l3Pt : MuSF_MAX_PT_ - 0.01;
     float pt_m4 = l4Pt < MuSF_MAX_PT_ ? l4Pt : MuSF_MAX_PT_ - 0.01;
     if (mIdSF_ != nullptr){
-      if (pt_m1 > 15.0)
+      if (pt_m1 > MuSF_MIN_PT_)
         weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l1Eta, pt_m1, (shift=="up")? "systup" : "systdown"})
           / mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l1Eta, pt_m1, "nominal"});
-      if (pt_m2 > 15.0)
+      if (pt_m2 > MuSF_MIN_PT_)
         weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l2Eta, pt_m2, (shift=="up")? "systup" : "systdown"})
           / mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l2Eta, pt_m2, "nominal"});
-      if (pt_m3 > 15.0)
+      if (pt_m3 > MuSF_MIN_PT_)
         weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l3Eta, pt_m3, (shift=="up")? "systup" : "systdown"})
           / mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l3Eta, pt_m3, "nominal"});
-      if (pt_m4 > 15.0)
+      if (pt_m4 > MuSF_MIN_PT_)
         weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l4Eta, pt_m4, (shift=="up")? "systup" : "systdown"})
           / mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l4Eta, pt_m4, "nominal"});
     }
