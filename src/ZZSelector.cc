@@ -535,8 +535,8 @@ void ZZSelector::ApplyScaleFactors()
     }
     if (mIdSF_ != nullptr)
     {
-      weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l3Eta, pt_m3, "nominal"});
-      weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l4Eta, pt_m4, "nominal"});
+      if (pt_m3 > 15.0) weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l3Eta, pt_m3, "nominal"});
+      if (pt_m4 > 15.0) weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l4Eta, pt_m4, "nominal"});
     }
   }
   else if (channel_ == mmee)
@@ -547,8 +547,8 @@ void ZZSelector::ApplyScaleFactors()
     float pt_e4 = l4Pt < EleSF_MAX_PT_ ? l4Pt : EleSF_MAX_PT_ - 0.01;
     if (mIdSF_ != nullptr)
     {
-      weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l1Eta, pt_m1, "nominal"});
-      weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l2Eta, pt_m2, "nominal"});
+      if (pt_m1 > 15.0) weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l1Eta, pt_m1, "nominal"});
+      if (pt_m2 > 15.0) weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l2Eta, pt_m2, "nominal"});
     }
     if (eIdSF_ != nullptr)
     {
@@ -568,10 +568,10 @@ void ZZSelector::ApplyScaleFactors()
     float pt_m4 = l4Pt < MuSF_MAX_PT_ ? l4Pt : MuSF_MAX_PT_ - 0.01;
     if (mIdSF_ != nullptr)
     {
-      weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l1Eta, pt_m1, "nominal"});
-      weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l2Eta, pt_m2, "nominal"});
-      weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l3Eta, pt_m3, "nominal"});
-      weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l4Eta, pt_m4, "nominal"});
+      if (pt_m1 > 15.0) weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l1Eta, pt_m1, "nominal"});
+      if (pt_m2 > 15.0) weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l2Eta, pt_m2, "nominal"});
+      if (pt_m3 > 15.0) weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l3Eta, pt_m3, "nominal"});
+      if (pt_m4 > 15.0) weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l4Eta, pt_m4, "nominal"});
     }
   }
   if (pileupSF_ != nullptr)
@@ -734,10 +734,12 @@ void ZZSelector::ShiftEfficiencies(Systematic variation)
     else if (variation == muonEfficiencyUp || variation == muonEfficiencyDown)
     {
       if (mIdSF_ != nullptr){
-        weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l3Eta, pt_m3, (shift=="up")? "systup" : "systdown"})
-          / mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l3Eta, pt_m3, "nominal"});
-        weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l4Eta, pt_m4, (shift=="up")? "systup" : "systdown"})
-          / mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l4Eta, pt_m4, "nominal"});
+        if (pt_m3 > 15.0)
+          weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l3Eta, pt_m3, (shift=="up")? "systup" : "systdown"})
+            / mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l3Eta, pt_m3, "nominal"});
+        if (pt_m4 > 15.0)
+          weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l4Eta, pt_m4, (shift=="up")? "systup" : "systdown"})
+            / mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l4Eta, pt_m4, "nominal"});
       }
     }
   }
@@ -750,10 +752,12 @@ void ZZSelector::ShiftEfficiencies(Systematic variation)
     if (variation == muonEfficiencyUp || variation == muonEfficiencyDown)
     {
       if (mIdSF_ != nullptr){
-        weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l1Eta, pt_m1, (shift=="up")? "systup" : "systdown"})
-          / mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l1Eta, pt_m1, "nominal"});
-        weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l2Eta, pt_m2, (shift=="up")? "systup" : "systdown"})
-          / mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l2Eta, pt_m2, "nominal"});
+        if (pt_m1 > 15.0)
+          weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l1Eta, pt_m1, (shift=="up")? "systup" : "systdown"})
+            / mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l1Eta, pt_m1, "nominal"});
+        if (pt_m2 > 15.0)
+          weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l2Eta, pt_m2, (shift=="up")? "systup" : "systdown"})
+            / mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l2Eta, pt_m2, "nominal"});
       }
     }
     else if (variation == electronRecoEffUp || variation == electronRecoEffDown)
@@ -786,14 +790,18 @@ void ZZSelector::ShiftEfficiencies(Systematic variation)
     float pt_m3 = l3Pt < MuSF_MAX_PT_ ? l3Pt : MuSF_MAX_PT_ - 0.01;
     float pt_m4 = l4Pt < MuSF_MAX_PT_ ? l4Pt : MuSF_MAX_PT_ - 0.01;
     if (mIdSF_ != nullptr){
-      weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l1Eta, pt_m1, (shift=="up")? "systup" : "systdown"})
-        / mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l1Eta, pt_m1, "nominal"});
-      weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l2Eta, pt_m2, (shift=="up")? "systup" : "systdown"})
-        / mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l2Eta, pt_m2, "nominal"});
-      weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l3Eta, pt_m3, (shift=="up")? "systup" : "systdown"})
-        / mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l3Eta, pt_m3, "nominal"});
-      weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l4Eta, pt_m4, (shift=="up")? "systup" : "systdown"})
-        / mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l4Eta, pt_m4, "nominal"});
+      if (pt_m1 > 15.0)
+        weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l1Eta, pt_m1, (shift=="up")? "systup" : "systdown"})
+          / mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l1Eta, pt_m1, "nominal"});
+      if (pt_m2 > 15.0)
+        weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l2Eta, pt_m2, (shift=="up")? "systup" : "systdown"})
+          / mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l2Eta, pt_m2, "nominal"});
+      if (pt_m3 > 15.0)
+        weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l3Eta, pt_m3, (shift=="up")? "systup" : "systdown"})
+          / mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l3Eta, pt_m3, "nominal"});
+      if (pt_m4 > 15.0)
+        weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l4Eta, pt_m4, (shift=="up")? "systup" : "systdown"})
+          / mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({l4Eta, pt_m4, "nominal"});
     }
   }
 }
