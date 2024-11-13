@@ -78,8 +78,8 @@ def makeHistFile(args):
     fjetPUeff= ROOT.TFile("data/jetSF/effcyPUID_81Xtraining.root")
     fr_inputs = []
     if addScaleFacs:
-        fScales = ROOT.TFile(args['scalefactors_file'])
         if "ZZ4l" in args['analysis']:
+            fScales = ROOT.TFile(args['scalefactors_file'])
             mZZTightFakeRate = fScales.Get("mZZTightFakeRate")
             eZZTightFakeRate = fScales.Get("eZZTightFakeRate")
             if mZZTightFakeRate:
@@ -89,14 +89,14 @@ def makeHistFile(args):
 
             yearstring = ""
             basename = "/cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration/POG/"
-            if "2016" in args['scalefactors_file']:
+            if args["year"] == "2016":
                 if args["preVFP"]:
                     yearstring = "2016preVFP_UL"
                 else:
                     yearstring = "2016postVFP_UL"
-            elif "2017" in args['scalefactors_file']:
+            elif args["year"] == "2017":
                 yearstring = "2017_UL"
-            elif "2018" in args['scalefactors_file']:
+            elif args["year"] == "2018":
                 yearstring = "2018_UL"
             else: 
                 print("what scale factors you want?")
