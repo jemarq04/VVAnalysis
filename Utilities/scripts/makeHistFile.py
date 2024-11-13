@@ -90,20 +90,21 @@ def makeHistFile(args):
             if "2018" in args['scalefactors_file']:
                 yearstring = "2018_UL"
             elif "2016" in args['scalefactors_file']:
-                yearstring = "2016preVFP_UL"
+                yearstring = "2016preVFP_UL" #TODO: allow option for choosing 2016postVFP
             elif "2017" in args['scalefactors_file']:
                 yearstring = "2017_UL"
             else: 
                 print("what scale factors you want?")
                 sys.exit()
             muonRunSF = ROOT.TNamed("muonRunSF", os.path.join(basename, "MUO/%s/muon_Z.json.gz" % yearstring))
-            electronRunSF = ROOT.TNamed("electronRunSF", os.path.join(basename, "EGM/%s/electron.json.gz" % yearstring))
+            electronRunSF = ROOT.TNamed("electronRunSF", "data/ElectronSF_HZZUL.json")
+            electronRecoSF = ROOT.TNamed("electronRecoSF", os.path.join(basename, "EGM/%s/electron.json.gz" % yearstring))
             jetPUSF = ROOT.TNamed("jetPUSF", os.path.join(basename, "JME/%s/jmar.json.gz" % yearstring))
             pileupSF = ROOT.TNamed("pileupSF", os.path.join(basename, "LUM/%s/puWeights.json.gz" % yearstring))
             yearcfg = ROOT.TNamed("yearcfg", yearstring.replace("_UL",""))
 
             fr_inputs = [eZZTightFakeRate, mZZTightFakeRate]
-            sf_inputs = [electronRunSF,muonRunSF,pileupSF,jetPUSF,yearcfg]
+            sf_inputs = [electronRunSF,electronRecoSF,muonRunSF,pileupSF,jetPUSF,yearcfg]
         else:
             fScales = ROOT.TFile('data/scaleFactors.root')
             mCBTightFakeRate = fScales.Get("mCBTightFakeRate")

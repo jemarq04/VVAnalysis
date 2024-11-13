@@ -20,6 +20,7 @@ void ZZSelectorBase::SetScaleFactors()
   catch (...){
     std::invalid_argument("Must pass valid jet PU id SF");
   }
+  //if (jetPUSF_ != nullptr) std::cout << "Applying jetPUSF" << std::endl;
 
   try{
     pileupSF_ = correction::CorrectionSet::from_file( ((TNamed*)GetInputList()->FindObject("pileupSF"))->GetTitle() );
@@ -27,18 +28,28 @@ void ZZSelectorBase::SetScaleFactors()
   catch (...){
     std::invalid_argument("Must pass valid pileup weights SF");
   }
+  //if (pileupSF_ != nullptr) std::cout << "Applying pileupSF" << std::endl;
   try{
     eIdSF_ = correction::CorrectionSet::from_file( ((TNamed*)GetInputList()->FindObject("electronRunSF"))->GetTitle() );
   }
   catch (...){
     std::invalid_argument("Must pass valid electron Run SF");
   }
+  //if (eIdSF_ != nullptr) std::cout << "Applying electron ID SFs" << std::endl;
+  try{
+    eRecoSF_ = correction::CorrectionSet::from_file( ((TNamed*)GetInputList()->FindObject("electronRecoSF"))->GetTitle() );
+  }
+  catch (...){
+    std::invalid_argument("Must pass valid electron Reco SF");
+  }
+  //if (eRecoSF_ != nullptr) std::cout << "Applying electron reco SFs" << std::endl;
   try{
     mIdSF_ = correction::CorrectionSet::from_file( ((TNamed*)GetInputList()->FindObject("muonRunSF"))->GetTitle() );
   }
   catch (...){
     std::invalid_argument("Must pass valid muon Run SF");
   }
+  //if (mIdSF_ != nullptr) std::cout << "Applying muon ID SFs" << std::endl;
 
   try{
     yearcfg = ((TNamed*)GetInputList()->FindObject("yearcfg"))->GetTitle();
