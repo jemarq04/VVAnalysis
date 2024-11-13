@@ -48,6 +48,8 @@ def getComLineArgs():
                         default=["all"], help="List of histograms, "
                         "as defined in ZZ4lRun2DatasetManager, separated "
                         "by commas")
+    parser.add_argument("--preVFP", action="store_true",
+        help="when processing 2016UL data, use preVFP scale factors")
     return vars(parser.parse_args())
 
 def makeHistFile(args):
@@ -87,12 +89,15 @@ def makeHistFile(args):
 
             yearstring = ""
             basename = "/cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration/POG/"
-            if "2018" in args['scalefactors_file']:
-                yearstring = "2018_UL"
-            elif "2016" in args['scalefactors_file']:
-                yearstring = "2016preVFP_UL" #TODO: allow option for choosing 2016postVFP
+            if "2016" in args['scalefactors_file']:
+                if args["preVFP"]:
+                    yearstring = "2016preVFP_UL"
+                else:
+                    yearstring = "2016postVFP_UL"
             elif "2017" in args['scalefactors_file']:
                 yearstring = "2017_UL"
+            elif "2018" in args['scalefactors_file']:
+                yearstring = "2018_UL"
             else: 
                 print("what scale factors you want?")
                 sys.exit()
