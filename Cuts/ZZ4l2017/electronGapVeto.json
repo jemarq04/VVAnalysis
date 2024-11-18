@@ -1,0 +1,19 @@
+{
+    "Object" : {
+        "e" : [ 
+            "(abs({object_name}Eta) <  1.44 || abs({object_name}Eta) > 1.57)"
+        ],
+        "m" : [
+        ]
+    },
+    "State" : {
+        "eeee" : [
+        ],
+        "eemm" : [ 
+        ],
+        "mmmm" : [
+        ]
+    },
+    "Event" : [ 
+    ]
+}
