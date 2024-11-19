@@ -48,8 +48,8 @@ def getComLineArgs():
                         default=["all"], help="List of histograms, "
                         "as defined in ZZ4lDatasetManager, separated "
                         "by commas")
-    parser.add_argument("--preVFP", action="store_true",
-        help="when processing 2016UL data, use preVFP scale factors")
+    parser.add_argument("--postEE", action="store_true",
+        help="when processing 2022 data, use scale factors after EE leak veto")
     return vars(parser.parse_args())
 
 def makeHistFile(args):
@@ -72,7 +72,7 @@ def makeHistFile(args):
     combinedNames = [fOut.GetName()]
 
     addScaleFacs = False
-    if args['analysis'] == "WZxsec2016" or args['analysis'] == 'Zstudy_2016' or args['scalefactors_file']:
+    if args['scalefactors_file']:
         addScaleFacs = True
     fjetPUSF = ROOT.TFile("data/jetSF/scalefactorsPUID_81Xtraining.root")
     fjetPUeff= ROOT.TFile("data/jetSF/effcyPUID_81Xtraining.root")
@@ -89,28 +89,25 @@ def makeHistFile(args):
 
             yearstring = ""
             basename = "/cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration/POG/"
-            if args["year"] == "2016":
-                if args["preVFP"]:
-                    yearstring = "2016preVFP_UL"
+            if args["year"] == "2022":
+                if args["postEE"]:
+                    yearstring = "2022_Summer22EE"
                 else:
-                    yearstring = "2016postVFP_UL"
-            elif args["year"] == "2017":
-                yearstring = "2017_UL"
-            elif args["year"] == "2018":
-                yearstring = "2018_UL"
+                    yearstring = "2022_Summer22"
             else: 
                 print("what scale factors you want?")
                 sys.exit()
             muonRunSF = ROOT.TNamed("muonRunSF", os.path.join(basename, "MUO/%s/muon_Z.json.gz" % yearstring))
-            electronRunSF = ROOT.TNamed("electronRunSF", "data/ElectronSF_HZZUL.json")
-            electronRecoSF = ROOT.TNamed("electronRecoSF", os.path.join(basename, "EGM/%s/electron.json.gz" % yearstring))
+            electronRunSF = ROOT.TNamed("electronRunSF", "data/ElectronSF_HZZUL.json") #TODO: Update to Run 3
+            electronRecoSF = ROOT.TNamed("electronRecoSF", os.path.join(basename, "EGM/%s/electron.json.gz" % yearstring)) #TODO: Update to Run 3
             jetPUSF = ROOT.TNamed("jetPUSF", os.path.join(basename, "JME/%s/jmar.json.gz" % yearstring))
             pileupSF = ROOT.TNamed("pileupSF", os.path.join(basename, "LUM/%s/puWeights.json.gz" % yearstring))
-            yearcfg = ROOT.TNamed("yearcfg", yearstring.replace("_UL",""))
+            yearcfg = ROOT.TNamed("yearcfg", yearstring.split("_")[0])
 
             fr_inputs = [eZZTightFakeRate, mZZTightFakeRate]
             sf_inputs = [electronRunSF,electronRecoSF,muonRunSF,pileupSF,jetPUSF,yearcfg]
         else:
+            # The lines below use Run 2
             fScales = ROOT.TFile('data/scaleFactors.root')
             mCBTightFakeRate = fScales.Get("mCBTightFakeRate")
             eCBTightFakeRate = fScales.Get("eCBTightFakeRate")
