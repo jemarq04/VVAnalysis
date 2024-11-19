@@ -147,6 +147,8 @@ protected:
     bool HZZMediumMass();
     bool TestMuons();
     void ShiftEfficiencies(Systematic variation);
+
+    std::string GetEleRecoSFName(Float_t ele_pt);
 };
 
 #endif
