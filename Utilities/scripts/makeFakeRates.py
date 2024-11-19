@@ -37,7 +37,7 @@ def getComLineArgs():
     parser.add_argument("-b", "--hist_names", 
                         type=lambda x : [i.strip() for i in x.split(',')],
                         default=["all"], help="List of histograms, "
-                        "as defined in ZZ4lRun2DatasetManager, separated "
+                        "as defined in ZZ4lDatasetManager, separated "
                         "by commas")
     return vars(parser.parse_args())
 
@@ -125,13 +125,14 @@ args = getComLineArgs()
 today = datetime.date.today().strftime("%d%b%Y")
 #fileName = "data/fakeRate%s-%s.root" % (today,args['analysis']) if args['output_file'] == "" \
 #        else args['output_file']
+#TODO: Update for Run 3
 fileName="data/fakeRate15Sep2019-ZZ4l2016.root"
 if not args['test']:
     fOut = ROOT.TFile(fileName, "recreate")
     
     
     addScaleFacs = False
-    if args['analysis'] == "WZxsec2016" or args['analysis'] == 'Zstudy_2016' or args['scalefactors_file']:
+    if args['scalefactors_file']:
         addScaleFacs = True
     sf_inputs = [ROOT.TParameter(bool)("applyScaleFacs", False)]
     
