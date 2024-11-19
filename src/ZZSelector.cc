@@ -740,7 +740,6 @@ void ZZSelector::ShiftEfficiencies(Systematic variation)
     {
       if (eIdSF_ != nullptr)
       {
-        //TODO: Figure out systematics.. no variances provided?
         if (pt_e1 > EleSF_MIN_PT_){
           std::string gapid = yearcfg + "_UL-" + (l1IsGap? "gap" : "nogap");
           try{
