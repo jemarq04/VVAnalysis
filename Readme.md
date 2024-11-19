@@ -1,15 +1,15 @@
 # Current instructions
-We use the current branch of the repository for ZZ selection and histogram filling, after skimming the UWVV ntuples in the **Run2LegacySkims** branch. You may want to do the setup in a different folder than the skimming one.
+We use the current branch of the repository for ZZ selection and histogram filling, after skimming the UWVV ntuples in the **Run3Skims** branch. You will want to do the setup in a different folder than the skimming one.
 
 ## Setup
 On hep.wisc.edu machine (previously done in uwlogin)
 ```
-cmsrel CMSSW_10_3_1
-cd CMSSW_10_3_1/src
+cmsrel CMSSW_14_0_9
+cd CMSSW_14_0_9/src
 cmsenv
 mkdir Analysis
 cd Analysis
-git clone https://github.com/YourGithubUsername/VVAnalysis -b For_testing_original
+git clone https://github.com/YourGithubUsername/VVAnalysis -b Run3Analysis
 cd VVAnalysis
 ```
 Then in VVAnalysis/Templates please copy config.oldName to config.YourUserName, and modify its first 3 lines to your user name and data manager path (after setting it up in the next step). In VVAnalysis/src/ZZSelector.cc, set "doSystematics_ = false;" if you don't need the systematics yet.
@@ -18,17 +18,17 @@ Then in VVAnalysis/Templates please copy config.oldName to config.YourUserName, 
 
 Next set up the data manager repository like before:
 
-Back in  CMSSW_10_3_1/src directory do:
+Back in  CMSSW_14_0_9/src directory do:
 
 ```
 mkdir Data_manager
 cd Data_manager
-git clone https://github.com/YourGithubUsername/ZZ4lDatasetManager -b for_merging
+git clone https://github.com/YourGithubUsername/ZZ4lDatasetManager -b for_merging_Run3
 ```
 
-**In the following instructoins, we use year 2018 as an example (but works the same for 2016 and 17).**
+**In the following instructions, we use year 2022 as an example.**
 
-In ZZ4lDatasetManager/FileInfo/ZZ4l2018, edit **LooseLeptons.json** so that it becomes something like the following (you can use names consistent with your choice in the skimming step), where you specify the path to your skimmed ntuple files for each sample:
+In ZZ4lDatasetManager/FileInfo/ZZ4l2022, edit **LooseLeptons.json** so that it becomes something like the following (you can use names consistent with your choice in the skimming step), where you specify the path to your skimmed ntuple files for each sample:
 
  ```
 
@@ -51,7 +51,7 @@ other entries...
 and copy **LooseLeptons.json** to to **ZZSelectionsTightLeps.json** also. 
  
 
-Finally build the codes in  CMSSW_10_3_1/src directory: 
+Finally build the codes in  CMSSW_14_0_9/src directory: 
 
 ```
 scram b -j 12
@@ -61,12 +61,12 @@ scram b -j 12
 Then to perform the selection, in VVAnalysis, run
 
 ```
-./runZZ4l2018.sh
+./runZZ4l2022.sh
 ```
  
 before running you will need to create/find the VVAnalysis/data/ folder and put the required data files into it.
 
-It will produce a series of temporary files, and eventually merge them into one single output root file, which contains the set of histograms we need and we can feed them into the [**ZZPlotting**](https://github.com/hhe62/ZZPlotting/) repository for final plots. With the updated codes it will also fill the selected events into ntuple files. Please create a directory called HistFiles in VVAnalysis and move the resulting histogram root file inside.
+It will produce a series of temporary files, and eventually merge them into one single output root file, which contains the set of histograms we need and we can feed them into the [**ZZPlotting**](https://github.com/jemarq04/ZZPlotting/) repository for final plots. With the updated codes it will also fill the selected events into ntuple files. Please create a directory called HistFiles in VVAnalysis and move the resulting histogram root file inside.
 
 # Previous instructions
 Analysis code for WZ/ZZ analyses. Some scripts using selections to skim Ntuples and C++ code to make histogram files for WZ.
