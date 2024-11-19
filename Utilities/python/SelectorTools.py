@@ -17,16 +17,11 @@ class SelectorDriver(object):
         logging.basicConfig(level=logging.WARNING)
 
         selector_map = {
-            "WZxsec2016" : "WZSelector",
             "Zstudy" : "ZSelector",
-            "Zstudy_2016" : "ZSelector",
-            "Zstudy_2017" : "ZSelector",
-            "ZZ4l2016" : "ZZSelector",
-            "ZZ4l2017" : "ZZSelector",
-            "ZZ4l2018" : "ZZSelector",
             "WGen" : "WGenSelector",
             "ZGen" : "ZGenSelector",
             "ThreeLep" : "ThreeLepSelector",
+            "ZZ4l2022" : "ZZSelector",
         }
 
         self.analysis = analysis

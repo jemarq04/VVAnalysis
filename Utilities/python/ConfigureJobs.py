@@ -213,46 +213,12 @@ def getListOfFiles(filelist, selection, manager_path="", analysis=""):
     for name in filelist:
         if ".root" in name:
             names.append(name)
-        elif "WZxsec2016" in name:
+        elif "ZZ4l2022" in name:
             dataset_file = manager_path + \
-                "%s/FileInfo/WZxsec2016/%s.json" % (getManagerPath(), selection)
+                "ZZ4lDatasetManager/FileInfo/ZZ4l2022/%s.json" % selection
             allnames = list(json.load(open(dataset_file)).keys())
             if "nodata" in name:
-                nodata = [x for x in allnames if "data" not in x]
-                names += nodata
-            elif "data" in name:
-                names += [x for x in allnames if "data" in x]
-            else:
-                names += allnames
-        elif "ZZ4l2016" in name:
-            dataset_file = manager_path + \
-                "ZZ4lRun2DatasetManager/FileInfo/ZZ4l2016/%s.json" % selection
-            allnames = list(json.load(open(dataset_file)).keys())
-            if "nodata" in name:
-                nodata = [x for x in allnames if "data" not in x]
-                names += nodata
-            elif "data" in name:
-                names += [x for x in allnames if "data" in x]
-            else:
-                names += allnames
-        elif "ZZ4l2017" in name:
-            dataset_file = manager_path + \
-                "ZZ4lRun2DatasetManager/FileInfo/ZZ4l2017/%s.json" % selection
-            allnames = list(json.load(open(dataset_file)).keys())
-            if "nodata" in name:
-                nodata = [x for x in allnames if "data" not in x]
-                names += nodata
-            elif "data" in name:
-                names += [x for x in allnames if "data" in x]
-            else:
-                names += allnames
-        elif "ZZ4l2018" in name:
-            dataset_file = manager_path + \
-                "ZZ4lRun2DatasetManager/FileInfo/ZZ4l2018/%s.json" % selection
-            allnames = list(json.load(open(dataset_file)).keys())
-            if "nodata" in name:
-                nodata = [x for x in allnames if "data" not in x]
-                names += nodata
+                names += [x for x in allnames if "data" not in x]
             elif "data" in name:
                 names += [x for x in allnames if "data" in x]
             else:
@@ -312,44 +278,6 @@ def getListOfFilesWithDASPath(filelist, analysis, selection, manager_path=""):
             continue
         info.update({file_name : selection_info[file_name]["DAS"]})
     return info
-
-def getPreviousStep(selection, analysis):
-    selection_map = {}
-    if analysis == "WZxsec2016":
-        selection_map = { "ntuples" : "ntuples",
-                "loosepreselection" : "ntuples",
-                "preselection" : "ntuples",
-                "3LooseLeptons" : "ntuples",
-                "3LooseLeptonsNoIP" : "ntuples",
-                "3LooseLeptonsNoVeto" : "ntuples",
-                "3TightLeptonsNoVeto" : "ntuples",
-                "3MediumLeptonsNoVeto" : "ntuples",
-                "preselectionLooseVeto" : "ntuples",
-                "preselectionNoVeto" : "ntuples",
-                "LepVetoAnd3lmass" : "preselection",
-                "3lmass" : "preselection",
-                "Zselection" : "3lmass",
-                "Wselection" : "Zselection",
-                "3lDYControl" : "Zselection",
-                "3lTTbarControl" : "3lmass",
-        }
-    elif analysis == "WZDecemberAnalysis":
-        selection_map = { "ntuples" : "ntuples",
-                "loosepreselection" : "ntuples",
-                "preselection" : "ntuples",
-                "Mass3l" : "preselection",
-                "Zselection" : "preselection",
-                "Wselection" : "Zselection"
-        }
-    selection = selection.replace(";",",")
-    first_selection = selection.split(",")[0].strip()
-    if first_selection not in list(selection_map.keys()):
-        if "preselection" in first_selection:
-            first_selection = "preselection"
-        else:
-            raise ValueError("Invalid selection '%s'. Valid selections are:"
-                "%s" % (first_selection, list(selection_map.keys())))
-    return selection_map[first_selection]
 
 def getConfigFileName(config_file_name):
     for extension in ["json", "py"]:
