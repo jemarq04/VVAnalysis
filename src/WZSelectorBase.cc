@@ -191,7 +191,6 @@ void WZSelectorBase::SetBranchesUWVV() {
     b.SetBranch("Flag_EcalDeadCellTriggerPrimitiveFilterPass", Flag_EcalDeadCellTriggerPrimitiveFilterPass);
     b.SetBranch("Flag_goodVerticesPass", Flag_goodVerticesPass);
     b.SetBranch("Flag_eeBadScFilterPass", Flag_eeBadScFilterPass);
-    b.SetBranch("Flag_globalTightHalo2016FilterPass", Flag_globalTightHalo2016FilterPass);
 }
 
 void WZSelectorBase::SetBranchesNanoAOD() {
@@ -232,7 +231,6 @@ void WZSelectorBase::SetBranchesNanoAOD() {
     //b.SetBranch("Flag_EcalDeadCellTriggerPrimitiveFilterPass", Flag_EcalDeadCellTriggerPrimitiveFilterPass);
     //b.SetBranch("Flag_goodVerticesPass", Flag_goodVerticesPass);
     //b.SetBranch("Flag_eeBadScFilterPass", Flag_eeBadScFilterPass);
-    //b.SetBranch("Flag_globalTightHalo2016FilterPass", Flag_globalTightHalo2016FilterPass);
 }
 
 void WZSelectorBase::LoadBranchesNanoAOD(Long64_t entry, std::pair<Systematic, std::string> variation) { 

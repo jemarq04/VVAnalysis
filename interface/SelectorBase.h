@@ -65,7 +65,7 @@ class SelectorBase : public TSelector {
     };
 
     enum Year {
-        yrdefault,      yr2016,      yr2017,      yr2018
+        yrdefault,      yr2022,      yr2023,      yr2024
     };
 
     enum Systematic {
@@ -126,9 +126,9 @@ class SelectorBase : public TSelector {
 
     std::map<std::string, Year> yearMap_ = {
         {"default", yrdefault},
-        {"2016", yr2016},
-        {"2017", yr2017},
-        {"2018", yr2018},
+        {"2022", yr2022},
+        {"2023", yr2023},
+        {"2024", yr2024},
     };
     
     std::map<std::string, Channel> channelMap_ = {

@@ -90,6 +90,7 @@ void ThreeLepSelector::SetBranchesNanoAOD() {
   b.SetBranch("Electron_sip3d",             Electron_sip3d);
   b.SetBranch("Electron_lostHits",          Electron_lostHits);
   b.SetBranch("Electron_convVeto",          Electron_convVeto);
+  /*
   if(year_ == yr2018) {
     b.SetBranch("Electron_mvaFall17V2noIso",     Electron_MVA);
     b.SetBranch("Electron_cutBased",             Electron_cutBased);
@@ -100,6 +101,7 @@ void ThreeLepSelector::SetBranchesNanoAOD() {
     b.SetBranch("Electron_mvaSpring16GP",        Electron_MVA);
     b.SetBranch("Electron_cutBased_Sum16",       Electron_cutBased);
   }
+  */
 
   b.SetBranch("nMuon",                  nMuon);
   b.SetBranch("Muon_pt",                Muon_pt);
@@ -344,22 +346,22 @@ bool ThreeLepSelector::isGoodElectron(size_t index) {
     else if(abs(Electron_eta[index]) < 1.479) caseIndex = 1;
     else if(abs(Electron_eta[index]) < 2.5)   caseIndex = 2;
 
-    if(year_ == yr2016 || year_ == yrdefault) {
+    //if(year_ == yr2016 || year_ == yrdefault) {
+    if (year_ == yrdefault) {
       if(caseIndex == 0)
-	passId = Electron_MVA[index] > std::max(0.52, 0.77 - 0.025 * (Electron_pt[index] - 15));     
+        passId = Electron_MVA[index] > std::max(0.52, 0.77 - 0.025 * (Electron_pt[index] - 15));     
       else if(caseIndex == 1)
-	passId = Electron_MVA[index] > std::max(0.11, 0.56 - 0.045 * (Electron_pt[index] - 15));
+        passId = Electron_MVA[index] > std::max(0.11, 0.56 - 0.045 * (Electron_pt[index] - 15));
       else if(caseIndex == 2)
-	passId = Electron_MVA[index] > std::max(-0.01, 0.48 - 0.049 * (Electron_pt[index] - 15));
+        passId = Electron_MVA[index] > std::max(-0.01, 0.48 - 0.049 * (Electron_pt[index] - 15));
     }
-    else if(year_ == yr2017) {
+    //else if(year_ == yr2017) {
       // if(caseIndex == 0)        passId = std::max(0.52, 0.77 - 0.025 * (Electron_pt[index] - 15));
       // else if(caseIndex == 1)   passId = std::max(0.11, 0.56 - 0.045 * (Electron_pt[index] - 15));
       // else if(caseIndex == 2)   passId = std::max(-0.01, 0.48 - 0.049 * (Electron_pt[index] - 15));
-    }
-  } else {
-    passId = (Electron_cutBased[index] == CBID_TIGHT);
+    //}
   }
+  else passId = (Electron_cutBased[index] == CBID_TIGHT);
 
   return ((Electron_pt[index] > 20)                 &&
 	  (Electron_miniPFRelIso_all[index] < 0.12) &&

@@ -512,7 +512,6 @@ bool WZSelector::PassesBaseSelection(Long64_t entry, bool tightLeps, Selection s
     //        && Flag_BadPFMuonFilterPass
     //        && Flag_EcalDeadCellTriggerPrimitiveFilterPass 
     //        && Flag_goodVerticesPass 
-    //        && Flag_globalTightHalo2016FilterPass
     //        && (isMC_ || Flag_eeBadScFilterPass
     //            //&& !Flag_duplicateMuonsPass 
     //            //&& !Flag_badMuonsPass)
