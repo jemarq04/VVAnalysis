@@ -1,1 +1,0 @@
-./Utilities/scripts/makeHistFile.py -a ZZ4l2016 -s LooseLeptons --output_file zzGen2016 --year 2016 --uwvv -c eeee,eemm,mmee,mmmm --test -f zz4l-powheg -j 12 --with_Gen --with_background -sf data/scaleFactorsZZ4l2016.root 
