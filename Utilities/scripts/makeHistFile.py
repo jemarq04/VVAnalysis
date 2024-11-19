@@ -74,18 +74,20 @@ def makeHistFile(args):
     addScaleFacs = False
     if args['scalefactors_file']:
         addScaleFacs = True
-    fjetPUSF = ROOT.TFile("data/jetSF/scalefactorsPUID_81Xtraining.root")
-    fjetPUeff= ROOT.TFile("data/jetSF/effcyPUID_81Xtraining.root")
     fr_inputs = []
     if addScaleFacs:
         if "ZZ4l" in args['analysis']:
-            fScales = ROOT.TFile(args['scalefactors_file'])
-            mZZTightFakeRate = fScales.Get("mZZTightFakeRate")
-            eZZTightFakeRate = fScales.Get("eZZTightFakeRate")
-            if mZZTightFakeRate:
-                mZZTightFakeRate.SetName("fakeRate_allMu")
-            if eZZTightFakeRate:
-                eZZTightFakeRate.SetName("fakeRate_allE")
+            if os.path.isfile(args["scalefactors_file"]):
+                fScales = ROOT.TFile(args['scalefactors_file'])
+                mZZTightFakeRate = fScales.Get("mZZTightFakeRate")
+                eZZTightFakeRate = fScales.Get("eZZTightFakeRate")
+                if mZZTightFakeRate:
+                    mZZTightFakeRate.SetName("fakeRate_allMu")
+                if eZZTightFakeRate:
+                    eZZTightFakeRate.SetName("fakeRate_allE")
+                fr_inputs = [eZZTightFakeRate, mZZTightFakeRate]
+            else:
+                print("ERROR: file:%s not found. No fake rates added" % args["scalefactors_file"])
 
             yearstring = ""
             basename = "/cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration/POG/"
@@ -104,7 +106,6 @@ def makeHistFile(args):
             pileupSF = ROOT.TNamed("pileupSF", os.path.join(basename, "LUM/%s/puWeights.json.gz" % yearstring))
             yearcfg = ROOT.TNamed("yearcfg", yearstring.split("_")[0])
 
-            fr_inputs = [eZZTightFakeRate, mZZTightFakeRate]
             sf_inputs = [electronRunSF,electronRecoSF,muonRunSF,pileupSF,jetPUSF,yearcfg]
         else:
             # The lines below use Run 2
