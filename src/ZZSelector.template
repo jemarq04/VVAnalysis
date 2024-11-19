@@ -390,11 +390,11 @@ void ZZSelector::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::str
     }
     else if (variation.first == pileupUp)
     {
-      weight *= pileupSF_->Evaluate1D(nTruePU, ScaleFactor::ShiftUp) / pileupSF_->Evaluate1D(nTruePU);
+      weight *= (*pileupSF_->begin()).second->evaluate({nTruePU, "up"}) / (*pileupSF_->begin()).second->evaluate({nTruePU, "nominal"});
     }
     else if (variation.first == pileupDown)
     {
-      weight *= pileupSF_->Evaluate1D(nTruePU, ScaleFactor::ShiftDown) / pileupSF_->Evaluate1D(nTruePU);
+      weight *= (*pileupSF_->begin()).second->evaluate({nTruePU, "down"}) / (*pileupSF_->begin()).second->evaluate({nTruePU, "nominal"});
     }
   }
 
@@ -476,10 +476,8 @@ void ZZSelector::ApplyScaleFactors()
 
       if (jetPt->at(ind) < 50)
       {
-        auto jetbin = jetPUSF_->FindBin(jetPt->at(ind), jetEta->at(ind));
-        float jetPUSF = (float)jetPUSF_->GetBinContent(jetbin);
-        auto jeffbin = jetPUeff_->FindBin(jetPt->at(ind), jetEta->at(ind));
-        float jeffPU = (float)jetPUeff_->GetBinContent(jeffbin);
+        float jetPUSF = jetPUSF_->at("PUJetID_eff")->evaluate({jetEta->at(ind), jetPt->at(ind), "nom", "T"});
+        float jeffPU = jetPUSF_->at("PUJetID_eff")->evaluate({jetEta->at(ind), jetPt->at(ind), "MCEff", "T"});
         float mulfac = 1.;
 
         if (jetPUID->at(ind) < 7)
@@ -503,78 +501,36 @@ void ZZSelector::ApplyScaleFactors()
     float pt_e2 = l2Pt < EleSF_MAX_PT_ ? l2Pt : EleSF_MAX_PT_ - 0.01;
     float pt_e3 = l3Pt < EleSF_MAX_PT_ ? l3Pt : EleSF_MAX_PT_ - 0.01;
     float pt_e4 = l4Pt < EleSF_MAX_PT_ ? l4Pt : EleSF_MAX_PT_ - 0.01;
-    if (eIdSF_ != nullptr and eGapIdSF_ != nullptr)
+    if (eIdSF_ != nullptr)
     {
-      // In order to get around the Overflow issue, set the Pt, not ideal.
-      if (l1IsGap)
-      {
-        weight *= eGapIdSF_->Evaluate2D(std::abs(l1Eta), pt_e1);
-        // std::cout<<"weight for GapE: "<<weight<<std::endl;
+      if (pt_e1 > EleSF_MIN_PT_){
+        std::string gapid = yearcfg + "_UL-" + (l1IsGap? "gap" : "nogap");
+        weight *= eIdSF_->at(gapid.c_str())->evaluate({l1Eta, pt_e1});
       }
-      else
-      {
-        weight *= eIdSF_->Evaluate2D(std::abs(l1Eta), pt_e1);
+      if (pt_e2 > EleSF_MIN_PT_){
+        std::string gapid = yearcfg + "_UL-" + (l2IsGap? "gap" : "nogap");
+        weight *= eIdSF_->at(gapid.c_str())->evaluate({l2Eta, pt_e2});
       }
-      if (l2IsGap)
-      {
-        weight *= eGapIdSF_->Evaluate2D(std::abs(l2Eta), pt_e2);
+      if (pt_e3 > EleSF_MIN_PT_){
+        std::string gapid = yearcfg + "_UL-" + (l3IsGap? "gap" : "nogap");
+        weight *= eIdSF_->at(gapid.c_str())->evaluate({l3Eta, pt_e3});
       }
-      else
-      {
-        weight *= eIdSF_->Evaluate2D(std::abs(l2Eta), pt_e2);
-      }
-      if (l3IsGap)
-      {
-        weight *= eGapIdSF_->Evaluate2D(std::abs(l3Eta), pt_e3);
-      }
-      else
-      {
-        weight *= eIdSF_->Evaluate2D(std::abs(l3Eta), pt_e3);
-      }
-      if (l4IsGap)
-      {
-        weight *= eGapIdSF_->Evaluate2D(std::abs(l4Eta), pt_e4);
-      }
-      else
-      {
-        weight *= eIdSF_->Evaluate2D(std::abs(l4Eta), pt_e4);
+      if (pt_e4 > EleSF_MIN_PT_){
+        std::string gapid = yearcfg + "_UL-" + (l4IsGap? "gap" : "nogap");
+        weight *= eIdSF_->at(gapid.c_str())->evaluate({l4Eta, pt_e4});
       }
     }
-    if (eRecoSF_ != nullptr and eLowRecoSF_ != nullptr)
+    if (eRecoSF_ != nullptr)
     {
-      // Applying Electron Reco SFs
-      if (l1Pt < 20)
-      {
-        weight *= eLowRecoSF_->Evaluate2D(std::abs(l1Eta), l1Pt);
-      }
-      else
-      {
-        weight *= eRecoSF_->Evaluate2D(std::abs(l1Eta), pt_e1);
-      }
-      if (l2Pt < 20)
-      {
-        weight *= eLowRecoSF_->Evaluate2D(std::abs(l2Eta), l2Pt);
-      }
-      else
-      {
-        weight *= eRecoSF_->Evaluate2D(std::abs(l2Eta), pt_e2);
-      }
-      if (l3Pt < 20)
-      {
-        weight *= eLowRecoSF_->Evaluate2D(std::abs(l3Eta), l3Pt);
-      }
-      else
-      {
-        weight *= eRecoSF_->Evaluate2D(std::abs(l3Eta), pt_e3);
-      }
-      if (l4Pt < 20)
-      {
-        weight *= eLowRecoSF_->Evaluate2D(std::abs(l4Eta), l4Pt);
-      }
-      else
-      {
-        weight *= eRecoSF_->Evaluate2D(std::abs(l4Eta), pt_e4);
-      }
+      const auto recoref = (*eRecoSF_->begin()).second;
+      if (pt_e1 > EleRecoSF_MIN_PT_)
+        weight *= recoref->evaluate({yearcfg.c_str(), "sf", (l1Pt<20)? "RecoBelow20" : "RecoAbove20", l1Eta, pt_e1});
+      if (pt_e2 > EleRecoSF_MIN_PT_)
+        weight *= recoref->evaluate({yearcfg.c_str(), "sf", (l2Pt<20)? "RecoBelow20" : "RecoAbove20", l2Eta, pt_e2});
+      if (pt_e3 > EleRecoSF_MIN_PT_)
+        weight *= recoref->evaluate({yearcfg.c_str(), "sf", (l3Pt<20)? "RecoBelow20" : "RecoAbove20", l3Eta, pt_e3});
+      if (pt_e4 > EleRecoSF_MIN_PT_)
+        weight *= recoref->evaluate({yearcfg.c_str(), "sf", (l4Pt<20)? "RecoBelow20" : "RecoAbove20", l4Eta, pt_e4});
     }
   }
   else if (channel_ == eemm)
@@ -583,50 +539,31 @@ void ZZSelector::ApplyScaleFactors()
     float pt_e2 = l2Pt < EleSF_MAX_PT_ ? l2Pt : EleSF_MAX_PT_ - 0.01;
     float pt_m3 = l3Pt < MuSF_MAX_PT_ ? l3Pt : MuSF_MAX_PT_ - 0.01;
     float pt_m4 = l4Pt < MuSF_MAX_PT_ ? l4Pt : MuSF_MAX_PT_ - 0.01;
-    if (eIdSF_ != nullptr and eGapIdSF_ != nullptr)
+    float absEta_m3 = std::abs(l3Eta) < MuSF_MAX_ETA_ ? std::abs(l3Eta) : MuSF_MAX_ETA_ - 0.01;
+    float absEta_m4 = std::abs(l4Eta) < MuSF_MAX_ETA_ ? std::abs(l4Eta) : MuSF_MAX_ETA_ - 0.01;
+    if (eIdSF_ != nullptr)
     {
-      // In order to get around the Overflow issue, set the Pt, not ideal.
-      if (l1IsGap)
-      {
-        weight *= eGapIdSF_->Evaluate2D(std::abs(l1Eta), pt_e1);
+      if (pt_e1 > EleSF_MIN_PT_){
+        std::string gapid = yearcfg + "_UL-" + (l1IsGap? "gap" : "nogap");
+        weight *= eIdSF_->at(gapid.c_str())->evaluate({l1Eta, pt_e1});
       }
-      else
-      {
-        weight *= eIdSF_->Evaluate2D(std::abs(l1Eta), pt_e1);
-      }
-      if (l2IsGap)
-      {
-        weight *= eGapIdSF_->Evaluate2D(std::abs(l2Eta), pt_e2);
-      }
-      else
-      {
-        weight *= eIdSF_->Evaluate2D(std::abs(l2Eta), pt_e2);
+      if (pt_e2 > EleSF_MIN_PT_){
+        std::string gapid = yearcfg + "_UL-" + (l2IsGap? "gap" : "nogap");
+        weight *= eIdSF_->at(gapid.c_str())->evaluate({l2Eta, pt_e2});
       }
     }
-    // Applying Electron Reco SFs
-    if (eRecoSF_ != nullptr and eLowRecoSF_ != nullptr)
+    if (eRecoSF_ != nullptr)
     {
-      if (l1Pt < 20)
-      {
-        weight *= eLowRecoSF_->Evaluate2D(std::abs(l1Eta), l1Pt);
-      }
-      else
-      {
-        weight *= eRecoSF_->Evaluate2D(std::abs(l1Eta), pt_e1);
-      }
-      if (l2Pt < 20)
-      {
-        weight *= eLowRecoSF_->Evaluate2D(std::abs(l2Eta), l2Pt);
-      }
-      else
-      {
-        weight *= eRecoSF_->Evaluate2D(std::abs(l2Eta), pt_e2);
-      }
+      const auto recoref = (*eRecoSF_->begin()).second;
+      if (pt_e1 > EleRecoSF_MIN_PT_)
+        weight *= recoref->evaluate({yearcfg.c_str(), "sf", (l1Pt<20)? "RecoBelow20" : "RecoAbove20", l1Eta, pt_e1});
+      if (pt_e2 > EleRecoSF_MIN_PT_)
+        weight *= recoref->evaluate({yearcfg.c_str(), "sf", (l2Pt<20)? "RecoBelow20" : "RecoAbove20", l2Eta, pt_e2});
     }
     if (mIdSF_ != nullptr)
     {
-      weight *= mIdSF_->Evaluate2D(std::abs(l3Eta), pt_m3);
-      weight *= mIdSF_->Evaluate2D(std::abs(l4Eta), pt_m4);
+      if (pt_m3 > MuSF_MIN_PT_) weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m3, pt_m3, "nominal"});
+      if (pt_m4 > MuSF_MIN_PT_) weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m4, pt_m4, "nominal"});
     }
   }
   else if (channel_ == mmee)
@@ -635,49 +572,31 @@ void ZZSelector::ApplyScaleFactors()
     float pt_m2 = l2Pt < MuSF_MAX_PT_ ? l2Pt : MuSF_MAX_PT_ - 0.01;
     float pt_e3 = l3Pt < EleSF_MAX_PT_ ? l3Pt : EleSF_MAX_PT_ - 0.01;
     float pt_e4 = l4Pt < EleSF_MAX_PT_ ? l4Pt : EleSF_MAX_PT_ - 0.01;
+    float absEta_m1 = std::abs(l1Eta) < MuSF_MAX_ETA_ ? std::abs(l1Eta) : MuSF_MAX_ETA_ - 0.01;
+    float absEta_m2 = std::abs(l2Eta) < MuSF_MAX_ETA_ ? std::abs(l2Eta) : MuSF_MAX_ETA_ - 0.01;
     if (mIdSF_ != nullptr)
     {
-      weight *= mIdSF_->Evaluate2D(std::abs(l1Eta), pt_m1);
-      weight *= mIdSF_->Evaluate2D(std::abs(l2Eta), pt_m2);
+      if (pt_m1 > MuSF_MIN_PT_) weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m1, pt_m1, "nominal"});
+      if (pt_m2 > MuSF_MIN_PT_) weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m2, pt_m2, "nominal"});
     }
-    if (eIdSF_ != nullptr and eGapIdSF_ != nullptr)
+    if (eIdSF_ != nullptr)
     {
-      if (l3IsGap)
-      {
-        weight *= eGapIdSF_->Evaluate2D(std::abs(l3Eta), pt_e3);
+      if (pt_e3 > EleSF_MIN_PT_){
+        std::string gapid = yearcfg + "_UL-" + (l3IsGap? "gap" : "nogap");
+        weight *= eIdSF_->at(gapid.c_str())->evaluate({l3Eta, pt_e3});
       }
-      else
-      {
-        weight *= eIdSF_->Evaluate2D(std::abs(l3Eta), pt_e3);
-      }
-      if (l4IsGap)
-      {
-        weight *= eGapIdSF_->Evaluate2D(std::abs(l4Eta), pt_e4);
-      }
-      else
-      {
-        weight *= eIdSF_->Evaluate2D(std::abs(l4Eta), pt_e4);
+      if (pt_e4 > EleSF_MIN_PT_){
+        std::string gapid = yearcfg + "_UL-" + (l4IsGap? "gap" : "nogap");
+        weight *= eIdSF_->at(gapid.c_str())->evaluate({l4Eta, pt_e4});
       }
     }
-    // Applying Electron Reco SFs
-    if (eRecoSF_ != nullptr and eLowRecoSF_ != nullptr)
+    if (eRecoSF_ != nullptr)
     {
-      if (l3Pt < 20)
-      {
-        weight *= eLowRecoSF_->Evaluate2D(std::abs(l3Eta), l3Pt);
-      }
-      else
-      {
-        weight *= eRecoSF_->Evaluate2D(std::abs(l3Eta), pt_e3);
-      }
-      if (l4Pt < 20)
-      {
-        weight *= eLowRecoSF_->Evaluate2D(std::abs(l4Eta), l4Pt);
-      }
-      else
-      {
-        weight *= eRecoSF_->Evaluate2D(std::abs(l4Eta), pt_e4);
-      }
+      const auto recoref = (*eRecoSF_->begin()).second;
+      if (pt_e3 > EleRecoSF_MIN_PT_)
+        weight *= recoref->evaluate({yearcfg.c_str(), "sf", (l3Pt<20)? "RecoBelow20" : "RecoAbove20", l3Eta, pt_e3});
+      if (pt_e4 > EleRecoSF_MIN_PT_)
+        weight *= recoref->evaluate({yearcfg.c_str(), "sf", (l4Pt<20)? "RecoBelow20" : "RecoAbove20", l4Eta, pt_e4});
     }
   }
   else
@@ -686,18 +605,20 @@ void ZZSelector::ApplyScaleFactors()
     float pt_m2 = l2Pt < MuSF_MAX_PT_ ? l2Pt : MuSF_MAX_PT_ - 0.01;
     float pt_m3 = l3Pt < MuSF_MAX_PT_ ? l3Pt : MuSF_MAX_PT_ - 0.01;
     float pt_m4 = l4Pt < MuSF_MAX_PT_ ? l4Pt : MuSF_MAX_PT_ - 0.01;
+    float absEta_m1 = std::abs(l1Eta) < MuSF_MAX_ETA_ ? std::abs(l1Eta) : MuSF_MAX_ETA_ - 0.01;
+    float absEta_m2 = std::abs(l2Eta) < MuSF_MAX_ETA_ ? std::abs(l2Eta) : MuSF_MAX_ETA_ - 0.01;
+    float absEta_m3 = std::abs(l3Eta) < MuSF_MAX_ETA_ ? std::abs(l3Eta) : MuSF_MAX_ETA_ - 0.01;
+    float absEta_m4 = std::abs(l4Eta) < MuSF_MAX_ETA_ ? std::abs(l4Eta) : MuSF_MAX_ETA_ - 0.01;
     if (mIdSF_ != nullptr)
     {
-      weight *= mIdSF_->Evaluate2D(std::abs(l1Eta), pt_m1);
-      weight *= mIdSF_->Evaluate2D(std::abs(l2Eta), pt_m2);
-      weight *= mIdSF_->Evaluate2D(std::abs(l3Eta), pt_m3);
-      weight *= mIdSF_->Evaluate2D(std::abs(l4Eta), pt_m4);
+      if (pt_m1 > MuSF_MIN_PT_) weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m1, pt_m1, "nominal"});
+      if (pt_m2 > MuSF_MIN_PT_) weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m2, pt_m2, "nominal"});
+      if (pt_m3 > MuSF_MIN_PT_) weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m3, pt_m3, "nominal"});
+      if (pt_m4 > MuSF_MIN_PT_) weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m4, pt_m4, "nominal"});
     }
   }
   if (pileupSF_ != nullptr)
-  {
-    weight *= pileupSF_->Evaluate1D(nTruePU);
-  }
+    weight *= (*pileupSF_->begin()).second->evaluate({nTruePU, "nominal"});
 }
 // Similar to Kenneth's SetShiftedMasses function which i will need later as well
 void ZZSelector::SetVariables(Long64_t entry)
@@ -781,9 +702,8 @@ void ZZSelector::SetVariables(Long64_t entry)
 }
 void ZZSelector::ShiftEfficiencies(Systematic variation)
 {
-  ScaleFactor::Variation shift = ScaleFactor::Variation::ShiftUp;
-  if (variation == electronEfficiencyDown || variation == electronRecoEffDown || variation == muonEfficiencyDown)
-    shift = ScaleFactor::Variation::ShiftDown;
+  std::string shift = (variation == electronEfficiencyDown || variation == electronRecoEffDown || variation == muonEfficiencyDown)?
+    "down" : "up";
 
   if (channel_ == eeee)
   {
@@ -794,80 +714,68 @@ void ZZSelector::ShiftEfficiencies(Systematic variation)
     // std::cout<<eRecoSF_<<std::endl;
     if (variation == electronRecoEffUp || variation == electronRecoEffDown)
     {
-      if (eRecoSF_ != nullptr and eLowRecoSF_ != nullptr)
+      if (eRecoSF_ != nullptr)
       {
-        // std::cout<<"Is it a null ptr"<<std::endl;
         // Applying Electron Reco SFs Up/Down for ElectronRecoSyst
-        if (l1Pt < 20)
-        {
-          weight *= eLowRecoSF_->Evaluate2D(std::abs(l1Eta), l1Pt, shift) / eLowRecoSF_->Evaluate2D(std::abs(l1Eta), l1Pt);
-        }
-        else
-        {
-          weight *= eRecoSF_->Evaluate2D(std::abs(l1Eta), pt_e1, shift) / eRecoSF_->Evaluate2D(std::abs(l1Eta), pt_e1);
-        }
-        if (l2Pt < 20)
-        {
-          weight *= eLowRecoSF_->Evaluate2D(std::abs(l2Eta), l2Pt, shift) / eLowRecoSF_->Evaluate2D(std::abs(l2Eta), l2Pt);
-        }
-        else
-        {
-          weight *= eRecoSF_->Evaluate2D(std::abs(l2Eta), pt_e2, shift) / eRecoSF_->Evaluate2D(std::abs(l2Eta), pt_e2);
-        }
-        if (l3Pt < 20)
-        {
-          weight *= eLowRecoSF_->Evaluate2D(std::abs(l3Eta), l3Pt, shift) / eLowRecoSF_->Evaluate2D(std::abs(l3Eta), l3Pt);
-        }
-        else
-        {
-          weight *= eRecoSF_->Evaluate2D(std::abs(l3Eta), pt_e3, shift) / eRecoSF_->Evaluate2D(std::abs(l3Eta), pt_e3);
-        }
-        if (l4Pt < 20)
-        {
-          weight *= eLowRecoSF_->Evaluate2D(std::abs(l4Eta), l4Pt, shift) / eLowRecoSF_->Evaluate2D(std::abs(l4Eta), l4Pt);
-        }
-        else
-        {
-          weight *= eRecoSF_->Evaluate2D(std::abs(l4Eta), pt_e4, shift) / eRecoSF_->Evaluate2D(std::abs(l4Eta), pt_e4);
-        }
+        const auto recoref = (*eRecoSF_->begin()).second;
+        if (pt_e1 > EleRecoSF_MIN_PT_)
+          weight *= recoref->evaluate({yearcfg.c_str(), (shift=="up")? "sfup" : "sfdown", (l1Pt<20)? "RecoBelow20" : "RecoAbove20", l1Eta, pt_e1})
+            / recoref->evaluate({yearcfg.c_str(), "sf", (l1Pt<20)? "RecoBelow20" : "RecoAbove20", l1Eta, pt_e1});
+        if (pt_e2 > EleRecoSF_MIN_PT_)
+          weight *= recoref->evaluate({yearcfg.c_str(), (shift=="up")? "sfup" : "sfdown", (l2Pt<20)? "RecoBelow20" : "RecoAbove20", l2Eta, pt_e2})
+            / recoref->evaluate({yearcfg.c_str(), "sf", (l2Pt<20)? "RecoBelow20" : "RecoAbove20", l2Eta, pt_e2});
+        if (pt_e3 > EleRecoSF_MIN_PT_)
+          weight *= recoref->evaluate({yearcfg.c_str(), (shift=="up")? "sfup" : "sfdown", (l3Pt<20)? "RecoBelow20" : "RecoAbove20", l3Eta, pt_e3})
+            / recoref->evaluate({yearcfg.c_str(), "sf", (l3Pt<20)? "RecoBelow20" : "RecoAbove20", l3Eta, pt_e3});
+        if (pt_e4 > EleRecoSF_MIN_PT_)
+          weight *= recoref->evaluate({yearcfg.c_str(), (shift=="up")? "sfup" : "sfdown", (l4Pt<20)? "RecoBelow20" : "RecoAbove20", l4Eta, pt_e4})
+            / recoref->evaluate({yearcfg.c_str(), "sf", (l4Pt<20)? "RecoBelow20" : "RecoAbove20", l4Eta, pt_e4});
       }
     }
     // Applying Electron ID SFs Up/Down for ElectronIDEffSyst
     else if (variation == electronEfficiencyUp || variation == electronEfficiencyDown)
     {
-      if (eIdSF_ != nullptr and eGapIdSF_ != nullptr)
+      if (eIdSF_ != nullptr)
       {
-        if (l1IsGap)
-        {
-          weight *= eGapIdSF_->Evaluate2D(std::abs(l1Eta), pt_e1, shift) / eGapIdSF_->Evaluate2D(std::abs(l1Eta), pt_e1);
+        if (pt_e1 > EleSF_MIN_PT_){
+          std::string gapid = yearcfg + "_UL-" + (l1IsGap? "gap" : "nogap");
+          try{
+            weight *= eIdSF_->at((gapid + "_" + shift).c_str())->evaluate({l1Eta, pt_e1})
+              / eIdSF_->at(gapid.c_str())->evaluate({l1Eta, pt_e1});
+          }
+          catch (...){
+            weight /= eIdSF_->at(gapid.c_str())->evaluate({l1Eta, pt_e1});
+          }
         }
-        else
-        {
-          weight *= eIdSF_->Evaluate2D(std::abs(l1Eta), pt_e1, shift) / eIdSF_->Evaluate2D(std::abs(l1Eta), pt_e1);
+        if (pt_e2 > EleSF_MIN_PT_){
+          std::string gapid = yearcfg + "_UL-" + (l2IsGap? "gap" : "nogap");
+          try{
+            weight *= eIdSF_->at((gapid + "_" + shift).c_str())->evaluate({l2Eta, pt_e2})
+              / eIdSF_->at(gapid.c_str())->evaluate({l2Eta, pt_e2});
+          }
+          catch (...){
+            weight /= eIdSF_->at(gapid.c_str())->evaluate({l2Eta, pt_e2});
+          }
         }
-        if (l2IsGap)
-        {
-          weight *= eGapIdSF_->Evaluate2D(std::abs(l2Eta), pt_e2, shift) / eGapIdSF_->Evaluate2D(std::abs(l2Eta), pt_e2);
+        if (pt_e3 > EleSF_MIN_PT_){
+          std::string gapid = yearcfg + "_UL-" + (l3IsGap? "gap" : "nogap");
+          try{
+            weight *= eIdSF_->at((gapid + "_" + shift).c_str())->evaluate({l3Eta, pt_e3})
+              / eIdSF_->at(gapid.c_str())->evaluate({l3Eta, pt_e3});
+          }
+          catch (...){
+            weight /= eIdSF_->at(gapid.c_str())->evaluate({l3Eta, pt_e3});
+          }
         }
-        else
-        {
-          weight *= eIdSF_->Evaluate2D(std::abs(l2Eta), pt_e2, shift) / eIdSF_->Evaluate2D(std::abs(l2Eta), pt_e2);
-        }
-        if (l3IsGap)
-        {
-          weight *= eGapIdSF_->Evaluate2D(std::abs(l3Eta), pt_e3, shift) / eGapIdSF_->Evaluate2D(std::abs(l3Eta), pt_e3);
-        }
-        else
-        {
-          weight *= eIdSF_->Evaluate2D(std::abs(l3Eta), pt_e3, shift) / eIdSF_->Evaluate2D(std::abs(l3Eta), pt_e3);
-        }
-        if (l4IsGap)
-        {
-          weight *= eGapIdSF_->Evaluate2D(std::abs(l4Eta), pt_e4, shift) / eGapIdSF_->Evaluate2D(std::abs(l4Eta), pt_e4);
-        }
-        else
-        {
-          weight *= eIdSF_->Evaluate2D(std::abs(l4Eta), pt_e4, shift) / eIdSF_->Evaluate2D(std::abs(l4Eta), pt_e4);
+        if (pt_e4 > EleSF_MIN_PT_){
+          std::string gapid = yearcfg + "_UL-" + (l4IsGap? "gap" : "nogap");
+          try{
+            weight *= eIdSF_->at((gapid + "_" + shift).c_str())->evaluate({l4Eta, pt_e4})
+              / eIdSF_->at(gapid.c_str())->evaluate({l4Eta, pt_e4});
+          }
+          catch (...){
+            weight /= eIdSF_->at(gapid.c_str())->evaluate({l4Eta, pt_e4});
+          }
         }
       }
     }
@@ -879,50 +787,57 @@ void ZZSelector::ShiftEfficiencies(Systematic variation)
     float pt_e2 = l2Pt < EleSF_MAX_PT_ ? l2Pt : EleSF_MAX_PT_ - 0.01;
     float pt_m3 = l3Pt < MuSF_MAX_PT_ ? l3Pt : MuSF_MAX_PT_ - 0.01;
     float pt_m4 = l4Pt < MuSF_MAX_PT_ ? l4Pt : MuSF_MAX_PT_ - 0.01;
+    float absEta_m3 = std::abs(l3Eta) < MuSF_MAX_ETA_ ? std::abs(l3Eta) : MuSF_MAX_ETA_ - 0.01;
+    float absEta_m4 = std::abs(l4Eta) < MuSF_MAX_ETA_ ? std::abs(l4Eta) : MuSF_MAX_ETA_ - 0.01;
     if (variation == electronRecoEffUp || variation == electronRecoEffDown)
     {
-      // Applying Electron Reco SFs Up/Down for ElectronRecoEffSyst
-      if (l1Pt < 20)
-      {
-        weight *= eLowRecoSF_->Evaluate2D(std::abs(l1Eta), l1Pt, shift) / eLowRecoSF_->Evaluate2D(std::abs(l1Eta), l1Pt);
-      }
-      else
-      {
-        weight *= eRecoSF_->Evaluate2D(std::abs(l1Eta), pt_e1, shift) / eRecoSF_->Evaluate2D(std::abs(l1Eta), pt_e1);
-      }
-      if (l2Pt < 20)
-      {
-        weight *= eLowRecoSF_->Evaluate2D(std::abs(l2Eta), l2Pt, shift) / eLowRecoSF_->Evaluate2D(std::abs(l2Eta), l2Pt);
-      }
-      else
-      {
-        weight *= eRecoSF_->Evaluate2D(std::abs(l2Eta), pt_e2, shift) / eRecoSF_->Evaluate2D(std::abs(l2Eta), pt_e2);
+      if (eRecoSF_ != nullptr){
+        // Applying Electron Reco SFs Up/Down for ElectronRecoEffSyst
+        const auto recoref = (*eRecoSF_->begin()).second;
+        if (pt_e1 > EleRecoSF_MIN_PT_)
+          weight *= recoref->evaluate({yearcfg.c_str(), (shift=="up")? "sfup" : "sfdown", (l1Pt<20)? "RecoBelow20" : "RecoAbove20", l1Eta, pt_e1})
+            / recoref->evaluate({yearcfg.c_str(), "sf", (l1Pt<20)? "RecoBelow20" : "RecoAbove20", l1Eta, pt_e1});
+        if (pt_e2 > EleRecoSF_MIN_PT_)
+          weight *= recoref->evaluate({yearcfg.c_str(), (shift=="up")? "sfup" : "sfdown", (l2Pt<20)? "RecoBelow20" : "RecoAbove20", l2Eta, pt_e2})
+            / recoref->evaluate({yearcfg.c_str(), "sf", (l2Pt<20)? "RecoBelow20" : "RecoAbove20", l2Eta, pt_e2});
       }
     }
     // Applying Electron ID SFs Up/Down for ElectronIDEffSyst
     else if (variation == electronEfficiencyUp || variation == electronEfficiencyDown)
     {
-      if (l1IsGap)
-      {
-        weight *= eGapIdSF_->Evaluate2D(std::abs(l1Eta), pt_e1, shift) / eGapIdSF_->Evaluate2D(std::abs(l1Eta), pt_e1);
-      }
-      else
-      {
-        weight *= eIdSF_->Evaluate2D(std::abs(l1Eta), pt_e1, shift) / eIdSF_->Evaluate2D(std::abs(l1Eta), pt_e1);
-      }
-      if (l2IsGap)
-      {
-        weight *= eGapIdSF_->Evaluate2D(std::abs(l2Eta), pt_e2, shift) / eGapIdSF_->Evaluate2D(std::abs(l2Eta), pt_e2);
-      }
-      else
-      {
-        weight *= eIdSF_->Evaluate2D(std::abs(l2Eta), pt_e2, shift) / eIdSF_->Evaluate2D(std::abs(l2Eta), pt_e2);
+      if (eIdSF_ != nullptr){
+        if (pt_e1 > EleSF_MIN_PT_){
+          std::string gapid = yearcfg + "_UL-" + (l1IsGap? "gap" : "nogap");
+          try{
+            weight *= eIdSF_->at((gapid + "_" + shift).c_str())->evaluate({l1Eta, pt_e1})
+              / eIdSF_->at(gapid.c_str())->evaluate({l1Eta, pt_e1});
+          }
+          catch (...){
+            weight /= eIdSF_->at(gapid.c_str())->evaluate({l1Eta, pt_e1});
+          }
+        }
+        if (pt_e2 > EleSF_MIN_PT_){
+          std::string gapid = yearcfg + "_UL-" + (l2IsGap? "gap" : "nogap");
+          try{
+            weight *= eIdSF_->at((gapid + "_" + shift).c_str())->evaluate({l2Eta, pt_e2})
+              / eIdSF_->at(gapid.c_str())->evaluate({l2Eta, pt_e2});
+          }
+          catch (...){
+            weight /= eIdSF_->at(gapid.c_str())->evaluate({l2Eta, pt_e2});
+          }
+        }
       }
     }
     else if (variation == muonEfficiencyUp || variation == muonEfficiencyDown)
     {
-      weight *= mIdSF_->Evaluate2D(std::abs(l3Eta), pt_m3, shift) / mIdSF_->Evaluate2D(std::abs(l3Eta), pt_m3);
-      weight *= mIdSF_->Evaluate2D(std::abs(l4Eta), pt_m4, shift) / mIdSF_->Evaluate2D(std::abs(l4Eta), pt_m4);
+      if (mIdSF_ != nullptr){
+        if (pt_m3 > MuSF_MIN_PT_)
+          weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m3, pt_m3, (shift=="up")? "systup" : "systdown"})
+            / mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m3, pt_m3, "nominal"});
+        if (pt_m4 > MuSF_MIN_PT_)
+          weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m4, pt_m4, (shift=="up")? "systup" : "systdown"})
+            / mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m4, pt_m4, "nominal"});
+      }
     }
   }
   else if (channel_ == mmee)
@@ -931,49 +846,56 @@ void ZZSelector::ShiftEfficiencies(Systematic variation)
     float pt_m2 = l2Pt < MuSF_MAX_PT_ ? l2Pt : MuSF_MAX_PT_ - 0.01;
     float pt_e3 = l3Pt < EleSF_MAX_PT_ ? l3Pt : EleSF_MAX_PT_ - 0.01;
     float pt_e4 = l4Pt < EleSF_MAX_PT_ ? l4Pt : EleSF_MAX_PT_ - 0.01;
+    float absEta_m1 = std::abs(l1Eta) < MuSF_MAX_ETA_ ? std::abs(l1Eta) : MuSF_MAX_ETA_ - 0.01;
+    float absEta_m2 = std::abs(l2Eta) < MuSF_MAX_ETA_ ? std::abs(l2Eta) : MuSF_MAX_ETA_ - 0.01;
     if (variation == muonEfficiencyUp || variation == muonEfficiencyDown)
     {
-      weight *= mIdSF_->Evaluate2D(std::abs(l1Eta), pt_m1, shift) / mIdSF_->Evaluate2D(std::abs(l1Eta), pt_m1);
-      weight *= mIdSF_->Evaluate2D(std::abs(l2Eta), pt_m2, shift) / mIdSF_->Evaluate2D(std::abs(l2Eta), pt_m2);
+      if (mIdSF_ != nullptr){
+        if (pt_m1 > MuSF_MIN_PT_)
+          weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m1, pt_m1, (shift=="up")? "systup" : "systdown"})
+            / mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m1, pt_m1, "nominal"});
+        if (pt_m2 > MuSF_MIN_PT_)
+          weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m2, pt_m2, (shift=="up")? "systup" : "systdown"})
+            / mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m2, pt_m2, "nominal"});
+      }
     }
     else if (variation == electronRecoEffUp || variation == electronRecoEffDown)
     {
       // Applying Electron Reco SFs Up/Down for ElectronRecoEffSyst
-      if (l3Pt < 20)
-      {
-        weight *= eLowRecoSF_->Evaluate2D(std::abs(l3Eta), l3Pt, shift) / eLowRecoSF_->Evaluate2D(std::abs(l3Eta), l3Pt);
-      }
-      else
-      {
-        weight *= eRecoSF_->Evaluate2D(std::abs(l3Eta), pt_e3, shift) / eRecoSF_->Evaluate2D(std::abs(l3Eta), pt_e3);
-      }
-      if (l4Pt < 20)
-      {
-        weight *= eLowRecoSF_->Evaluate2D(std::abs(l4Eta), l4Pt, shift) / eLowRecoSF_->Evaluate2D(std::abs(l4Eta), l4Pt);
-      }
-      else
-      {
-        weight *= eRecoSF_->Evaluate2D(std::abs(l4Eta), pt_e4, shift) / eRecoSF_->Evaluate2D(std::abs(l4Eta), pt_e4);
+      if (eRecoSF_ != nullptr){
+        const auto recoref = (*eRecoSF_->begin()).second;
+        if (pt_e3 > EleRecoSF_MIN_PT_)
+          weight *= recoref->evaluate({yearcfg.c_str(), (shift=="up")? "sfup" : "sfdown", (l3Pt<20)? "RecoBelow20" : "RecoAbove20", l3Eta, pt_e3})
+            / recoref->evaluate({yearcfg.c_str(), "sf", (l3Pt<20)? "RecoBelow20" : "RecoAbove20", l3Eta, pt_e3});
+        if (pt_e4 > EleRecoSF_MIN_PT_)
+          weight *= recoref->evaluate({yearcfg.c_str(), (shift=="up")? "sfup" : "sfdown", (l4Pt<20)? "RecoBelow20" : "RecoAbove20", l4Eta, pt_e4})
+            / recoref->evaluate({yearcfg.c_str(), "sf", (l4Pt<20)? "RecoBelow20" : "RecoAbove20", l4Eta, pt_e4});
       }
     }
     // Applying Electron ID SFs Up/Down for ElectronIDEffSyst
     else if (variation == electronEfficiencyUp || variation == electronEfficiencyDown)
     {
-      if (l3IsGap)
-      {
-        weight *= eGapIdSF_->Evaluate2D(std::abs(l3Eta), pt_e3, shift) / eGapIdSF_->Evaluate2D(std::abs(l3Eta), pt_e3);
-      }
-      else
-      {
-        weight *= eIdSF_->Evaluate2D(std::abs(l3Eta), pt_e3, shift) / eIdSF_->Evaluate2D(std::abs(l3Eta), pt_e3);
-      }
-      if (l4IsGap)
-      {
-        weight *= eGapIdSF_->Evaluate2D(std::abs(l4Eta), pt_e4, shift) / eGapIdSF_->Evaluate2D(std::abs(l4Eta), pt_e4);
-      }
-      else
-      {
-        weight *= eIdSF_->Evaluate2D(std::abs(l4Eta), pt_e4, shift) / eIdSF_->Evaluate2D(std::abs(l4Eta), pt_e4);
+      if (eIdSF_ != nullptr){
+        if (pt_e3 > EleSF_MIN_PT_){
+          std::string gapid = yearcfg + "_UL-" + (l3IsGap? "gap" : "nogap");
+          try{
+            weight *= eIdSF_->at((gapid + "_" + shift).c_str())->evaluate({l3Eta, pt_e3})
+              / eIdSF_->at(gapid.c_str())->evaluate({l3Eta, pt_e3});
+          }
+          catch (...){
+            weight /= eIdSF_->at(gapid.c_str())->evaluate({l3Eta, pt_e3});
+          }
+        }
+        if (pt_e4 > EleSF_MIN_PT_){
+          std::string gapid = yearcfg + "_UL-" + (l4IsGap? "gap" : "nogap");
+          try{
+            weight *= eIdSF_->at((gapid + "_" + shift).c_str())->evaluate({l4Eta, pt_e4})
+              / eIdSF_->at(gapid.c_str())->evaluate({l4Eta, pt_e4});
+          }
+          catch (...){
+            weight /= eIdSF_->at(gapid.c_str())->evaluate({l4Eta, pt_e4});
+          }
+        }
       }
     }
   }
@@ -983,14 +905,24 @@ void ZZSelector::ShiftEfficiencies(Systematic variation)
     float pt_m2 = l2Pt < MuSF_MAX_PT_ ? l2Pt : MuSF_MAX_PT_ - 0.01;
     float pt_m3 = l3Pt < MuSF_MAX_PT_ ? l3Pt : MuSF_MAX_PT_ - 0.01;
     float pt_m4 = l4Pt < MuSF_MAX_PT_ ? l4Pt : MuSF_MAX_PT_ - 0.01;
-    weight *= mIdSF_->Evaluate2D(std::abs(l1Eta), pt_m1, shift) / mIdSF_->Evaluate2D(std::abs(l1Eta), pt_m1);
-    // std::cout<<"l1 Shift: "<< mIdSF_->Evaluate2D(std::abs(l1Eta), pt_m1, shift)<<std::endl;
-    // std::cout<<"l1 sf: "<< mIdSF_->Evaluate2D(std::abs(l1Eta), pt_m1)<<std::endl;
-    weight *= mIdSF_->Evaluate2D(std::abs(l2Eta), pt_m2, shift) / mIdSF_->Evaluate2D(std::abs(l2Eta), pt_m2);
-    weight *= mIdSF_->Evaluate2D(std::abs(l3Eta), pt_m3, shift) / mIdSF_->Evaluate2D(std::abs(l3Eta), pt_m3);
-    // std::cout<<"l3 Shift: "<< mIdSF_->Evaluate2D(std::abs(l3Eta), pt_m3, shift)<<std::endl;
-    // std::cout<<"l3 sf: "<< mIdSF_->Evaluate2D(std::abs(l3Eta), pt_m3)<<std::endl;
-    weight *= mIdSF_->Evaluate2D(std::abs(l4Eta), pt_m4, shift) / mIdSF_->Evaluate2D(std::abs(l4Eta), pt_m4);
+    float absEta_m1 = std::abs(l1Eta) < MuSF_MAX_ETA_ ? std::abs(l1Eta) : MuSF_MAX_ETA_ - 0.01;
+    float absEta_m2 = std::abs(l2Eta) < MuSF_MAX_ETA_ ? std::abs(l2Eta) : MuSF_MAX_ETA_ - 0.01;
+    float absEta_m3 = std::abs(l3Eta) < MuSF_MAX_ETA_ ? std::abs(l3Eta) : MuSF_MAX_ETA_ - 0.01;
+    float absEta_m4 = std::abs(l4Eta) < MuSF_MAX_ETA_ ? std::abs(l4Eta) : MuSF_MAX_ETA_ - 0.01;
+    if (mIdSF_ != nullptr){
+      if (pt_m1 > MuSF_MIN_PT_)
+        weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m1, pt_m1, (shift=="up")? "systup" : "systdown"})
+          / mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m1, pt_m1, "nominal"});
+      if (pt_m2 > MuSF_MIN_PT_)
+        weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m2, pt_m2, (shift=="up")? "systup" : "systdown"})
+          / mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m2, pt_m2, "nominal"});
+      if (pt_m3 > MuSF_MIN_PT_)
+        weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m3, pt_m3, (shift=="up")? "systup" : "systdown"})
+          / mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m3, pt_m3, "nominal"});
+      if (pt_m4 > MuSF_MIN_PT_)
+        weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m4, pt_m4, (shift=="up")? "systup" : "systdown"})
+          / mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m4, pt_m4, "nominal"});
+    }
   }
 }
 
