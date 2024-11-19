@@ -504,7 +504,7 @@ void ZZSelector::ApplyScaleFactors()
     float pt_e2 = l2Pt < EleSF_MAX_PT_ ? l2Pt : EleSF_MAX_PT_ - 0.01;
     float pt_e3 = l3Pt < EleSF_MAX_PT_ ? l3Pt : EleSF_MAX_PT_ - 0.01;
     float pt_e4 = l4Pt < EleSF_MAX_PT_ ? l4Pt : EleSF_MAX_PT_ - 0.01;
-    if (eIdSF_ != nullptr)
+    if (eIdSF_ != nullptr) //Update with appropriate CorrectionSet calls once JSON files are provided
     {
       if (pt_e1 > EleSF_MIN_PT_){
         std::string gapid = yearcfg + "_UL-" + (l1IsGap? "gap" : "nogap");
@@ -1005,41 +1005,9 @@ bool ZZSelector::PassesZZSelection(bool nonPrompt)
   // This nonPrompt boolean is for ZZBackgroundSelector
   // When running ZZBackgroundSelector, FillHistograms should run just with ZZSelection, we cannot require TightZZLeptons by definition
   if (nonPrompt)
-  {
-    // Because we are using Cut Based Moriond ID for Muons, we need SIP cut for 2016,2017
-    if (year_ == yr2016 || year_ == yr2017)
-    {
-      if (ZZSelection() && HZZSIPSelection())
-        return true;
-      else
-        return false;
-    }
-    else
-    {
-      if (ZZSelection())
-        return true;
-      else
-        return false;
-    }
-  }
+    return ZZSelection();
   else
-  {
-    // std::cout<<"nonPrompt inside function: "<<nonPrompt<<std::endl;
-    if (year_ == yr2016 || year_ == yr2017)
-    {
-      if (ZZSelection() && TightZZLeptons() && HZZSIPSelection())
-        return true;
-      else
-        return false;
-    }
-    else
-    {
-      if (ZZSelection() && TightZZLeptons())
-        return true;
-      else
-        return false;
-    }
-  }
+    return ZZSelection() && TightZZLeptons();
 }
 
 bool ZZSelector::PassesZZSelectionLoose(bool nonPrompt)
@@ -1047,41 +1015,9 @@ bool ZZSelector::PassesZZSelectionLoose(bool nonPrompt)
   // This nonPrompt boolean is for ZZBackgroundSelector
   // When running ZZBackgroundSelector, FillHistograms should run just with ZZSelection, we cannot require TightZZLeptons by definition
   if (nonPrompt)
-  {
-    // Because we are using Cut Based Moriond ID for Muons, we need SIP cut for 2016,2017
-    if (year_ == yr2016 || year_ == yr2017)
-    {
-      if (HZZSIPSelection())
-        return true;
-      else
-        return false;
-    }
-    else
-    {
-      if (true)
-        return true;
-      else
-        return false;
-    }
-  }
+    return true;
   else
-  {
-    // std::cout<<"nonPrompt inside function: "<<nonPrompt<<std::endl;
-    if (year_ == yr2016 || year_ == yr2017)
-    {
-      if (TightZZLeptons() && HZZSIPSelection())
-        return true;
-      else
-        return false;
-    }
-    else
-    {
-      if (TightZZLeptons())
-        return true;
-      else
-        return false;
-    }
-  }
+    return TightZZLeptons();
 }
 
 bool ZZSelector::PassesHZZSelection(bool nonPrompt)
@@ -1103,10 +1039,7 @@ bool ZZSelector::PassesHZZSelection(bool nonPrompt)
 }
 bool ZZSelector::TightZZLeptons()
 {
-  if (tightZ1Leptons() && tightZ2Leptons())
-    return true;
-  else
-    return false;
+  return tightZ1Leptons() && tightZ2Leptons();
 }
 bool ZZSelector::ZZSelection()
 {
