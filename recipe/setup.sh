@@ -1,6 +1,6 @@
 #!/bin/bash
 
-dataset_manager=$(./Utilities/scripts/getConfigValue.py dataset_manager_path)/ZZ4lRun2DatasetManager
+dataset_manager=$(./Utilities/scripts/getConfigValue.py dataset_manager_path)/ZZ4lDatasetManager
 pushd $CMSSW_BASE/src/Analysis/VVAnalysis/Cuts
 
 echo "INFO: Linking alias files"

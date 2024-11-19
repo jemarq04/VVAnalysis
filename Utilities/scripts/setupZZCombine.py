@@ -28,8 +28,8 @@ config_factory = ConfigHistFactory(
 #manager_name = ConfigureJobs.getManagerName()
 ##print("manager_path: ", manager_path)
 #if manager_path not in sys.path:
-#        sys.path.insert(0, "/".join([manager_path,"ZZ4lRun2DatasetManager", "Utilities/python"]))
-#dataset_file = "%s/ZZ4lRun2DatasetManager/FileInfo/ZZ4l2016/%s.json" % (manager_path, "LooseLeptons")
+#        sys.path.insert(0, "/".join([manager_path,"ZZ4lDatasetManager", "Utilities/python"]))
+#dataset_file = "%s/ZZ4lDatasetManager/FileInfo/ZZ4l2016/%s.json" % (manager_path, "LooseLeptons")
 #allnames = json.load(open(dataset_file))
 #atgcSamples={}
 #for name in allnames.keys():

@@ -23,12 +23,12 @@ Back in  CMSSW_10_3_1/src directory do:
 ```
 mkdir Data_manager
 cd Data_manager
-git clone https://github.com/YourGithubUsername/ZZ4lRun2DatasetManager -b for_merging
+git clone https://github.com/YourGithubUsername/ZZ4lDatasetManager -b for_merging
 ```
 
 **In the following instructoins, we use year 2018 as an example (but works the same for 2016 and 17).**
 
-In ZZ4lRun2DatasetManager/FileInfo/ZZ4l2018, edit **LooseLeptons.json** so that it becomes something like the following (you can use names consistent with your choice in the skimming step), where you specify the path to your skimmed ntuple files for each sample:
+In ZZ4lDatasetManager/FileInfo/ZZ4l2018, edit **LooseLeptons.json** so that it becomes something like the following (you can use names consistent with your choice in the skimming step), where you specify the path to your skimmed ntuple files for each sample:
 
  ```
 
