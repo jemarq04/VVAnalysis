@@ -19,8 +19,6 @@ def getComLineArgs():
         default=35.87, help="luminosity value (in fb-1)")
     parser.add_argument("--output_file", "-o", type=str,
         default="test.root", help="Output file name")
-    parser.add_argument("--muIDType", type=str,
-        default="", help="Moriond Muon ID or MVA ID")
     parser.add_argument("--test", action='store_true',
         help="Run test job (no background estimate)")
     parser.add_argument("--uwvv", action='store_true',
@@ -66,7 +64,7 @@ def makeHistFile(args):
         tmpFileName = "Hists%s-%s.root" % (today, args['output_file']) 
     else:
         tmpFileName = "Hists%s-%s.root" % (today, args['output_file']) if args['selection'] == "SignalSync" \
-            else "Hists%s-%s_%s.root" % (today, args['analysis'],args['muIDType'])
+            else "Hists%s-%s.root" % (today, args['analysis'])
     toCombine = args['with_background'] or args['with_Gen']
     fOut = ROOT.TFile(tmpFileName if not toCombine else tmpFileName.replace(".root", "sel.root"), "recreate")
     combinedNames = [fOut.GetName()]
