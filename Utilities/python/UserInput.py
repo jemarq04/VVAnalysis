@@ -25,8 +25,8 @@ def getDefaultParser():
     input_group.add_argument("-f", "--filenames", 
                         type=lambda x : [i.strip() for i in x.split(',')],
                         help="List of input file names, "
-                        "as defined in ZZ4lDatasetManager, separated "
-                        "by commas")
+                        "as defined in %s, separated "
+                        "by commas" % ConfigureJobs.getManagerName())
     input_group.add_argument("--inputs_from_file", nargs=3, 
                         metavar=('filelist', 'nPerJob', 'jobNum'),
                         help="Text file with one input file per line, "
@@ -90,7 +90,7 @@ def getHistInfo(analysis, input_hists, noConfig=False):
 
     manager_path = ConfigureJobs.getManagerPath()
     ConfigHistTools = imp.load_source("ConfigHistTools", 
-        "/".join([manager_path, "ZZ4lDatasetManager/Utilities/python/ConfigHistTools.py"]))
+        "/".join([manager_path, "%s/Utilities/python/ConfigHistTools.py" % ConfigureJobs.getManagerName()]))
     # For histograms produced with some postprocessing on the hist file
     excludedHistPatterns = ["wCR", "unrolled", "YieldByChannel"]
     config_hists = ConfigHistTools.getAllHistNames(manager_path, analysis) \
@@ -104,7 +104,7 @@ def getHistInfo(analysis, input_hists, noConfig=False):
 def getHistExpr(hist_names, selection):
     manager_path = ConfigureJobs.getManagerPath()
     ConfigHistTools = imp.load_source("ConfigHistTools", 
-        "/".join([manager_path, "ZZ4lDatasetManager/Utilities/python/ConfigHistTools.py"]))
+        "/".join([manager_path, "%s/Utilities/python/ConfigHistTools.py" % ConfigureJobs.getManagerName()]))
 
     info = ROOT.TList()
     info.SetName("histinfo")

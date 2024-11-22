@@ -215,7 +215,7 @@ def getListOfFiles(filelist, selection, manager_path="", analysis=""):
             names.append(name)
         elif "ZZ4l2022" in name:
             dataset_file = manager_path + \
-                "ZZ4lDatasetManager/FileInfo/ZZ4l2022/%s.json" % selection
+                "%s/FileInfo/ZZ4l2022/%s.json" % (getManagerName(), selection)
             allnames = list(json.load(open(dataset_file)).keys())
             if "nodata" in name:
                 names += [x for x in allnames if "data" not in x]

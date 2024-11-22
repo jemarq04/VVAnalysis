@@ -44,8 +44,8 @@ def getComLineArgs():
     parser.add_argument("-b", "--hist_names", 
                         type=lambda x : [i.strip() for i in x.split(',')],
                         default=["all"], help="List of histograms, "
-                        "as defined in ZZ4lDatasetManager, separated "
-                        "by commas")
+                        "as defined in %s, separated "
+                        "by commas" % ConfigureJobs.getManagerName())
     parser.add_argument("--postEE", action="store_true",
         help="when processing 2022 data, use scale factors after EE leak veto")
     return vars(parser.parse_args())
@@ -56,7 +56,7 @@ def makeHistFile(args):
     manager_path = ConfigureJobs.getManagerPath()
     if manager_path not in sys.path:
         sys.path.insert(0, "/".join([manager_path, 
-            "ZZ4lDatasetManager", "Utilities/python"]))
+            ConfigureJobs.getManagerName(), "Utilities/python"]))
 
     today = datetime.date.today().strftime("%d%b%Y")
     

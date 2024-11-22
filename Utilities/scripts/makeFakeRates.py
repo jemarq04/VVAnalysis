@@ -37,8 +37,8 @@ def getComLineArgs():
     parser.add_argument("-b", "--hist_names", 
                         type=lambda x : [i.strip() for i in x.split(',')],
                         default=["all"], help="List of histograms, "
-                        "as defined in ZZ4lDatasetManager, separated "
-                        "by commas")
+                        "as defined in %s, separated "
+                        "by commas" % ConfigureJobs.getManagerName())
     return vars(parser.parse_args())
 
 def getHistNames(channels):
