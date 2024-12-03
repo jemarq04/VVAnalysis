@@ -135,7 +135,9 @@ unsigned int ZZSelector::GetLheWeightInfo()
       "ggZZ2e2mu", "ggZZ4e", "ggZZ4m", "ggZZ4t", "ggZZ2e2tau", "ggZZ2mu2tau", "zz4l-sherpa", "ZZJJTo2e2mu-EWK-phantom", "ZZJJTo4e-EWK-phantom", "ZZJJTo4mu-EWK-phantom"
   };
   std::vector<std::string> scaleWeightsAndIDs = {
-      "pp_eemm-cHWB_massless", "pp_eemm-cHG_massless", "pp_eemm-cll1_massless"
+      "pp_eemm-cHWB_massless", "pp_eemm-cHG_massless", "pp_eemm-cll1_massless",
+      "pp_eemm-ceu_massless", "pp_eemm-ced_massless", "pp_eemm-cee_massless",
+      "pp_eemm-cll_massless", "pp_eemmj-cHG_massless", "gg_eemm-cHG_massless"
   };
   std::vector<std::string> scaleAndPdfWeights = {
       "wz3lnu-powheg", "wz3lnu-mg5amcnlo",
