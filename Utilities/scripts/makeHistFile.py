@@ -16,7 +16,7 @@ import subprocess,pdb
 def getComLineArgs():
     parser = UserInput.getDefaultParser()
     parser.add_argument("--lumi", "-l", type=float,
-        default=35.87, help="luminosity value (in fb-1)")
+        default=37.85, help="luminosity value (in fb-1)")
     parser.add_argument("--output_file", "-o", type=str,
         default="test.root", help="Output file name")
     parser.add_argument("--test", action='store_true',
