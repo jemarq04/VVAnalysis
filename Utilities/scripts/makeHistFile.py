@@ -85,7 +85,7 @@ def makeHistFile(args):
             else:
                 print("WARNING: file:%s not found. No fake rates added" % args["scalefactors_file"])
 
-            basename = ROOT.TNamed("basename", "/cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration/POG/")
+            basename = ROOT.TNamed("basename", "/cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration/POG")
             yearcfg = ROOT.TNamed("yearcfg", args["year"])
 
             sf_inputs = [basename, yearcfg]
