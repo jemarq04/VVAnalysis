@@ -46,8 +46,6 @@ def getComLineArgs():
                         default=["all"], help="List of histograms, "
                         "as defined in %s, separated "
                         "by commas" % ConfigureJobs.getManagerName())
-    parser.add_argument("--postEE", action="store_true",
-        help="when processing 2022 data, use scale factors after EE leak veto")
     return vars(parser.parse_args())
 
 def makeHistFile(args):
@@ -85,26 +83,12 @@ def makeHistFile(args):
                     eZZTightFakeRate.SetName("fakeRate_allE")
                 fr_inputs = [eZZTightFakeRate, mZZTightFakeRate]
             else:
-                print("ERROR: file:%s not found. No fake rates added" % args["scalefactors_file"])
+                print("WARNING: file:%s not found. No fake rates added" % args["scalefactors_file"])
 
-            yearstring = ""
-            basename = "/cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration/POG/"
-            if args["year"] == "2022":
-                if args["postEE"]:
-                    yearstring = "2022_Summer22EE"
-                else:
-                    yearstring = "2022_Summer22"
-            else: 
-                print("what scale factors you want?")
-                sys.exit()
-            muonRunSF = ROOT.TNamed("muonRunSF", os.path.join(basename, "MUO/%s/muon_Z.json.gz" % yearstring))
-            electronRunSF = ROOT.TNamed("electronRunSF", "data/ElectronSF_HZZUL.json") #TODO: Update to Run 3
-            electronRecoSF = ROOT.TNamed("electronRecoSF", os.path.join(basename, "EGM/%s/electron.json.gz" % yearstring)) #TODO: Update to Run 3
-            jetPUSF = ROOT.TNamed("jetPUSF", os.path.join(basename, "JME/%s/jmar.json.gz" % yearstring))
-            pileupSF = ROOT.TNamed("pileupSF", os.path.join(basename, "LUM/%s/puWeights.json.gz" % yearstring))
-            yearcfg = ROOT.TNamed("yearcfg", yearstring.split("_")[0])
+            basename = ROOT.TNamed("basename", "/cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration/POG/")
+            yearcfg = ROOT.TNamed("yearcfg", args["year"])
 
-            sf_inputs = [electronRunSF,electronRecoSF,muonRunSF,pileupSF,jetPUSF,yearcfg]
+            sf_inputs = [basename, yearcfg]
         else:
             # The lines below use Run 2
             fScales = ROOT.TFile('data/scaleFactors.root')

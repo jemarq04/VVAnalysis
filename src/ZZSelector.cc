@@ -149,14 +149,16 @@ unsigned int ZZSelector::GetLheWeightInfo()
       //"wz-atgc_pt300"
   };
 
-  if ((std::find(noLheWeights.begin(), noLheWeights.end(), name_) != noLheWeights.end()) || (isaTGC_))
-    return 0;
-  if (std::find(scaleAndPdfWeights.begin(), scaleAndPdfWeights.end(), name_) != scaleAndPdfWeights.end())
-    return 2;
-  if (std::find(allLheWeights.begin(), allLheWeights.end(), name_) != allLheWeights.end())
-    return 3;
-  if (std::find(scaleWeightsAndIDs.begin(), scaleWeightsAndIDs.end(), name_) != scaleWeightsAndIDs.end())
-    return 4;
+  for (auto suffix : {"_postEE", ""}){
+    if ((std::find(noLheWeights.begin(), noLheWeights.end(), name_ + suffix) != noLheWeights.end()) || (isaTGC_))
+      return 0;
+    if (std::find(scaleAndPdfWeights.begin(), scaleAndPdfWeights.end(), name_ + suffix) != scaleAndPdfWeights.end())
+      return 2;
+    if (std::find(allLheWeights.begin(), allLheWeights.end(), name_ + suffix) != allLheWeights.end())
+      return 3;
+    if (std::find(scaleWeightsAndIDs.begin(), scaleWeightsAndIDs.end(), name_ + suffix) != scaleWeightsAndIDs.end())
+      return 4;
+  }
   
   if (isUL_L1check){
     return 0;
@@ -504,7 +506,7 @@ void ZZSelector::ApplyScaleFactors()
     float pt_e2 = l2Pt < EleSF_MAX_PT_ ? l2Pt : EleSF_MAX_PT_ - 0.01;
     float pt_e3 = l3Pt < EleSF_MAX_PT_ ? l3Pt : EleSF_MAX_PT_ - 0.01;
     float pt_e4 = l4Pt < EleSF_MAX_PT_ ? l4Pt : EleSF_MAX_PT_ - 0.01;
-    if (eIdSF_ != nullptr) //Update with appropriate CorrectionSet calls once JSON files are provided
+    if (eIdSF_ != nullptr) //TODO: Update with appropriate CorrectionSet calls once JSON files are provided
     {
       if (pt_e1 > EleSF_MIN_PT_){
         std::string gapid = yearcfg + "_UL-" + (l1IsGap? "gap" : "nogap");
@@ -939,26 +941,13 @@ bool ZZSelector::PassesZZjjSelection()
 
 bool ZZSelector::Passes4eExtraCut()
 {
-
   float lpt_arraySort[] = {l1Pt, l2Pt, l3Pt, l4Pt};
   std::sort(lpt_arraySort, lpt_arraySort + 4, std::greater<float>());
 
   if (channel_ == eeee)
-  {
-
-    if (lpt_arraySort[0] > 23 && lpt_arraySort[1] > 12)
-    {
-      return true;
-    }
-    else
-    {
-      return false;
-    }
-  }
+    return lpt_arraySort[0] > 23 && lpt_arraySort[1] > 12;
   else
-  {
     return true;
-  }
 }
 
 bool ZZSelector::Passes2e2mExtraCut(Long64_t entry)
@@ -983,21 +972,9 @@ bool ZZSelector::Passes2e2mExtraCut(Long64_t entry)
   }
 
   if (channel_ == eemm || channel_ == mmee)
-  {
-
-    if (lpt1Tmp > 23 && lpt2Tmp > 12)
-    {
-      return true;
-    }
-    else
-    {
-      return false;
-    }
-  }
+    return lpt1Tmp > 23 && lpt2Tmp > 12;
   else
-  {
     return true;
-  }
 }
 
 bool ZZSelector::PassesZZSelection(bool nonPrompt)
@@ -1023,19 +1000,9 @@ bool ZZSelector::PassesZZSelectionLoose(bool nonPrompt)
 bool ZZSelector::PassesHZZSelection(bool nonPrompt)
 {
   if (nonPrompt)
-  {
-    if (ZSelection())
-      return true;
-    else
-      return false;
-  }
+    return ZSelection();
   else
-  {
-    if (ZSelection() && TightZZLeptons())
-      return true;
-    else
-      return false;
-  }
+    return ZSelection() && TightZZLeptons();
 }
 bool ZZSelector::TightZZLeptons()
 {
@@ -1043,59 +1010,34 @@ bool ZZSelector::TightZZLeptons()
 }
 bool ZZSelector::ZZSelection()
 {
-  if ((Z1mass > 60.0 && Z1mass < 120.0) && (Z2mass > 60.0 && Z2mass < 120.0))
-  {
-    return true;
-  }
-  else
-  {
-    return false;
-  }
+  return (Z1mass > 60.0 && Z1mass < 120.0) && (Z2mass > 60.0 && Z2mass < 120.0);
 }
 
 // We already require 4 < Z1,Z2 < 120  in the "Loose Skim"
 bool ZZSelector::ZSelection()
 {
-  if (Z1mass > 40.0 && Z2mass > 12.0)
-    return true;
-  else
-    return false;
+  return Z1mass > 40.0 && Z2mass > 12.0;
 }
 bool ZZSelector::Z4lSelection()
 {
-  if (Mass > 80.0 && Mass < 100.0)
-    return true;
-  else
-    return false;
+  return Mass > 80.0 && Mass < 100.0;
 }
 // This is no longer needed as I apply SIP < 4.0 on electrons while skimming and we don't need SIP cut on muons with latest HZZID
 bool ZZSelector::HZZSIPSelection()
 {
-  if ((l1SIP3D < 4.0 && l2SIP3D < 4.0 && l3SIP3D < 4.0 && l4SIP3D < 4.0))
-    return true;
-  else
-    return false;
+  return l1SIP3D < 4.0 && l2SIP3D < 4.0 && l3SIP3D < 4.0 && l4SIP3D < 4.0;
 }
 bool ZZSelector::HZZLowMass()
 {
-  if (Mass > 130.0 && Mass < 170.0)
-    return true;
-  else
-    return false;
+  return Mass > 130.0 && Mass < 170.0;
 }
 bool ZZSelector::HZZMediumMass()
 {
-  if (Mass > 138.0 && Mass < 300.0)
-    return true;
-  else
-    return false;
+  return Mass > 138.0 && Mass < 300.0;
 }
 bool ZZSelector::TestMuons()
 {
-  if ((Z1mass > 82.0 && Z1mass < 102.0) && (Z2mass < 40.0))
-    return true;
-  else
-    return false;
+  return (Z1mass > 82.0 && Z1mass < 102.0) && (Z2mass < 40.0);
 }
 
 void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::string> variation)
