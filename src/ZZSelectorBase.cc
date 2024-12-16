@@ -702,12 +702,12 @@ bool ZZSelectorBase::lep4IsIso()
 // To be a function of multiple variables
 bool ZZSelectorBase::lep1IsTight()
 {
-  return l1IsTight;
+  return l1IsTight && lep1IsIso();
 }
 
 bool ZZSelectorBase::lep2IsTight()
 {
-  return l2IsTight;
+  return l2IsTight && lep2IsIso();
 }
 bool ZZSelectorBase::tightSIP()
 {
@@ -722,11 +722,11 @@ bool ZZSelectorBase::tightZ1Leptons()
 }
 bool ZZSelectorBase::lep3IsTight()
 {
-  return l3IsTight;
+  return l3IsTight && lep3IsIso();
 }
 bool ZZSelectorBase::lep4IsTight()
 {
-  return l4IsTight;
+  return l4IsTight && lep4IsIso();
 }
 bool ZZSelectorBase::tightZ2Leptons()
 {
