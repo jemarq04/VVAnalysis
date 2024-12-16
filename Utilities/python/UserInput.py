@@ -51,7 +51,7 @@ def readAllInfo(file_path):
         try:
             file_info = readInfo(info_file)
         except ValueError:
-            pass
+            continue
         if file_info:
             info.update(file_info)
     return info
