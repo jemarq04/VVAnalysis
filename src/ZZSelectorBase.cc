@@ -2,6 +2,7 @@
 #include <TStyle.h>
 #include <regex>
 #include "TParameter.h"
+#include "TString.h"
 
 std::string ZZSelectorBase::GetNameFromFile()
 {
@@ -14,8 +15,26 @@ std::string ZZSelectorBase::GetNameFromFile()
 }
 void ZZSelectorBase::SetScaleFactors()
 {
+  std::string yearstring, basename;
+
   try{
-    jetPUSF_ = correction::CorrectionSet::from_file( ((TNamed*)GetInputList()->FindObject("jetPUSF"))->GetTitle() );
+    basename = ((TNamed*)GetInputList()->FindObject("basename"))->GetTitle();
+    yearcfg = ((TNamed*)GetInputList()->FindObject("yearcfg"))->GetTitle();
+
+    if (yearcfg == "2016"){
+      if (name_.find("_postVFP") != std::string::npos)
+        yearcfg = "2016postVFP";
+      else
+        yearcfg = "2016preVFP";
+    }
+    yearstring = yearcfg + "_UL";
+  }
+  catch (...){
+    std::invalid_argument("Must pass valid year/basename for analysis");
+  }
+
+  try{
+    jetPUSF_ = correction::CorrectionSet::from_file(TString::Format("%s/JME/%s/jmar.json.gz", basename.c_str(), yearstring.c_str()).Data());
   }
   catch (...){
     std::invalid_argument("Must pass valid jet PU id SF");
@@ -23,40 +42,33 @@ void ZZSelectorBase::SetScaleFactors()
   //if (jetPUSF_ != nullptr) std::cout << "Applying jetPUSF" << std::endl;
 
   try{
-    pileupSF_ = correction::CorrectionSet::from_file( ((TNamed*)GetInputList()->FindObject("pileupSF"))->GetTitle() );
+    pileupSF_ = correction::CorrectionSet::from_file(TString::Format("%s/LUM/%s/puWeights.json.gz", basename.c_str(), yearstring.c_str()).Data());
   }
   catch (...){
     std::invalid_argument("Must pass valid pileup weights SF");
   }
   //if (pileupSF_ != nullptr) std::cout << "Applying pileupSF" << std::endl;
   try{
-    eIdSF_ = correction::CorrectionSet::from_file( ((TNamed*)GetInputList()->FindObject("electronRunSF"))->GetTitle() );
+    eIdSF_ = correction::CorrectionSet::from_file("data/ElectronSF_HZZUL.json");
   }
   catch (...){
     std::invalid_argument("Must pass valid electron Run SF");
   }
   //if (eIdSF_ != nullptr) std::cout << "Applying electron ID SFs" << std::endl;
   try{
-    eRecoSF_ = correction::CorrectionSet::from_file( ((TNamed*)GetInputList()->FindObject("electronRecoSF"))->GetTitle() );
+    eRecoSF_ = correction::CorrectionSet::from_file(TString::Format("%s/EGM/%s/electron.json.gz", basename.c_str(), yearstring.c_str()).Data());
   }
   catch (...){
     std::invalid_argument("Must pass valid electron Reco SF");
   }
   //if (eRecoSF_ != nullptr) std::cout << "Applying electron reco SFs" << std::endl;
   try{
-    mIdSF_ = correction::CorrectionSet::from_file( ((TNamed*)GetInputList()->FindObject("muonRunSF"))->GetTitle() );
+    mIdSF_ = correction::CorrectionSet::from_file(TString::Format("%s/MUO/%s/muon_Z.json.gz", basename.c_str(), yearstring.c_str()).Data());
   }
   catch (...){
     std::invalid_argument("Must pass valid muon Run SF");
   }
   //if (mIdSF_ != nullptr) std::cout << "Applying muon ID SFs" << std::endl;
-
-  try{
-    yearcfg = ((TNamed*)GetInputList()->FindObject("yearcfg"))->GetTitle();
-  }
-  catch (...){
-    std::invalid_argument("Must pass valid year for analysis");
-  }
 
   //There are L1Prefiring weight and uncertainity in the ZZ UWVV ntuples
   //prefireEff_ = (TEfficiency*) GetInputList()->FindObject("prefireEfficiencyMap");

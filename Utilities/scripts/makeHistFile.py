@@ -48,8 +48,6 @@ def getComLineArgs():
                         default=["all"], help="List of histograms, "
                         "as defined in ZZ4lRun2DatasetManager, separated "
                         "by commas")
-    parser.add_argument("--preVFP", action="store_true",
-        help="when processing 2016UL data, use preVFP scale factors")
     return vars(parser.parse_args())
 
 def makeHistFile(args):
@@ -87,29 +85,11 @@ def makeHistFile(args):
             if eZZTightFakeRate:
                 eZZTightFakeRate.SetName("fakeRate_allE")
 
-            yearstring = ""
-            basename = "/cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration/POG/"
-            if args["year"] == "2016":
-                if args["preVFP"]:
-                    yearstring = "2016preVFP_UL"
-                else:
-                    yearstring = "2016postVFP_UL"
-            elif args["year"] == "2017":
-                yearstring = "2017_UL"
-            elif args["year"] == "2018":
-                yearstring = "2018_UL"
-            else: 
-                print("what scale factors you want?")
-                sys.exit()
-            muonRunSF = ROOT.TNamed("muonRunSF", os.path.join(basename, "MUO/%s/muon_Z.json.gz" % yearstring))
-            electronRunSF = ROOT.TNamed("electronRunSF", "data/ElectronSF_HZZUL.json")
-            electronRecoSF = ROOT.TNamed("electronRecoSF", os.path.join(basename, "EGM/%s/electron.json.gz" % yearstring))
-            jetPUSF = ROOT.TNamed("jetPUSF", os.path.join(basename, "JME/%s/jmar.json.gz" % yearstring))
-            pileupSF = ROOT.TNamed("pileupSF", os.path.join(basename, "LUM/%s/puWeights.json.gz" % yearstring))
-            yearcfg = ROOT.TNamed("yearcfg", yearstring.replace("_UL",""))
+            basename = ROOT.TNamed("basename", "/cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration/POG/")
+            yearcfg = ROOT.TNamed("yearcfg", args["year"])
 
             fr_inputs = [eZZTightFakeRate, mZZTightFakeRate]
-            sf_inputs = [electronRunSF,electronRecoSF,muonRunSF,pileupSF,jetPUSF,yearcfg]
+            sf_inputs = [basename, yearcfg]
         else:
             fScales = ROOT.TFile('data/scaleFactors.root')
             mCBTightFakeRate = fScales.Get("mCBTightFakeRate")
