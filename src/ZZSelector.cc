@@ -434,18 +434,26 @@ void ZZSelector::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::str
   if (l1PdgId > 0){
   	lp1 = ROOT::Math::PtEtaPhiEVector(l1Pt, l1Eta, l1Phi, l1Energy);
   	ln1 = ROOT::Math::PtEtaPhiEVector(l2Pt, l2Eta, l2Phi, l2Energy);
+    l1P = lp1.P();
+    l2P = ln1.P();
   }
   else{
   	ln1 = ROOT::Math::PtEtaPhiEVector(l1Pt, l1Eta, l1Phi, l1Energy);
   	lp1 = ROOT::Math::PtEtaPhiEVector(l2Pt, l2Eta, l2Phi, l2Energy);
+    l1P = ln1.P();
+    l2P = lp1.P();
   }
   if (l3PdgId > 0){
     lp2 = ROOT::Math::PtEtaPhiEVector(l3Pt, l3Eta, l3Phi, l3Energy);
     ln2 = ROOT::Math::PtEtaPhiEVector(l4Pt, l4Eta, l4Phi, l4Energy);
+    l3P = lp2.P();
+    l4P = ln2.P();
   }
   else{
     ln2 = ROOT::Math::PtEtaPhiEVector(l3Pt, l3Eta, l3Phi, l3Energy);
     lp2 = ROOT::Math::PtEtaPhiEVector(l4Pt, l4Eta, l4Phi, l4Energy);
+    l3P = ln2.P();
+    l4P = lp2.P();
   }
   auto PolCosTheta = [&](const ROOT::Math::PtEtaPhiEVector& lp, const ROOT::Math::PtEtaPhiEVector& ln)
   {
@@ -542,10 +550,10 @@ void ZZSelector::ApplyScaleFactors()
   {
     float pt_e1 = l1Pt < EleSF_MAX_PT_ ? l1Pt : EleSF_MAX_PT_ - 0.01;
     float pt_e2 = l2Pt < EleSF_MAX_PT_ ? l2Pt : EleSF_MAX_PT_ - 0.01;
-    float pt_m3 = l3Pt < MuSF_MAX_PT_ ? l3Pt : MuSF_MAX_PT_ - 0.01;
-    float pt_m4 = l4Pt < MuSF_MAX_PT_ ? l4Pt : MuSF_MAX_PT_ - 0.01;
     float absEta_m3 = std::abs(l3Eta) < MuSF_MAX_ETA_ ? std::abs(l3Eta) : MuSF_MAX_ETA_ - 0.01;
     float absEta_m4 = std::abs(l4Eta) < MuSF_MAX_ETA_ ? std::abs(l4Eta) : MuSF_MAX_ETA_ - 0.01;
+    float p_m3 = l3P > MuSF_MIN_P_ ? l3P : MuSF_MIN_P_ + 0.01;
+    float p_m4 = l4P > MuSF_MIN_P_ ? l4P : MuSF_MIN_P_ + 0.01;
     if (eIdSF_ != nullptr)
     {
       if (pt_e1 > EleSF_MIN_PT_){
@@ -565,24 +573,76 @@ void ZZSelector::ApplyScaleFactors()
       if (pt_e2 > EleRecoSF_MIN_PT_)
         weight *= recoref->evaluate({yearcfg.c_str(), "sf", GetEleRecoSFName(pt_e2), l2Eta, pt_e2});
     }
-    if (mIdSF_ != nullptr)
+    if (mLowPtSF_ != nullptr)
     {
-      if (pt_m3 > MuSF_MIN_PT_) weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m3, pt_m3, "nominal"});
-      if (pt_m4 > MuSF_MIN_PT_) weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m4, pt_m4, "nominal"});
+      if (l3Pt < MuSF_MAX_LOWPT_)
+        weight *= mLowPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m3, l3Pt, "nominal"});
+      if (l4Pt < MuSF_MAX_LOWPT_)
+        weight *= mLowPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m4, l4Pt, "nominal"});
+    }
+    if (mMedPtSF_ != nullptr)
+    {
+      if (l3Pt > MuSF_MAX_LOWPT_ && l3Pt < MuSF_MAX_MEDPT_){
+        weight *= mMedPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m3, l3Pt, "nominal"});
+        weight *= mMedPtSF_->at("NUM_LoosePFIso_DEN_LooseID")->evaluate({absEta_m3, l3Pt, "nominal"});
+      }
+      if (l4Pt > MuSF_MAX_LOWPT_ && l4Pt < MuSF_MAX_MEDPT_){
+        weight *= mMedPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m4, l4Pt, "nominal"});
+        weight *= mMedPtSF_->at("NUM_LoosePFIso_DEN_LooseID")->evaluate({absEta_m4, l4Pt, "nominal"});
+      }
+    }
+    if (mHighPtSF_ != nullptr)
+    {
+      if (l3Pt > MuSF_MAX_MEDPT_){
+        std::cout << "NOTE: " << l3P << " (" << l3Pt << " " << l3Eta << " " << l3Phi << " " << l3Energy << std::endl;
+        weight *= mHighPtSF_->at("NUM_GlobalMuons_DEN_TrackerMuonProbes")->evaluate({absEta_m3, p_m3, "nominal"});
+        weight *= mHighPtSF_->at("NUM_TrkHighPtID_DEN_GlobalMuonProbes")->evaluate({absEta_m3, l3Pt, "nominal"});
+      }
+      if (l4Pt > MuSF_MAX_MEDPT_){
+        std::cout << "NOTE: " << l4P << " (" << l4Pt << " " << l4Eta << " " << l4Phi << " " << l4Energy << std::endl;
+        weight *= mHighPtSF_->at("NUM_GlobalMuons_DEN_TrackerMuonProbes")->evaluate({absEta_m4, p_m4, "nominal"});
+        weight *= mHighPtSF_->at("NUM_TrkHighPtID_DEN_GlobalMuonProbes")->evaluate({absEta_m4, l4Pt, "nominal"});
+      }
     }
   }
   else if (channel_ == mmee)
   {
-    float pt_m1 = l1Pt < MuSF_MAX_PT_ ? l1Pt : MuSF_MAX_PT_ - 0.01;
-    float pt_m2 = l2Pt < MuSF_MAX_PT_ ? l2Pt : MuSF_MAX_PT_ - 0.01;
     float pt_e3 = l3Pt < EleSF_MAX_PT_ ? l3Pt : EleSF_MAX_PT_ - 0.01;
     float pt_e4 = l4Pt < EleSF_MAX_PT_ ? l4Pt : EleSF_MAX_PT_ - 0.01;
     float absEta_m1 = std::abs(l1Eta) < MuSF_MAX_ETA_ ? std::abs(l1Eta) : MuSF_MAX_ETA_ - 0.01;
     float absEta_m2 = std::abs(l2Eta) < MuSF_MAX_ETA_ ? std::abs(l2Eta) : MuSF_MAX_ETA_ - 0.01;
-    if (mIdSF_ != nullptr)
+    float p_m1 = l1P > MuSF_MIN_P_ ? l1P : MuSF_MIN_P_ + 0.01;
+    float p_m2 = l2P > MuSF_MIN_P_ ? l2P : MuSF_MIN_P_ + 0.01;
+    if (mLowPtSF_ != nullptr)
     {
-      if (pt_m1 > MuSF_MIN_PT_) weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m1, pt_m1, "nominal"});
-      if (pt_m2 > MuSF_MIN_PT_) weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m2, pt_m2, "nominal"});
+      if (l1Pt < MuSF_MAX_LOWPT_)
+        weight *= mLowPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m1, l1Pt, "nominal"});
+      if (l2Pt < MuSF_MAX_LOWPT_)
+        weight *= mLowPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m2, l2Pt, "nominal"});
+    }
+    if (mMedPtSF_ != nullptr)
+    {
+      if (l1Pt > MuSF_MAX_LOWPT_ && l1Pt < MuSF_MAX_MEDPT_){
+        weight *= mMedPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m1, l1Pt, "nominal"});
+        weight *= mMedPtSF_->at("NUM_LoosePFIso_DEN_LooseID")->evaluate({absEta_m1, l1Pt, "nominal"});
+      }
+      if (l2Pt > MuSF_MAX_LOWPT_ && l2Pt < MuSF_MAX_MEDPT_){
+        weight *= mMedPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m2, l2Pt, "nominal"});
+        weight *= mMedPtSF_->at("NUM_LoosePFIso_DEN_LooseID")->evaluate({absEta_m2, l2Pt, "nominal"});
+      }
+    }
+    if (mHighPtSF_ != nullptr)
+    {
+      if (l1Pt > MuSF_MAX_MEDPT_){
+        std::cout << "NOTE: " << l1P << " (" << l1Pt << " " << l1Eta << " " << l1Phi << " " << l1Energy << std::endl;
+        weight *= mHighPtSF_->at("NUM_GlobalMuons_DEN_TrackerMuonProbes")->evaluate({absEta_m1, p_m1, "nominal"});
+        weight *= mHighPtSF_->at("NUM_TrkHighPtID_DEN_GlobalMuonProbes")->evaluate({absEta_m1, l1Pt, "nominal"});
+      }
+      if (l2Pt > MuSF_MAX_MEDPT_){
+        std::cout << "NOTE: " << l2P << " (" << l2Pt << " " << l2Eta << " " << l2Phi << " " << l2Energy << std::endl;
+        weight *= mHighPtSF_->at("NUM_GlobalMuons_DEN_TrackerMuonProbes")->evaluate({absEta_m2, p_m2, "nominal"});
+        weight *= mHighPtSF_->at("NUM_TrkHighPtID_DEN_GlobalMuonProbes")->evaluate({absEta_m2, l2Pt, "nominal"});
+      }
     }
     if (eIdSF_ != nullptr)
     {
@@ -606,20 +666,66 @@ void ZZSelector::ApplyScaleFactors()
   }
   else
   {
-    float pt_m1 = l1Pt < MuSF_MAX_PT_ ? l1Pt : MuSF_MAX_PT_ - 0.01;
-    float pt_m2 = l2Pt < MuSF_MAX_PT_ ? l2Pt : MuSF_MAX_PT_ - 0.01;
-    float pt_m3 = l3Pt < MuSF_MAX_PT_ ? l3Pt : MuSF_MAX_PT_ - 0.01;
-    float pt_m4 = l4Pt < MuSF_MAX_PT_ ? l4Pt : MuSF_MAX_PT_ - 0.01;
     float absEta_m1 = std::abs(l1Eta) < MuSF_MAX_ETA_ ? std::abs(l1Eta) : MuSF_MAX_ETA_ - 0.01;
     float absEta_m2 = std::abs(l2Eta) < MuSF_MAX_ETA_ ? std::abs(l2Eta) : MuSF_MAX_ETA_ - 0.01;
     float absEta_m3 = std::abs(l3Eta) < MuSF_MAX_ETA_ ? std::abs(l3Eta) : MuSF_MAX_ETA_ - 0.01;
     float absEta_m4 = std::abs(l4Eta) < MuSF_MAX_ETA_ ? std::abs(l4Eta) : MuSF_MAX_ETA_ - 0.01;
-    if (mIdSF_ != nullptr)
+    float p_m1 = l1P > MuSF_MIN_P_ ? l1P : MuSF_MIN_P_ + 0.01;
+    float p_m2 = l2P > MuSF_MIN_P_ ? l2P : MuSF_MIN_P_ + 0.01;
+    float p_m3 = l3P > MuSF_MIN_P_ ? l3P : MuSF_MIN_P_ + 0.03;
+    float p_m4 = l4P > MuSF_MIN_P_ ? l4P : MuSF_MIN_P_ + 0.01;
+    if (mLowPtSF_ != nullptr)
     {
-      if (pt_m1 > MuSF_MIN_PT_) weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m1, pt_m1, "nominal"});
-      if (pt_m2 > MuSF_MIN_PT_) weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m2, pt_m2, "nominal"});
-      if (pt_m3 > MuSF_MIN_PT_) weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m3, pt_m3, "nominal"});
-      if (pt_m4 > MuSF_MIN_PT_) weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m4, pt_m4, "nominal"});
+      if (l1Pt < MuSF_MAX_LOWPT_)
+        weight *= mLowPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m1, l1Pt, "nominal"});
+      if (l2Pt < MuSF_MAX_LOWPT_)
+        weight *= mLowPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m2, l2Pt, "nominal"});
+      if (l3Pt < MuSF_MAX_LOWPT_)
+        weight *= mLowPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m3, l3Pt, "nominal"});
+      if (l4Pt < MuSF_MAX_LOWPT_)
+        weight *= mLowPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m4, l4Pt, "nominal"});
+    }
+    if (mMedPtSF_ != nullptr)
+    {
+      if (l1Pt > MuSF_MAX_LOWPT_ && l1Pt < MuSF_MAX_MEDPT_){
+        weight *= mMedPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m1, l1Pt, "nominal"});
+        weight *= mMedPtSF_->at("NUM_LoosePFIso_DEN_LooseID")->evaluate({absEta_m1, l1Pt, "nominal"});
+      }
+      if (l2Pt > MuSF_MAX_LOWPT_ && l2Pt < MuSF_MAX_MEDPT_){
+        weight *= mMedPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m2, l2Pt, "nominal"});
+        weight *= mMedPtSF_->at("NUM_LoosePFIso_DEN_LooseID")->evaluate({absEta_m2, l2Pt, "nominal"});
+      }
+      if (l3Pt > MuSF_MAX_LOWPT_ && l3Pt < MuSF_MAX_MEDPT_){
+        weight *= mMedPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m3, l3Pt, "nominal"});
+        weight *= mMedPtSF_->at("NUM_LoosePFIso_DEN_LooseID")->evaluate({absEta_m3, l3Pt, "nominal"});
+      }
+      if (l4Pt > MuSF_MAX_LOWPT_ && l4Pt < MuSF_MAX_MEDPT_){
+        weight *= mMedPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m4, l4Pt, "nominal"});
+        weight *= mMedPtSF_->at("NUM_LoosePFIso_DEN_LooseID")->evaluate({absEta_m4, l4Pt, "nominal"});
+      }
+    }
+    if (mHighPtSF_ != nullptr)
+    {
+      if (l1Pt > MuSF_MAX_MEDPT_){
+        std::cout << "NOTE: " << l1P << " (" << l1Pt << " " << l1Eta << " " << l1Phi << " " << l1Energy << std::endl;
+        weight *= mHighPtSF_->at("NUM_GlobalMuons_DEN_TrackerMuonProbes")->evaluate({absEta_m1, p_m1, "nominal"});
+        weight *= mHighPtSF_->at("NUM_TrkHighPtID_DEN_GlobalMuonProbes")->evaluate({absEta_m1, l1Pt, "nominal"});
+      }
+      if (l2Pt > MuSF_MAX_MEDPT_){
+        std::cout << "NOTE: " << l2P << " (" << l2Pt << " " << l2Eta << " " << l2Phi << " " << l2Energy << std::endl;
+        weight *= mHighPtSF_->at("NUM_GlobalMuons_DEN_TrackerMuonProbes")->evaluate({absEta_m2, p_m2, "nominal"});
+        weight *= mHighPtSF_->at("NUM_TrkHighPtID_DEN_GlobalMuonProbes")->evaluate({absEta_m2, l2Pt, "nominal"});
+      }
+      if (l3Pt > MuSF_MAX_MEDPT_){
+        std::cout << "NOTE: " << l3P << " (" << l3Pt << " " << l3Eta << " " << l3Phi << " " << l3Energy << std::endl;
+        weight *= mHighPtSF_->at("NUM_GlobalMuons_DEN_TrackerMuonProbes")->evaluate({absEta_m3, p_m3, "nominal"});
+        weight *= mHighPtSF_->at("NUM_TrkHighPtID_DEN_GlobalMuonProbes")->evaluate({absEta_m3, l3Pt, "nominal"});
+      }
+      if (l4Pt > MuSF_MAX_MEDPT_){
+        std::cout << "NOTE: " << l4P << " (" << l4Pt << " " << l4Eta << " " << l4Phi << " " << l4Energy << std::endl;
+        weight *= mHighPtSF_->at("NUM_GlobalMuons_DEN_TrackerMuonProbes")->evaluate({absEta_m4, p_m4, "nominal"});
+        weight *= mHighPtSF_->at("NUM_TrkHighPtID_DEN_GlobalMuonProbes")->evaluate({absEta_m4, l4Pt, "nominal"});
+      }
     }
   }
   if (pileupSF_ != nullptr)
@@ -655,6 +761,12 @@ void ZZSelector::SetVariables(Long64_t entry)
     bool templ2IsGap = l2IsGap;
     l2IsGap = l4IsGap;
     l4IsGap = templ2IsGap;
+    float templ1P = l1P;
+    l1P = l3P;
+    l3P = templ1P;
+    float templ2P = l2P;
+    l2P = l4P;
+    l4P = templ2P;
     float templ1Pt = l1Pt;
     l1Pt = l3Pt;
     l3Pt = templ1Pt;
@@ -790,10 +902,10 @@ void ZZSelector::ShiftEfficiencies(Systematic variation)
     // In order to get around the Overflow issue, set the Pt, not ideal.
     float pt_e1 = l1Pt < EleSF_MAX_PT_ ? l1Pt : EleSF_MAX_PT_ - 0.01;
     float pt_e2 = l2Pt < EleSF_MAX_PT_ ? l2Pt : EleSF_MAX_PT_ - 0.01;
-    float pt_m3 = l3Pt < MuSF_MAX_PT_ ? l3Pt : MuSF_MAX_PT_ - 0.01;
-    float pt_m4 = l4Pt < MuSF_MAX_PT_ ? l4Pt : MuSF_MAX_PT_ - 0.01;
     float absEta_m3 = std::abs(l3Eta) < MuSF_MAX_ETA_ ? std::abs(l3Eta) : MuSF_MAX_ETA_ - 0.01;
     float absEta_m4 = std::abs(l4Eta) < MuSF_MAX_ETA_ ? std::abs(l4Eta) : MuSF_MAX_ETA_ - 0.01;
+    float p_m3 = l3P > MuSF_MIN_P_ ? l3P : MuSF_MIN_P_ + 0.03;
+    float p_m4 = l4P > MuSF_MIN_P_ ? l4P : MuSF_MIN_P_ + 0.01;
     if (variation == electronRecoEffUp || variation == electronRecoEffDown)
     {
       if (eRecoSF_ != nullptr){
@@ -835,33 +947,91 @@ void ZZSelector::ShiftEfficiencies(Systematic variation)
     }
     else if (variation == muonEfficiencyUp || variation == muonEfficiencyDown)
     {
-      if (mIdSF_ != nullptr){
-        if (pt_m3 > MuSF_MIN_PT_)
-          weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m3, pt_m3, (shift=="up")? "systup" : "systdown"})
-            / mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m3, pt_m3, "nominal"});
-        if (pt_m4 > MuSF_MIN_PT_)
-          weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m4, pt_m4, (shift=="up")? "systup" : "systdown"})
-            / mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m4, pt_m4, "nominal"});
+      if (mLowPtSF_ != nullptr){
+        if (l3Pt < MuSF_MAX_LOWPT_)
+          weight *= mLowPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m3, l3Pt, (shift=="up")? "systup" : "systdown"})
+            / mLowPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m3, l3Pt, "nominal"});
+        if (l4Pt < MuSF_MAX_LOWPT_)
+          weight *= mLowPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m4, l4Pt, (shift=="up")? "systup" : "systdown"})
+            / mLowPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m4, l4Pt, "nominal"});
+      }
+      if (mMedPtSF_ != nullptr){
+        if (l3Pt > MuSF_MAX_LOWPT_ && l3Pt < MuSF_MAX_MEDPT_){
+          weight *= mMedPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m3, l3Pt, (shift=="up")? "systup" : "systdown"})
+            / mMedPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m3, l3Pt, "nominal"});
+          weight *= mMedPtSF_->at("NUM_LoosePFIso_DEN_LooseID")->evaluate({absEta_m3, l3Pt, (shift=="up")? "systup" : "systdown"})
+            / mMedPtSF_->at("NUM_LoosePFIso_DEN_LooseID")->evaluate({absEta_m3, l3Pt, "nominal"});
+        }
+        if (l4Pt > MuSF_MAX_LOWPT_ && l4Pt < MuSF_MAX_MEDPT_){
+          weight *= mMedPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m4, l4Pt, (shift=="up")? "systup" : "systdown"})
+            / mMedPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m4, l4Pt, "nominal"});
+          weight *= mMedPtSF_->at("NUM_LoosePFIso_DEN_LooseID")->evaluate({absEta_m4, l4Pt, (shift=="up")? "systup" : "systdown"})
+            / mMedPtSF_->at("NUM_LoosePFIso_DEN_LooseID")->evaluate({absEta_m4, l4Pt, "nominal"});
+        }
+      }
+      if (mHighPtSF_ != nullptr)
+      {
+        if (l3Pt > MuSF_MAX_MEDPT_){
+          weight *= mHighPtSF_->at("NUM_GlobalMuons_DEN_TrackerMuonProbes")->evaluate({absEta_m3, p_m3, (shift=="up")? "systup" : "systdown"})
+            / mHighPtSF_->at("NUM_GlobalMuons_DEN_TrackerMuonProbes")->evaluate({absEta_m3, p_m3, "nominal"});
+          weight *= mHighPtSF_->at("NUM_TrkHighPtID_DEN_GlobalMuonProbes")->evaluate({absEta_m3, l3Pt, (shift=="up")? "systup" : "systdown"})
+            / mHighPtSF_->at("NUM_TrkHighPtID_DEN_GlobalMuonProbes")->evaluate({absEta_m3, l3Pt, "nominal"});
+        }
+        if (l4Pt > MuSF_MAX_MEDPT_){
+          weight *= mHighPtSF_->at("NUM_GlobalMuons_DEN_TrackerMuonProbes")->evaluate({absEta_m4, p_m4, (shift=="up")? "systup" : "systdown"})
+            / mHighPtSF_->at("NUM_GlobalMuons_DEN_TrackerMuonProbes")->evaluate({absEta_m4, p_m4, "nominal"});
+          weight *= mHighPtSF_->at("NUM_TrkHighPtID_DEN_GlobalMuonProbes")->evaluate({absEta_m4, l4Pt, (shift=="up")? "systup" : "systdown"})
+            / mHighPtSF_->at("NUM_TrkHighPtID_DEN_GlobalMuonProbes")->evaluate({absEta_m4, l4Pt, "nominal"});
+        }
       }
     }
   }
   else if (channel_ == mmee)
   {
-    float pt_m1 = l1Pt < MuSF_MAX_PT_ ? l1Pt : MuSF_MAX_PT_ - 0.01;
-    float pt_m2 = l2Pt < MuSF_MAX_PT_ ? l2Pt : MuSF_MAX_PT_ - 0.01;
     float pt_e3 = l3Pt < EleSF_MAX_PT_ ? l3Pt : EleSF_MAX_PT_ - 0.01;
     float pt_e4 = l4Pt < EleSF_MAX_PT_ ? l4Pt : EleSF_MAX_PT_ - 0.01;
     float absEta_m1 = std::abs(l1Eta) < MuSF_MAX_ETA_ ? std::abs(l1Eta) : MuSF_MAX_ETA_ - 0.01;
     float absEta_m2 = std::abs(l2Eta) < MuSF_MAX_ETA_ ? std::abs(l2Eta) : MuSF_MAX_ETA_ - 0.01;
+    float p_m1 = l1P > MuSF_MIN_P_ ? l1P : MuSF_MIN_P_ + 0.01;
+    float p_m2 = l2P > MuSF_MIN_P_ ? l2P : MuSF_MIN_P_ + 0.01;
     if (variation == muonEfficiencyUp || variation == muonEfficiencyDown)
     {
-      if (mIdSF_ != nullptr){
-        if (pt_m1 > MuSF_MIN_PT_)
-          weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m1, pt_m1, (shift=="up")? "systup" : "systdown"})
-            / mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m1, pt_m1, "nominal"});
-        if (pt_m2 > MuSF_MIN_PT_)
-          weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m2, pt_m2, (shift=="up")? "systup" : "systdown"})
-            / mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m2, pt_m2, "nominal"});
+      if (mLowPtSF_ != nullptr){
+        if (l1Pt < MuSF_MAX_LOWPT_)
+          weight *= mLowPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m1, l1Pt, (shift=="up")? "systup" : "systdown"})
+            / mLowPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m1, l1Pt, "nominal"});
+        if (l2Pt < MuSF_MAX_LOWPT_)
+          weight *= mLowPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m2, l2Pt, (shift=="up")? "systup" : "systdown"})
+            / mLowPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m2, l2Pt, "nominal"});
+      }
+      if (mMedPtSF_ != nullptr){
+        if (l1Pt > MuSF_MAX_LOWPT_ && l1Pt < MuSF_MAX_MEDPT_){
+          weight *= mMedPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m1, l1Pt, (shift=="up")? "systup" : "systdown"})
+            / mMedPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m1, l1Pt, "nominal"});
+          weight *= mMedPtSF_->at("NUM_LoosePFIso_DEN_LooseID")->evaluate({absEta_m1, l1Pt, (shift=="up")? "systup" : "systdown"})
+            / mMedPtSF_->at("NUM_LoosePFIso_DEN_LooseID")->evaluate({absEta_m1, l1Pt, "nominal"});
+        }
+        if (l2Pt > MuSF_MAX_LOWPT_ && l2Pt < MuSF_MAX_MEDPT_){
+          weight *= mMedPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m2, l2Pt, (shift=="up")? "systup" : "systdown"})
+            / mMedPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m2, l2Pt, "nominal"});
+          weight *= mMedPtSF_->at("NUM_LoosePFIso_DEN_LooseID")->evaluate({absEta_m2, l2Pt, (shift=="up")? "systup" : "systdown"})
+            / mMedPtSF_->at("NUM_LoosePFIso_DEN_LooseID")->evaluate({absEta_m2, l2Pt, "nominal"});
+        }
+      }
+      if (mHighPtSF_ != nullptr)
+      {
+        if (l1Pt > MuSF_MAX_MEDPT_){
+          weight *= mHighPtSF_->at("NUM_GlobalMuons_DEN_TrackerMuonProbes")->evaluate({absEta_m1, p_m1, (shift=="up")? "systup" : "systdown"})
+            / mHighPtSF_->at("NUM_GlobalMuons_DEN_TrackerMuonProbes")->evaluate({absEta_m1, p_m1, "nominal"});
+          weight *= mHighPtSF_->at("NUM_TrkHighPtID_DEN_GlobalMuonProbes")->evaluate({absEta_m1, l1Pt, (shift=="up")? "systup" : "systdown"})
+            / mHighPtSF_->at("NUM_TrkHighPtID_DEN_GlobalMuonProbes")->evaluate({absEta_m1, l1Pt, "nominal"});
+        }
+        if (l2Pt > MuSF_MAX_MEDPT_){
+          weight *= mHighPtSF_->at("NUM_GlobalMuons_DEN_TrackerMuonProbes")->evaluate({absEta_m2, p_m2, (shift=="up")? "systup" : "systdown"})
+            / mHighPtSF_->at("NUM_GlobalMuons_DEN_TrackerMuonProbes")->evaluate({absEta_m2, p_m2, "nominal"});
+          weight *= mHighPtSF_->at("NUM_TrkHighPtID_DEN_GlobalMuonProbes")->evaluate({absEta_m2, l2Pt, (shift=="up")? "systup" : "systdown"})
+            / mHighPtSF_->at("NUM_TrkHighPtID_DEN_GlobalMuonProbes")->evaluate({absEta_m2, l2Pt, "nominal"});
+        }
       }
     }
     else if (variation == electronRecoEffUp || variation == electronRecoEffDown)
@@ -906,27 +1076,80 @@ void ZZSelector::ShiftEfficiencies(Systematic variation)
   }
   else if (channel_ == mmmm && (variation == muonEfficiencyUp || variation == muonEfficiencyDown))
   {
-    float pt_m1 = l1Pt < MuSF_MAX_PT_ ? l1Pt : MuSF_MAX_PT_ - 0.01;
-    float pt_m2 = l2Pt < MuSF_MAX_PT_ ? l2Pt : MuSF_MAX_PT_ - 0.01;
-    float pt_m3 = l3Pt < MuSF_MAX_PT_ ? l3Pt : MuSF_MAX_PT_ - 0.01;
-    float pt_m4 = l4Pt < MuSF_MAX_PT_ ? l4Pt : MuSF_MAX_PT_ - 0.01;
     float absEta_m1 = std::abs(l1Eta) < MuSF_MAX_ETA_ ? std::abs(l1Eta) : MuSF_MAX_ETA_ - 0.01;
     float absEta_m2 = std::abs(l2Eta) < MuSF_MAX_ETA_ ? std::abs(l2Eta) : MuSF_MAX_ETA_ - 0.01;
     float absEta_m3 = std::abs(l3Eta) < MuSF_MAX_ETA_ ? std::abs(l3Eta) : MuSF_MAX_ETA_ - 0.01;
     float absEta_m4 = std::abs(l4Eta) < MuSF_MAX_ETA_ ? std::abs(l4Eta) : MuSF_MAX_ETA_ - 0.01;
-    if (mIdSF_ != nullptr){
-      if (pt_m1 > MuSF_MIN_PT_)
-        weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m1, pt_m1, (shift=="up")? "systup" : "systdown"})
-          / mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m1, pt_m1, "nominal"});
-      if (pt_m2 > MuSF_MIN_PT_)
-        weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m2, pt_m2, (shift=="up")? "systup" : "systdown"})
-          / mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m2, pt_m2, "nominal"});
-      if (pt_m3 > MuSF_MIN_PT_)
-        weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m3, pt_m3, (shift=="up")? "systup" : "systdown"})
-          / mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m3, pt_m3, "nominal"});
-      if (pt_m4 > MuSF_MIN_PT_)
-        weight *= mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m4, pt_m4, (shift=="up")? "systup" : "systdown"})
-          / mIdSF_->at("NUM_TightID_DEN_TrackerMuons")->evaluate({absEta_m4, pt_m4, "nominal"});
+    float p_m1 = l1P > MuSF_MIN_P_ ? l1P : MuSF_MIN_P_ + 0.01;
+    float p_m2 = l2P > MuSF_MIN_P_ ? l2P : MuSF_MIN_P_ + 0.01;
+    float p_m3 = l3P > MuSF_MIN_P_ ? l3P : MuSF_MIN_P_ + 0.03;
+    float p_m4 = l4P > MuSF_MIN_P_ ? l4P : MuSF_MIN_P_ + 0.01;
+    if (mLowPtSF_ != nullptr){
+      if (l1Pt < MuSF_MAX_LOWPT_)
+        weight *= mLowPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m1, l1Pt, (shift=="up")? "systup" : "systdown"})
+          / mLowPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m1, l1Pt, "nominal"});
+      if (l2Pt < MuSF_MAX_LOWPT_)
+        weight *= mLowPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m2, l2Pt, (shift=="up")? "systup" : "systdown"})
+          / mLowPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m2, l2Pt, "nominal"});
+      if (l3Pt < MuSF_MAX_LOWPT_)
+        weight *= mLowPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m3, l3Pt, (shift=="up")? "systup" : "systdown"})
+          / mLowPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m3, l3Pt, "nominal"});
+      if (l4Pt < MuSF_MAX_LOWPT_)
+        weight *= mLowPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m4, l4Pt, (shift=="up")? "systup" : "systdown"})
+          / mLowPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m4, l4Pt, "nominal"});
+    }
+    if (mMedPtSF_ != nullptr){
+      if (l1Pt > MuSF_MAX_LOWPT_ && l1Pt < MuSF_MAX_MEDPT_){
+        weight *= mMedPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m1, l1Pt, (shift=="up")? "systup" : "systdown"})
+          / mMedPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m1, l1Pt, "nominal"});
+        weight *= mMedPtSF_->at("NUM_LoosePFIso_DEN_LooseID")->evaluate({absEta_m1, l1Pt, (shift=="up")? "systup" : "systdown"})
+          / mMedPtSF_->at("NUM_LoosePFIso_DEN_LooseID")->evaluate({absEta_m1, l1Pt, "nominal"});
+      }
+      if (l2Pt > MuSF_MAX_LOWPT_ && l2Pt < MuSF_MAX_MEDPT_){
+        weight *= mMedPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m2, l2Pt, (shift=="up")? "systup" : "systdown"})
+          / mMedPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m2, l2Pt, "nominal"});
+        weight *= mMedPtSF_->at("NUM_LoosePFIso_DEN_LooseID")->evaluate({absEta_m2, l2Pt, (shift=="up")? "systup" : "systdown"})
+          / mMedPtSF_->at("NUM_LoosePFIso_DEN_LooseID")->evaluate({absEta_m2, l2Pt, "nominal"});
+      }
+      if (l3Pt > MuSF_MAX_LOWPT_ && l3Pt < MuSF_MAX_MEDPT_){
+        weight *= mMedPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m3, l3Pt, (shift=="up")? "systup" : "systdown"})
+          / mMedPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m3, l3Pt, "nominal"});
+        weight *= mMedPtSF_->at("NUM_LoosePFIso_DEN_LooseID")->evaluate({absEta_m3, l3Pt, (shift=="up")? "systup" : "systdown"})
+          / mMedPtSF_->at("NUM_LoosePFIso_DEN_LooseID")->evaluate({absEta_m3, l3Pt, "nominal"});
+      }
+      if (l4Pt > MuSF_MAX_LOWPT_ && l4Pt < MuSF_MAX_MEDPT_){
+        weight *= mMedPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m4, l4Pt, (shift=="up")? "systup" : "systdown"})
+          / mMedPtSF_->at("NUM_LooseID_DEN_TrackerMuons")->evaluate({absEta_m4, l4Pt, "nominal"});
+        weight *= mMedPtSF_->at("NUM_LoosePFIso_DEN_LooseID")->evaluate({absEta_m4, l4Pt, (shift=="up")? "systup" : "systdown"})
+          / mMedPtSF_->at("NUM_LoosePFIso_DEN_LooseID")->evaluate({absEta_m4, l4Pt, "nominal"});
+      }
+    }
+    if (mHighPtSF_ != nullptr)
+    {
+      if (l1Pt > MuSF_MAX_MEDPT_){
+        weight *= mHighPtSF_->at("NUM_GlobalMuons_DEN_TrackerMuonProbes")->evaluate({absEta_m1, p_m1, (shift=="up")? "systup" : "systdown"})
+          / mHighPtSF_->at("NUM_GlobalMuons_DEN_TrackerMuonProbes")->evaluate({absEta_m1, p_m1, "nominal"});
+        weight *= mHighPtSF_->at("NUM_TrkHighPtID_DEN_GlobalMuonProbes")->evaluate({absEta_m1, l1Pt, (shift=="up")? "systup" : "systdown"})
+          / mHighPtSF_->at("NUM_TrkHighPtID_DEN_GlobalMuonProbes")->evaluate({absEta_m1, l1Pt, "nominal"});
+      }
+      if (l2Pt > MuSF_MAX_MEDPT_){
+        weight *= mHighPtSF_->at("NUM_GlobalMuons_DEN_TrackerMuonProbes")->evaluate({absEta_m2, p_m2, (shift=="up")? "systup" : "systdown"})
+          / mHighPtSF_->at("NUM_GlobalMuons_DEN_TrackerMuonProbes")->evaluate({absEta_m2, p_m2, "nominal"});
+        weight *= mHighPtSF_->at("NUM_TrkHighPtID_DEN_GlobalMuonProbes")->evaluate({absEta_m2, l2Pt, (shift=="up")? "systup" : "systdown"})
+          / mHighPtSF_->at("NUM_TrkHighPtID_DEN_GlobalMuonProbes")->evaluate({absEta_m2, l2Pt, "nominal"});
+      }
+      if (l3Pt > MuSF_MAX_MEDPT_){
+        weight *= mHighPtSF_->at("NUM_GlobalMuons_DEN_TrackerMuonProbes")->evaluate({absEta_m3, p_m3, (shift=="up")? "systup" : "systdown"})
+          / mHighPtSF_->at("NUM_GlobalMuons_DEN_TrackerMuonProbes")->evaluate({absEta_m3, p_m3, "nominal"});
+        weight *= mHighPtSF_->at("NUM_TrkHighPtID_DEN_GlobalMuonProbes")->evaluate({absEta_m3, l3Pt, (shift=="up")? "systup" : "systdown"})
+          / mHighPtSF_->at("NUM_TrkHighPtID_DEN_GlobalMuonProbes")->evaluate({absEta_m3, l3Pt, "nominal"});
+      }
+      if (l4Pt > MuSF_MAX_MEDPT_){
+        weight *= mHighPtSF_->at("NUM_GlobalMuons_DEN_TrackerMuonProbes")->evaluate({absEta_m4, p_m4, (shift=="up")? "systup" : "systdown"})
+          / mHighPtSF_->at("NUM_GlobalMuons_DEN_TrackerMuonProbes")->evaluate({absEta_m4, p_m4, "nominal"});
+        weight *= mHighPtSF_->at("NUM_TrkHighPtID_DEN_GlobalMuonProbes")->evaluate({absEta_m4, l4Pt, (shift=="up")? "systup" : "systdown"})
+          / mHighPtSF_->at("NUM_TrkHighPtID_DEN_GlobalMuonProbes")->evaluate({absEta_m4, l4Pt, "nominal"});
+      }
     }
   }
 }

@@ -60,10 +60,22 @@ void ZZSelectorBase::SetScaleFactors()
     std::invalid_argument("Must pass valid electron Reco SF");
   }
   try{
-    mIdSF_ = correction::CorrectionSet::from_file(TString::Format("%s/MUO/%s/muon_Z.json.gz", basename.c_str(), yearstring.c_str()).Data());
+    mLowPtSF_ = correction::CorrectionSet::from_file(TString::Format("%s/MUO/%s/muon_JPsi.json.gz", basename.c_str(), yearstring.c_str()).Data());
   }
   catch (...){
-    std::invalid_argument("Must pass valid muon Run SF");
+    std::invalid_argument("Must pass valid low pt muon SF");
+  }
+  try{
+    mMedPtSF_ = correction::CorrectionSet::from_file(TString::Format("%s/MUO/%s/muon_Z.json.gz", basename.c_str(), yearstring.c_str()).Data());
+  }
+  catch (...){
+    std::invalid_argument("Must pass valid medium pt muon SF");
+  }
+  try{
+    mHighPtSF_ = correction::CorrectionSet::from_file(TString::Format("%s/MUO/%s/muon_HighPt.json.gz", basename.c_str(), yearstring.c_str()).Data());
+  }
+  catch (...){
+    std::invalid_argument("Must pass valid high pt muon SF");
   }
 
   //There are L1Prefiring weight and uncertainity in the ZZ UWVV ntuples
