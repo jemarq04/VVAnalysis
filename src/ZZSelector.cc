@@ -431,6 +431,7 @@ void ZZSelector::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::str
 
   ROOT::Math::PtEtaPhiEVector lp1, ln1, lp2, ln2;
   //std::cout << "NOTE: " << l1PdgId << " " << l2PdgId << " " << l3PdgId << " " << l4PdgId << std::endl;
+  //TODO: Once ntuples are re-done, replace l#P assignments with the appropriate loading from ntuple branches
   if (l1PdgId > 0){
   	lp1 = ROOT::Math::PtEtaPhiEVector(l1Pt, l1Eta, l1Phi, l1Energy);
   	ln1 = ROOT::Math::PtEtaPhiEVector(l2Pt, l2Eta, l2Phi, l2Energy);
@@ -594,12 +595,10 @@ void ZZSelector::ApplyScaleFactors()
     if (mHighPtSF_ != nullptr)
     {
       if (l3Pt > MuSF_MAX_MEDPT_){
-        std::cout << "NOTE: " << l3P << " (" << l3Pt << " " << l3Eta << " " << l3Phi << " " << l3Energy << std::endl;
         weight *= mHighPtSF_->at("NUM_GlobalMuons_DEN_TrackerMuonProbes")->evaluate({absEta_m3, p_m3, "nominal"});
         weight *= mHighPtSF_->at("NUM_TrkHighPtID_DEN_GlobalMuonProbes")->evaluate({absEta_m3, l3Pt, "nominal"});
       }
       if (l4Pt > MuSF_MAX_MEDPT_){
-        std::cout << "NOTE: " << l4P << " (" << l4Pt << " " << l4Eta << " " << l4Phi << " " << l4Energy << std::endl;
         weight *= mHighPtSF_->at("NUM_GlobalMuons_DEN_TrackerMuonProbes")->evaluate({absEta_m4, p_m4, "nominal"});
         weight *= mHighPtSF_->at("NUM_TrkHighPtID_DEN_GlobalMuonProbes")->evaluate({absEta_m4, l4Pt, "nominal"});
       }
@@ -634,12 +633,10 @@ void ZZSelector::ApplyScaleFactors()
     if (mHighPtSF_ != nullptr)
     {
       if (l1Pt > MuSF_MAX_MEDPT_){
-        std::cout << "NOTE: " << l1P << " (" << l1Pt << " " << l1Eta << " " << l1Phi << " " << l1Energy << std::endl;
         weight *= mHighPtSF_->at("NUM_GlobalMuons_DEN_TrackerMuonProbes")->evaluate({absEta_m1, p_m1, "nominal"});
         weight *= mHighPtSF_->at("NUM_TrkHighPtID_DEN_GlobalMuonProbes")->evaluate({absEta_m1, l1Pt, "nominal"});
       }
       if (l2Pt > MuSF_MAX_MEDPT_){
-        std::cout << "NOTE: " << l2P << " (" << l2Pt << " " << l2Eta << " " << l2Phi << " " << l2Energy << std::endl;
         weight *= mHighPtSF_->at("NUM_GlobalMuons_DEN_TrackerMuonProbes")->evaluate({absEta_m2, p_m2, "nominal"});
         weight *= mHighPtSF_->at("NUM_TrkHighPtID_DEN_GlobalMuonProbes")->evaluate({absEta_m2, l2Pt, "nominal"});
       }
@@ -707,22 +704,18 @@ void ZZSelector::ApplyScaleFactors()
     if (mHighPtSF_ != nullptr)
     {
       if (l1Pt > MuSF_MAX_MEDPT_){
-        std::cout << "NOTE: " << l1P << " (" << l1Pt << " " << l1Eta << " " << l1Phi << " " << l1Energy << std::endl;
         weight *= mHighPtSF_->at("NUM_GlobalMuons_DEN_TrackerMuonProbes")->evaluate({absEta_m1, p_m1, "nominal"});
         weight *= mHighPtSF_->at("NUM_TrkHighPtID_DEN_GlobalMuonProbes")->evaluate({absEta_m1, l1Pt, "nominal"});
       }
       if (l2Pt > MuSF_MAX_MEDPT_){
-        std::cout << "NOTE: " << l2P << " (" << l2Pt << " " << l2Eta << " " << l2Phi << " " << l2Energy << std::endl;
         weight *= mHighPtSF_->at("NUM_GlobalMuons_DEN_TrackerMuonProbes")->evaluate({absEta_m2, p_m2, "nominal"});
         weight *= mHighPtSF_->at("NUM_TrkHighPtID_DEN_GlobalMuonProbes")->evaluate({absEta_m2, l2Pt, "nominal"});
       }
       if (l3Pt > MuSF_MAX_MEDPT_){
-        std::cout << "NOTE: " << l3P << " (" << l3Pt << " " << l3Eta << " " << l3Phi << " " << l3Energy << std::endl;
         weight *= mHighPtSF_->at("NUM_GlobalMuons_DEN_TrackerMuonProbes")->evaluate({absEta_m3, p_m3, "nominal"});
         weight *= mHighPtSF_->at("NUM_TrkHighPtID_DEN_GlobalMuonProbes")->evaluate({absEta_m3, l3Pt, "nominal"});
       }
       if (l4Pt > MuSF_MAX_MEDPT_){
-        std::cout << "NOTE: " << l4P << " (" << l4Pt << " " << l4Eta << " " << l4Phi << " " << l4Energy << std::endl;
         weight *= mHighPtSF_->at("NUM_GlobalMuons_DEN_TrackerMuonProbes")->evaluate({absEta_m4, p_m4, "nominal"});
         weight *= mHighPtSF_->at("NUM_TrkHighPtID_DEN_GlobalMuonProbes")->evaluate({absEta_m4, l4Pt, "nominal"});
       }
