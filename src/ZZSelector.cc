@@ -669,7 +669,7 @@ void ZZSelector::ApplyScaleFactors()
     float absEta_m4 = std::abs(l4Eta) < MuSF_MAX_ETA_ ? std::abs(l4Eta) : MuSF_MAX_ETA_ - 0.01;
     float p_m1 = l1P > MuSF_MIN_P_ ? l1P : MuSF_MIN_P_ + 0.01;
     float p_m2 = l2P > MuSF_MIN_P_ ? l2P : MuSF_MIN_P_ + 0.01;
-    float p_m3 = l3P > MuSF_MIN_P_ ? l3P : MuSF_MIN_P_ + 0.03;
+    float p_m3 = l3P > MuSF_MIN_P_ ? l3P : MuSF_MIN_P_ + 0.01;
     float p_m4 = l4P > MuSF_MIN_P_ ? l4P : MuSF_MIN_P_ + 0.01;
     if (mLowPtSF_ != nullptr)
     {
@@ -897,7 +897,7 @@ void ZZSelector::ShiftEfficiencies(Systematic variation)
     float pt_e2 = l2Pt < EleSF_MAX_PT_ ? l2Pt : EleSF_MAX_PT_ - 0.01;
     float absEta_m3 = std::abs(l3Eta) < MuSF_MAX_ETA_ ? std::abs(l3Eta) : MuSF_MAX_ETA_ - 0.01;
     float absEta_m4 = std::abs(l4Eta) < MuSF_MAX_ETA_ ? std::abs(l4Eta) : MuSF_MAX_ETA_ - 0.01;
-    float p_m3 = l3P > MuSF_MIN_P_ ? l3P : MuSF_MIN_P_ + 0.03;
+    float p_m3 = l3P > MuSF_MIN_P_ ? l3P : MuSF_MIN_P_ + 0.01;
     float p_m4 = l4P > MuSF_MIN_P_ ? l4P : MuSF_MIN_P_ + 0.01;
     if (variation == electronRecoEffUp || variation == electronRecoEffDown)
     {
@@ -1075,7 +1075,7 @@ void ZZSelector::ShiftEfficiencies(Systematic variation)
     float absEta_m4 = std::abs(l4Eta) < MuSF_MAX_ETA_ ? std::abs(l4Eta) : MuSF_MAX_ETA_ - 0.01;
     float p_m1 = l1P > MuSF_MIN_P_ ? l1P : MuSF_MIN_P_ + 0.01;
     float p_m2 = l2P > MuSF_MIN_P_ ? l2P : MuSF_MIN_P_ + 0.01;
-    float p_m3 = l3P > MuSF_MIN_P_ ? l3P : MuSF_MIN_P_ + 0.03;
+    float p_m3 = l3P > MuSF_MIN_P_ ? l3P : MuSF_MIN_P_ + 0.01;
     float p_m4 = l4P > MuSF_MIN_P_ ? l4P : MuSF_MIN_P_ + 0.01;
     if (mLowPtSF_ != nullptr){
       if (l1Pt < MuSF_MAX_LOWPT_)
