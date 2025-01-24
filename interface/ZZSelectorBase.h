@@ -23,6 +23,7 @@ public:
     std::unique_ptr<correction::CorrectionSet> pileupSF_;
     std::unique_ptr<correction::CorrectionSet> eIdSF_, eRecoSF_;
     std::unique_ptr<correction::CorrectionSet> mIdSF_;
+    std::unique_ptr<correction::CorrectionSet> mLowPtSF_, mMedPtSF_, mHighPtSF_;
     std::unique_ptr<correction::CorrectionSet> jetPUSF_;
     std::string yearcfg;
     //ScaleFactor* mIsoSF_;
@@ -75,6 +76,10 @@ public:
 
     Bool_t isUL_L1check = true;
 
+    Float_t l1P=-1.0;
+    Float_t l2P=-1.0;
+    Float_t l3P=-1.0;
+    Float_t l4P=-1.0;
     Float_t l1Pt;
     Float_t l2Pt;
     Float_t l3Pt;
@@ -221,7 +226,9 @@ protected:
     bool isZgamma_;
     const float FR_MAX_PT_ = 80;
     const float FR_MAX_ETA_ = 2.5;
-    const float MuSF_MIN_PT_ = 15, MuSF_MAX_PT_ = 200, MuSF_MAX_ETA_ = 2.4;
+    const float MuSF_MIN_P_ = 50;
+    const float MuSF_MIN_PT_ = 15, MuSF_MAX_PT_ = 200;
+    const float MuSF_MAX_LOWPT_ = 15, MuSF_MAX_MEDPT_ = 200, MuSF_MAX_ETA_ = 2.4;
     const float EleSF_MIN_PT_ = 7, EleRecoSF_MIN_PT_ = 10, EleSF_MAX_PT_ = 500;
     virtual std::string GetNameFromFile() override;
     virtual void SetBranchesNanoAOD() override;
