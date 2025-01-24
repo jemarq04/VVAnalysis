@@ -6,7 +6,7 @@
 
 std::string ZZSelectorBase::GetNameFromFile()
 {
-  std::regex expr = std::regex("201[0-9]-[0-9][0-9]-[0-9][0-9]-(.*)-ZZ4l2018");
+  std::regex expr = std::regex("20[0-9][0-9]-[0-9][0-9]-[0-9][0-9]-(.*)-ZZ4l20[0-9][0-9]");
   std::smatch matches;
   std::string fileName = fChain->GetTree()->GetDirectory()->GetFile()->GetName();
 
@@ -39,36 +39,48 @@ void ZZSelectorBase::SetScaleFactors()
   catch (...){
     std::invalid_argument("Must pass valid jet PU id SF");
   }
-  //if (jetPUSF_ != nullptr) std::cout << "Applying jetPUSF" << std::endl;
-
   try{
     pileupSF_ = correction::CorrectionSet::from_file(TString::Format("%s/LUM/%s/puWeights.json.gz", basename.c_str(), yearstring.c_str()).Data());
   }
   catch (...){
     std::invalid_argument("Must pass valid pileup weights SF");
   }
-  //if (pileupSF_ != nullptr) std::cout << "Applying pileupSF" << std::endl;
   try{
     eIdSF_ = correction::CorrectionSet::from_file("data/ElectronSF_HZZUL.json");
   }
   catch (...){
     std::invalid_argument("Must pass valid electron Run SF");
   }
-  //if (eIdSF_ != nullptr) std::cout << "Applying electron ID SFs" << std::endl;
   try{
     eRecoSF_ = correction::CorrectionSet::from_file(TString::Format("%s/EGM/%s/electron.json.gz", basename.c_str(), yearstring.c_str()).Data());
   }
   catch (...){
     std::invalid_argument("Must pass valid electron Reco SF");
   }
-  //if (eRecoSF_ != nullptr) std::cout << "Applying electron reco SFs" << std::endl;
   try{
     mIdSF_ = correction::CorrectionSet::from_file(TString::Format("%s/MUO/%s/muon_Z.json.gz", basename.c_str(), yearstring.c_str()).Data());
   }
   catch (...){
     std::invalid_argument("Must pass valid muon Run SF");
   }
-  //if (mIdSF_ != nullptr) std::cout << "Applying muon ID SFs" << std::endl;
+  try{
+    mLowPtSF_ = correction::CorrectionSet::from_file(TString::Format("%s/MUO/%s/muon_JPsi.json.gz", basename.c_str(), yearstring.c_str()).Data());
+  }
+  catch (...){
+    std::invalid_argument("Must pass valid low pt muon SF");
+  }
+  try{
+    mMedPtSF_ = correction::CorrectionSet::from_file(TString::Format("%s/MUO/%s/muon_Z.json.gz", basename.c_str(), yearstring.c_str()).Data());
+  }
+  catch (...){
+    std::invalid_argument("Must pass valid medium pt muon SF");
+  }
+  try{
+    mHighPtSF_ = correction::CorrectionSet::from_file(TString::Format("%s/MUO/%s/muon_HighPt.json.gz", basename.c_str(), yearstring.c_str()).Data());
+  }
+  catch (...){
+    std::invalid_argument("Must pass valid high pt muon SF");
+  }
 
   //There are L1Prefiring weight and uncertainity in the ZZ UWVV ntuples
   //prefireEff_ = (TEfficiency*) GetInputList()->FindObject("prefireEfficiencyMap");
