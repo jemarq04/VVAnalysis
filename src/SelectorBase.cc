@@ -262,8 +262,9 @@ void SelectorBase::InitializeHistogramsFromConfig()
                 InitializeHistogramFromConfig(name, chan, histData);
             }
             // No need to print warning for every channel
-            else if (chan == channels.front())
-                std::cerr << "Skipping invalid histogram " << name << std::endl;
+            // No need to print it at all...
+            //else if (chan == channels.front())
+            //    std::cerr << "Skipping invalid histogram " << name << std::endl;
         }
     }
 }
