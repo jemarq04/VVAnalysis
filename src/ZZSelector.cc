@@ -1148,10 +1148,7 @@ void ZZSelector::ShiftEfficiencies(Systematic variation)
 
 bool ZZSelector::PassesZZjjSelection()
 {
-  if ((jetPt->size() != jetEta->size() || jetPt->size() < 2) || (mjj < 100))
-    return false;
-  else
-    return true;
+  return !((jetPt->size() != jetEta->size() || jetPt->size() < 2) || (mjj < 100));
 }
 
 bool ZZSelector::Passes4eExtraCut()
@@ -1197,21 +1194,9 @@ bool ZZSelector::PassesZZSelection(bool nonPrompt)
   // This nonPrompt boolean is for ZZBackgroundSelector
   // When running ZZBackgroundSelector, FillHistograms should run just with ZZSelection, we cannot require TightZZLeptons by definition
   if (nonPrompt)
-  {
-    // Because we are using Cut Based Moriond ID for Muons, we need SIP cut for 2016,2017
-    if (year_ == yr2016 || year_ == yr2017)
-      return ZZSelection() && HZZSIPSelection();
-    else
-      return ZZSelection();
-  }
+    return ZZSelection() && HZZSIPSelection();
   else
-  {
-    // std::cout<<"nonPrompt inside function: "<<nonPrompt<<std::endl;
-    if (year_ == yr2016 || year_ == yr2017)
-      return ZZSelection() && TightZZLeptons() && HZZSIPSelection();
-    else
-      return ZZSelection() && TightZZLeptons();
-  }
+    return ZZSelection() && TightZZLeptons() && HZZSIPSelection();
 }
 
 bool ZZSelector::PassesZZSelectionLoose(bool nonPrompt)
@@ -1219,21 +1204,9 @@ bool ZZSelector::PassesZZSelectionLoose(bool nonPrompt)
   // This nonPrompt boolean is for ZZBackgroundSelector
   // When running ZZBackgroundSelector, FillHistograms should run just with ZZSelection, we cannot require TightZZLeptons by definition
   if (nonPrompt)
-  {
-    // Because we are using Cut Based Moriond ID for Muons, we need SIP cut for 2016,2017
-    if (year_ == yr2016 || year_ == yr2017)
-      return HZZSIPSelection();
-    else
-      return true;
-  }
+    return HZZSIPSelection();
   else
-  {
-    // std::cout<<"nonPrompt inside function: "<<nonPrompt<<std::endl;
-    if (year_ == yr2016 || year_ == yr2017)
-      return TightZZLeptons() && HZZSIPSelection();
-    else
-      return TightZZLeptons();
-  }
+    return TightZZLeptons() && HZZSIPSelection();
 }
 
 bool ZZSelector::PassesHZZSelection(bool nonPrompt)

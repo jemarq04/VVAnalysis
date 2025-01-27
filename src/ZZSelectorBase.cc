@@ -699,22 +699,12 @@ bool ZZSelectorBase::e1e2IsZ1(Long64_t entry)
 {
   //4P Signal region logic where I need to differentiate between two tight pairs and assign Z1 depending on which is closer to mZ
   if (tightZ1Leptons() && tightZ2Leptons())
-  {
-    if (fabs(Z1mass - 91.1876) < fabs(Z2mass - 91.1876))
-      return true;
-    else
-      return false;
-  }
+    return fabs(Z1mass - 91.1876) < fabs(Z2mass - 91.1876);
   //In CRs it doesn't matter, the tight pair builds the Z and the other pair is X in Z+X.
   else if (tightZ1Leptons() && !tightZ2Leptons())
-  {
     return true;
-  }
-
   else if (!tightZ1Leptons() && tightZ2Leptons())
-  {
     return false;
-  }
   else
     return false;
 }
@@ -722,48 +712,28 @@ bool ZZSelectorBase::e1e2IsZ1(Long64_t entry)
 bool ZZSelectorBase::lep1IsIso()
 {
   if (abs(l1PdgId) == 13)
-  {
-    if (l1IsIso < 0.35)
-      return true;
-    else
-      return false;
-  }
+    return l1IsIso < 0.35;
   else
     return true;
 }
 bool ZZSelectorBase::lep2IsIso()
 {
   if (abs(l2PdgId) == 13)
-  {
-    if (l2IsIso < 0.35)
-      return true;
-    else
-      return false;
-  }
+    return l2IsIso < 0.35;
   else
     return true;
 }
 bool ZZSelectorBase::lep3IsIso()
 {
   if (abs(l3PdgId) == 13)
-  {
-    if (l3IsIso < 0.35)
-      return true;
-    else
-      return false;
-  }
+    return l3IsIso < 0.35;
   else
     return true;
 }
 bool ZZSelectorBase::lep4IsIso()
 {
   if (abs(l4PdgId) == 13)
-  {
-    if (l4IsIso < 0.35)
-      return true;
-    else
-      return false;
-  }
+    return l4IsIso < 0.35;
   else
     return true;
 }
@@ -771,29 +741,16 @@ bool ZZSelectorBase::lep4IsIso()
 // To be a function of multiple variables
 bool ZZSelectorBase::lep1IsTight()
 {
-  if (year_ == yr2016 || year_ == yr2017)
-  {
-    return (l1IsTight && lep1IsIso());
-  }
-  else
-    return (l1IsTight);
+  return (l1IsTight && lep1IsIso());
 }
 
 bool ZZSelectorBase::lep2IsTight()
 {
-  if (year_ == yr2016 || year_ == yr2017)
-  {
-    return (l2IsTight && lep2IsIso());
-  }
-  else
-    return (l2IsTight);
+  return (l2IsTight && lep2IsIso());
 }
 bool ZZSelectorBase::tightSIP()
 {
-  if ((l1SIP3D < 4.0 && l2SIP3D < 4.0 && l3SIP3D < 4.0))
-    return true;
-  else
-    return false;
+  return l1SIP3D < 4.0 && l2SIP3D < 4.0 && l3SIP3D < 4.0;
 }
 bool ZZSelectorBase::tightZ1Leptons()
 {
@@ -801,21 +758,11 @@ bool ZZSelectorBase::tightZ1Leptons()
 }
 bool ZZSelectorBase::lep3IsTight()
 {
-  if (year_ == yr2016 || year_ == yr2017)
-  {
-    return (l3IsTight && lep3IsIso());
-  }
-  else
-    return (l3IsTight);
+  return (l3IsTight && lep3IsIso());
 }
 bool ZZSelectorBase::lep4IsTight()
 {
-  if (year_ == yr2016 || year_ == yr2017)
-  {
-    return (l4IsTight && lep4IsIso());
-  }
-  else
-    return (l4IsTight);
+  return (l4IsTight && lep4IsIso());
 }
 bool ZZSelectorBase::tightZ2Leptons()
 {
@@ -823,43 +770,25 @@ bool ZZSelectorBase::tightZ2Leptons()
 }
 bool ZZSelectorBase::Z1PF()
 {
-  if (lep1IsTight() && !lep2IsTight())
-    return true;
-  else
-    return false;
+  return lep1IsTight() && !lep2IsTight();
 }
 bool ZZSelectorBase::Z1FP()
 {
-  if (lep2IsTight() && !lep1IsTight())
-    return true;
-  else
-    return false;
+  return lep2IsTight() && !lep1IsTight();
 }
 bool ZZSelectorBase::Z1FF()
 {
-  if (!lep1IsTight() && !lep2IsTight())
-    return true;
-  else
-    return false;
+  return !lep1IsTight() && !lep2IsTight();
 }
 bool ZZSelectorBase::Z2PF()
 {
-  if (lep3IsTight() && !lep4IsTight())
-    return true;
-  else
-    return false;
+  return lep3IsTight() && !lep4IsTight();
 }
 bool ZZSelectorBase::Z2FP()
 {
-  if (lep4IsTight() && !lep3IsTight())
-    return true;
-  else
-    return false;
+  return lep4IsTight() && !lep3IsTight();
 }
 bool ZZSelectorBase::Z2FF()
 {
-  if (!lep3IsTight() && !lep4IsTight())
-    return true;
-  else
-    return false;
+  return !lep3IsTight() && !lep4IsTight();
 }
