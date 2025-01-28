@@ -72,8 +72,6 @@ def makeHistFile(args):
     addScaleFacs = False
     if args['analysis'] == "WZxsec2016" or args['analysis'] == 'Zstudy_2016' or args['scalefactors_file']:
         addScaleFacs = True
-    fjetPUSF = ROOT.TFile("data/jetSF/scalefactorsPUID_81Xtraining.root")
-    fjetPUeff= ROOT.TFile("data/jetSF/effcyPUID_81Xtraining.root")
     fr_inputs = []
     if addScaleFacs:
         if "ZZ4l" in args['analysis']:
