@@ -13,7 +13,7 @@ import glob
 import argparse
 import subprocess
 from os import listdir
-from os.path import isfile, isdir, join
+from os.path import isfile, join
 def getComLineArgs():
     parser = argparse.ArgumentParser()
     parser.add_argument("-o", "--output_file", type=str,
@@ -39,10 +39,7 @@ def makeHDFSFileList(output_file, file_path, only_root_files):
                 continue
             file_list.write(file_name+"\n")
 def makeLocalFileList(output_file, file_path, only_root_files):
-    if isdir(file_path):
-        files = [f for f in listdir(file_path) if isfile(join(file_path, f))]
-    else:
-        files = [file_path]
+    files = [f for f in listdir(file_path) if isfile(join(file_path, f))]
     print(file_path)
     with open(output_file, "w") as file_list:
         for file_name in files:
