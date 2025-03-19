@@ -88,7 +88,10 @@ def makeHistFile(args):
             basename = ROOT.TNamed("basename", "/cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration/POG")
             yearcfg = ROOT.TNamed("yearcfg", args["year"])
 
-            sf_inputs = [basename, yearcfg]
+            sf_inputs = [basename, yearcfg] 
+            
+            qqZZ_kfac = ROOT.TNamed("qqZZ_kfac", "data/qqZZ_kfacs.json")
+            #sf_inputs.append(qqZZ_kfac)
         else:
             # The lines below use Run 2
             fScales = ROOT.TFile('data/scaleFactors.root')
