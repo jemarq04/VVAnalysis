@@ -87,7 +87,7 @@ void ZZSelectorBase::SetScaleFactors()
   }
   catch (...){
     //throw std::invalid_argument("Must pass valid qqZZ differental kfactor");
-    if (qqZZ_kfac_ != nullptr) qqZZ_kfac_->reset();
+    if (qqZZ_kfac_ != nullptr) qqZZ_kfac_.reset();
   }
 
   //There are L1Prefiring weight and uncertainity in the ZZ UWVV ntuples
