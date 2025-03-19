@@ -24,6 +24,7 @@ public:
     std::unique_ptr<correction::CorrectionSet> eIdSF_, eRecoSF_;
     std::unique_ptr<correction::CorrectionSet> mLowPtSF_, mMedPtSF_, mHighPtSF_;
     std::unique_ptr<correction::CorrectionSet> jetPUSF_;
+    std::unique_ptr<correction::CorrectionSet> qqZZ_kfac_;
     std::string yearcfg;
     //ScaleFactor* mIsoSF_;
 

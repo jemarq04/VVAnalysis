@@ -167,6 +167,13 @@ unsigned int ZZSelector::GetLheWeightInfo()
   }
   return 1;
 }
+bool ZZSelector::CheckQQZZ(){
+  std::vector<std::string> samples = {
+    "zz4l-powheg", "zz4l-amcatnlo", "qqZZSpec",
+    "zz4l-powheg_postEE", "zz4l-amcatnlo_postEE", "qqZZSpec_postEE"
+  };
+  return std::find(samples.begin(), samples.end(), name_) != samples.end();
+}
 void ZZSelector::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::string> variation)
 {
 
@@ -472,6 +479,12 @@ void ZZSelector::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::str
 
 void ZZSelector::ApplyScaleFactors()
 {
+  if (CheckQQZZ() && qqZZ_kfac_ != nullptr){
+    if (channel_ == eeee || channel_ == mmmm)
+      weight *= qqZZ_kfac_->at("qqZZ4l_NLO_NNLO")->evaluate({Mass});
+    else
+      weight *= qqZZ_kfac_->at("qqZZ2l2l_NLO_NNLO")->evaluate({Mass});
+  }
 
   if (applyPUSFNtp_)
   {

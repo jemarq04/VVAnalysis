@@ -135,6 +135,7 @@ protected:
     bool PassesZZjjSelection();
     bool PassesHZZSelection(bool nonPrompt);
     unsigned int GetLheWeightInfo();
+    bool CheckQQZZ();
     void SetVariables(Long64_t entry);
     //bool DuplicatedEvent();
     bool TightZZLeptons();
