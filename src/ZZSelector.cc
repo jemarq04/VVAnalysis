@@ -533,19 +533,19 @@ void ZZSelector::ApplyScaleFactors()
     if (eIdSF_ != nullptr) //TODO: Update with appropriate CorrectionSet calls once JSON files are provided
     {
       if (pt_e1 > EleSF_MIN_PT_){
-        std::string gapid = yearcfg + "_UL-" + (l1IsGap? "gap" : "nogap");
+        std::string gapid = (std::string)"2018_UL-" + (l1IsGap? "gap" : "nogap");
         weight *= eIdSF_->at(gapid.c_str())->evaluate({l1Eta, pt_e1});
       }
       if (pt_e2 > EleSF_MIN_PT_){
-        std::string gapid = yearcfg + "_UL-" + (l2IsGap? "gap" : "nogap");
+        std::string gapid = (std::string)"2018_UL-" + (l2IsGap? "gap" : "nogap");
         weight *= eIdSF_->at(gapid.c_str())->evaluate({l2Eta, pt_e2});
       }
       if (pt_e3 > EleSF_MIN_PT_){
-        std::string gapid = yearcfg + "_UL-" + (l3IsGap? "gap" : "nogap");
+        std::string gapid = (std::string)"2018_UL-" + (l3IsGap? "gap" : "nogap");
         weight *= eIdSF_->at(gapid.c_str())->evaluate({l3Eta, pt_e3});
       }
       if (pt_e4 > EleSF_MIN_PT_){
-        std::string gapid = yearcfg + "_UL-" + (l4IsGap? "gap" : "nogap");
+        std::string gapid = (std::string)"2018_UL-" + (l4IsGap? "gap" : "nogap");
         weight *= eIdSF_->at(gapid.c_str())->evaluate({l4Eta, pt_e4});
       }
     }
@@ -573,11 +573,11 @@ void ZZSelector::ApplyScaleFactors()
     if (eIdSF_ != nullptr)
     {
       if (pt_e1 > EleSF_MIN_PT_){
-        std::string gapid = yearcfg + "_UL-" + (l1IsGap? "gap" : "nogap");
+        std::string gapid = (std::string)"2018_UL-" + (l1IsGap? "gap" : "nogap");
         weight *= eIdSF_->at(gapid.c_str())->evaluate({l1Eta, pt_e1});
       }
       if (pt_e2 > EleSF_MIN_PT_){
-        std::string gapid = yearcfg + "_UL-" + (l2IsGap? "gap" : "nogap");
+        std::string gapid = (std::string)"2018_UL-" + (l2IsGap? "gap" : "nogap");
         weight *= eIdSF_->at(gapid.c_str())->evaluate({l2Eta, pt_e2});
       }
     }
@@ -659,11 +659,11 @@ void ZZSelector::ApplyScaleFactors()
     if (eIdSF_ != nullptr)
     {
       if (pt_e3 > EleSF_MIN_PT_){
-        std::string gapid = yearcfg + "_UL-" + (l3IsGap? "gap" : "nogap");
+        std::string gapid = (std::string)"2018_UL-" + (l3IsGap? "gap" : "nogap");
         weight *= eIdSF_->at(gapid.c_str())->evaluate({l3Eta, pt_e3});
       }
       if (pt_e4 > EleSF_MIN_PT_){
-        std::string gapid = yearcfg + "_UL-" + (l4IsGap? "gap" : "nogap");
+        std::string gapid = (std::string)"2018_UL-" + (l4IsGap? "gap" : "nogap");
         weight *= eIdSF_->at(gapid.c_str())->evaluate({l4Eta, pt_e4});
       }
     }
@@ -863,7 +863,7 @@ void ZZSelector::ShiftEfficiencies(Systematic variation)
       if (eIdSF_ != nullptr)
       {
         if (pt_e1 > EleSF_MIN_PT_){
-          std::string gapid = yearcfg + "_UL-" + (l1IsGap? "gap" : "nogap");
+          std::string gapid = (std::string)"2018_UL-" + (l1IsGap? "gap" : "nogap");
           try{
             weight *= eIdSF_->at((gapid + "_" + shift).c_str())->evaluate({l1Eta, pt_e1})
               / eIdSF_->at(gapid.c_str())->evaluate({l1Eta, pt_e1});
@@ -873,7 +873,7 @@ void ZZSelector::ShiftEfficiencies(Systematic variation)
           }
         }
         if (pt_e2 > EleSF_MIN_PT_){
-          std::string gapid = yearcfg + "_UL-" + (l2IsGap? "gap" : "nogap");
+          std::string gapid = (std::string)"2018_UL-" + (l2IsGap? "gap" : "nogap");
           try{
             weight *= eIdSF_->at((gapid + "_" + shift).c_str())->evaluate({l2Eta, pt_e2})
               / eIdSF_->at(gapid.c_str())->evaluate({l2Eta, pt_e2});
@@ -883,7 +883,7 @@ void ZZSelector::ShiftEfficiencies(Systematic variation)
           }
         }
         if (pt_e3 > EleSF_MIN_PT_){
-          std::string gapid = yearcfg + "_UL-" + (l3IsGap? "gap" : "nogap");
+          std::string gapid = (std::string)"2018_UL-" + (l3IsGap? "gap" : "nogap");
           try{
             weight *= eIdSF_->at((gapid + "_" + shift).c_str())->evaluate({l3Eta, pt_e3})
               / eIdSF_->at(gapid.c_str())->evaluate({l3Eta, pt_e3});
@@ -893,7 +893,7 @@ void ZZSelector::ShiftEfficiencies(Systematic variation)
           }
         }
         if (pt_e4 > EleSF_MIN_PT_){
-          std::string gapid = yearcfg + "_UL-" + (l4IsGap? "gap" : "nogap");
+          std::string gapid = (std::string)"2018_UL-" + (l4IsGap? "gap" : "nogap");
           try{
             weight *= eIdSF_->at((gapid + "_" + shift).c_str())->evaluate({l4Eta, pt_e4})
               / eIdSF_->at(gapid.c_str())->evaluate({l4Eta, pt_e4});
@@ -932,7 +932,7 @@ void ZZSelector::ShiftEfficiencies(Systematic variation)
     {
       if (eIdSF_ != nullptr){
         if (pt_e1 > EleSF_MIN_PT_){
-          std::string gapid = yearcfg + "_UL-" + (l1IsGap? "gap" : "nogap");
+          std::string gapid = (std::string)"2018_UL-" + (l1IsGap? "gap" : "nogap");
           try{
             weight *= eIdSF_->at((gapid + "_" + shift).c_str())->evaluate({l1Eta, pt_e1})
               / eIdSF_->at(gapid.c_str())->evaluate({l1Eta, pt_e1});
@@ -942,7 +942,7 @@ void ZZSelector::ShiftEfficiencies(Systematic variation)
           }
         }
         if (pt_e2 > EleSF_MIN_PT_){
-          std::string gapid = yearcfg + "_UL-" + (l2IsGap? "gap" : "nogap");
+          std::string gapid = (std::string)"2018_UL-" + (l2IsGap? "gap" : "nogap");
           try{
             weight *= eIdSF_->at((gapid + "_" + shift).c_str())->evaluate({l2Eta, pt_e2})
               / eIdSF_->at(gapid.c_str())->evaluate({l2Eta, pt_e2});
@@ -1060,7 +1060,7 @@ void ZZSelector::ShiftEfficiencies(Systematic variation)
     {
       if (eIdSF_ != nullptr){
         if (pt_e3 > EleSF_MIN_PT_){
-          std::string gapid = yearcfg + "_UL-" + (l3IsGap? "gap" : "nogap");
+          std::string gapid = (std::string)"2018_UL-" + (l3IsGap? "gap" : "nogap");
           try{
             weight *= eIdSF_->at((gapid + "_" + shift).c_str())->evaluate({l3Eta, pt_e3})
               / eIdSF_->at(gapid.c_str())->evaluate({l3Eta, pt_e3});
@@ -1070,7 +1070,7 @@ void ZZSelector::ShiftEfficiencies(Systematic variation)
           }
         }
         if (pt_e4 > EleSF_MIN_PT_){
-          std::string gapid = yearcfg + "_UL-" + (l4IsGap? "gap" : "nogap");
+          std::string gapid = (std::string)"2018_UL-" + (l4IsGap? "gap" : "nogap");
           try{
             weight *= eIdSF_->at((gapid + "_" + shift).c_str())->evaluate({l4Eta, pt_e4})
               / eIdSF_->at(gapid.c_str())->evaluate({l4Eta, pt_e4});

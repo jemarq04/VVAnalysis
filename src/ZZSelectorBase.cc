@@ -53,15 +53,15 @@ void ZZSelectorBase::SetScaleFactors()
   catch (...){
     throw std::invalid_argument("Must pass valid pileup weights SF");
   }
-  /*
-   * TODO: Update to Run 3 when available
   try{
-    eIdSF_ = correction::CorrectionSet::from_file("data/ElectronSF_HZZUL.json");
+    if (GetInputList()->FindObject("eIdSF") != nullptr) //Optional argument
+      eIdSF_ = correction::CorrectionSet::from_file(((TNamed*)GetInputList()->FindObject("eIdSF"))->GetTitle());
   }
   catch (...){
-    throw std::invalid_argument("Must pass valid electron Run SF");
+    // TODO: Update to Run 3 when available. For now, disable the error.
+    //throw std::invalid_argument("Must pass valid electron Run SF");
+    if (eIdSF_ != nullptr) eIdSF_.reset();
   }
-  */
   try{
     eRecoSF_ = correction::CorrectionSet::from_file(TString::Format("%s/EGM/%s/electron.json.gz", basename.c_str(), yearstring.c_str()).Data());
   }

@@ -90,8 +90,11 @@ def makeHistFile(args):
 
             sf_inputs = [basename, yearcfg] 
             
+            # Optional inputs
             qqZZ_kfac = ROOT.TNamed("qqZZ_kfac", "data/qqZZ_kfacs.json")
             #sf_inputs.append(qqZZ_kfac)
+            eIdSFs = ROOT.TNamed("eIdSf", "data/ElectronSF_HZZUL.json")
+            #sf_inputs.append(eIdSFs)
         else:
             # The lines below use Run 2
             fScales = ROOT.TFile('data/scaleFactors.root')
