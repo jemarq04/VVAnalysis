@@ -38,24 +38,30 @@ void ZZSelectorBase::SetScaleFactors()
     throw std::invalid_argument("Must pass valid year/basename for analysis");
   }
 
+  /*
+   * jetPUSFs are currently loaded in UWVV - commenting this to avoid errors
   try{
     jetPUSF_ = correction::CorrectionSet::from_file(TString::Format("%s/JME/%s/jmar.json.gz", basename.c_str(), yearstring.c_str()).Data());
   }
   catch (...){
     throw std::invalid_argument("Must pass valid jet PU id SF");
   }
+  */
   try{
     pileupSF_ = correction::CorrectionSet::from_file(TString::Format("%s/LUM/%s/puWeights.json.gz", basename.c_str(), yearstring.c_str()).Data());
   }
   catch (...){
     throw std::invalid_argument("Must pass valid pileup weights SF");
   }
+  /*
+   * TODO: Update to Run 3 when available
   try{
-    eIdSF_ = correction::CorrectionSet::from_file("data/ElectronSF_HZZUL.json"); //TODO: Update to Run 3
+    eIdSF_ = correction::CorrectionSet::from_file("data/ElectronSF_HZZUL.json");
   }
   catch (...){
     throw std::invalid_argument("Must pass valid electron Run SF");
   }
+  */
   try{
     eRecoSF_ = correction::CorrectionSet::from_file(TString::Format("%s/EGM/%s/electron.json.gz", basename.c_str(), yearstring.c_str()).Data());
   }
