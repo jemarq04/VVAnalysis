@@ -49,7 +49,8 @@ def getNumberAndSizeOfLocalFiles(path_to_files):
 def getNumberAndSizeOfHDFSFiles(file_path):
     p = subprocess.Popen(["hdfs", "dfs", "-ls", "-h", file_path.replace("/hdfs", "")],
             stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE
+            stderr=subprocess.PIPE,
+            encoding="utf-8"
         )
     out,err = p.communicate()
     file_info = []
