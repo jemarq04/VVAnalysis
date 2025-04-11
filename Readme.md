@@ -2,28 +2,21 @@
 We use the current branch of the repository for ZZ selection and histogram filling, after skimming the UWVV ntuples in the **Run3Skims** branch. You will want to do the setup in a different folder than the skimming one.
 
 ## Setup
-On hep.wisc.edu machine (previously done in uwlogin)
+On hep.wisc.edu machine:
 ```
 cmsrel CMSSW_14_0_9
 cd CMSSW_14_0_9/src
 cmsenv
-mkdir Analysis
-cd Analysis
-git clone https://github.com/YourGithubUsername/VVAnalysis -b Run3Analysis
-cd VVAnalysis
+git clone https://github.com/YourGithubUsername/VVAnalysis -b Run3Analysis Analysis/VVAnalysis
 ```
 Then in VVAnalysis/Templates please copy config.oldName to config.YourUserName, and modify its first 3 lines to your user name and data manager path (after setting it up in the next step). In VVAnalysis/src/ZZSelector.cc, set "doSystematics_ = false;" if you don't need the systematics yet.
-
-
 
 Next set up the data manager repository like before:
 
 Back in  CMSSW_14_0_9/src directory do:
 
 ```
-mkdir Data_manager
-cd Data_manager
-git clone https://github.com/YourGithubUsername/ZZ4lDatasetManager -b for_merging_Run3
+git clone https://github.com/YourGithubUsername/ZZ4lDatasetManager -b for_merging_Run3 Dataset_manager/ZZ4lDatasetManager
 ```
 
 **In the following instructions, we use year 2022 as an example.**
@@ -31,29 +24,21 @@ git clone https://github.com/YourGithubUsername/ZZ4lDatasetManager -b for_mergin
 In ZZ4lDatasetManager/FileInfo/ZZ4l2022, edit **LooseLeptons.json** so that it becomes something like the following (you can use names consistent with your choice in the skimming step), where you specify the path to your skimmed ntuple files for each sample:
 
  ```
-
 {
-
-"Sample1_Name" : {
-
-"plot_group": "sample1_plotgroup",
-
-"file_path": "path to skimmed root files for sample1/*"
-
-},
-
-other entries...
-
+  "Sample1_Name" : {
+    "plot_group": "sample1_plotgroup",
+    "file_path": "path to skimmed root files for sample1/*"
+  },
+  other entries...
 }
 ```
- 
-
 and copy **LooseLeptons.json** to to **ZZSelectionsTightLeps.json** also. 
  
 
 Finally build the codes in  CMSSW_14_0_9/src directory: 
 
 ```
+cd ${CMSSW_BASE}/src
 scram b -j 12
 ```
  
