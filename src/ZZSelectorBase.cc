@@ -33,6 +33,8 @@ void ZZSelectorBase::SetScaleFactors()
         yearcfg = "2022Re-recoE+PromptFG";
       }
     }
+    else
+      throw std::invalid_argument("");
   }
   catch (...){
     throw std::invalid_argument("Must pass valid year/basename for analysis");

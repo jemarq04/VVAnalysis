@@ -213,9 +213,10 @@ def getListOfFiles(filelist, selection, manager_path="", analysis=""):
     for name in filelist:
         if ".root" in name:
             names.append(name)
-        elif "ZZ4l2022" in name:
+        elif any("ZZ4l%s" % year in name for year in [2022, 2023, 2024]):
+            key = ["ZZ4l%s" % year for year in [2022, 2023, 2024] if "ZZ4l%s" % year in name][0]
             dataset_file = manager_path + \
-                "%s/FileInfo/ZZ4l2022/%s.json" % (getManagerName(), selection)
+                "%s/FileInfo/%s/%s.json" % (getManagerName(), key, selection)
             allnames = list(json.load(open(dataset_file)).keys())
             if "nodata" in name:
                 names += [x for x in allnames if "data" not in x]
