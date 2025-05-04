@@ -162,7 +162,7 @@ def getInputFilesPath(sample_name, manager_path,selection, analysis):
 def getCutsJsonName(selection, analysis):
     return "/".join(["Cuts", analysis, selection + ".json"]) 
 def getTriggerName(sample_name,analysis, selection):
-    trigger_names = ["MuonEG", "DoubleMuon", "DoubleEG","EGamma", "SingleMuon", "SingleElectron", "Muon"]
+    trigger_names = ["MuonEG", "DoubleMuon", "DoubleEG", "EGamma0", "EGamma1", "EGamma", "SingleMuon", "SingleElectron", "Muon0", "Muon1", "Muon"]
     if "Run" in sample_name and (getPreviousStep(selection, analysis) == "ntuples" or getPreviousStep(selection, analysis) == "LooseNtuples"):
         for name in trigger_names:
             if name in sample_name:

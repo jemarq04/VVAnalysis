@@ -17,7 +17,8 @@ def getComLineArgs():
                         " mapped to a cuts json via Cuts/definitions.json")
     parser.add_argument("-t", "--trigger", type=str, default="",
                         choices=["EGamma", "DoubleEG","DoubleMuon", "MuonEG", 
-                            "SingleMuon", "SingleElectron", "MonteCarlo", "Muon", ""],
+                            "SingleMuon", "SingleElectron", "MonteCarlo", "Muon", 
+                            "Muon0", "Muon1", "EGamma0", "EGamma1", ""],
                         help="Name of trigger to select in data")
     parser.add_argument("-f", "--filelist", type=str,
                         required=True, help="List of input file names "
