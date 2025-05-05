@@ -35,8 +35,10 @@ def getComLineArgs():
         default="", help="Selection stage of input files")
     parser.add_argument("--year", type=str,
         default="default", help="Year of Analysis")
-    parser.add_argument("--scalefactors_file", "-sf", type=str,
-        default="", help="ScaleFactors file name")
+    parser.add_argument("-sf", "--apply_scalefactors", action="store_true",
+        help="apply scale factors")
+    parser.add_argument("--fakerates_file", "-F", type=str,
+        default="", help="fake rates file name")
     parser.add_argument("-c", "--channels", 
                         type=lambda x : [i.strip() for i in x.split(',')],
                         default=["eee","eem","emm","mmm"], help="List of channels"
@@ -67,14 +69,14 @@ def makeHistFile(args):
     fOut = ROOT.TFile(tmpFileName if not toCombine else tmpFileName.replace(".root", "sel.root"), "recreate")
     combinedNames = [fOut.GetName()]
 
-    addScaleFacs = False
-    if args['scalefactors_file']:
-        addScaleFacs = True
+    if args["fakerates_file"] and not os.path.isfile(args["fakerates_file"]):
+        print("WARNING: file:%s not found -> no fake rates added" % args["fakerates_file"])
+
     fr_inputs = []
-    if addScaleFacs:
+    if args["fakerates_file"] or args["apply_scalefactors"]:
         if "ZZ4l" in args['analysis']:
-            if os.path.isfile(args["scalefactors_file"]):
-                fScales = ROOT.TFile(args['scalefactors_file'])
+            if args["fakerates_file"]:
+                fScales = ROOT.TFile(args['fakerates_file'])
                 mZZTightFakeRate = fScales.Get("mZZTightFakeRate")
                 eZZTightFakeRate = fScales.Get("eZZTightFakeRate")
                 if mZZTightFakeRate:
@@ -82,8 +84,6 @@ def makeHistFile(args):
                 if eZZTightFakeRate:
                     eZZTightFakeRate.SetName("fakeRate_allE")
                 fr_inputs = [eZZTightFakeRate, mZZTightFakeRate]
-            else:
-                print("WARNING: file:%s not found. No fake rates added" % args["scalefactors_file"])
 
             basename = ROOT.TNamed("basename", "/cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration/POG")
             yearcfg = ROOT.TNamed("yearcfg", args["year"])
