@@ -25,12 +25,19 @@ void ZZSelectorBase::SetScaleFactors()
     yearcfg = ((TNamed*)GetInputList()->FindObject("yearcfg"))->GetTitle();
 
     if (yearcfg == "2022"){
-      //TODO: Update yearcfg with appropriate year input as these are updated
       yearstring = "2022_Summer22";
-      yearcfg = "2022Re-recoBCD";
+      yearcfg = "2022Re-recoBCD"; // overwritten to use for ele reco SFs
       if (name_.find("_postEE") != std::string::npos){
         yearstring += "EE";
         yearcfg = "2022Re-recoE+PromptFG";
+      }
+    }
+    else if (yearcfg == "2023"){
+      yearstring = "2023_Summer23";
+      yearcfg = "2023PromptC";
+      if (name_.find("_postBPix") != std::string::npos){
+        yearstring += "BPix";
+        yearcfg = "2023PromptD";
       }
     }
     else
