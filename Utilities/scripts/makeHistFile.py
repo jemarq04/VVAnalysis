@@ -92,7 +92,7 @@ def makeHistFile(args):
             
             # Optional inputs
             #sf_inputs.append(ROOT.TNamed("qqZZ_kfac", "data/qqZZ_kfacs.json"))
-            #sf_inputs.append(ROOT.TNamed("eIdSf", "data/ElectronSF_HZZUL.json"))
+            sf_inputs.append(ROOT.TNamed("eIdSf", "data/ElectronSF_HZZUL.json"))
         else:
             # The lines below use Run 2
             fScales = ROOT.TFile('data/scaleFactors.root')
