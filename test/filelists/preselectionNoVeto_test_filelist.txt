@@ -1,1 +1,0 @@
-/data/kelong/DibosonAnalysisData/PreselectionNoVeto/2016-11-01-wz3lnu-powheg-WZxsec2016-preselectionNoVeto-v1/skim-ntuplize_cfg-086609CA-D81B-E611-BF6C-002590D9D896.root

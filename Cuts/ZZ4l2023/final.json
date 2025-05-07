@@ -1,0 +1,23 @@
+{
+    "Object" : {
+        "e" : [
+          "({object_name}SIP3D < 4.0 && {object_name}ZZTightID > 0.5)"
+        ],
+        "m" : [
+          "({object_name}SIP3D < 4.0 && {object_name}ZZIsoPass > 0.5 && {object_name}ZZTightID > 0.5)"
+        ]
+    },
+    "State" : {
+        "eeee" : [
+          "(e1_e2_Mass > 60 && e1_e2_Mass < 120 && e3_e4_Mass > 60 && e3_e4_Mass < 120)"
+        ],
+        "eemm" : [
+          "(e1_e2_Mass > 60 && e1_e2_Mass < 120 && m1_m2_Mass > 60 && m1_m2_Mass < 120)"
+        ],
+        "mmmm" : [
+          "(m1_m2_Mass > 60 && m1_m2_Mass < 120 && m3_m4_Mass > 60 && m3_m4_Mass < 120)"
+        ]
+    },
+    "Event" : [
+    ]
+}

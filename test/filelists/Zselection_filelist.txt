@@ -1,2 +1,0 @@
-/store/user/kelong/2015-10-03-wz3lnu-powheg-preselection-skim/skim-make_ntuples_cfg-008E7FBF-9218-E511-81E0-001E675A5244.root
-/store/user/kelong/2015-10-03-wz3lnu-powheg-preselection-skim/skim-make_ntuples_cfg-8E4F6434-CA19-E511-A31A-0025905A60B8.root

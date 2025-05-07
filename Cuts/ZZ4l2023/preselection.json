@@ -1,0 +1,22 @@
+{
+    "Object" : {
+        "e" : [ 
+            "({object_name}ZZTightID > 0.5)",
+            "({object_name}ZZIsoPass > 0.5)"
+        ],
+        "m" : [
+            "({object_name}ZZTightID > 0.5)",
+            "({object_name}ZZIsoPass > 0.5)"
+        ]
+    },
+    "State" : {
+        "eeee" : ["((e1Pt >= 20 && (e2Pt >= 10 || e3Pt >= 10 || e4Pt >= 10)) || (e2Pt >= 20 && (e1Pt >= 10 || e3Pt >= 10 || e4Pt >= 10)) || (e3Pt >= 20 && (e1Pt >= 10 || e2Pt >= 10 || e4Pt >= 10)) || (e4Pt >= 20 && (e1Pt >= 10 || e2Pt >= 10 || e3Pt >= 10)))"
+        ],
+        "eemm" : ["((e1Pt >= 20 && (e2Pt >= 10 || m1Pt >= 10 || m2Pt >= 10)) || (e2Pt >= 20 && (e1Pt >= 10 || m1Pt >= 10 || m2Pt >= 10)) || (m1Pt >= 20 && (m2Pt >= 10 || e1Pt >= 10 || e2Pt >= 10)) || (m2Pt >= 20 && (m1Pt >= 10 || e1Pt >=  10 || e2Pt >= 10)))" 
+        ],
+        "mmmm" : ["((m1Pt >= 20 && (m2Pt >= 10 || m3Pt >= 10 || m4Pt >= 10)) || (m2Pt >= 20 && (m1Pt >= 10 || m3Pt >= 10 || m4Pt >= 10)) || (m3Pt >= 20 && (m1Pt >= 10 || m2Pt >= 10 || m4Pt >= 10))  || (m4Pt >= 20 && (m1Pt >= 10 || m2Pt >= 10 || m3Pt >= 10)))" 
+        ]
+    },
+    "Event" : [
+    ]
+}

@@ -1,2 +1,0 @@
-/store/user/dntaylor/data/2015-10-12-13TeV-WZ/data_MuonEG_Run2015C_23Sep2015_25ns/make_ntuples_cfg-929A8D5F-5A63-E511-B218-00A0D1EE8A20.root
-/store/user/dntaylor/data/2015-10-12-13TeV-WZ/data_MuonEG_Run2015C_23Sep2015_25ns/make_ntuples_cfg-14CA9C58-5A63-E511-A604-00266CF9B878.root
