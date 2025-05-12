@@ -28,13 +28,12 @@ void ZZSelector::Init(TTree *tree)
   //      "Z2lep2_Eta","Z2lep2_Phi","Z2lep2_Pt","Z2lep2_PdgId","Mass","nJets",
   // };
 
-  hists1D_ = {"yield","Z1Mass","Z2Mass","ZMass","ZZPt","ZZEta","dPhiZ1Z2","dRZ1Z2","ZPt","LepPt","LepPtFull","LepEta","Lep1Eta","Lep2Eta","Lep3Eta","Lep4Eta","PassTriggerFull","LepPt1","LepPt2","LepPt3","LepPt4","LepPt1Full","LepPt2Full","LepPt3Full","LepPt4Full","e1PtSortedFull","e2PtSortedFull","e1PtSorted","e2PtSorted","Mass","nJets","MassFull","SIP3D","PVDZ","deltaPVDZ_sameZ","deltaPVDZ_diffZ","scaleWeightIDs","Z1PolCos","Z2PolCos","Lep1Energy","Lep2Energy","Lep3Energy","Lep4Energy","LepIso","Lep1Iso","Lep2Iso","Lep3Iso","Lep4Iso"};
+  hists1D_ = {"yield","Z1Mass","Z2Mass","ZMass","ZZPt","ZZEta","dPhiZ1Z2","dRZ1Z2","ZPt","LepPt","LepPtFull","LepEta","PassTriggerFull","LepPt1","LepPt2","LepPt3","LepPt4","LepPt1Full","LepPt2Full","LepPt3Full","LepPt4Full","e1PtSortedFull","e2PtSortedFull","e1PtSorted","e2PtSorted","Mass","nJets","MassFull","SIP3D","PVDZ","deltaPVDZ_sameZ","deltaPVDZ_diffZ","Z1PolCos","Z2PolCos","Lep1Energy","Lep2Energy","Lep3Energy","Lep4Energy","LepIso","Lep1Iso","Lep2Iso","Lep3Iso","Lep4Iso","Mass0j","Mass1j","Mass2j","Mass3j","Mass34j","Mass4j","Mass0jFull","Mass1jFull","Mass2jFull","Mass3jFull","Mass34jFull","Mass4jFull","jetEta[0]","absjetEta[0]","jetEta[1]","absjetEta[1]","jetPt[0]","jetPt[1]","jetPhi[0]","jetPhi[1]","mjj","dEtajj"};
 
   jetTest2D_ = {}; // also defined in hists1D_ to pass checks in InitializeHistogramsFromConfig()
   jethists1D_ = {"Mass","MassFull","nJets","jetPt[1]","jetPt[0]","jetEta[0]","jetEta[1]","absjetEta[0]","absjetEta[1]","mjj","dEtajj","Mass0j","Mass1j","Mass2j","Mass3j","Mass34j","Mass4j","Mass0jFull","Mass1jFull","Mass2jFull","Mass3jFull","Mass34jFull","Mass4jFull"};
 
-  weighthists1D_ = {"yield","Z1Mass","Z2Mass","ZMass","ZZPt","ZZEta","dPhiZ1Z2","dRZ1Z2","ZPt","LepPt","LepPtFull","LepEta","Lep1Eta","Lep2Eta","Lep3Eta","Lep4Eta","PassTriggerFull","LepPt1","LepPt2","LepPt3","LepPt4","LepPt1Full","LepPt2Full","LepPt3Full","LepPt4Full","e1PtSortedFull","e2PtSortedFull","e1PtSorted","e2PtSorted","Mass","nJets","MassFull","SIP3D","PVDZ","deltaPVDZ_sameZ","deltaPVDZ_diffZ","Z1PolCos","Z2PolCos","Lep1Energy","Lep2Energy","Lep3Energy","Lep4Energy","LepIso","Lep1Iso","Lep2Iso","Lep3Iso","Lep4Iso"};
-  //weighthists1D_ = {"yield","Mass","MassFull","nJets","jetPt[1]","jetPt[0]","jetEta[0]","jetEta[1]","absjetEta[0]","absjetEta[1]","mjj","dEtajj","Mass0j","Mass1j","Mass2j","Mass3j","Mass34j","Mass4j","Mass0jFull","Mass1jFull","Mass2jFull","Mass3jFull","Mass34jFull","Mass4jFull"};
+  weighthists1D_ = {"yield","Z1Mass","Z2Mass","ZMass","ZZPt","ZZEta","dPhiZ1Z2","dRZ1Z2","ZPt","LepPt","LepPtFull","LepEta","PassTriggerFull","LepPt1","LepPt2","LepPt3","LepPt4","LepPt1Full","LepPt2Full","LepPt3Full","LepPt4Full","e1PtSortedFull","e2PtSortedFull","e1PtSorted","e2PtSorted","Mass","nJets","MassFull","SIP3D","PVDZ","deltaPVDZ_sameZ","deltaPVDZ_diffZ","Z1PolCos","Z2PolCos","Lep1Energy","Lep2Energy","Lep3Energy","Lep4Energy","LepIso","Lep1Iso","Lep2Iso","Lep3Iso","Lep4Iso","Mass0j","Mass1j","Mass2j","Mass3j","Mass34j","Mass4j","Mass0jFull","Mass1jFull","Mass2jFull","Mass3jFull","Mass34jFull","Mass4jFull","jetEta[0]","absjetEta[0]","jetEta[1]","absjetEta[1]","jetPt[0]","jetPt[1]","jetPhi[0]","jetPhi[1]","mjj","dEtajj"};
   ZZSelectorBase::Init(tree);
   // fCutFormula = new TTreeFormula("CutFormula", fOption, fChain);
   // fCutFormula->SetQuickLoad(kTRUE);
@@ -1366,31 +1365,31 @@ if (writeNtp_ && writeNtpFullRange){
 
         if (vnJets[i] == 0)
         {
-//          SafeHistFill(jethistMap1D_, getHistName("Mass0jFull", variation.second), Mass, i, weight);
+          SafeHistFill(jethistMap1D_, getHistName("Mass0jFull", variation.second), Mass, i, weight);
         }
         else if (vnJets[i] == 1)
         {
-//          SafeHistFill(jethistMap1D_, getHistName("Mass1jFull", variation.second), Mass, i, weight);
+          SafeHistFill(jethistMap1D_, getHistName("Mass1jFull", variation.second), Mass, i, weight);
         }
         else if (vnJets[i] == 2)
         {
-//          SafeHistFill(jethistMap1D_, getHistName("Mass2jFull", variation.second), Mass, i, weight);
+          SafeHistFill(jethistMap1D_, getHistName("Mass2jFull", variation.second), Mass, i, weight);
         }
         else
         {
           if (vnJets[i] == 3)
           {
-//            SafeHistFill(jethistMap1D_, getHistName("Mass3jFull", variation.second), Mass, i, weight);
+            SafeHistFill(jethistMap1D_, getHistName("Mass3jFull", variation.second), Mass, i, weight);
           }
 
           if (vnJets[i] >= 3)
           {
-//            SafeHistFill(jethistMap1D_, getHistName("Mass34jFull", variation.second), Mass, i, weight);
+            SafeHistFill(jethistMap1D_, getHistName("Mass34jFull", variation.second), Mass, i, weight);
           }
 
           if (vnJets[i] >= 4)
           {
-//            SafeHistFill(jethistMap1D_, getHistName("Mass4jFull", variation.second), Mass, i, weight);
+            SafeHistFill(jethistMap1D_, getHistName("Mass4jFull", variation.second), Mass, i, weight);
           }
         }
       }
@@ -1401,32 +1400,32 @@ if (writeNtp_ && writeNtpFullRange){
       SafeHistFill(weighthistMap1D_, getHistName("MassFull", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight);
       if (jetPt->size() == 0 && jetPt->size() == jetEta->size())
       {
-//        SafeHistFill(weighthistMap1D_, getHistName("Mass0jFull", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight);
+        SafeHistFill(weighthistMap1D_, getHistName("Mass0jFull", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight);
       }
       else if (jetPt->size() == 1 && jetPt->size() == jetEta->size())
       {
-//        SafeHistFill(weighthistMap1D_, getHistName("Mass1jFull", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight);
+        SafeHistFill(weighthistMap1D_, getHistName("Mass1jFull", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight);
       }
       else if (jetPt->size() == 2 && jetPt->size() == jetEta->size())
       {
-//        SafeHistFill(weighthistMap1D_, getHistName("Mass2jFull", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight);
+        SafeHistFill(weighthistMap1D_, getHistName("Mass2jFull", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight);
       }
       else
       {
 
         if (jetPt->size() == 3 && jetPt->size() == jetEta->size())
         {
-//          SafeHistFill(weighthistMap1D_, getHistName("Mass3jFull", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight);
+          SafeHistFill(weighthistMap1D_, getHistName("Mass3jFull", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight);
         }
 
         if (jetPt->size() >= 3 && jetPt->size() == jetEta->size())
         {
-//          SafeHistFill(weighthistMap1D_, getHistName("Mass34jFull", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight);
+          SafeHistFill(weighthistMap1D_, getHistName("Mass34jFull", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight);
         }
 
         if (jetPt->size() >= 4 && jetPt->size() == jetEta->size())
         {
-//          SafeHistFill(weighthistMap1D_, getHistName("Mass4jFull", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight);
+          SafeHistFill(weighthistMap1D_, getHistName("Mass4jFull", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight);
         }
       }
     }
@@ -1435,31 +1434,31 @@ if (writeNtp_ && writeNtpFullRange){
   SafeHistFill(histMap1D_, getHistName("MassFull", variation.second), Mass, weight);
   if (jetPt->size() == 0 && jetPt->size() == jetEta->size())
   {
-//    SafeHistFill(histMap1D_, getHistName("Mass0jFull", variation.second), Mass, weight);
+    SafeHistFill(histMap1D_, getHistName("Mass0jFull", variation.second), Mass, weight);
   }
   else if (jetPt->size() == 1 && jetPt->size() == jetEta->size())
   {
-//    SafeHistFill(histMap1D_, getHistName("Mass1jFull", variation.second), Mass, weight);
+    SafeHistFill(histMap1D_, getHistName("Mass1jFull", variation.second), Mass, weight);
   }
   else if (jetPt->size() == 2 && jetPt->size() == jetEta->size())
   {
-//    SafeHistFill(histMap1D_, getHistName("Mass2jFull", variation.second), Mass, weight);
+    SafeHistFill(histMap1D_, getHistName("Mass2jFull", variation.second), Mass, weight);
   }
   else
   {
     if (jetPt->size() == 3 && jetPt->size() == jetEta->size())
     {
-//      SafeHistFill(histMap1D_, getHistName("Mass3jFull", variation.second), Mass, weight);
+      SafeHistFill(histMap1D_, getHistName("Mass3jFull", variation.second), Mass, weight);
     }
 
     if (jetPt->size() >= 3 && jetPt->size() == jetEta->size())
     {
-//      SafeHistFill(histMap1D_, getHistName("Mass34jFull", variation.second), Mass, weight);
+      SafeHistFill(histMap1D_, getHistName("Mass34jFull", variation.second), Mass, weight);
     }
 
     if (jetPt->size() >= 4 && jetPt->size() == jetEta->size())
     {
-//      SafeHistFill(histMap1D_, getHistName("Mass4jFull", variation.second), Mass, weight);
+      SafeHistFill(histMap1D_, getHistName("Mass4jFull", variation.second), Mass, weight);
     }
   }
 //End filling ntuple
@@ -1570,20 +1569,20 @@ if (writeNtp_ && writeNtpFullRange){
 
         if (vnJets[i] > 0)
         {
-//          SafeHistFill(jethistMap1D_, getHistName("jetPt[0]", variation.second), vjetPt[i]->at(0), i, weight);
+          SafeHistFill(jethistMap1D_, getHistName("jetPt[0]", variation.second), vjetPt[i]->at(0), i, weight);
 
-//          SafeHistFill(jethistMap1D_, getHistName("jetEta[0]", variation.second), vjetEta[i]->at(0), i, weight);
-//          SafeHistFill(jethistMap1D_, getHistName("absjetEta[0]", variation.second), std::abs(vjetEta[i]->at(0)), i, weight);
+          SafeHistFill(jethistMap1D_, getHistName("jetEta[0]", variation.second), vjetEta[i]->at(0), i, weight);
+          SafeHistFill(jethistMap1D_, getHistName("absjetEta[0]", variation.second), std::abs(vjetEta[i]->at(0)), i, weight);
         }
         if (vnJets[i] > 1)
         {
-//          SafeHistFill(jethistMap1D_, getHistName("jetPt[1]", variation.second), vjetPt[i]->at(1), i, weight);
+          SafeHistFill(jethistMap1D_, getHistName("jetPt[1]", variation.second), vjetPt[i]->at(1), i, weight);
 
-//          SafeHistFill(jethistMap1D_, getHistName("jetEta[1]", variation.second), vjetEta[i]->at(1), i, weight); //}
-//          SafeHistFill(jethistMap1D_, getHistName("absjetEta[1]", variation.second), std::abs(vjetEta[i]->at(1)), i, weight);
+          SafeHistFill(jethistMap1D_, getHistName("jetEta[1]", variation.second), vjetEta[i]->at(1), i, weight); //}
+          SafeHistFill(jethistMap1D_, getHistName("absjetEta[1]", variation.second), std::abs(vjetEta[i]->at(1)), i, weight);
 
-//          SafeHistFill(jethistMap1D_, getHistName("dEtajj", variation.second), std::abs(vjetEta[i]->at(0) - vjetEta[i]->at(1)), i, weight);
-//          SafeHistFill(jethistMap1D_, getHistName("mjj", variation.second), vmjj[i], i, weight);
+          SafeHistFill(jethistMap1D_, getHistName("dEtajj", variation.second), std::abs(vjetEta[i]->at(0) - vjetEta[i]->at(1)), i, weight);
+          SafeHistFill(jethistMap1D_, getHistName("mjj", variation.second), vmjj[i], i, weight);
         }
 
         // No actual syst for full m4l but just for consistency
@@ -1591,31 +1590,31 @@ if (writeNtp_ && writeNtpFullRange){
 
         if (vnJets[i] == 0)
         {
-//          SafeHistFill(jethistMap1D_, getHistName("Mass0j", variation.second), Mass, i, weight);
+          SafeHistFill(jethistMap1D_, getHistName("Mass0j", variation.second), Mass, i, weight);
         }
         else if (vnJets[i] == 1)
         {
-//          SafeHistFill(jethistMap1D_, getHistName("Mass1j", variation.second), Mass, i, weight);
+          SafeHistFill(jethistMap1D_, getHistName("Mass1j", variation.second), Mass, i, weight);
         }
         else if (vnJets[i] == 2)
         {
-//          SafeHistFill(jethistMap1D_, getHistName("Mass2j", variation.second), Mass, i, weight);
+          SafeHistFill(jethistMap1D_, getHistName("Mass2j", variation.second), Mass, i, weight);
         }
         else
         {
           if (vnJets[i] == 3)
           {
-//            SafeHistFill(jethistMap1D_, getHistName("Mass3j", variation.second), Mass, i, weight);
+            SafeHistFill(jethistMap1D_, getHistName("Mass3j", variation.second), Mass, i, weight);
           }
 
           if (vnJets[i] >= 3)
           {
-//            SafeHistFill(jethistMap1D_, getHistName("Mass34j", variation.second), Mass, i, weight);
+            SafeHistFill(jethistMap1D_, getHistName("Mass34j", variation.second), Mass, i, weight);
           }
 
           if (vnJets[i] >= 4)
           {
-//            SafeHistFill(jethistMap1D_, getHistName("Mass4j", variation.second), Mass, i, weight);
+            SafeHistFill(jethistMap1D_, getHistName("Mass4j", variation.second), Mass, i, weight);
           }
         }
       } // loop over syst indices
@@ -1700,50 +1699,50 @@ if (writeNtp_ && writeNtpFullRange){
 
       if (jetPt->size() > 0 && jetPt->size() == jetEta->size())
       {
-//        SafeHistFill(weighthistMap1D_, getHistName("jetPt[0]", variation.second), jetPt->at(0), i, lheWeights[i] / lheWeights[0] * weight);
+        SafeHistFill(weighthistMap1D_, getHistName("jetPt[0]", variation.second), jetPt->at(0), i, lheWeights[i] / lheWeights[0] * weight);
 
-//        SafeHistFill(weighthistMap1D_, getHistName("jetEta[0]", variation.second), jetEta->at(0), i, lheWeights[i] / lheWeights[0] * weight);
-//        SafeHistFill(weighthistMap1D_, getHistName("absjetEta[0]", variation.second), std::abs(jetEta->at(0)), i, lheWeights[i] / lheWeights[0] * weight);
+        SafeHistFill(weighthistMap1D_, getHistName("jetEta[0]", variation.second), jetEta->at(0), i, lheWeights[i] / lheWeights[0] * weight);
+        SafeHistFill(weighthistMap1D_, getHistName("absjetEta[0]", variation.second), std::abs(jetEta->at(0)), i, lheWeights[i] / lheWeights[0] * weight);
       }
       if (jetPt->size() > 1 && jetPt->size() == jetEta->size())
       {
-//        SafeHistFill(weighthistMap1D_, getHistName("jetPt[1]", variation.second), jetPt->at(1), i, lheWeights[i] / lheWeights[0] * weight);
+        SafeHistFill(weighthistMap1D_, getHistName("jetPt[1]", variation.second), jetPt->at(1), i, lheWeights[i] / lheWeights[0] * weight);
 
-//        SafeHistFill(weighthistMap1D_, getHistName("jetEta[1]", variation.second), jetEta->at(1), i, lheWeights[i] / lheWeights[0] * weight);
-//        SafeHistFill(weighthistMap1D_, getHistName("absjetEta[1]", variation.second), std::abs(jetEta->at(1)), i, lheWeights[i] / lheWeights[0] * weight);
+        SafeHistFill(weighthistMap1D_, getHistName("jetEta[1]", variation.second), jetEta->at(1), i, lheWeights[i] / lheWeights[0] * weight);
+        SafeHistFill(weighthistMap1D_, getHistName("absjetEta[1]", variation.second), std::abs(jetEta->at(1)), i, lheWeights[i] / lheWeights[0] * weight);
 
-//        SafeHistFill(weighthistMap1D_, getHistName("dEtajj", variation.second), dEtajj, i, lheWeights[i] / lheWeights[0] * weight);
-//        SafeHistFill(weighthistMap1D_, getHistName("mjj", variation.second), mjj, i, lheWeights[i] / lheWeights[0] * weight);
+        SafeHistFill(weighthistMap1D_, getHistName("dEtajj", variation.second), dEtajj, i, lheWeights[i] / lheWeights[0] * weight);
+        SafeHistFill(weighthistMap1D_, getHistName("mjj", variation.second), mjj, i, lheWeights[i] / lheWeights[0] * weight);
       }
 
       if (jetPt->size() == 0 && jetPt->size() == jetEta->size())
       {
-//        SafeHistFill(weighthistMap1D_, getHistName("Mass0j", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight);
+        SafeHistFill(weighthistMap1D_, getHistName("Mass0j", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight);
       }
       else if (jetPt->size() == 1 && jetPt->size() == jetEta->size())
       {
-//        SafeHistFill(weighthistMap1D_, getHistName("Mass1j", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight);
+        SafeHistFill(weighthistMap1D_, getHistName("Mass1j", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight);
       }
       else if (jetPt->size() == 2 && jetPt->size() == jetEta->size())
       {
-//        SafeHistFill(weighthistMap1D_, getHistName("Mass2j", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight);
+        SafeHistFill(weighthistMap1D_, getHistName("Mass2j", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight);
       }
       else
       {
 
         if (jetPt->size() == 3 && jetPt->size() == jetEta->size())
         {
-//          SafeHistFill(weighthistMap1D_, getHistName("Mass3j", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight);
+          SafeHistFill(weighthistMap1D_, getHistName("Mass3j", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight);
         }
 
         if (jetPt->size() >= 3 && jetPt->size() == jetEta->size())
         {
-//          SafeHistFill(weighthistMap1D_, getHistName("Mass34j", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight);
+          SafeHistFill(weighthistMap1D_, getHistName("Mass34j", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight);
         }
 
         if (jetPt->size() >= 4 && jetPt->size() == jetEta->size())
         {
-//          SafeHistFill(weighthistMap1D_, getHistName("Mass4j", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight);
+          SafeHistFill(weighthistMap1D_, getHistName("Mass4j", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight);
         }
       }
     }
@@ -1876,41 +1875,41 @@ if (writeNtp_ && writeNtpFullRange){
 
   if (jetPt->size() == 0 && jetPt->size() == jetEta->size())
   {
-//    SafeHistFill(histMap1D_, getHistName("Mass0j", variation.second), Mass, weight);
+    SafeHistFill(histMap1D_, getHistName("Mass0j", variation.second), Mass, weight);
   }
   else if (jetPt->size() == 1 && jetPt->size() == jetEta->size())
   {
-//    SafeHistFill(histMap1D_, getHistName("Mass1j", variation.second), Mass, weight);
+    SafeHistFill(histMap1D_, getHistName("Mass1j", variation.second), Mass, weight);
   }
   else if (jetPt->size() == 2 && jetPt->size() == jetEta->size())
   {
-//    SafeHistFill(histMap1D_, getHistName("Mass2j", variation.second), Mass, weight);
+    SafeHistFill(histMap1D_, getHistName("Mass2j", variation.second), Mass, weight);
   }
   else
   {
     if (jetPt->size() == 3 && jetPt->size() == jetEta->size())
     {
-//      SafeHistFill(histMap1D_, getHistName("Mass3j", variation.second), Mass, weight);
+      SafeHistFill(histMap1D_, getHistName("Mass3j", variation.second), Mass, weight);
     }
 
     if (jetPt->size() >= 3 && jetPt->size() == jetEta->size())
     {
-//      SafeHistFill(histMap1D_, getHistName("Mass34j", variation.second), Mass, weight);
+      SafeHistFill(histMap1D_, getHistName("Mass34j", variation.second), Mass, weight);
     }
 
     if (jetPt->size() >= 4 && jetPt->size() == jetEta->size())
     {
-//      SafeHistFill(histMap1D_, getHistName("Mass4j", variation.second), Mass, weight);
+      SafeHistFill(histMap1D_, getHistName("Mass4j", variation.second), Mass, weight);
     }
   }
 
   if (jetPt->size() > 0 && jetPt->size() == jetEta->size())
   {
-//    SafeHistFill(histMap1D_, getHistName("jetPt[0]", variation.second), jetPt->at(0), weight);
+    SafeHistFill(histMap1D_, getHistName("jetPt[0]", variation.second), jetPt->at(0), weight);
     // if (jetPt->size() ==2 && jetPt->size() == jetEta->size()) {
-//    SafeHistFill(histMap1D_, getHistName("jetEta[0]", variation.second), jetEta->at(0), weight); //}
-//    SafeHistFill(histMap1D_, getHistName("absjetEta[0]", variation.second), std::abs(jetEta->at(0)), weight);
-//    SafeHistFill(histMap1D_, getHistName("jetPhi[0]", variation.second), jetPhi->at(0), weight);
+    SafeHistFill(histMap1D_, getHistName("jetEta[0]", variation.second), jetEta->at(0), weight); //}
+    SafeHistFill(histMap1D_, getHistName("absjetEta[0]", variation.second), std::abs(jetEta->at(0)), weight);
+    SafeHistFill(histMap1D_, getHistName("jetPhi[0]", variation.second), jetPhi->at(0), weight);
 
     for (unsigned int ind = 0; ind < jetPt->size(); ind++)
     {
@@ -1942,13 +1941,13 @@ if (writeNtp_ && writeNtpFullRange){
   }
   if (jetPt->size() > 1 && jetPt->size() == jetEta->size())
   {
-//    SafeHistFill(histMap1D_, getHistName("jetPt[1]", variation.second), jetPt->at(1), weight);
+    SafeHistFill(histMap1D_, getHistName("jetPt[1]", variation.second), jetPt->at(1), weight);
     // if (jetPt->size() ==2 && jetPt->size() == jetEta->size()) {
-//    SafeHistFill(histMap1D_, getHistName("jetEta[1]", variation.second), jetEta->at(1), weight); //}
-//    SafeHistFill(histMap1D_, getHistName("absjetEta[1]", variation.second), std::abs(jetEta->at(1)), weight);
-//    SafeHistFill(histMap1D_, getHistName("jetPhi[1]", variation.second), jetPhi->at(1), weight);
-//    SafeHistFill(histMap1D_, getHistName("dEtajj", variation.second), dEtajj, weight);
-//    SafeHistFill(histMap1D_, getHistName("mjj", variation.second), mjj, weight);
+    SafeHistFill(histMap1D_, getHistName("jetEta[1]", variation.second), jetEta->at(1), weight); //}
+    SafeHistFill(histMap1D_, getHistName("absjetEta[1]", variation.second), std::abs(jetEta->at(1)), weight);
+    SafeHistFill(histMap1D_, getHistName("jetPhi[1]", variation.second), jetPhi->at(1), weight);
+    SafeHistFill(histMap1D_, getHistName("dEtajj", variation.second), dEtajj, weight);
+    SafeHistFill(histMap1D_, getHistName("mjj", variation.second), mjj, weight);
 
     if (jetPt->size() == 2 && jetPt->size() == jetEta->size())
     {
