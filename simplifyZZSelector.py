@@ -23,11 +23,6 @@ odict = {}
 writeNtuple = True
 baseList = ["yield", "Mass", "MassFull", "nJets", "jetPt[1]", "jetPt[0]", "jetEta[0]", "jetEta[1]", "absjetEta[0]", "absjetEta[1]", "mjj", "dEtajj", "Mass0j", "Mass1j", "Mass2j", "Mass3j", "Mass34j", "Mass4j", "Mass0jFull", "Mass1jFull", "Mass2jFull", "Mass3jFull", "Mass34jFull", "Mass4jFull"]
 baseList2 = baseList[1:]
-testList = ["yield", "Mass"]
-testList2 = testList[1:]
-
-#baseList = testList
-#baseList2 = testList2
 
 systHist_Ori= [
       "yield",
@@ -86,7 +81,9 @@ hists1DList = [
       "yield", "Z1Mass", "Z2Mass", "ZMass", "ZZPt", "ZZEta", "dPhiZ1Z2", "dRZ1Z2", "ZPt", "LepPt", "LepPtFull", "LepEta", "PassTriggerFull",
       "LepPt1", "LepPt2", "LepPt3", "LepPt4", "LepPt1Full", "LepPt2Full", "LepPt3Full", "LepPt4Full", "e1PtSortedFull", "e2PtSortedFull", "e1PtSorted", "e2PtSorted",
       "Mass", "nJets", "MassFull", "SIP3D", "PVDZ", "deltaPVDZ_sameZ", "deltaPVDZ_diffZ", "scaleWeightIDs", "Z1PolCos", "Z2PolCos", "Lep1Energy", "Lep2Energy",
-      "Lep3Energy", "Lep4Energy"
+      "Lep3Energy", "Lep4Energy", "LepIso", "Lep1Iso", "Lep2Iso", "Lep3Iso", "Lep4Iso",
+      "Mass0j", "Mass1j", "Mass2j", "Mass3j", "Mass34j", "Mass4j", "Mass0jFull", "Mass1jFull", "Mass2jFull", "Mass3jFull", "Mass34jFull", "Mass4jFull",
+      "jetEta[0]", "absjetEta[0]", "jetEta[1]", "absjetEta[1]", "jetPt[0]", "jetPt[1]", "jetPhi[0]", "jetPhi[1]", "mjj", "dEtajj"
 ]
 #hists1DList = [ "yield", "Mass", "Mass0j", "Mass1j", "Mass2j", "Mass3j", "Mass34j", "Mass4j", "nJets", "MassFull", "Mass0jFull", "Mass1jFull", "Mass2jFull", "Mass3jFull", "Mass34jFull", "Mass4jFull", "jetPt[0]", "jetPt[1]","jetEta[0]", "jetEta[1]", "absjetEta[0]", "absjetEta[1]", "mjj", "dEtajj" ]
 
@@ -118,7 +115,7 @@ jethists1D_Ori = [
       "mjj",
       "dEtajj",
   ]
-jethists1DList = baseList2
+jethists1DList = baseList[1:]
 
 weighthists1D_Ori = [
       "yield",
@@ -234,8 +231,7 @@ Genldict = {}
 Genodict = {}
 Genmapdict = {}
 
-GenbaseList = ["Gen"+li for li in baseList]
-GenbaseList2 = ["Gen"+li for li in baseList2]
+GenBaseList = ["Gen"+li for li in baseList]
 
 Genhists1D_Ori = [
       "GenMass",
@@ -274,7 +270,7 @@ Genhists1D_Ori = [
 
 
 Genodict["Genhists1D"] = Genhists1D_Ori
-Genldict["Genhists1D"] = GenbaseList
+Genldict["Genhists1D"] = GenBaseList
 Gendict["Genhists1D"] = listToStr(Genldict["Genhists1D"])
 
 Genweighthists1D_Ori = [
@@ -312,7 +308,7 @@ Genweighthists1D_Ori = [
       "GenMass4jFull"]
 
 Genodict["Genweighthists1D"] = Genweighthists1D_Ori
-Genldict["Genweighthists1D"] = GenbaseList
+Genldict["Genweighthists1D"] = GenBaseList
 Gendict["Genweighthists1D"] = listToStr(Genldict["Genweighthists1D"])
 
 Genmapdict["Genhists1D"] = "histMap1D_"

@@ -2046,3 +2046,11 @@ void ZZSelector::SetupNewDirectory()
   InitializeHistogramsFromConfig();
   // std::cout<<"Do Histos get initialized"<<std::endl;
 }
+
+std::string ZZSelector::GetEleRecoSFName(Float_t ele_pt){
+  std::string name;
+  if (ele_pt < 20) name = "RecoBelow20";
+  else if (ele_pt < 75) name = "Reco20to75";
+  else name = "RecoAbove75";
+  return name;
+}
