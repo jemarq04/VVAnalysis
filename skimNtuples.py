@@ -183,7 +183,7 @@ def skimNtuple(selections, analysis, trigger, filelist, output_file_name,saveGen
             tmpfile = ROOT.TFile("tmpfile.root", "UPDATE")
         for i, selection_group in enumerate(selection_groups):
             applyDeduplicate = deduplicate if i == 0 else False
-            print(applyDeduplicate)
+            print("deduplicate: ", applyDeduplicate)
             print("selection_group: ", selection_group)
             cuts = ApplySelection.CutString()
             cuts.append(ApplySelection.buildCutString(state, 
