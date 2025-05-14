@@ -44,9 +44,7 @@ Bool_t disambiguateFinalStates::Notify()
   return kTRUE;
 }
 
-void disambiguateFinalStates::Begin(TTree * /*tree*/)
-{
-}
+void disambiguateFinalStates::Begin(TTree * /*tree*/){}
 
 void disambiguateFinalStates::SlaveBegin(TTree * /*tree*/)
 {
@@ -59,17 +57,15 @@ Bool_t disambiguateFinalStates::Process(Long64_t entry)
   b_evt->GetEntry(entry);
   b_run->GetEntry(entry);
 
-  if ( !(run == fCurrentRun && evt == fCurrentEvt) )
-  {
+  if (run != fCurrentRun || evt != fCurrentEvt)
     findBestEntry();
-  }
 
   fCurrentRun = run;
   fCurrentEvt = evt;
   // TODO Understand why this gives segfault for chains
   // with multiple entries
-  if ( fCutFormula && fCutFormula->EvalInstance() > 0. )
-    {
+  if (fCutFormula && fCutFormula->EvalInstance() > 0.)
+  {
     b_l1_l2_Mass->GetEntry(entry);
     b_l1_Pt->GetEntry(entry);
     b_l2_Pt->GetEntry(entry);
@@ -84,60 +80,35 @@ Bool_t disambiguateFinalStates::Process(Long64_t entry)
     b_l3IsIso->GetEntry(entry);
     b_l4IsTight->GetEntry(entry);
     b_l4IsIso->GetEntry(entry); 
-    
-    float mass_discriminant,Z2ptSum;
-    //float Z2Mass;
 
-    //This condition identifies the Z1 candidate
-    //Required for the 2e2mu state but redundant for the 4e,4mu state however it should be quick comparison and it helps with Z1Mass > 40 and Z2Mass > 12 condition
-    if(fabs(l1_l2_Mass-91.1876) < fabs(l3_l4_Mass-91.1876)){
-    //if(l1l2IsZ1(entry)){
+    float mass_discriminant,Z2ptSum;
+
+    // This condition identifies the Z1 candidate
+    // Required for the 2e2mu state but redundant for the 4e,4mu state.
+    //  However it should be quick comparison and it helps with Z1Mass > 40 and Z2Mass > 12 condition.
+    if (fabs(l1_l2_Mass-91.1876) < fabs(l3_l4_Mass-91.1876)){
       mass_discriminant = fabs(l1_l2_Mass-91.1876);
       Z2ptSum = l3_Pt+l4_Pt;
-      //Z1Mass=l1_l2_Mass;
-      //Z2Mass=l3_l4_Mass;
     }
     else{ 
       mass_discriminant = fabs(l3_l4_Mass-91.1876);
       Z2ptSum = l1_Pt+l2_Pt;
-      //Z1Mass=l3_l4_Mass;
-      //Z2Mass=l1_l2_Mass;
-      //bool templ1IsTight = l1IsTight;
-      //l1IsTight = l3IsTight;
-      //l3IsTight = templ1IsTight;
-      //bool templ2IsTight = l2IsTight;
-      //l2IsTight = l4IsTight;
-      //l4IsTight = templ2IsTight;
-      //bool templ1IsIso = l1IsIso;
-      //l1IsIso = l3IsIso;
-      //l3IsIso = templ1IsIso;
-      //bool templ2IsIso = l2IsIso;
-      //l2IsIso = l4IsIso;
-      //l4IsIso = templ2IsIso;
     }  
-   
-    if(tightZ1Leptons() && tightZ2Leptons()){ 
+
+    if (tightZ1Leptons() && tightZ2Leptons()){ 
       fEntriesToCompareTight.push_back(entry);
       fEntryDiscriminantsTight.push_back(mass_discriminant);
       fEntryZ2PtSumTight.push_back(Z2ptSum);
     }
-    //
-    //else if(tightZ1Leptons()){
     else{
       fEntriesToCompareLoose.push_back(entry);
       fEntryDiscriminantsLoose.push_back(mass_discriminant);
       fEntryZ2PtSumLoose.push_back(Z2ptSum);
     }
-    //else{ 
-    //  fEntriesToCompareVLoose.push_back(entry);
-    //  fEntryDiscriminantsVLoose.push_back(mass_discriminant);
-    //  fEntryZ2PtSumVLoose.push_back(Z2ptSum);
-    //}
   }
 
-  if ( entry == fChain->GetEntries()-1 ) {
+  if (entry == fChain->GetEntries()-1)
     findBestEntry();
-  }
 
   return kTRUE;
 }
@@ -150,107 +121,70 @@ void disambiguateFinalStates::SlaveTerminate()
 
 }
 
-void disambiguateFinalStates::Terminate()
-{
-}
+void disambiguateFinalStates::Terminate(){}
 
 void disambiguateFinalStates::findBestEntry()
 {
   //The correct row is the one with Z1 closest
-  //to on-shell, with the highest scalar Pt sum of the remaining leptons
+  // to on-shell, with the highest scalar Pt sum of the remaining leptons
   // used as a tiebreaker. 
   Long64_t bestEntryTight = -1L;
-  float lowestDiscriminantTight = 1e100;
-  float MaxPtSumTight = 0.0;
+  float    lowestDiscriminantTight = 1e100;
+  float    maxPtSumTight = 0.0;
 
   Long64_t bestEntryLoose = -1L;
-  float lowestDiscriminantLoose = 1e100;
-  float MaxPtSumLoose = 0.0;
-  
-  //Long64_t bestEntryVLoose = -1L;
-  //float lowestDiscriminantVLoose = 1e100;
-  //float MaxPtSumVLoose = 0.0;
+  float    lowestDiscriminantLoose = 1e100;
+  float    maxPtSumLoose = 0.0;
 
   for (size_t i=0; i<fEntriesToCompareTight.size(); ++i)
   {
-    if ((fEntryDiscriminantsTight[i] < lowestDiscriminantTight) || ((fEntryDiscriminantsTight[i] == lowestDiscriminantTight) && (fEntryZ2PtSumTight[i] > MaxPtSumTight)))
+    if (fEntryDiscriminantsTight[i] < lowestDiscriminantTight || (fEntryDiscriminantsTight[i] == lowestDiscriminantTight && fEntryZ2PtSumTight[i] > maxPtSumTight))
     {
-      MaxPtSumTight = fEntryZ2PtSumTight[i];
-      lowestDiscriminantTight = fEntryDiscriminantsTight[i];
       bestEntryTight = fEntriesToCompareTight[i];
+      lowestDiscriminantTight = fEntryDiscriminantsTight[i];
+      maxPtSumTight = fEntryZ2PtSumTight[i];
     }
   }
- 
+
   for (size_t i=0; i<fEntriesToCompareLoose.size(); ++i)
   {
-    if ((fEntryDiscriminantsLoose[i] < lowestDiscriminantLoose) || ((fEntryDiscriminantsLoose[i] == lowestDiscriminantLoose) && (fEntryZ2PtSumLoose[i] > MaxPtSumLoose)))
+    if (fEntryDiscriminantsLoose[i] < lowestDiscriminantLoose || (fEntryDiscriminantsLoose[i] == lowestDiscriminantLoose && fEntryZ2PtSumLoose[i] > maxPtSumLoose))
     {
-      MaxPtSumLoose = fEntryZ2PtSumLoose[i];
-      lowestDiscriminantLoose = fEntryDiscriminantsLoose[i];
       bestEntryLoose = fEntriesToCompareLoose[i];
+      lowestDiscriminantLoose = fEntryDiscriminantsLoose[i];
+      maxPtSumLoose = fEntryZ2PtSumLoose[i];
     }
   }
 
- // for (size_t i=0; i<fEntriesToCompareVLoose.size(); ++i)
- // {
- //   if ((fEntryDiscriminantsVLoose[i] < lowestDiscriminantVLoose) || ((fEntryDiscriminantsVLoose[i] == lowestDiscriminantVLoose) && (fEntryZ2PtSumVLoose[i] > MaxPtSumVLoose)))
- //   {
- //     MaxPtSumVLoose = fEntryZ2PtSumVLoose[i];
- //     lowestDiscriminantVLoose = fEntryDiscriminantsVLoose[i];
- //     bestEntryVLoose = fEntriesToCompareVLoose[i];
- //   }
- // }
-    if ( bestEntryTight >= 0 )
-    {
-      fBestCandidateEntryList->Enter(bestEntryTight);
-    }
-    else if ( bestEntryLoose >=0 ){ 
-      fBestCandidateEntryList->Enter(bestEntryLoose);
-    }
-    //else if ( bestEntryVLoose >=0 ){ 
-    //  fBestCandidateEntryList->Enter(bestEntryVLoose);
-    //}
+  if (bestEntryTight >= 0)
+    fBestCandidateEntryList->Enter(bestEntryTight);
+  else if (bestEntryLoose >= 0)
+    fBestCandidateEntryList->Enter(bestEntryLoose);
 
-    fEntriesToCompareTight.clear();
-    fEntryDiscriminantsTight.clear();
-    fEntryZ2PtSumTight.clear();
+  fEntriesToCompareTight.clear();
+  fEntryDiscriminantsTight.clear();
+  fEntryZ2PtSumTight.clear();
 
-    fEntriesToCompareLoose.clear();
-    fEntryDiscriminantsLoose.clear();
-    fEntryZ2PtSumLoose.clear();
-
-    //fEntriesToCompareVLoose.clear();
-    //fEntryDiscriminantsVLoose.clear();
-    //fEntryZ2PtSumVLoose.clear();
+  fEntriesToCompareLoose.clear();
+  fEntryDiscriminantsLoose.clear();
+  fEntryZ2PtSumLoose.clear();
 }
 
-bool disambiguateFinalStates::l1l2IsZ1(Long64_t entry){
-  if(fabs(l1_l2_Mass-91.1876) < fabs(l3_l4_Mass-91.1876))
-    return true;
-  else
-    return false;
-}
 bool disambiguateFinalStates::lep1IsTight() {
-    return (l1IsTight && l1IsIso); 
+  return (l1IsTight && l1IsIso); 
 }
 bool disambiguateFinalStates::lep2IsTight() {
-    return (l2IsTight && l2IsIso); 
+  return (l2IsTight && l2IsIso); 
 }
 bool disambiguateFinalStates::tightZ1Leptons() {
-    return lep1IsTight() && lep2IsTight(); 
+  return lep1IsTight() && lep2IsTight(); 
 }
 bool disambiguateFinalStates::lep3IsTight() {
-    return (l3IsTight && l3IsIso);
+  return (l3IsTight && l3IsIso);
 }
 bool disambiguateFinalStates::lep4IsTight() {
-    return (l4IsTight && l4IsIso);
+  return (l4IsTight && l4IsIso);
 }
 bool disambiguateFinalStates::tightZ2Leptons() {
-    return lep3IsTight() && lep4IsTight(); 
+  return lep3IsTight() && lep4IsTight(); 
 }
-//bool disambiguateFinalStates::HZZSIPSelection(){
-//    if ((l1SIP3D < 4.0 && l2SIP3D < 4.0 && l3SIP3D < 4.0 && l4SIP3D < 4.0))
-//        return true;
-//    else
-//        return false;
-//}
