@@ -106,7 +106,7 @@ def getListOfGenFilenames(analysis='ZZ'):
     return []
 def getListOfEWKFilenames(analysis=""):
     if "ZZ4l" in analysis:
-        return [
+        outlist = [
             #"zz4l-amcatnlo",
             "zz4l-powheg",
             #"ZZJJTo4L-EWK",
@@ -117,6 +117,12 @@ def getListOfEWKFilenames(analysis=""):
             "ggZZ2e2tau",
             "ggZZ2mu2tau",
         ]
+        if "ZZ4l2022" in analysis:
+            outlist = ["%s_%sEE" % (name, suffix) for name in outlist for suffix in ["pre", "post"]]
+        elif "ZZ4l2023" in analysis:
+            outlist = ["%s_%sBPix" % (name, suffix) for name in outlist for suffix in ["pre", "post"]]
+        return outlist
+
     # TODO: This is obviously WZ specific and should be updated
     return [
     #    "wz3lnu-powheg",
