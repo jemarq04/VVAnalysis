@@ -4,5 +4,5 @@
     "EGamma1" : "(singleEPass || doubleEPass)",
     "Muon0" : "((singleIsoMuPass || doubleMuDZPass || tripleMuPass) && !(singleEPass || doubleEPass))",
     "Muon1" : "((singleIsoMuPass || doubleMuDZPass || tripleMuPass) && !(singleEPass || doubleEPass))",
-    "MuonEG" : "((singleMuSingleEPass || doubleMuSingleEPass || doubleESingleMuPass) && !(singleEPass || doubleEPass))"
+    "MuonEG" : "((singleMuSingleEPass || doubleMuSingleEPass || doubleESingleMuPass) && !(singleIsoMuPass || doubleMuDZPass || tripleMuPass) && !(singleEPass || doubleEPass))"
 }
