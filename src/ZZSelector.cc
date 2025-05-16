@@ -150,7 +150,7 @@ unsigned int ZZSelector::GetLheWeightInfo()
       //"wz-atgc_pt300"
   };
 
-  for (auto suffix : {"_postEE", ""}){
+  for (auto suffix : {"_preEE", "_postEE", "_preBPix", "_postBPix", ""}){
     if ((std::find(noLheWeights.begin(), noLheWeights.end(), name_ + suffix) != noLheWeights.end()) || (isaTGC_))
       return 0;
     if (std::find(scaleAndPdfWeights.begin(), scaleAndPdfWeights.end(), name_ + suffix) != scaleAndPdfWeights.end())
