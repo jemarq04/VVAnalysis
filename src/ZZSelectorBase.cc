@@ -78,22 +78,10 @@ void ZZSelectorBase::SetScaleFactors()
     throw std::invalid_argument("Must pass valid electron Reco SF");
   }
   try{
-    mLowPtSF_ = correction::CorrectionSet::from_file(TString::Format("%s/MUO/%s/muon_JPsi.json.gz", basename.c_str(), yearstring.c_str()).Data());
+    mIdSF_ = correction::CorrectionSet::from_file(TString::Format("%s/MUO/%s/muon_Z.json.gz", basename.c_str(), yearstring.c_str()).Data());
   }
   catch (...){
-    throw std::invalid_argument("Must pass valid low pt muon SF");
-  }
-  try{
-    mMedPtSF_ = correction::CorrectionSet::from_file(TString::Format("%s/MUO/%s/muon_Z.json.gz", basename.c_str(), yearstring.c_str()).Data());
-  }
-  catch (...){
-    throw std::invalid_argument("Must pass valid medium pt muon SF");
-  }
-  try{
-    mHighPtSF_ = correction::CorrectionSet::from_file(TString::Format("%s/MUO/%s/muon_HighPt.json.gz", basename.c_str(), yearstring.c_str()).Data());
-  }
-  catch (...){
-    throw std::invalid_argument("Must pass valid high pt muon SF");
+    throw std::invalid_argument("Must pass valid muon ID SF");
   }
 
   try{
