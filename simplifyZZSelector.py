@@ -21,7 +21,7 @@ mapdict = {}
 odict = {}
 
 writeNtuple = True
-baseList = ["yield", "Mass", "MassFull", "nJets", "jetPt[1]", "jetPt[0]", "jetEta[0]", "jetEta[1]", "absjetEta[0]", "absjetEta[1]", "mjj", "dEtajj", "Mass0j", "Mass1j", "Mass2j", "Mass3j", "Mass34j", "Mass4j", "Mass0jFull", "Mass1jFull", "Mass2jFull", "Mass3jFull", "Mass34jFull", "Mass4jFull"]
+baseList = ["yield", "Mass", "MassFull", "nJets", "nJets_central", "jetPt[1]", "jetPt[0]", "jetEta[0]", "jetEta[1]", "absjetEta[0]", "absjetEta[1]", "mjj", "dEtajj", "Mass0j", "Mass1j", "Mass2j", "Mass3j", "Mass34j", "Mass4j", "Mass0jFull", "Mass1jFull", "Mass2jFull", "Mass3jFull", "Mass34jFull", "Mass4jFull"]
 baseList2 = baseList[1:]
 
 systHist_Ori= [
@@ -29,6 +29,7 @@ systHist_Ori= [
       "Mass",
       "MassFull",
       "nJets",
+      "nJets_central",
       "jetPt[1]",
       "jetPt[0]",
       "jetEta[0]",
@@ -66,7 +67,7 @@ systHistList = baseList
 hist1D_Ori =[
       "yield", "Z1Mass", "Z2Mass", "ZMass", "ZZPt", "ZZEta", "dPhiZ1Z2", "dRZ1Z2", "ZPt", "LepPt", "LepPtFull", "LepEta", "PassTriggerFull",
       "LepPt1", "LepPt2", "LepPt3", "LepPt4", "LepPt1Full", "LepPt2Full", "LepPt3Full", "LepPt4Full", "e1PtSortedFull", "e2PtSortedFull", "e1PtSorted", "e2PtSorted",
-      "Mass", "Mass0j", "Mass1j", "Mass2j", "Mass3j", "Mass34j", "Mass4j", "nJets",
+      "Mass", "Mass0j", "Mass1j", "Mass2j", "Mass3j", "Mass34j", "Mass4j", "nJets", "nJets_central",
       "MassFull", "Mass0jFull", "Mass1jFull", "Mass2jFull", "Mass3jFull", "Mass34jFull", "Mass4jFull",
       "jetPt[0]", "jetPt[1]", "jetPt[2]", "jetEta[0]", "jetEta[1]", "absjetEta[0]", "absjetEta[1]", "jetEta[2]",
       "jetPhi[0]", "jetPhi[1]", "jetPhi[2]", "mjj", "dEtajj", "SIP3D", "jetPt[01]", "jetEta[01]",
@@ -80,8 +81,8 @@ hist1D_Ori =[
 hists1DList = [
       "yield", "Z1Mass", "Z2Mass", "ZMass", "ZZPt", "ZZEta", "dPhiZ1Z2", "dRZ1Z2", "ZPt", "LepPt", "LepPtFull", "LepEta", "PassTriggerFull",
       "LepPt1", "LepPt2", "LepPt3", "LepPt4", "LepPt1Full", "LepPt2Full", "LepPt3Full", "LepPt4Full", "e1PtSortedFull", "e2PtSortedFull", "e1PtSorted", "e2PtSorted",
-      "Mass", "nJets", "MassFull", "SIP3D", "PVDZ", "deltaPVDZ_sameZ", "deltaPVDZ_diffZ", "scaleWeightIDs", "Z1PolCos", "Z2PolCos", "Lep1Energy", "Lep2Energy",
-      "Lep3Energy", "Lep4Energy", "LepIso", "Lep1Iso", "Lep2Iso", "Lep3Iso", "Lep4Iso",
+      "Mass", "nJets", "nJets_central", "MassFull", "SIP3D", "PVDZ", "deltaPVDZ_sameZ", "deltaPVDZ_diffZ", "scaleWeightIDs", "Z1PolCos", "Z2PolCos",
+      "Lep1Energy", "Lep2Energy", "Lep3Energy", "Lep4Energy", "LepIso", "Lep1Iso", "Lep2Iso", "Lep3Iso", "Lep4Iso",
       "Mass0j", "Mass1j", "Mass2j", "Mass3j", "Mass34j", "Mass4j", "Mass0jFull", "Mass1jFull", "Mass2jFull", "Mass3jFull", "Mass34jFull", "Mass4jFull",
       "jetEta[0]", "absjetEta[0]", "jetEta[1]", "absjetEta[1]", "jetPt[0]", "jetPt[1]", "jetPhi[0]", "jetPhi[1]", "mjj", "dEtajj"
 ]
@@ -106,6 +107,7 @@ jethists1D_Ori = [
       "Mass34jFull",
       "Mass4jFull",
       "nJets",
+      "nJets_central",
       "jetPt[0]",
       "jetPt[1]",
       "jetEta[0]",
@@ -130,6 +132,7 @@ weighthists1D_Ori = [
       "LepPt",
       "LepEta",
       "nJets",
+      "nJets_central",
       "jetPt[1]",
       "jetPt[0]",
       "jetEta[0]",
