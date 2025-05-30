@@ -41,18 +41,14 @@ public:
     Float_t L1prefiringWeightUp;
     Float_t L1prefiringWeightDn;
     Float_t nTruePU;
-    Float_t Z1mass;
-    Float_t Z2mass;
-    //Float_t Zamass;
-    //Float_t Zbmass;
-    Float_t Z1pt;
-    Float_t Z2pt;
+    Float_t Z1Mass;
+    Float_t Z2Mass;
+    Float_t Z1Pt;
+    Float_t Z2Pt;
     Float_t Z1Phi;
     Float_t Z2Phi;
     Float_t Z1Eta;
     Float_t Z2Eta;
-	Float_t Z1PolCos;
-	Float_t Z2PolCos;
     Float_t type1_pfMETEt;
     Float_t type1_pfMETPhi;
     Float_t l1GenPt;
@@ -64,10 +60,14 @@ public:
     Bool_t l2IsTight;
     Bool_t l3IsTight;
     Bool_t l4IsTight;
-    Float_t l1IsIso;
-    Float_t l2IsIso;
-    Float_t l3IsIso;
-    Float_t l4IsIso;
+    Bool_t l1IsIso;
+    Bool_t l2IsIso;
+    Bool_t l3IsIso;
+    Bool_t l4IsIso;
+    Float_t l1Iso;
+    Float_t l2Iso;
+    Float_t l3Iso;
+    Float_t l4Iso;
 
     Bool_t l1IsGap;
     Bool_t l2IsGap;
@@ -124,13 +124,10 @@ public:
     TBranch *b_L1prefiringWeight;
     TBranch *b_L1prefiringWeightUp;
     TBranch *b_L1prefiringWeightDn;
-    TBranch *b_Z1mass;
-    TBranch *b_Z2mass;
-    //Smart cut on 4e/4mu
-    //TBranch* b_Zamass;
-    //TBranch* b_Zbmass;
-    TBranch *b_Z1pt;
-    TBranch *b_Z2pt;
+    TBranch *b_Z1Mass;
+    TBranch *b_Z2Mass;
+    TBranch *b_Z1Pt;
+    TBranch *b_Z2Pt;
     TBranch *b_Z1Phi;
     TBranch *b_Z2Phi;
     TBranch *b_Z1Eta;
@@ -155,6 +152,10 @@ public:
     TBranch *b_l2IsIso;
     TBranch *b_l3IsIso;
     TBranch *b_l4IsIso;
+    TBranch *b_l1Iso;
+    TBranch *b_l2Iso;
+    TBranch *b_l3Iso;
+    TBranch *b_l4Iso;
 
     TBranch *b_l1IsGap;
     TBranch *b_l2IsGap;
@@ -244,7 +245,6 @@ protected:
     bool Z2PF();
     bool Z2FP();
     bool Z2FF();
-    bool tightSIP();
     bool tightZ1Leptons();
     bool tightZ2Leptons();
 };
