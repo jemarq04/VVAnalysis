@@ -18,14 +18,11 @@
 #include <vector>
 #include "Analysis/VVAnalysis/interface/ScaleFactor.h"
 
-//Dylan's macro, pls ignore
-//#define PAIR(NAME_) {#NAME_, NAME_}
-
 class SelectorBase : public TSelector {
- public :
+  public :
     std::map<std::string, ScaleFactor*> scaleFactors;
     TEfficiency* prefireEff_;
-    
+
     TTree          *fChain = 0;   //!pointer to the analyzed TTree or TChain
 
     /*********************************/
@@ -35,51 +32,51 @@ class SelectorBase : public TSelector {
     /* | |___| |\  | |_| | |  | \__ \ */
     /* |_____|_| \_|\___/|_|  |_|___/ */
     /*********************************/
-                              
+
     enum NtupleType {
-        UWVV,    NanoAOD,
+      UWVV,    NanoAOD,
     };
 
     enum Channel {
-        e,           m,         
-        ee,          em,        mm,     
-        eee,         eem,       emm,    mmm,
-        eeee,        eemm,      mmee,   mmmm,
-        Inclusive,   Unknown,   lll,    
+      e,           m,         
+      ee,          em,        mm,     
+      eee,         eem,       emm,    mmm,
+      eeee,        eemm,      mmee,   mmmm,
+      Inclusive,   Unknown,   lll,    
     };
-  
+
     enum Selection {
-        tightleptons,                 ZZGenFiducial,
-        ZZselection,
-        Wselection,                   Zselection,
-        Wselection_Full,              FakeRateSelectionLoose,
-        FakeRateSelectionTight,       VBSselection_Loose,
-        VBSselection_NoZeppenfeld,    VBSselection_Tight,
-        VBSselection_Loose_Full,      VBSselection_NoZeppenfeld_Full,
-        VBSselection_Tight_Full,      VBSBackgroundControl,
-        VBSBackgroundControlATLAS,    VBSBackgroundControl_Full,
-        VBSBackgroundControlLoose,    VBSBackgroundControlLoose_Full,
-        Inclusive2Jet,                Inclusive2Jet_Full,
-        TightWithLooseVeto,           FourTopPlots,
-        FourTopCutBasedEl,            FourTopMVAEl,
+      tightleptons,                 ZZGenFiducial,
+      ZZselection,
+      Wselection,                   Zselection,
+      Wselection_Full,              FakeRateSelectionLoose,
+      FakeRateSelectionTight,       VBSselection_Loose,
+      VBSselection_NoZeppenfeld,    VBSselection_Tight,
+      VBSselection_Loose_Full,      VBSselection_NoZeppenfeld_Full,
+      VBSselection_Tight_Full,      VBSBackgroundControl,
+      VBSBackgroundControlATLAS,    VBSBackgroundControl_Full,
+      VBSBackgroundControlLoose,    VBSBackgroundControlLoose_Full,
+      Inclusive2Jet,                Inclusive2Jet_Full,
+      TightWithLooseVeto,           FourTopPlots,
+      FourTopCutBasedEl,            FourTopMVAEl,
     };
 
     enum Year {
-        yrdefault,      yr2022,      yr2023,      yr2024
+      yrdefault,      yr2022,      yr2023,      yr2024
     };
 
     enum Systematic {
-        Central,
-        jetEnergyScaleUp,          jetEnergyScaleDown,
-        jetEnergyResolutionUp,     jetEnergyResolutionDown,
-        metUnclusteredEnergyUp,    metUnclusteredEnergyDown,
-        muonEfficiencyUp,          muonEfficiencyDown,
-        muonScaleUp,               muonScaleDown,
-        electronRecoEffUp,         electronRecoEffDown,
-        electronEfficiencyUp,      electronEfficiencyDown,
-        electronScaleUp,           electronScaleDown,
-        pileupUp,                  pileupDown,
-        //L1prefiringWeightUp,       L1prefiringWeightDown,
+      Central,
+      jetEnergyScaleUp,          jetEnergyScaleDown,
+      jetEnergyResolutionUp,     jetEnergyResolutionDown,
+      metUnclusteredEnergyUp,    metUnclusteredEnergyDown,
+      muonEfficiencyUp,          muonEfficiencyDown,
+      muonScaleUp,               muonScaleDown,
+      electronRecoEffUp,         electronRecoEffDown,
+      electronEfficiencyUp,      electronEfficiencyDown,
+      electronScaleUp,           electronScaleDown,
+      pileupUp,                  pileupDown,
+      //L1prefiringWeightUp,       L1prefiringWeightDown,
     }; 
 
     /****************************/
@@ -92,52 +89,52 @@ class SelectorBase : public TSelector {
     /****************************/
 
     std::map<std::string, Selection> selectionMap_ = {
-	{"tightleptons", tightleptons},
-        {"ZZGenFiducial", ZZGenFiducial},
-        {"Wselection", Wselection},
-        {"Zselection", Zselection},
-        {"ZZselection", ZZselection},
-        {"SignalSync", ZZselection},
-        {"AllData", ZZselection},
-        {"LooseLeptons", ZZselection},
-        {"TightLeptonsWGen", ZZselection},
-        {"ZplusLSkim", ZZselection},
-        {"Wselection_Full", Wselection_Full},
-        {"FakeRateSelectionLoose", FakeRateSelectionLoose},
-        {"FakeRateSelectionTight", FakeRateSelectionTight},
-        {"VBSselection_Loose", VBSselection_Loose},
-        {"VBSselection_NoZeppenfeld", VBSselection_NoZeppenfeld},
-        {"VBSselection_Tight", VBSselection_Tight},
-        {"VBSselection_Loose_Full", VBSselection_Loose_Full},
-        {"VBSselection_NoZeppenfeld_Full", VBSselection_NoZeppenfeld_Full},
-        {"VBSselection_Tight_Full", VBSselection_Tight_Full},
-        {"VBSBackgroundControl", VBSBackgroundControl},
-        {"VBSBackgroundControlATLAS", VBSBackgroundControlATLAS},
-        {"VBSBackgroundControl_Full", VBSBackgroundControl_Full},
-        {"VBSBackgroundControlLoose", VBSBackgroundControlLoose},
-        {"VBSBackgroundControlLoose_Full", VBSBackgroundControlLoose_Full},
-        {"Inclusive2Jet", Inclusive2Jet},
-        {"Inclusive2Jet_Full", Inclusive2Jet_Full},
-        {"TightWithLooseVeto", TightWithLooseVeto}, 
-        {"FourTopPlots", FourTopPlots},
-        {"FourTopCutBasedEl", FourTopCutBasedEl},
-	{"FourTopMVAEl", FourTopMVAEl}, 
+      {"tightleptons", tightleptons},
+      {"ZZGenFiducial", ZZGenFiducial},
+      {"Wselection", Wselection},
+      {"Zselection", Zselection},
+      {"ZZselection", ZZselection},
+      {"SignalSync", ZZselection},
+      {"AllData", ZZselection},
+      {"LooseLeptons", ZZselection},
+      {"TightLeptonsWGen", ZZselection},
+      {"ZplusLSkim", ZZselection},
+      {"Wselection_Full", Wselection_Full},
+      {"FakeRateSelectionLoose", FakeRateSelectionLoose},
+      {"FakeRateSelectionTight", FakeRateSelectionTight},
+      {"VBSselection_Loose", VBSselection_Loose},
+      {"VBSselection_NoZeppenfeld", VBSselection_NoZeppenfeld},
+      {"VBSselection_Tight", VBSselection_Tight},
+      {"VBSselection_Loose_Full", VBSselection_Loose_Full},
+      {"VBSselection_NoZeppenfeld_Full", VBSselection_NoZeppenfeld_Full},
+      {"VBSselection_Tight_Full", VBSselection_Tight_Full},
+      {"VBSBackgroundControl", VBSBackgroundControl},
+      {"VBSBackgroundControlATLAS", VBSBackgroundControlATLAS},
+      {"VBSBackgroundControl_Full", VBSBackgroundControl_Full},
+      {"VBSBackgroundControlLoose", VBSBackgroundControlLoose},
+      {"VBSBackgroundControlLoose_Full", VBSBackgroundControlLoose_Full},
+      {"Inclusive2Jet", Inclusive2Jet},
+      {"Inclusive2Jet_Full", Inclusive2Jet_Full},
+      {"TightWithLooseVeto", TightWithLooseVeto}, 
+      {"FourTopPlots", FourTopPlots},
+      {"FourTopCutBasedEl", FourTopCutBasedEl},
+      {"FourTopMVAEl", FourTopMVAEl}, 
     };
 
     std::map<std::string, Year> yearMap_ = {
-        {"default", yrdefault},
-        {"2022", yr2022},
-        {"2023", yr2023},
-        {"2024", yr2024},
+      {"default", yrdefault},
+      {"2022", yr2022},
+      {"2023", yr2023},
+      {"2024", yr2024},
     };
-    
+
     std::map<std::string, Channel> channelMap_ = {
-        {"e", e},                   {"m", m},         
-        {"ee", ee},                 {"em", em},       {"mm", mm},
-        {"eee", eee},               {"eem", eem},     {"emm", emm},     {"mmm", mmm},
-        {"eeee", eeee},             {"eemm", eemm},   {"mmee", mmee},   {"mmmm", mmmm},
-        {"eeeeGen", eeee},          {"eemmGen", eemm},{"mmeeGen", mmee},{"mmmmGen", mmmm},
-        {"Inclusive", Inclusive},   {"lll", lll},
+      {"e", e},                   {"m", m},         
+      {"ee", ee},                 {"em", em},       {"mm", mm},
+      {"eee", eee},               {"eem", eem},     {"emm", emm},     {"mmm", mmm},
+      {"eeee", eeee},             {"eemm", eemm},   {"mmee", mmee},   {"mmmm", mmmm},
+      {"eeeeGen", eeee},          {"eemmGen", eemm},{"mmeeGen", mmee},{"mmmmGen", mmmm},
+      {"Inclusive", Inclusive},   {"lll", lll},
     };
 
 
@@ -156,7 +153,7 @@ class SelectorBase : public TSelector {
     bool applyPrefiringCorr_;
     bool writeNtp_ = true; //Whether to write selected events into ntuple
     std::string ftntpName_; //Tree name containing dataset, channel 
-    
+
     // Readers to access the data (delete the ones you do not need).
     SelectorBase(TTree * /*tree*/ =0) { }
     virtual ~SelectorBase() { }
@@ -185,18 +182,18 @@ class SelectorBase : public TSelector {
 
 
     template<typename T, typename... Args>
-	void AddObject(T* &ptr, Args... args) {
-	static_assert(std::is_base_of<TNamed, T>::value, "Objects must inheirit from ROOT TNamed to be streamable from PROOF sessions");
-	ptr = new T(args...);
-	ptr->SetDirectory(gROOT);
-	currentHistDir_->Add(ptr);
-	allObjects_.insert((TNamed**) &ptr);
+    void AddObject(T* &ptr, Args... args) {
+      static_assert(std::is_base_of<TNamed, T>::value, "Objects must inheirit from ROOT TNamed to be streamable from PROOF sessions");
+      ptr = new T(args...);
+      ptr->SetDirectory(gROOT);
+      currentHistDir_->Add(ptr);
+      allObjects_.insert((TNamed**) &ptr);
     };
-    
+
     void UpdateDirectory();    
     ClassDef(SelectorBase,0);
 
- protected:
+  protected:
     // Maps to the histogram pointers themselves
     std::map<std::string, TH1D*> histMap1D_ = {};
     //TODO change the name to map and don't break things
@@ -214,10 +211,10 @@ class SelectorBase : public TSelector {
     std::vector<std::string> systHists_ = {};
     std::vector<std::string> systHists2D_ = {};
 
-    void    SetBranches();
+    void            SetBranches();
     virtual void    SetBranchesUWVV() { }
     virtual void    SetBranchesNanoAOD() { }
-    void    LoadBranches(Long64_t entry, std::pair<Systematic, std::string> variation);
+    void            LoadBranches(Long64_t entry, std::pair<Systematic, std::string> variation);
     virtual void    LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::string> variation) { }
     virtual void    LoadBranchesNanoAOD(Long64_t entry, std::pair<Systematic, std::string> variation) { }
     virtual void    FillHistograms(Long64_t entry, std::pair<Systematic, std::string> variation) { }
@@ -232,7 +229,7 @@ class SelectorBase : public TSelector {
     Year year_ = yrdefault;
     bool isMC_;
 
-    
+
     float GetPrefiringEfficiencyWeight(std::vector<float>* jetPt, std::vector<float>* jetEta);
     virtual std::string GetNameFromFile() { return ""; }
     void InitializeHistogramFromConfig(std::string name, std::string channel, std::vector<std::string> histData);
@@ -243,41 +240,33 @@ class SelectorBase : public TSelector {
     std::string getBranchName(std::string bName, std::string variationName, std::string channel);
     std::string getBranchName(std::string bName, std::string variationName);
     template<typename T>
-    void InitializeHistMap(std::vector<std::string>& labels, std::map<std::string, T*>& histMap);
+      void InitializeHistMap(std::vector<std::string>& labels, std::map<std::string, T*>& histMap);
 
     // Filling Functions
     template<typename T, typename... Args>
-	void SafeHistFill(std::map<std::string, T*> container, 
-			  std::string histname, Args... args) {
-	if (container[histname] != nullptr)
-	    container[histname]->Fill(args...);
+    void SafeHistFill(std::map<std::string, T*> container, 
+        std::string histname, Args... args) {
+      if (container[histname] != nullptr)
+        container[histname]->Fill(args...);
     };
 
     //Set branch for the ntuple, expected to be called in the histogram filling stage
     //Expect fundamental types like float and int
     template<typename T>
     void SafeSetBranch(TTree* tree, std::string bName, T* var) {
-
-    TBranch * branch = tree->GetBranch(bName.c_str());
-    if (branch == nullptr){
+      TBranch * branch = tree->GetBranch(bName.c_str());
+      if (branch == nullptr)
         tree->Branch(bName.c_str(),var);
-    }
-
-    else{
+      else
         tree->SetBranchAddress(bName.c_str(),var);
     }
 
-    }
-  
     template<typename T, typename... Args>
-	void HistFullFill(std::map<std::string, T*> container,
-			  std::string histname, std::string var, Args... args) {
-	SafeHistFill(container, getHistName(histname, var), args...);
-	SafeHistFill(container, getHistName(histname, var, "all"), args...);
+    void HistFullFill(std::map<std::string, T*> container,
+        std::string histname, std::string var, Args... args) {
+      SafeHistFill(container, getHistName(histname, var), args...);
+      SafeHistFill(container, getHistName(histname, var, "all"), args...);
     }
-  
-    
 };
 
 #endif
-
