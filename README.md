@@ -6,8 +6,8 @@ code working elsewhere.
 
 ## Setup
 
-To set up this code, make a fork of this repository (including all available branches, or at least Run3Skims and Run3Analysis). Then, run the following code 
-replacing `YourGithubUsername` accordingly.
+To set up this code, make a fork of this repository (including branches Run3Skims and Run3Analysis) and the [ZZ4lDatasetManager]() repository (including 
+branches for_skimming_Run3 and for_merging_Run3). Then, run the following code replacing `YourGithubUsername` accordingly.
 
 ```bash
 cmsrel CMSSW_14_0_9
@@ -51,7 +51,7 @@ at the end:
 }
 ```
 
-Finally, to run the job, simply run the following:
+Finally, to run the job, simply run the following while in this directory:
 
 ```bash
 ./runZZ4l2022.sh
