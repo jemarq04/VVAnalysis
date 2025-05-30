@@ -14,7 +14,7 @@ void ZZSelector::Init(TTree *tree)
       {pileupUp, "CMS_pileupUp"},
       {pileupDown, "CMS_pileupDown"},
   };
-  doSystematics_ = false; // true; // false;//true;
+  doSystematics_ = false;
 
   // This would be set true inside ZZBackground Selector
   // isNonPrompt_ = false;
@@ -1453,7 +1453,7 @@ if (writeNtp_ && writeNtpFullRange){
         {
           SafeHistFill(jethistMap1D_, getHistName("jetPt[1]", variation.second), vjetPt[i]->at(1), i, weight);
 
-          SafeHistFill(jethistMap1D_, getHistName("jetEta[1]", variation.second), vjetEta[i]->at(1), i, weight); //}
+          SafeHistFill(jethistMap1D_, getHistName("jetEta[1]", variation.second), vjetEta[i]->at(1), i, weight);
           SafeHistFill(jethistMap1D_, getHistName("absjetEta[1]", variation.second), std::abs(vjetEta[i]->at(1)), i, weight);
 
           SafeHistFill(jethistMap1D_, getHistName("dEtajj", variation.second), std::abs(vjetEta[i]->at(0) - vjetEta[i]->at(1)), i, weight);
@@ -1739,12 +1739,8 @@ if (writeNtp_ && writeNtpFullRange){
   
   int central_nJets = 0;
   for (unsigned int cind = 0; cind < jetPt->size(); cind++)
-  {
-      if (std::abs(jetEta->at(cind))<2.4){
-        central_nJets = central_nJets + 1;
-      }
-
-  }
+      if (std::abs(jetEta->at(cind))<2.4)
+        central_nJets++;
 
   SafeHistFill(histMap1D_, getHistName("nJets_central", variation.second), central_nJets, weight);
 
@@ -1781,8 +1777,7 @@ if (writeNtp_ && writeNtpFullRange){
   if (jetPt->size() > 0 && jetPt->size() == jetEta->size())
   {
     SafeHistFill(histMap1D_, getHistName("jetPt[0]", variation.second), jetPt->at(0), weight);
-    // if (jetPt->size() ==2 && jetPt->size() == jetEta->size()) {
-    SafeHistFill(histMap1D_, getHistName("jetEta[0]", variation.second), jetEta->at(0), weight); //}
+    SafeHistFill(histMap1D_, getHistName("jetEta[0]", variation.second), jetEta->at(0), weight);
     SafeHistFill(histMap1D_, getHistName("absjetEta[0]", variation.second), std::abs(jetEta->at(0)), weight);
     SafeHistFill(histMap1D_, getHistName("jetPhi[0]", variation.second), jetPhi->at(0), weight);
 
@@ -1817,8 +1812,7 @@ if (writeNtp_ && writeNtpFullRange){
   if (jetPt->size() > 1 && jetPt->size() == jetEta->size())
   {
     SafeHistFill(histMap1D_, getHistName("jetPt[1]", variation.second), jetPt->at(1), weight);
-    // if (jetPt->size() ==2 && jetPt->size() == jetEta->size()) {
-    SafeHistFill(histMap1D_, getHistName("jetEta[1]", variation.second), jetEta->at(1), weight); //}
+    SafeHistFill(histMap1D_, getHistName("jetEta[1]", variation.second), jetEta->at(1), weight);
     SafeHistFill(histMap1D_, getHistName("absjetEta[1]", variation.second), std::abs(jetEta->at(1)), weight);
     SafeHistFill(histMap1D_, getHistName("jetPhi[1]", variation.second), jetPhi->at(1), weight);
     SafeHistFill(histMap1D_, getHistName("dEtajj", variation.second), dEtajj, weight);
