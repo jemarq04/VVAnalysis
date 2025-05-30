@@ -1261,7 +1261,7 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
         }
       } // loop over syst indices
 
-      // LHE weights
+      // Jet plots with LHE weights
       for (size_t i = 0; i < lheWeights.size(); i++) // expect 0 to 111 currently
       {
         if (jetPt->size() != jetEta->size()) break;
@@ -1339,7 +1339,7 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
   }
   //End filling ntuple
 
-  // LHE weights
+  // Plot with LHE weights
   if (isMC_)
   {
     for (size_t i=0; i<lheWeights.size(); i++)
