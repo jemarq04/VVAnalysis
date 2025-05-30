@@ -63,5 +63,41 @@ into ntuple files.
 
 ## Configuring the jobs
 
-(WIP)
+To modify the [`ZZSelector`](src/ZZSelector.cc) plugin to plot pre-defined plot objects, you can use the [`simplifyZZSelector.py`](simplifyZZSelector.py) script. By listing
+the desired plots in the `hists1D` variable and running `python3 simplifyZZSelector.py`, the files `src/ZZSelectorFilled.template` and `src/ZZGenSelectorFilled.template`
+will be created. You can rename those to `src/ZZSelector.cc` and `src/ZZGenSelector.cc`, respectively. Alternatively, you can change `overwrite` to `True` in the script
+and it will create the new files with the final destinations instead.
+
+To add new plots, you first need to create a corresponding entry in the dataset manager under `Dataset_manager/ZZ4lDatasetManager/PlotObjects/`. Any changes to the
+`LooseLeptons.json` file must be directly copied to `ZZSelectionTightLeps.json` - these two files should be exact copies. Then, using the name you used to identify
+the section in the JSON file, add that name to the `hists1D` variable list in [`simplifyZZSelector.py`](simplifyZZSelector.py). Finally, you need to write the appropriate
+lines to [`ZZSelector.cc`](src/ZZSelector.cc) (and [`ZZSelector.template`](src/ZZSelector.template) to be used with the simplify script). For example, if you were adding
+the plot object `Z1PolCos` you would first create the following plot object entry:
+
+```json
+  "Z1PolCos": {  
+        "Initialize": {  
+            "type": "TH1D",
+            "nbins": 100,
+            "xmin": -1,
+            "xmax": 1
+        },
+        "Attributes": {  
+            "GetXaxis().SetTitle": "cos#theta^{*}_{Z1}",  
+            "GetYaxis().SetTitle": "Events", 
+            "GetYaxis().SetTitleOffset": 1.2
+        }
+    },
+```
+
+Then, you would add `Z1PolCos` to the `hists1D` variable and add `SafeHistFill` commands to the `ZZSelector` files. These commands would look like the following:
+
+```C++
+SafeHistFill(histMap1D_, getHistName("Z1PolCos", variation.second), Z1PolCos, weight);
+```
+
+If you wanted to add LHE re-weighing capabilities, you'd also need to look for the `for` block under the `// Plot with LHE weights` comment and add the following:
+```C++
+SafeHistFill(weighthistMap1D_, getHistName("Z1PolCos", variation.second), Z1PolCos, i, lheWeights[i] / lheWeights[0] * weight);
+```
 
