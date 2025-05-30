@@ -4,7 +4,7 @@
 void FakeRateSelector::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::string> variation) { 
     ZZSelectorBase::LoadBranchesUWVV(entry, variation);
     //In HZZ AN it says: |M_inv(l1,l2)- MZ| < 7 GeV, to reduce the contribution from photon (asymmetric) conversions populating low masses.
-    if (Z1mass > 98.1876 || Z1mass < 84.1876){
+    if (Z1Mass > 98.1876 || Z1Mass < 84.1876){
         return;}
     if (type1_pfMETEt > 25){
         return;}

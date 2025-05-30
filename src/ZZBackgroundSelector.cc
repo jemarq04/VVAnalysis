@@ -74,8 +74,8 @@ float ZZBackgroundSelector::getEventWeight(Long64_t entry) {
       if (IsPPPFRegion()) {
         if (true){
              //std::cout<<"Weight in PPPF: "<<weight<<std::endl;
-             Z1MassHistPPPF_->Fill(Z1mass, weight);
-             Z2MassHistPPPF_->Fill(Z2mass, weight);
+             Z1MassHistPPPF_->Fill(Z1Mass, weight);
+             Z2MassHistPPPF_->Fill(Z2Mass, weight);
              MassHistPPPF_->Fill(Mass,weight);
          }
          evtwgt = (getl4FakeRate(entry)*weight);
@@ -84,8 +84,8 @@ float ZZBackgroundSelector::getEventWeight(Long64_t entry) {
       if (IsPPFFRegion()) {
         if (true) {
             //std::cout<<"Weight in PPFF: "<<weight<<std::endl;
-            Z1MassHistPPFF_->Fill(Z1mass, weight);
-            Z2MassHistPPFF_->Fill(Z2mass, weight);
+            Z1MassHistPPFF_->Fill(Z1Mass, weight);
+            Z2MassHistPPFF_->Fill(Z2Mass, weight);
             MassHistPPFF_->Fill(Mass,weight);
         }
         evtwgt = ((-1*getl3FakeRate(entry)*getl4FakeRate(entry))*weight);
@@ -178,10 +178,10 @@ void ZZBackgroundSelector::SetZ1Z2Masses() {
     TLorentzVector lepton4;
     lepton4.SetPtEtaPhiM(l4Pt, l4Eta, l4Phi, l4Mass);
     if(tightZ1Leptons() && !tightZ2Leptons()){
-      Z1mass = (lepton1+lepton2).M();
-      Z2mass = (lepton3+lepton4).M();
-      Z1pt = (lepton1+lepton2).Pt();
-      Z2pt = (lepton3+lepton4).Pt();
+      Z1Mass = (lepton1+lepton2).M();
+      Z2Mass = (lepton3+lepton4).M();
+      Z1Pt = (lepton1+lepton2).Pt();
+      Z2Pt = (lepton3+lepton4).Pt();
       //In Z2 what is l3 and l4 can change the fake rate a little bit.
       if(Z2FP()){
         float templ3Pt = l3Pt;
@@ -193,10 +193,10 @@ void ZZBackgroundSelector::SetZ1Z2Masses() {
       }
     }
     else if(tightZ2Leptons() && !tightZ1Leptons()){  
-      Z1mass = (lepton3+lepton4).M();
-      Z2mass = (lepton1+lepton2).M();
-      Z1pt = (lepton3+lepton4).Pt();
-      Z2pt = (lepton1+lepton2).Pt();
+      Z1Mass = (lepton3+lepton4).M();
+      Z2Mass = (lepton1+lepton2).M();
+      Z1Pt = (lepton3+lepton4).Pt();
+      Z2Pt = (lepton1+lepton2).Pt();
       //Fakes are l1,l2 from skims, reverse them
       float templ1Pt = l1Pt;
       l1Pt = l3Pt;
@@ -237,10 +237,10 @@ void ZZBackgroundSelector::SetZ1Z2Masses() {
     else if(Z1FP() && Z2PF()){
       //Make sure I am not making a Z in eemm with an e and mu!
       if ((channel_ == eeee) || (channel_ == mmmm)){
-        Z1mass = (lepton2+lepton3).M();
-        Z2mass = (lepton1+lepton4).M();
-        Z1pt = (lepton2+lepton3).Pt();
-        Z2pt = (lepton1+lepton4).Pt();
+        Z1Mass = (lepton2+lepton3).M();
+        Z2Mass = (lepton1+lepton4).M();
+        Z1Pt = (lepton2+lepton3).Pt();
+        Z2Pt = (lepton1+lepton4).Pt();
         //Here the two fakes are l1,l4 and we only need to relabel l1 -> l3
         float templ1Pt = l1Pt;
         l1Pt = l3Pt;
@@ -254,10 +254,10 @@ void ZZBackgroundSelector::SetZ1Z2Masses() {
     else if(Z1PF() && Z2FP()){
       //Make sure I am not making a Z in eemm with an e and mu!
       if ((channel_ == eeee) || (channel_ == mmmm)){
-        Z1mass = (lepton1+lepton4).M();
-        Z2mass = (lepton2+lepton3).M();
-        Z1pt = (lepton1+lepton4).Pt();
-        Z2pt = (lepton2+lepton3).Pt();
+        Z1Mass = (lepton1+lepton4).M();
+        Z2Mass = (lepton2+lepton3).M();
+        Z1Pt = (lepton1+lepton4).Pt();
+        Z2Pt = (lepton2+lepton3).Pt();
         //Here the two fakes are l2,l3 and we only need to relabel l2 -> l4 since this only matters in PPFF region so l3,l4 are interchangeable
         float templ2Pt = l2Pt;
         l2Pt = l4Pt;
