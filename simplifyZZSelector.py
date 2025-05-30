@@ -73,7 +73,7 @@ hist1D_Ori =[
       "jetPhi[0]", "jetPhi[1]", "jetPhi[2]", "mjj", "dEtajj", "SIP3D", "jetPt[01]", "jetEta[01]",
       "jetEtaAllj", "absjetEtaAllj", "jetEtaAllj50", "absjetEtaAllj50", "jetEtaAllj_120", "absjetEtaAllj_120", "jetEtaAllj50_120", "absjetEtaAllj50_120",
       "jetEtaAllj_180", "absjetEtaAllj_180", "jetEtaAllj50_180", "absjetEtaAllj50_180",
-      "absjetEtaN1", "jetPtN1", "jetPtN2", "jetPtN3", "absjetEtaN1_100", "jetHEM_AB", "jetHEM_CD", "jetHEM2_AB", "jetHEM2_CD",
+      "absjetEtaN1", "jetPtN1", "jetPtN2", "jetPtN3", "absjetEtaN1_100",
       "PVDZ", "deltaPVDZ_sameZ", "deltaPVDZ_diffZ"]
 
 #hists1DList = baseList
@@ -88,7 +88,7 @@ hists1DList = [
 ]
 #hists1DList = [ "yield", "Mass", "Mass0j", "Mass1j", "Mass2j", "Mass3j", "Mass34j", "Mass4j", "nJets", "MassFull", "Mass0jFull", "Mass1jFull", "Mass2jFull", "Mass3jFull", "Mass34jFull", "Mass4jFull", "jetPt[0]", "jetPt[1]","jetEta[0]", "jetEta[1]", "absjetEta[0]", "absjetEta[1]", "mjj", "dEtajj" ]
 
-jetTest2D_Ori = ["jetPtN1", "jetPtN2", "jetPtN3", "jetHEM_AB", "jetHEM_CD", "jetHEM2_AB", "jetHEM2_CD"]
+jetTest2D_Ori = ["jetPtN1", "jetPtN2", "jetPtN3"]
 jetTest2DList = []
 
 jethists1D_Ori = [

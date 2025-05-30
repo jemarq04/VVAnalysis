@@ -16,7 +16,7 @@ public:
     bool isaTGC_ = false;
     bool doaTGC_ = false;
     bool applyPUSF_ = false;
-    bool applyPUSFNtp_ = true;
+    bool applyPUSFNtp_ = false;
 
     std::vector<float> *scaleWeights = NULL;
 		std::vector<float> *scaleWeightIDs = NULL;
@@ -142,13 +142,7 @@ protected:
     bool ZZSelection();
     bool Z4lSelection();
     bool ZSelection();
-    bool HZZSIPSelection();
-    //bool SmartCut();
-    bool HZZLowMass();
-    bool HZZMediumMass();
-    bool TestMuons();
     void ShiftEfficiencies(Systematic variation);
-
     std::string GetEleRecoSFName(Float_t ele_pt);
 };
 
