@@ -12,8 +12,6 @@ import math
 import logging
 import pdb
 
-USERNAME = "marquez5"
-
 def getComLineArgs():
     parser = UserInput.getDefaultParser()
     parser.add_argument("--scaleFacs", action='store_true',
@@ -88,7 +86,7 @@ def farmoutNtupleSkim(sample_name, path, selection, analysis, version, scaleFacs
     first_selection = selection.split(",")[0].strip()
     #pdb.set_trace()
     submission_dir = ("/nfs_scratch/%s/%s") \
-        % (USERNAME, '{:%Y-%m-%d}_%sAnalysisJobs'.format(datetime.date.today()) %analysis)
+        % (os.getlogin(), '{:%Y-%m-%d}_%sAnalysisJobs'.format(datetime.date.today()) %analysis)
     try:
         os.mkdir(submission_dir)
     except:
