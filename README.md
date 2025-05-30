@@ -1,4 +1,4 @@
-# VVAnalysis - Run 3 Analysis
+# VVAnalysis: Run 3 Analysis
 
 This branch of the repository is used for ZZ selection and histogram filling after skimming the UWVV ntuples in the **Run3Skims** branch. To avoid conflicts with that
 environment, this branch should be used in a brand-new CMSSW environment. In other words, follow the [setup instructions](#setup) even if you have the skimming
