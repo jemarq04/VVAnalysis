@@ -1,0 +1,21 @@
+{
+    "Object" : {
+        "e" : [ 
+            "({object_name}ZZTightID > 0.5)"
+        ],
+        "m" : [
+            "({object_name}ZZTightID > 0.5)",
+            "({object_name}ZZIsoPass > 0.5)"
+        ]
+    },
+    "State" : {
+        "eeee" : [
+        ],
+        "eemm" : [
+        ],
+        "mmmm" : [
+        ]
+    },
+    "Event" : [
+    ]
+}
