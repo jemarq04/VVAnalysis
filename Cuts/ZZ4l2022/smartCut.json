@@ -1,0 +1,18 @@
+{
+    "Object" : {
+        "e" : [ 
+        ],
+        "m" : [
+        ]
+    },
+    "State" : {
+        "eeee" : ["!(abs(ZaMass-91.1876) < abs(e1_e2_Mass-91.1876) && ZbMass < 12)"
+        ],
+        "eemm" : [ 
+        ],
+        "mmmm" : ["!(abs(ZaMass-91.1876) < abs(m1_m2_Mass-91.1876) && ZbMass < 12)"
+        ]
+    },
+    "Event" : [ 
+    ]
+}
