@@ -14,7 +14,7 @@ cmsrel CMSSW_14_0_9
 cd CMSSW_14_0_9/src
 cmsenv
 git clone https://github.com/YourGithubUsername/VVAnalysis -b Run3Analysis Analysis/VVAnalysis
-git clone https://github.com/YourGithubUsername/ZZ4lDatasetManager -b for_merging_Run3 Dataset_manager/ZZ4lDatasetManager
+git clone https://github.com/YourGithubUsername/ZZ4lDatasetManager -b for_merging_Run3 Data_manager/ZZ4lDatasetManager
 scram build -j 12
 ```
 
@@ -25,7 +25,7 @@ data manager path (after setting it up in the next step). Note that this usernam
 
 **In the following instructions, we use year 2022 as an example.**
 
-In `Dataset_manager/ZZ4lDatasetManager/FileInfo/ZZ4l2022`, edit `LooseLeptons.json` to specify your desired plot groups and their corresponding skimmed ntuples.
+In `Data_manager/ZZ4lDatasetManager/FileInfo/ZZ4l2022`, edit `LooseLeptons.json` to specify your desired plot groups and their corresponding skimmed ntuples.
 For example,
 
  ```json
@@ -68,7 +68,7 @@ the desired plots in the `hists1D` variable and running `python3 simplifyZZSelec
 will be created. You can rename those to `src/ZZSelector.cc` and `src/ZZGenSelector.cc`, respectively. Alternatively, you can change `overwrite` to `True` in the script
 and it will create the new files with the final destinations instead.
 
-To add new plots, you first need to create a corresponding entry in the dataset manager under `Dataset_manager/ZZ4lDatasetManager/PlotObjects/`. Any changes to the
+To add new plots, you first need to create a corresponding entry in the dataset manager under `Data_manager/ZZ4lDatasetManager/PlotObjects/`. Any changes to the
 `LooseLeptons.json` file must be directly copied to `ZZSelectionTightLeps.json` - these two files should be exact copies. Then, using the name you used to identify
 the section in the JSON file, add that name to the `hists1D` variable list in [`simplifyZZSelector.py`](simplifyZZSelector.py). Finally, you need to write the appropriate
 lines to [`ZZSelector.cc`](src/ZZSelector.cc) (and [`ZZSelector.template`](src/ZZSelector.template) to be used with the simplify script). For example, if you were adding
