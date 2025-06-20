@@ -151,7 +151,7 @@ class SelectorBase : public TSelector {
     bool addSumweights_;
     bool applyScaleFactors_;
     bool applyPrefiringCorr_;
-    bool writeNtp_ = true; //Whether to write selected events into ntuple
+    bool writeNtp_ = false; //Whether to write selected events into ntuple
     std::string ftntpName_; //Tree name containing dataset, channel 
 
     // Readers to access the data (delete the ones you do not need).
