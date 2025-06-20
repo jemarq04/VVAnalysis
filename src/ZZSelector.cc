@@ -15,7 +15,7 @@ void ZZSelector::Init(TTree *tree)
     {pileupUp, "CMS_pileupUp"},
     {pileupDown, "CMS_pileupDown"},
   };
-  doSystematics_ = false;
+  doSystematics_ = true;
 
   // This would be set true inside ZZBackground Selector
   // isNonPrompt_ = false;
