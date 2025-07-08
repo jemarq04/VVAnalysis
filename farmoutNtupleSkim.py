@@ -26,6 +26,8 @@ def getComLineArgs():
                         help="Extra arguments to pass to skimNtuples script")
     parser.add_argument("--noSubmit", action='store_true',
                         help="Create submit scripts but don't call farmout")
+    parser.add_argument("--jobName", type=str,
+                        help="Optional name of job (defaults to auto-generation)")
     return vars(parser.parse_args())
 
 def getFilesPerJob(path_to_files):
@@ -73,7 +75,7 @@ def callFarmout(output_dir, script_name, noSubmit):
         print("Error in submitting files to condor. Check the log file: %s" % log_file_name)
     if noSubmit: status = -1
     return status
-def farmoutNtupleSkim(sample_name, path, selection, analysis, version, scaleFacs, deduplicateAcrossChannels, noSubmit, extraArgs):
+def farmoutNtupleSkim(sample_name, path, selection, analysis, version, scaleFacs, deduplicateAcrossChannels, noSubmit, extraArgs, job_name=None):
     farmout_dict = {}
     farmout_dict['input_files_path'] = ConfigureJobs.getInputFilesPath(
         sample_name, 
@@ -81,7 +83,7 @@ def farmoutNtupleSkim(sample_name, path, selection, analysis, version, scaleFacs
         ConfigureJobs.getPreviousStep(selection, analysis), 
         analysis
     )
-    job_name = ConfigureJobs.getJobName(sample_name, analysis, selection, version) 
+    job_name = job_name if job_name is not None else ConfigureJobs.getJobName(sample_name, analysis, selection, version) 
     farmout_dict['base_dir'] = os.path.dirname(os.path.realpath(sys.argv[0]))
     first_selection = selection.split(",")[0].strip()
     #pdb.set_trace()
@@ -154,7 +156,7 @@ def main():
         try:
             farmoutNtupleSkim(file_name, path, args['selection'], 
                 args['analysis'], args['version'], args['scaleFacs'], args['deduplicateAcrossChannels'], 
-                args['noSubmit'], args['extraArgs'])
+                args['noSubmit'], args['extraArgs'], args['jobName'])
         except (ValueError, OSError) as error:
             logging.warning(error)
             logging.warning("Skipping submission for %s" % file_name)
