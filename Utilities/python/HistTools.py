@@ -268,7 +268,7 @@ def addOverflowAndUnderflow(hist, underflow=True, overflow=True):
         add_underflow = hist.GetBinContent(0) + hist.GetBinContent(1)
         hist.SetBinContent(1, add_underflow)
 
-def makeCompositeHists(hist_file, name, members, lumi, hists=[], hist_filter=0, underflow=False, overflow=True, rebin=None):
+def makeCompositeHists(hist_file, name, members, lumi, hists=None, hist_filter=None, underflow=False, overflow=True, rebin=None):
     composite = ROOT.TList()
     composite.SetName(name)
     for directory in [str(i) for i in list(members.keys())]:
@@ -278,9 +278,9 @@ def makeCompositeHists(hist_file, name, members, lumi, hists=[], hist_filter=0, 
         if not hist_file.Get(directory):
             logging.warning("Skipping invalid filename %s" % directory)
             continue
-        if hists == []:
+        if hists is None:
             hists = [i.GetName() for i in hist_file.Get(directory).GetListOfKeys()]
-        if hist_filter:
+        if hist_filter is not None:
             hists = list(filter(hist_filter, hists))
         sumweights = 0
         if "data" not in directory.lower() and "nonprompt" not in directory.lower():
@@ -290,7 +290,8 @@ def makeCompositeHists(hist_file, name, members, lumi, hists=[], hist_filter=0, 
             sumweights = sumweights_hist.Integral(1, sumweights_hist.GetNbinsX()+2)
             sumweights_hist.Delete()
         for histname in hists:
-            if histname == "sumweights": continue
+            if histname == "sumweights":
+                continue
             tmphist = hist_file.Get("/".join([directory, histname]))
             if not tmphist: 
                 raise RuntimeError("Failed to produce histogram %s" % "/".join([directory, histname]))
