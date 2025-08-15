@@ -1,0 +1,12 @@
+if [[ $# -lt 1 ]]; then
+  echo usage: $0 YEAR [EXTRA]
+  echo
+  echo "YEAR: any year in Run 3 for analysis"
+  echo "[EXTRA]: optional argument(s) passed directly to script"
+  exit 1
+fi
+
+year=$1
+shift 1
+
+./farmoutNtupleSkim.py -a ZplusL$year -s ZplusLBase,Zselection,LepPt,LepOverlap,4lVeto -f ZplusL$year $@
