@@ -84,7 +84,7 @@ def getListOfFiles(filelist, manager_path):
         print("name in filelist: ",name)
         zz4l="ZZ4l"
         Zl="ZplusL"
-        isTight = "Tight" in name
+        isTight = Zl not in name and "Tight" in name
         name = name.replace("Tight","")
         if (zz4l in name) or (Zl in name):
             dataset_file = "%s/ZZ4lDatasetManager/FileInfo/%s/%s.json" % (manager_path, name, "LooseNtuples" if isTight else "ntuples")
