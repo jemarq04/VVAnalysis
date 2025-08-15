@@ -194,6 +194,7 @@ class CombineCardGenerator():
         for chan in ["all"] + self.channels:
             with open("%s/%s_%s.txt" % (outdir, self.analysis, chan), "w") as outfile:
                 # Card header
+                outfile.write(f'# With input file {self.hist_infile.GetName()}\n')
                 outfile.write(f'imax 1  number of channels\n')
                 outfile.write(f'jmax {len(self.sig_procs)+len(self.bkg_procs)-1:<2d} number of backgrounds plus signals minus 1\n')
                 outfile.write(f'kmax *  number of nuisance parameters (sources of systematical uncertainties)\n')
