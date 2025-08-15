@@ -17,8 +17,8 @@ bkg_procs = ["ggZZ", "VVV"]
 all_procs = sig_procs + bkg_procs
 channels = ["eeee", "eemm", "mmee", "mmmm"]
 lumiMap = {
-        "2022": 34.652,
-        "2023": 1,
+        "2022": (34.652, 1.014),
+        "2023": (27.76, 1.013),
         "2024": 1,
         "2025": 1,
 }
@@ -34,15 +34,16 @@ lumiMap = {
 #  - whether or not to use combine's 'auto stats'
 generator = CombineCardGenerator.CombineCardGenerator(
     analysis, fit_variable, fileMap[year], sig_procs, bkg_procs,
-    channels=channels, lumi=lumiMap[year], auto_stats=False
+    channels=channels, lumi=lumiMap[year][0], auto_stats=False
 )
 
 systematics_lnN = {
     "bkgStat": {"nonprompt": 1.4},
     "trigger": {proc: "1.020" for proc in all_procs},
+    "CMS_lumi": {proc: str(lumiMap[year][1]) for proc in all_procs},
 }
 systematics_shape = {
-    "CMS_pileup":       {proc: "1" for proc in all_procs},
+    "CMS_pileup": {proc: "1" for proc in all_procs},
 }
 
 # Add systematics by supplying 
