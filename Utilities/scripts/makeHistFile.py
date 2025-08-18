@@ -142,7 +142,7 @@ def makeHistFile(args):
     selector.setOutputfile(fOut.GetName())
     selector.setInputs(sf_inputs+hist_inputs)
 
-    selector.setNtupeType("UWVV" if args['uwvv'] else "NanoAOD")
+    selector.setNtupleType("UWVV" if args['uwvv'] else "NanoAOD")
     if args['uwvv']:
         logging.debug("Processing channels " % args['channels'])
         selector.setChannels(args['channels'])

@@ -93,7 +93,7 @@ class SelectorDriver(object):
         self.addTNamed("selection", self.selection)
         self.addTNamed("year", self.year)
         
-    def setNtupeType(self, ntupleType):
+    def setNtupleType(self, ntupleType):
         self.ntupleType = ntupleType
         self.addTNamed("ntupleType", self.ntupleType)
 

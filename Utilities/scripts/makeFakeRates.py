@@ -21,15 +21,13 @@ def getComLineArgs():
     parser.add_argument("--noHistConfig", action='store_true',
         help="Don't rely on config file to specify hist info")
     parser.add_argument("--input_tier", type=str,
-        default="", help="Selection stage of input files")
+        help="Selection stage of input files")
     parser.add_argument("--year", type=str,
         default="default", help="Year of Analysis")
     parser.add_argument("-j", "--numCores", type=int, default=1,
         help="Number of cores to use (parallelize by dataset)")
-    parser.add_argument("--scalefactors_file", "-sf", type=str,
-        default="", help="ScaleFactors file name")
     parser.add_argument("--output_file", "-o", type=str,
-        default="", help="Output file name")
+        help="Output file name")
     parser.add_argument("-c", "--channels", 
                         type=lambda x : [i.strip() for i in x.split(',')],
                         default=["eee","eem","emm","mmm"], help="List of channels"
@@ -120,71 +118,66 @@ def getRatios(hists):
         ratios.append(ratio)
     return ratios
 
-args = getComLineArgs()
+def main():
+    args = getComLineArgs()
 
-today = datetime.date.today().strftime("%d%b%Y")
-#fileName = "data/fakeRate%s-%s.root" % (today,args['analysis']) if args['output_file'] == "" \
-#        else args['output_file']
-#TODO: Update for Run 3
-fileName="data/fakeRate15Sep2019-ZZ4l2016.root"
-if not args['test']:
-    fOut = ROOT.TFile(fileName, "recreate")
-    
-    
-    addScaleFacs = False
-    if args['scalefactors_file']:
-        addScaleFacs = True
-    sf_inputs = [ROOT.TParameter(bool)("applyScaleFacs", False)]
-    
-    if args['input_tier'] == '':
-        args['input_tier'] = args['selection']
-    selection = args['selection'].split("_")[0]
-    
-    if selection == "Inclusive2Jet":
-        selection = "Wselection"
-        print("Info: Using Wselection for hist defintions")
-    analysis = "/".join([args['analysis'], selection])
-    hists, hist_inputs = UserInput.getHistInfo(analysis, args['hist_names'], args['noHistConfig'])
-    print("hists: ",hists)
-    print("hist_inputs: ", hist_inputs)
-    selector = SelectorTools.SelectorDriver(args['analysis'], args['selection'], args['input_tier'], args['year'])
-    selector.setOutputfile(fOut.GetName())
-    selector.setInputs(sf_inputs+hist_inputs)
-    selector.isFake()
-    
-    selector.setNtupeType("UWVV" if args['uwvv'] else "NanoAOD")
-    if args['uwvv']:
-        logging.debug("Processing channels " % args['channels'])
-        selector.setChannels(args['channels'])
-    
-    selector.setNumCores(args['numCores'])
-    
-    if args['filenames']:
-        selector.setDatasets(args['filenames'])
+    today = datetime.date.today().strftime("%d%b%Y")
+    fileName = "data/fakeRate%s-%s.root" % (today, args["analysis"]) \
+            if args["output_file"] is not None else args["output_file"]
+
+    if not args['test']:
+        sf_inputs = [ROOT.TParameter(bool)("applyScaleFacs", False)]
+        
+        if args['input_tier'] is None:
+            args['input_tier'] = args['selection']
+        selection = args['selection'].split("_")[0]
+        
+        if selection == "Inclusive2Jet":
+            selection = "Wselection"
+            print("INFO: Using Wselection for hist defintions")
+        analysis = "/".join([args['analysis'], selection])
+        hists, hist_inputs = UserInput.getHistInfo(analysis, args['hist_names'], args['noHistConfig'])
+        print("hists:", hists)
+        print("hist_inputs:", hist_inputs)
+        selector = SelectorTools.SelectorDriver(args['analysis'], args['selection'], args['input_tier'], args['year'])
+        selector.setOutputfile(fileName)
+        selector.setInputs(sf_inputs+hist_inputs)
+        selector.isFake()
+        
+        if args['uwvv']:
+            selector.setNtupleType("UWVV")
+            logging.debug("Processing channels " % args['channels'])
+            selector.setChannels(args['channels'])
+        else:
+            selector.setNtupleType("NanoAOD")
+        
+        selector.setNumCores(args['numCores'])
+        
+        if args['filenames']:
+            selector.setDatasets(args['filenames'])
+        else:
+            selector.setFileList(*args['inputs_from_file'])
+        mc = selector.applySelector()
     else:
-        selector.setFileList(*args['inputs_from_file'])
-    mc = selector.applySelector()
-    
-    #if args['test']:
-    #    sys.exit(0)
-    
-    #fOut.Close()
-if args['test']:
-    fOut = ROOT.TFile.Open(fileName, "update")
-    alldata = makeCompositeHists(fOut,"AllData", ConfigureJobs.getListOfFilesWithXSec([args['analysis']+"data"]))
-    OutputTools.writeOutputListItem(alldata, fOut)
-    alldata.Delete()
-    allewk = makeCompositeHists(fOut,"AllEWK", ConfigureJobs.getListOfFilesWithXSec(
-        ConfigureJobs.getListOfEWKFilenames()), True)
-    OutputTools.writeOutputListItem(allewk, fOut)
-    allewk.Delete()
-    allDYJets = makeCompositeHists(fOut,"DYMC", ConfigureJobs.getListOfFilesWithXSec(
-        ConfigureJobs.getListOfDYFilenames()),True)
-    OutputTools.writeOutputListItem(allDYJets, fOut)
-    allDYJets.Delete()
-    #allnonprompt = makeCompositeHists("NonpromptMC", ConfigureJobs.getListOfFilesWithXSec(
-    #    ConfigureJobs.getListOfNonpromptFilenames()))
-    #OutputTools.writeOutputListItem(allnonprompt, fOut)
-    final = HistTools.getDifference(fOut, "DataEWKCorrected", "AllData", "AllEWK", getRatios)
-    OutputTools.writeOutputListItem(final, fOut)
-    final.Delete()
+        fOut = ROOT.TFile.Open(fileName, "update")
+        alldata = makeCompositeHists(fOut,"AllData", ConfigureJobs.getListOfFilesWithXSec([args['analysis']+"data"]))
+        OutputTools.writeOutputListItem(alldata, fOut)
+        alldata.Delete()
+        allewk = makeCompositeHists(fOut,"AllEWK", ConfigureJobs.getListOfFilesWithXSec(
+            ConfigureJobs.getListOfEWKFilenames()), True)
+        OutputTools.writeOutputListItem(allewk, fOut)
+        allewk.Delete()
+        allDYJets = makeCompositeHists(fOut,"DYMC", ConfigureJobs.getListOfFilesWithXSec(
+            ConfigureJobs.getListOfDYFilenames()),True)
+        OutputTools.writeOutputListItem(allDYJets, fOut)
+        allDYJets.Delete()
+        #allnonprompt = makeCompositeHists("NonpromptMC", ConfigureJobs.getListOfFilesWithXSec(
+        #    ConfigureJobs.getListOfNonpromptFilenames()))
+        #OutputTools.writeOutputListItem(allnonprompt, fOut)
+        final = HistTools.getDifference(fOut, "DataEWKCorrected", "AllData", "AllEWK", getRatios)
+        OutputTools.writeOutputListItem(final, fOut)
+        final.Delete()
+        fOut.Close()
+
+if __name__ == "__main__":
+    main()
