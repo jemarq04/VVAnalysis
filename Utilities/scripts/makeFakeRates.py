@@ -130,53 +130,61 @@ def main():
         
         if args['input_tier'] is None:
             args['input_tier'] = args['selection']
+
         selection = args['selection'].split("_")[0]
-        
         if selection == "Inclusive2Jet":
             selection = "Wselection"
             print("INFO: Using Wselection for hist defintions")
+
         analysis = "/".join([args['analysis'], selection])
         hists, hist_inputs = UserInput.getHistInfo(analysis, args['hist_names'], args['noHistConfig'])
         print("hists:", hists)
         print("hist_inputs:", hist_inputs)
+
         selector = SelectorTools.SelectorDriver(args['analysis'], args['selection'], args['input_tier'], args['year'])
         selector.setOutputfile(fileName)
         selector.setInputs(sf_inputs+hist_inputs)
         selector.isFake()
+        selector.setNumCores(args['numCores'])
         
         if args['uwvv']:
             selector.setNtupleType("UWVV")
-            logging.debug("Processing channels " % args['channels'])
+            logging.debug("Processing channels %s" % args['channels'])
             selector.setChannels(args['channels'])
         else:
             selector.setNtupleType("NanoAOD")
-        
-        selector.setNumCores(args['numCores'])
         
         if args['filenames']:
             selector.setDatasets(args['filenames'])
         else:
             selector.setFileList(*args['inputs_from_file'])
+
         mc = selector.applySelector()
     else:
         fOut = ROOT.TFile.Open(fileName, "update")
+
         alldata = makeCompositeHists(fOut,"AllData", ConfigureJobs.getListOfFilesWithXSec([args['analysis']+"data"]))
         OutputTools.writeOutputListItem(alldata, fOut)
         alldata.Delete()
+
         allewk = makeCompositeHists(fOut,"AllEWK", ConfigureJobs.getListOfFilesWithXSec(
             ConfigureJobs.getListOfEWKFilenames()), True)
         OutputTools.writeOutputListItem(allewk, fOut)
         allewk.Delete()
+
         allDYJets = makeCompositeHists(fOut,"DYMC", ConfigureJobs.getListOfFilesWithXSec(
             ConfigureJobs.getListOfDYFilenames()),True)
         OutputTools.writeOutputListItem(allDYJets, fOut)
         allDYJets.Delete()
+
         #allnonprompt = makeCompositeHists("NonpromptMC", ConfigureJobs.getListOfFilesWithXSec(
         #    ConfigureJobs.getListOfNonpromptFilenames()))
         #OutputTools.writeOutputListItem(allnonprompt, fOut)
+
         final = HistTools.getDifference(fOut, "DataEWKCorrected", "AllData", "AllEWK", getRatios)
         OutputTools.writeOutputListItem(final, fOut)
         final.Delete()
+
         fOut.Close()
 
 if __name__ == "__main__":
