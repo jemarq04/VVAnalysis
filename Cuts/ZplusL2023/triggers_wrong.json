@@ -1,8 +1,0 @@
-{ 
-    "MonteCarlo" : "(doubleMuDZPass || doubleEPass)",    
-    "DoubleEG" : "(doubleEPass)",
-    "DoubleMuon" : "((doubleMuDZPass) && !(doubleEPass))",
-    "MuonEG" : "(!(doubleMuDZPass) && !(doubleEPass))", 
-    "SingleElectron" : "(!(doubleMuDZPass) && !(doubleEPass))",
-    "SingleMuon" : "(!(doubleMuDZPass) && !(doubleEPass))"
-}
