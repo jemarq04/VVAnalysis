@@ -39,7 +39,7 @@ def getComLineArgs():
 
 def getHistNames(channels):
     base_hists = [x+y for x in ["passingLooseE", "passingTightE","passingLooseMu", "passingTightMu"] \
-            for y in "1DEta", "1DPt_barrel","1DPt_endcap", "2D"]
+            for y in ["1DEta", "1DPt_barrel","1DPt_endcap", "2D"]]
     if len(channels) == 0:
         return base_hists
     return [x+"_"+y for x in base_hists for y in channels]
@@ -121,7 +121,7 @@ def main():
 
     today = datetime.date.today().strftime("%d%b%Y")
     fileName = "data/fakeRate%s-%s.root" % (today, args["analysis"]) \
-            if args["output_file"] is not None else args["output_file"]
+            if args["output_file"] is None else args["output_file"]
 
     fOut = ROOT.TFile.Open(fileName, "recreate")
     sf_inputs = [ROOT.TParameter(bool)("applyScaleFacs", False)]
