@@ -85,7 +85,8 @@ def makeHistFile(args):
                     eZZTightFakeRate.SetName("fakeRate_allE")
                 fr_inputs = [eZZTightFakeRate, mZZTightFakeRate]
 
-            basename = ROOT.TNamed("basename", "/cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration/POG")
+            #basename = ROOT.TNamed("basename", "/cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration/POG")
+            basename = ROOT.TNamed("basename", "%s/src/Analysis/VVAnalysis/data/POG", os.environ["CMSSW_BASE"])
             yearcfg = ROOT.TNamed("yearcfg", args["year"])
 
             sf_inputs = [basename, yearcfg] 
