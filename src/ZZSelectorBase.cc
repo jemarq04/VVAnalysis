@@ -419,6 +419,9 @@ void ZZSelectorBase::SetBranchesUWVV()
     fChain->SetBranchAddress("e2PdgId", &l2PdgId, &b_l2PdgId);
     fChain->SetBranchAddress("e3PdgId", &l3PdgId, &b_l3PdgId);
     fChain->SetBranchAddress("e3MtToMET", &l3MtToMET, &b_l3MtToMET);
+    fChain->SetBranchAddress("e1PVDZ", &l1PVDZ, &b_l1PVDZ);
+    fChain->SetBranchAddress("e2PVDZ", &l2PVDZ, &b_l2PVDZ);
+    fChain->SetBranchAddress("e3PVDZ", &l3PVDZ, &b_l3PVDZ);
   }
   else if (channel_ == eem)
   {
@@ -459,6 +462,9 @@ void ZZSelectorBase::SetBranchesUWVV()
     fChain->SetBranchAddress("e2PdgId", &l2PdgId, &b_l2PdgId);
     fChain->SetBranchAddress("mPdgId", &l3PdgId, &b_l3PdgId);
     fChain->SetBranchAddress("mMtToMET", &l3MtToMET, &b_l3MtToMET);
+    fChain->SetBranchAddress("e1PVDZ", &l1PVDZ, &b_l1PVDZ);
+    fChain->SetBranchAddress("e2PVDZ", &l2PVDZ, &b_l2PVDZ);
+    fChain->SetBranchAddress("mPVDZ", &l3PVDZ, &b_l3PVDZ);
   }
   else if (channel_ == emm)
   {
@@ -498,6 +504,9 @@ void ZZSelectorBase::SetBranchesUWVV()
     fChain->SetBranchAddress("m2PdgId", &l2PdgId, &b_l2PdgId);
     fChain->SetBranchAddress("ePdgId", &l3PdgId, &b_l3PdgId);
     fChain->SetBranchAddress("eMtToMET", &l3MtToMET, &b_l3MtToMET);
+    fChain->SetBranchAddress("m1PVDZ", &l1PVDZ, &b_l1PVDZ);
+    fChain->SetBranchAddress("m2PVDZ", &l2PVDZ, &b_l2PVDZ);
+    fChain->SetBranchAddress("ePVDZ", &l3PVDZ, &b_l3PVDZ);
   }
   else if (channel_ == mmm)
   {
@@ -537,6 +546,9 @@ void ZZSelectorBase::SetBranchesUWVV()
     fChain->SetBranchAddress("m2PdgId", &l2PdgId, &b_l2PdgId);
     fChain->SetBranchAddress("m3PdgId", &l3PdgId, &b_l3PdgId);
     fChain->SetBranchAddress("m3MtToMET", &l3MtToMET, &b_l3MtToMET);
+    fChain->SetBranchAddress("m1PVDZ", &l1PVDZ, &b_l1PVDZ);
+    fChain->SetBranchAddress("m2PVDZ", &l2PVDZ, &b_l2PVDZ);
+    fChain->SetBranchAddress("m3PVDZ", &l3PVDZ, &b_l3PVDZ);
   }
   else
     throw std::invalid_argument("Invalid channel choice in ZZSelectorBase!");
