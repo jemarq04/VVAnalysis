@@ -1,13 +1,14 @@
 # VVAnalysis: Run 3 Analysis
 
 This branch of the repository is used for ZZ selection and histogram filling after skimming the UWVV ntuples in the **Run3Skims** branch. To avoid conflicts with that
-environment, this branch should be used in a brand-new CMSSW environment. In other words, follow the [setup instructions](#setup) even if you have the skimming
+environment, this branch should be used in a **brand-new CMSSW environment**. In other words, follow the [setup instructions](#setup) even if you have the skimming
 code working elsewhere.
 
 ## Setup
 
-To set up this code, make a fork of this repository (including branches Run3Skims and Run3Analysis) and the [ZZ4lDatasetManager]() repository (including 
-branches for_skimming_Run3 and for_merging_Run3). Then, run the following code replacing `YourGithubUsername` accordingly.
+To set up this code, make a fork of this repository (including branches Run3Skims and Run3Analysis) and the 
+[ZZ4lDatasetManager](https://github.com/jemarq04/ZZ4lDatasetManager/) repository (including branches `for_skimming_Run3` and `for_merging_Run3`). 
+Then, run the following code replacing `YourGithubUsername` accordingly.
 
 ```bash
 cmsrel CMSSW_14_0_9
