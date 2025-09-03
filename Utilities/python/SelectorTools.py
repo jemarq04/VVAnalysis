@@ -162,13 +162,13 @@ class SelectorDriver(object):
 
                 #Multiple files in 1-thread case also, and do the combination here instead of inside processParallel
                 tempTreeFiles = ["FilledNtuples/TreeFile_"+self.tempfileName(dataset) for dataset in self.datasets]
-                
                 self.combineParallelTreeFiles(tempTreeFiles, chan)
+
         if len(self.channels) > 1 and self.numCores > 1:
             tempfiles = [self.outfile_name.replace(".root", "_%s.root" % c) for c in self.channels]
             self.combineParallelFiles(tempfiles, "Inclusive")
 
-        #Same tree files regardless of single of multi-thread 
+        #Same tree files regardless of single or multi-thread
         tempTreefiles = ["FilledNtuples/TreeFile_"+self.outfile_name.replace(".root", "_%s.root" % c) for c in self.channels]
         self.combineParallelTreeFiles(tempTreefiles, "Inclusive")
 
