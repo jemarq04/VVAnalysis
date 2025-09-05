@@ -120,7 +120,7 @@ def main():
     args = getComLineArgs()
 
     today = datetime.date.today().strftime("%d%b%Y")
-    fileName = "data/fakeRate%s-%s.root" % (today, args["analysis"]) \
+    fileName = "fakeRate%s-%s.root" % (today, args["analysis"]) \
             if args["output_file"] is None else args["output_file"]
 
     fOut = ROOT.TFile.Open(fileName, "recreate")
