@@ -23,8 +23,8 @@ def main():
     # Configuration of analysis
     analysis = f"ZZ4l{args.year}"
     fileMap = {
-        2022: "HistFiles/Hists19Jun2025-ZZ4l2022.root",
-        2023: "",
+        2022: "HistFiles/Hists12Sep2025-ZZ4l2022.root",
+        2023: "HistFiles/Hists14Sep2025-ZZ4l2023.root",
     }
     lumiMap = {
         2022: 34.652,
@@ -35,7 +35,7 @@ def main():
         2023: 1.013,
     }
     sig_procs = ["qqZZ-powheg"]
-    bkg_procs = ["ggZZ", "VVV"]
+    bkg_procs = ["ggZZ", "VVV", "HZZ-signal", "qqZZjj-ewk"]
     all_procs = sig_procs + bkg_procs
 
     if args.infile is None:
