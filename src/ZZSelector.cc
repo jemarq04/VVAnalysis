@@ -1344,7 +1344,7 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
   {
     for (size_t i=0; i<lheWeights.size(); i++)
     {
-      if (80 < Mass && Mass < 110){
+      if (80 < Mass && Mass < 110){ //TODO: counter-intuitive? 'Full' referred to plots before Mass selection above. this is tighter?
         SafeHistFill(weighthistMap1D_, getHistName("LepPt1Full", variation.second), l1PtTmp, i, lheWeights[i] / lheWeights[0] * weight);
         SafeHistFill(weighthistMap1D_, getHistName("LepPt2Full", variation.second), l2PtTmp, i, lheWeights[i] / lheWeights[0] * weight);
         SafeHistFill(weighthistMap1D_, getHistName("LepPt3Full", variation.second), l3PtTmp, i, lheWeights[i] / lheWeights[0] * weight);
@@ -1359,7 +1359,7 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
 
       SafeHistFill(weighthistMap1D_, getHistName("yield", variation.second), 1, i, lheWeights[i] / lheWeights[0] * weight);
       SafeHistFill(weighthistMap1D_, getHistName("Mass", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("MassFull", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight);
+      SafeHistFill(weighthistMap1D_, getHistName("MassFull", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight); //TODO: Full?
       SafeHistFill(weighthistMap1D_, getHistName("ZZPt", variation.second), Pt, i, lheWeights[i] / lheWeights[0] * weight);
       SafeHistFill(weighthistMap1D_, getHistName("ZZEta", variation.second), Eta, i, lheWeights[i] / lheWeights[0] * weight);
       SafeHistFill(weighthistMap1D_, getHistName("ZPt", variation.second), Z1Pt, i, lheWeights[i] / lheWeights[0] * weight);
