@@ -35,6 +35,8 @@ def getComLineArgs():
                         default=["all"], help="List of histograms, "
                         "as defined in %s, separated "
                         "by commas" % ConfigureJobs.getManagerName())
+    parser.add_argument("--steps", type=str, choices=["merge", "ewk", "all"],
+                        default="all", help="step for fake rate calculation")
     return vars(parser.parse_args())
 
 def getHistNames(channels):
@@ -123,73 +125,75 @@ def main():
     fileName = "fakeRate%s-%s.root" % (today, args["analysis"]) \
             if args["output_file"] is None else args["output_file"]
 
-    fOut = ROOT.TFile.Open(fileName, "recreate")
-    sf_inputs = [ROOT.TParameter(bool)("applyScaleFacs", False)]
+    if args["steps"] in ["merge", "all"]:
+        fOut = ROOT.TFile.Open(fileName, "recreate")
+        sf_inputs = [ROOT.TParameter(bool)("applyScaleFacs", False)]
 
-    if args['input_tier'] is None:
-        args['input_tier'] = args['selection']
+        if args['input_tier'] is None:
+            args['input_tier'] = args['selection']
 
-    selection = args['selection'].split("_")[0]
-    if selection == "Inclusive2Jet":
-        selection = "Wselection"
-        print("INFO: Using Wselection for hist defintions")
+        selection = args['selection'].split("_")[0]
+        if selection == "Inclusive2Jet":
+            selection = "Wselection"
+            print("INFO: Using Wselection for hist defintions")
 
-    analysis = "/".join([args['analysis'], selection])
-    hists, hist_inputs = UserInput.getHistInfo(analysis, args['hist_names'], args['noHistConfig'])
-    print("hists:", hists)
-    print("hist_inputs:", hist_inputs)
+        analysis = "/".join([args['analysis'], selection])
+        hists, hist_inputs = UserInput.getHistInfo(analysis, args['hist_names'], args['noHistConfig'])
+        print("hists:", hists)
+        print("hist_inputs:", hist_inputs)
 
-    selector = SelectorTools.SelectorDriver(args['analysis'], args['selection'], args['input_tier'], args['year'])
-    selector.setOutputfile(fileName)
-    selector.setInputs(sf_inputs+hist_inputs)
-    selector.isFake()
-    selector.setNumCores(args['numCores'])
+        selector = SelectorTools.SelectorDriver(args['analysis'], args['selection'], args['input_tier'], args['year'])
+        selector.setOutputfile(fileName)
+        selector.setInputs(sf_inputs+hist_inputs)
+        selector.isFake()
+        selector.setNumCores(args['numCores'])
 
-    if args['uwvv']:
-        selector.setNtupleType("UWVV")
-        logging.debug("Processing channels %s" % args['channels'])
-        selector.setChannels(args['channels'])
-    else:
-        selector.setNtupleType("NanoAOD")
+        if args['uwvv']:
+            selector.setNtupleType("UWVV")
+            logging.debug("Processing channels %s" % args['channels'])
+            selector.setChannels(args['channels'])
+        else:
+            selector.setNtupleType("NanoAOD")
 
-    if args['filenames']:
-        selector.setDatasets(args['filenames'])
-    else:
-        selector.setFileList(*args['inputs_from_file'])
+        if args['filenames']:
+            selector.setDatasets(args['filenames'])
+        else:
+            selector.setFileList(*args['inputs_from_file'])
 
-    mc = selector.applySelector()
-    fOut.Close()
+        mc = selector.applySelector()
+        fOut.Close()
 
-    # EWK Correction
-    print("Applying EWK corrections")
-    fOut = ROOT.TFile.Open(fileName, "update")
+    if args["step"] in ["ewk", "all"]:
+        # EWK Correction
+        print("Applying EWK corrections")
+        fOut = ROOT.TFile.Open(fileName, "update")
 
-    alldata = makeCompositeHists(fOut,"AllData", ConfigureJobs.getListOfFilesWithXSec([args['analysis']+"data"]))
-    OutputTools.writeOutputListItem(alldata, fOut)
-    alldata.Delete()
+        alldata = makeCompositeHists(fOut,"AllData", ConfigureJobs.getListOfFilesWithXSec([args['analysis']+"data"]))
+        OutputTools.writeOutputListItem(alldata, fOut)
+        alldata.Delete()
 
-    allewk = makeCompositeHists(fOut,"AllEWK", ConfigureJobs.getListOfFilesWithXSec(
-        ConfigureJobs.getListOfEWKFilenames("ZplusL%s" % args["year"])), True, lumi=args["lumi"])
-    OutputTools.writeOutputListItem(allewk, fOut)
-    allewk.Delete()
+        allewk = makeCompositeHists(fOut,"AllEWK", ConfigureJobs.getListOfFilesWithXSec(
+            ConfigureJobs.getListOfEWKFilenames("ZplusL%s" % args["year"])), True, lumi=args["lumi"])
+        OutputTools.writeOutputListItem(allewk, fOut)
+        allewk.Delete()
 
-    #allDYJets = makeCompositeHists(fOut,"DYMC", ConfigureJobs.getListOfFilesWithXSec(
-    #    ConfigureJobs.getListOfDYFilenames()),True)
-    #OutputTools.writeOutputListItem(allDYJets, fOut)
-    #allDYJets.Delete()
+        #allDYJets = makeCompositeHists(fOut,"DYMC", ConfigureJobs.getListOfFilesWithXSec(
+        #    ConfigureJobs.getListOfDYFilenames()),True)
+        #OutputTools.writeOutputListItem(allDYJets, fOut)
+        #allDYJets.Delete()
 
-    #allnonprompt = makeCompositeHists("NonpromptMC", ConfigureJobs.getListOfFilesWithXSec(
-    #    ConfigureJobs.getListOfNonpromptFilenames()))
-    #OutputTools.writeOutputListItem(allnonprompt, fOut)
-    #allnonprompt.Delete()
+        #allnonprompt = makeCompositeHists("NonpromptMC", ConfigureJobs.getListOfFilesWithXSec(
+        #    ConfigureJobs.getListOfNonpromptFilenames()))
+        #OutputTools.writeOutputListItem(allnonprompt, fOut)
+        #allnonprompt.Delete()
 
-    final = HistTools.getDifference(fOut, "DataEWKCorrected", "AllData", "AllEWK", getRatios)
-    OutputTools.writeOutputListItem(final, fOut)
-    final.Delete()
+        final = HistTools.getDifference(fOut, "DataEWKCorrected", "AllData", "AllEWK", getRatios)
+        OutputTools.writeOutputListItem(final, fOut)
+        final.Delete()
 
-    fOut.Close()
+        fOut.Close()
 
-    print("Done:", fileName)
+    print("Done:", fileName, "(steps: %s)" % args["steps"])
 
 if __name__ == "__main__":
     main()
