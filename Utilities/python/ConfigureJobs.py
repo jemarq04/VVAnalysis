@@ -122,31 +122,39 @@ def getListOfEWKFilenames(analysis=""):
         elif "ZZ4l2023" in analysis:
             outlist = ["%s_%sBPix" % (name, suffix) for name in outlist for suffix in ["pre", "post"]]
         return outlist
+    elif "ZplusL" in analysis:
+        outlist = [
+            "wz3lnu-powheg",
+            #"wz3lnu-mgmlm-0j",
+            #"wz3lnu-mgmlm-1j",
+            #"wz3lnu-mgmlm-2j",
+            #"wz3lnu-mgmlm-3j",
+            #"wlljj-ewk",
+            "zz4l-powheg",
+            "zzjj4l-ewk",
+            #"zz2l2vjj-ewk",
+            #"tzq",
+            "ttZ",
+            #"ttw",
+            "ZZZ",
+            "WWZ",
+            "WZZ",
+            #"ww",
+            #"zg",
+            "ggZZ4e",
+            "ggZZ4m",
+            "ggZZ4t",
+            "ggZZ2e2mu",
+            "ggZZ2e2tau",
+            "ggZZ2mu2tau",
+        ]
+        if "ZplusL2022" in analysis:
+            outlist = ["%s_%sEE" % (name, suffix) for name in outlist for suffix in ["pre", "post"]]
+        elif "ZplusL2023" in analysis:
+            outlist = ["%s_%sBPix" % (name, suffix) for name in outlist for suffix in ["pre", "post"]]
+        return outlist
 
-    # TODO: This is obviously WZ specific and should be updated
-    return [
-    #    "wz3lnu-powheg",
-    # Use jet binned WZ samples for subtraction by default
-        "wz3lnu-mgmlm-0j",
-        "wz3lnu-mgmlm-1j",
-        "wz3lnu-mgmlm-2j",
-        "wz3lnu-mgmlm-3j",
-        "wlljj-ewk",
-        "zz4l-powheg",
-        "zz4ljj-ewk",
-        "zz2l2vjj-ewk",
-        "tzq",
-        "ttz",
-        "ttw",
-        "zzz",
-        "wwz",
-        "www",
-        "ww",
-        "zg",
-        "ggZZ4e",
-        "ggZZ4m",
-        "ggZZ2e2mu",
-    ]
+    return []
 def getListOfDYFilenames():
     return[
         "DYJetsToLL_M10to50",

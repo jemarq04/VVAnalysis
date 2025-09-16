@@ -45,24 +45,24 @@ def getHistNames(channels):
     return [x+"_"+y for x in base_hists for y in channels]
 
 # Turn off overflow for FR hists (> 50 is pretty much all EWK anyway)
-def makeCompositeHists(hist_file,name, members, addRatios=True, overflow=False):
+def makeCompositeHists(hist_file,name, members, addRatios=True, overflow=False, lumi=None):
     composite = ROOT.TList()
     composite.SetName(name)
     if name=="AllEWK":
         print("EWK members: ",members)
     for directory in [str(i) for i in list(members.keys())]:
         for histname in getHistNames(["eee", "eem", "emm", "mmm"]):
-            print("histname:", histname)
-            print("hist_file:", hist_file)
-            print("directory:",directory)
+            #print("histname:", histname)
+            #print("hist_file:", hist_file)
+            #print("directory:",directory)
             hist = hist_file.Get("/".join([directory, str(histname)]))
-            print("hist:", hist)
+            #print("hist:", hist)
             if hist:
                 sumhist = composite.FindObject(hist.GetName())
                 if "data" not in directory and hist.GetEntries() > 0:
                     sumweights_hist = hist_file.Get("/".join([directory, "sumweights"]))
                     sumweights = sumweights_hist.Integral()
-                    hist.Scale(members[directory]*1000*args['lumi']/sumweights)
+                    hist.Scale(members[directory]*1000*lumi/sumweights)
                 if overflow and isinstance(hist, ROOT.TH1):
                     xbins = hist.GetNbinsX()
                     ybins = hist.GetNbinsY()
@@ -161,6 +161,7 @@ def main():
     fOut.Close()
 
     # EWK Correction
+    print("Applying EWK corrections")
     fOut = ROOT.TFile.Open(fileName, "update")
 
     alldata = makeCompositeHists(fOut,"AllData", ConfigureJobs.getListOfFilesWithXSec([args['analysis']+"data"]))
@@ -168,24 +169,27 @@ def main():
     alldata.Delete()
 
     allewk = makeCompositeHists(fOut,"AllEWK", ConfigureJobs.getListOfFilesWithXSec(
-        ConfigureJobs.getListOfEWKFilenames()), True)
+        ConfigureJobs.getListOfEWKFilenames("ZplusL%s" % args["year"])), True, lumi=args["lumi"])
     OutputTools.writeOutputListItem(allewk, fOut)
     allewk.Delete()
 
-    allDYJets = makeCompositeHists(fOut,"DYMC", ConfigureJobs.getListOfFilesWithXSec(
-        ConfigureJobs.getListOfDYFilenames()),True)
-    OutputTools.writeOutputListItem(allDYJets, fOut)
-    allDYJets.Delete()
+    #allDYJets = makeCompositeHists(fOut,"DYMC", ConfigureJobs.getListOfFilesWithXSec(
+    #    ConfigureJobs.getListOfDYFilenames()),True)
+    #OutputTools.writeOutputListItem(allDYJets, fOut)
+    #allDYJets.Delete()
 
     #allnonprompt = makeCompositeHists("NonpromptMC", ConfigureJobs.getListOfFilesWithXSec(
     #    ConfigureJobs.getListOfNonpromptFilenames()))
     #OutputTools.writeOutputListItem(allnonprompt, fOut)
+    #allnonprompt.Delete()
 
     final = HistTools.getDifference(fOut, "DataEWKCorrected", "AllData", "AllEWK", getRatios)
     OutputTools.writeOutputListItem(final, fOut)
     final.Delete()
 
     fOut.Close()
+
+    print("Done:", fileName)
 
 if __name__ == "__main__":
     main()
