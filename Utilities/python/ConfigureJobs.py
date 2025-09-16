@@ -151,6 +151,7 @@ def getListOfEWKFilenames(analysis=""):
         if "ZplusL2022" in analysis:
             outlist = ["%s_%sEE" % (name, suffix) for name in outlist for suffix in ["pre", "post"]]
         elif "ZplusL2023" in analysis:
+            outlist.remove("ttZ") #NOTE: not available for 2023 yet
             outlist = ["%s_%sBPix" % (name, suffix) for name in outlist for suffix in ["pre", "post"]]
         return outlist
 
