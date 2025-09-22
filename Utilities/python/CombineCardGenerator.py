@@ -227,8 +227,8 @@ class CombineCardGenerator():
                 headers.append(["process", ""] + [procname for procname in list(self.sig_procs.keys()) + list(self.bkg_procs.keys())])
                 headers.append(["process", ""] + [str(num-1) for num in range(numcols-2)])
                 headers.append(["rate", ""] + \
-                        [str(proc.yields[chan]) for proc in self.sig_procs.values()] + \
-                        [str(proc.yields[chan]) for proc in self.bkg_procs.values()])
+                        ["%.4f" % proc.yields[chan] for proc in self.sig_procs.values()] + \
+                        ["%.4f" % proc.yields[chan] for proc in self.bkg_procs.values()])
         
                 table = []
                 for syst in self.systematics[chan]:
