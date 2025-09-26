@@ -101,7 +101,7 @@ class CombineCardGenerator():
 
         for procname in list(self.sig_procs.keys()) + list(self.bkg_procs.keys()):
             if procname not in values:
-                values[procname] = "-"
+                values[procname] = "-" if not shape else "0"
 
         syst = Systematic(name, shape)
         syst.AddProcesses(values)

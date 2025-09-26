@@ -1,5 +1,5 @@
+#!/usr/bin/env python3
 import os
-from python import CombineCardGenerator
 import argparse
 
 def main():
@@ -19,6 +19,8 @@ def main():
     parser.add_argument("year", choices=[2022,2023], type=int,
         help="year for analysis (e.g. 2022 for ZZ4l2022")
     args = parser.parse_args()
+
+    from python import CombineCardGenerator
 
     # Configuration of analysis
     analysis = f"ZZ4l{args.year}"
