@@ -1,0 +1,23 @@
+{
+    "Object" : {
+        "e" : [
+          "({object_name}Pt > 15)"
+        ],
+        "m" : [
+          "({object_name}Pt > 15)"
+        ]
+    },
+    "State" : {
+        "eeee" : [
+          "(e1Pt > 20 || e2Pt > 20 || e3Pt > 20 || e4Pt > 20)"
+        ],
+        "eemm" : [
+          "(e1Pt > 20 || e2Pt > 20 || m1Pt > 20 || m2Pt > 20)"
+        ],
+        "mmmm" : [
+          "(m1Pt > 20 || m2Pt > 20 || m3Pt > 20 || m4Pt > 20)"
+        ]
+    },
+    "Event" : [
+    ]
+}
