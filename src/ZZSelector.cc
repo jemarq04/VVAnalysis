@@ -151,20 +151,21 @@ unsigned int ZZSelector::GetLheWeightInfo()
     //"wz-atgc_pt300"
   };
 
+  if (isaTGC_) return 0;
+
   for (auto suffix : {"_preEE", "_postEE", "_preBPix", "_postBPix", ""}){
-    if ((std::find(noLheWeights.begin(), noLheWeights.end(), name_ + suffix) != noLheWeights.end()) || (isaTGC_))
-      return 0;
-    if (std::find(scaleAndPdfWeights.begin(), scaleAndPdfWeights.end(), name_ + suffix) != scaleAndPdfWeights.end())
-      return 2;
-    if (std::find(allLheWeights.begin(), allLheWeights.end(), name_ + suffix) != allLheWeights.end())
-      return 3;
-    if (std::find(scaleWeightsAndIDs.begin(), scaleWeightsAndIDs.end(), name_ + suffix) != scaleWeightsAndIDs.end())
-      return 4;
+    for (std::string other : noLheWeights)
+      if (name_ == other+suffix) return 0;
+    for (std::string other : scaleAndPdfWeights)
+      if (name_ == other+suffix) return 2;
+    for (std::string other : allLheWeights)
+      if (name_ == other+suffix) return 3;
+    for (std::string other : scaleWeightsAndIDs)
+      if (name_ == other+suffix) return 4;
   }
 
-  if (isUL_L1check){
+  if (isUL_L1check)
     return 0;
-  }
   return 1;
 }
 
