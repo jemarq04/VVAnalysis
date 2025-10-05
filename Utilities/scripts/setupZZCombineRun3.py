@@ -27,14 +27,17 @@ def main():
     fileMap = {
         2022: "HistFiles/Hists-ZZ4l2022.root",
         2023: "HistFiles/Hists-ZZ4l2023.root",
+        2024: "HistFiles/Hists-ZZ4l2024.root",
     }
     lumiMap = {
         2022: 34.652,
         2023: 27.76,
+        2024: 109.33,
     }
     lumiUncMap = {
         2022: 1.014,
         2023: 1.013,
+        2024: 0.0, #TODO, unavailable at the moment
     }
     sig_procs = ["qqZZ-powheg"]
     bkg_procs = ["ggZZ", "VVV", "nonprompt"]
