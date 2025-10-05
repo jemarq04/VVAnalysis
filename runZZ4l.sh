@@ -3,17 +3,19 @@ if [[ $# -ne 1 ]]; then
   echo
   echo "YEAR/ALL: year for analysis or 'all' to run all Run 3"
   exit 1
-elif [[ ! $1 =~ ^202[2-3]$ ]]; then
+elif [[ ! $1 =~ ^202[2-4]$ && ! $1 = Run3Combined ]]; then
   echo invalid year: $1
   exit 1
 fi
 
 year=$1
-[[ $year = all ]] && year="2022 2023"
+[[ $year = all ]] && year="2022 2023 2024"
 
 for yr in $year; do
   if [[ $yr = 2022 ]]; then lumi=34.652;
   elif [[ $yr = 2023 ]]; then lumi=27.76;
+  elif [[ $yr = Run3Combined ]]; then lumi=62.412;
+  elif [[ $yr = 2024 ]]; then lumi=109.33;
   fi
   frfile=data/fakeScaleFactorsRun3-ZZ4l$yr.root
 

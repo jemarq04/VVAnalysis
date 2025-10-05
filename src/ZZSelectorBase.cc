@@ -17,6 +17,9 @@ void ZZSelectorBase::SetScaleFactors()
 {
   std::string yearstring, basename;
 
+  TNamed *name_obj = (TNamed*)GetInputList()->FindObject("name");
+  std::string name = (name_obj != nullptr)? name_obj->GetTitle() : GetNameFromFile();
+  if (name.find("data") != std::string::npos) return;
   try{
     for (std::string objname : {"basename", "yearcfg"})
       if (GetInputList()->FindObject(objname.c_str()) == nullptr)
@@ -24,18 +27,19 @@ void ZZSelectorBase::SetScaleFactors()
     basename = ((TNamed*)GetInputList()->FindObject("basename"))->GetTitle();
     yearcfg = ((TNamed*)GetInputList()->FindObject("yearcfg"))->GetTitle();
 
-    if (yearcfg == "2022"){
+
+    if (yearcfg == "2022" || (yearcfg == "Run3Combined" && name.find("_2022_") != std::string::npos)){
       yearstring = "2022_Summer22";
       yearcfg = "2022Re-recoBCD"; // overwritten to use for ele reco SFs
-      if (name_.find("_postEE") != std::string::npos){
+      if (name.find("_postEE") != std::string::npos){
         yearstring += "EE";
         yearcfg = "2022Re-recoE+PromptFG";
       }
     }
-    else if (yearcfg == "2023"){
+    else if (yearcfg == "2023" || (yearcfg == "Run3Combined" && name.find("_2023_") != std::string::npos)){
       yearstring = "2023_Summer23";
       yearcfg = "2023PromptC";
-      if (name_.find("_postBPix") != std::string::npos){
+      if (name.find("_postBPix") != std::string::npos){
         yearstring += "BPix";
         yearcfg = "2023PromptD";
       }

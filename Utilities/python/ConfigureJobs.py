@@ -121,6 +121,8 @@ def getListOfEWKFilenames(analysis=""):
             outlist = ["%s_%sEE" % (name, suffix) for name in outlist for suffix in ["pre", "post"]]
         elif "ZZ4l2023" in analysis:
             outlist = ["%s_%sBPix" % (name, suffix) for name in outlist for suffix in ["pre", "post"]]
+        elif "ZZ4lRun3Combined" in analysis:
+            outlist = ["%s_%s" % (name, suffix) for name in outlist for suffix in ["2022_preEE", "2022_postEE", "2023_preBPix", "2023_postBPix"]]
         return outlist
     elif "ZplusL" in analysis:
         outlist = [
@@ -153,6 +155,10 @@ def getListOfEWKFilenames(analysis=""):
         elif "ZplusL2023" in analysis:
             outlist.remove("ttZ") #NOTE: not available for 2023 yet
             outlist = ["%s_%sBPix" % (name, suffix) for name in outlist for suffix in ["pre", "post"]]
+        elif "ZplusLRun3Combined" in analysis:
+            outlist = ["%s_%s" % (name, suffix) for name in outlist for suffix in ["2022_preEE", "2022_postEE", "2023_preBPix", "2023_postBPix"]]
+            outlist.remove("ttZ_2023_preBPix")
+            outlist.remove("ttZ_2023_postBPix")
         return outlist
 
     return []
@@ -220,7 +226,7 @@ def getListOfFiles(filelist, selection, manager_path="", analysis=""):
         manager_path = getManagerPath()
     data_path = "%s/%s/FileInfo" % (manager_path, getManagerName())
     data_info = UserInput.readAllInfo("/".join([data_path, "data/*"]))
-    mc_info = UserInput.readAllInfo("/".join([data_path, "montecarlo/*"]))
+    mc_info = UserInput.readAllInfo("/".join([data_path, "montecarlo/montecarlo*"]))
     analysis_info = UserInput.readInfo("/".join([data_path, analysis, selection])) \
         if analysis != "" else []
     valid_names = (list(data_info.keys()) + list(mc_info.keys())) if not analysis_info else list(analysis_info.keys())
@@ -228,8 +234,8 @@ def getListOfFiles(filelist, selection, manager_path="", analysis=""):
     for name in filelist:
         if ".root" in name:
             names.append(name)
-        elif any("ZZ4l%s" % year in name for year in [2022, 2023, 2024]):
-            key = ["ZZ4l%s" % year for year in [2022, 2023, 2024] if "ZZ4l%s" % year in name][0]
+        elif any("ZZ4l%s" % year in name for year in ["2022", "2023", "2024", "Run3Combined"]):
+            key = ["ZZ4l%s" % year for year in ["2022", "2023", "2024", "Run3Combined"] if "ZZ4l%s" % year in name][0]
             dataset_file = manager_path + \
                 "%s/FileInfo/%s/%s.json" % (getManagerName(), key, selection)
             allnames = list(json.load(open(dataset_file)).keys())
@@ -270,7 +276,7 @@ def getListOfFilesWithXSec(filelist, manager_path="", selection="ntuples"):
         manager_path = getManagerPath()
     data_path = "%s/%s/FileInfo" % (manager_path, getManagerName())
     files = getListOfFiles(filelist, selection, manager_path)
-    mc_info = UserInput.readAllInfo("/".join([data_path, "montecarlo/*"]))
+    mc_info = UserInput.readAllInfo("/".join([data_path, "montecarlo/montecarlo*"]))
     info = {}
     for file_name in files:
         if "data" in file_name.lower() or "nonprompt" in file_name.lower():

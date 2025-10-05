@@ -24,6 +24,7 @@ class SelectorDriver(object):
             "ZZ4l2022" : "ZZSelector",
             "ZZ4l2023" : "ZZSelector",
             "ZZ4l2024" : "ZZSelector",
+            "ZZ4lRun3Combined": "ZZSelector",
         }
 
         self.analysis = analysis
