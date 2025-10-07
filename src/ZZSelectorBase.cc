@@ -83,8 +83,9 @@ void ZZSelectorBase::SetScaleFactors()
   try{
     if (yearcfg != "2024Prompt")
       eRecoSF_ = correction::CorrectionSet::from_file(TString::Format("%s/EGM/%s/electron.json.gz", basename.c_str(), yearstring.c_str()).Data());
-    else
-      eRecoSF_ = correction::CorrectionSet::from_file(TString::Format("%s/EGM/%s/electron_v1.json.gz", basename.c_str(), yearstring.c_str()).Data());
+    //TODO: Currently bugged, disabled for now
+    //else
+    //  eRecoSF_ = correction::CorrectionSet::from_file(TString::Format("%s/EGM/%s/electron_v1.json.gz", basename.c_str(), yearstring.c_str()).Data());
   }
   catch (...){
     throw std::invalid_argument("Must pass valid electron Reco SF");
