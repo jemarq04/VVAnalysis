@@ -44,6 +44,10 @@ void ZZSelectorBase::SetScaleFactors()
         yearcfg = "2023PromptD";
       }
     }
+    else if (yearcfg == "2024" || (yearcfg == "Run3Combined" && name.find("_2024") != std::string::npos)){
+      yearstring = "2024_Summer24";
+      yearcfg = "2024Prompt";
+    }
     else
       throw std::invalid_argument("");
   }
@@ -61,7 +65,8 @@ void ZZSelectorBase::SetScaleFactors()
   }
   */
   try{
-    pileupSF_ = correction::CorrectionSet::from_file(TString::Format("%s/LUM/%s/puWeights.json.gz", basename.c_str(), yearstring.c_str()).Data());
+    if (yearcfg != "2024Prompt") //TODO: Add when available
+      pileupSF_ = correction::CorrectionSet::from_file(TString::Format("%s/LUM/%s/puWeights.json.gz", basename.c_str(), yearstring.c_str()).Data());
   }
   catch (...){
     throw std::invalid_argument("Must pass valid pileup weights SF");
@@ -76,7 +81,10 @@ void ZZSelectorBase::SetScaleFactors()
     if (eIdSF_ != nullptr) eIdSF_.reset();
   }
   try{
-    eRecoSF_ = correction::CorrectionSet::from_file(TString::Format("%s/EGM/%s/electron.json.gz", basename.c_str(), yearstring.c_str()).Data());
+    if (yearcfg != "2024Prompt")
+      eRecoSF_ = correction::CorrectionSet::from_file(TString::Format("%s/EGM/%s/electron.json.gz", basename.c_str(), yearstring.c_str()).Data());
+    else
+      eRecoSF_ = correction::CorrectionSet::from_file(TString::Format("%s/EGM/%s/electron_v1.json.gz", basename.c_str(), yearstring.c_str()).Data());
   }
   catch (...){
     throw std::invalid_argument("Must pass valid electron Reco SF");
