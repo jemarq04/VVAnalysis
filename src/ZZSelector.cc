@@ -608,7 +608,7 @@ void ZZSelector::ShiftEfficiencies(Systematic variation)
   std::string shift = (variation == electronEfficiencyDown || variation == electronRecoEffDown || variation == muonEfficiencyDown || variation == pileupDown)?
     "down" : "up";
 
-  if (variation == pileupUp || variation == pileupDown)
+  if (pileupSF_ != nullptr && (variation == pileupUp || variation == pileupDown))
     weight *= (*pileupSF_->begin()).second->evaluate({nTruePU, shift}) / (*pileupSF_->begin()).second->evaluate({nTruePU, "nominal"});
   else if (channel_ == eeee)
   {
