@@ -126,6 +126,7 @@ def main():
             if args["output_file"] is None else args["output_file"]
 
     if args["steps"] in ["merge", "all"]:
+        print("Merging input files")
         fOut = ROOT.TFile.Open(fileName, "recreate")
         sf_inputs = [ROOT.TParameter(bool)("applyScaleFacs", False)]
 
@@ -163,7 +164,7 @@ def main():
         mc = selector.applySelector()
         fOut.Close()
 
-    if args["step"] in ["ewk", "all"]:
+    if args["steps"] in ["ewk", "all"]:
         # EWK Correction
         print("Applying EWK corrections")
         fOut = ROOT.TFile.Open(fileName, "update")
