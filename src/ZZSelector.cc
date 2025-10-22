@@ -153,16 +153,14 @@ unsigned int ZZSelector::GetLheWeightInfo()
 
   if (isaTGC_) return 0;
 
-  for (auto suffix : {"_preEE", "_postEE", "_preBPix", "_postBPix", ""}){
-    for (std::string other : noLheWeights)
-      if (name_ == other+suffix) return 0;
-    for (std::string other : scaleAndPdfWeights)
-      if (name_ == other+suffix) return 2;
-    for (std::string other : allLheWeights)
-      if (name_ == other+suffix) return 3;
-    for (std::string other : scaleWeightsAndIDs)
-      if (name_ == other+suffix) return 4;
-  }
+  for (std::string other : noLheWeights)
+    if (name_.rfind(other, 0) == 0) return 0;
+  for (std::string other : scaleAndPdfWeights)
+    if (name_.rfind(other, 0) == 0) return 2;
+  for (std::string other : allLheWeights)
+    if (name_.rfind(other, 0) == 0) return 3;
+  for (std::string other : scaleWeightsAndIDs)
+    if (name_.rfind(other, 0) == 0) return 4;
 
   if (isUL_L1check)
     return 0;
