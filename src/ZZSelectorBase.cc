@@ -30,23 +30,27 @@ void ZZSelectorBase::SetScaleFactors()
 
     if (yearcfg == "2022" || (yearcfg == "Run3Combined" && name.find("_2022_") != std::string::npos)){
       yearstring = "2022_Summer22";
-      yearcfg = "2022Re-recoBCD"; // overwritten to use for ele reco SFs
+      EleRecoSF_Name_ = "2022Re-recoBCD";
+      yearcfg = "2022BCD"; // overwritten to use for HZZ ID SFs
       if (name.find("_postEE") != std::string::npos){
         yearstring += "EE";
-        yearcfg = "2022Re-recoE+PromptFG";
+        EleRecoSF_Name_ = "2022Re-recoE+PromptFG";
+        yearcfg = "2022EFG";
       }
     }
     else if (yearcfg == "2023" || (yearcfg == "Run3Combined" && name.find("_2023_") != std::string::npos)){
       yearstring = "2023_Summer23";
-      yearcfg = "2023PromptC";
+      EleRecoSF_Name_ = "2023PromptC";
+      yearcfg = "2023C";
       if (name.find("_postBPix") != std::string::npos){
         yearstring += "BPix";
-        yearcfg = "2023PromptD";
+        EleRecoSF_Name_ = "2023PromptD";
+        yearcfg = "2023D";
       }
     }
     else if (yearcfg == "2024" || (yearcfg == "Run3Combined" && name.find("_2024") != std::string::npos)){
       yearstring = "2024_Summer24";
-      yearcfg = "2024Prompt";
+      EleRecoSF_Name_ = "2024Prompt";
     }
     else
       throw std::invalid_argument("");
@@ -65,33 +69,32 @@ void ZZSelectorBase::SetScaleFactors()
   }
   */
   try{
-    if (yearcfg != "2024Prompt") //TODO: Add when available
+    if (yearcfg != "2024") //TODO: Add when available
       pileupSF_ = correction::CorrectionSet::from_file(TString::Format("%s/LUM/%s/puWeights.json.gz", basename.c_str(), yearstring.c_str()).Data());
   }
   catch (...){
     throw std::invalid_argument("Must pass valid pileup weights SF");
   }
   try{
-    if (GetInputList()->FindObject("eIdSF") != nullptr) //Optional argument
+    if (yearcfg != "2024") //TODO: Add when available
       eIdSF_ = correction::CorrectionSet::from_file(((TNamed*)GetInputList()->FindObject("eIdSF"))->GetTitle());
   }
   catch (...){
-    // TODO: Update to Run 3 when available. For now, disable the error.
-    //throw std::invalid_argument("Must pass valid electron Run SF");
-    if (eIdSF_ != nullptr) eIdSF_.reset();
+    throw std::invalid_argument("Must pass valid electron Run SF");
   }
   try{
-    if (yearcfg != "2024Prompt")
+    if (yearcfg != "2024")
       eRecoSF_ = correction::CorrectionSet::from_file(TString::Format("%s/EGM/%s/electron.json.gz", basename.c_str(), yearstring.c_str()).Data());
-    //TODO: Currently bugged, disabled for now
-    //else
+    //else //TODO: Currently bugged, disabled for now
     //  eRecoSF_ = correction::CorrectionSet::from_file(TString::Format("%s/EGM/%s/electron_v1.json.gz", basename.c_str(), yearstring.c_str()).Data());
   }
   catch (...){
     throw std::invalid_argument("Must pass valid electron Reco SF");
   }
   try{
-    mIdSF_ = correction::CorrectionSet::from_file(TString::Format("%s/MUO/%s/muon_Z.json.gz", basename.c_str(), yearstring.c_str()).Data());
+    //mIdSF_ = correction::CorrectionSet::from_file(TString::Format("%s/MUO/%s/muon_Z.json.gz", basename.c_str(), yearstring.c_str()).Data());
+    if (yearcfg != "2024") //TODO: Add when available
+      mIdSF_ = correction::CorrectionSet::from_file(((TNamed*)GetInputList()->FindObject("mIdSF"))->GetTitle());
   }
   catch (...){
     throw std::invalid_argument("Must pass valid muon ID SF");
