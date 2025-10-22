@@ -980,6 +980,8 @@ std::string ZZSelector::GetEleRecoSFName(Float_t ele_pt)
 void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::string> variation)
 {
   //weight = 1; //NOTE: unweighted
+  //if (entry == 0 && variation.first == Central)
+  //  std::cout << fChain->GetTree()->GetDirectory()->GetFile()->GetName() << std::endl;
   
   // require TightZZLeptons for prompt
   if (!PassesZZSelectionLoose(isNonPrompt_)) return;
