@@ -1,2 +1,4 @@
 *
 !.gitignore
+!POG/*
+!check_corrections.sh
