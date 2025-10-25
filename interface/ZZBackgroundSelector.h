@@ -18,6 +18,14 @@ public :
   //4lMass Histogram
   TH1D* MassHistPPPF_;
   TH1D* MassHistPPFF_;
+  //Full Mass
+  TH1D* Z1MassFullHistPPPF_;
+  TH1D* Z1MassFullHistPPFF_;
+  TH1D* Z2MassFullHistPPPF_;
+  TH1D* Z2MassFullHistPPFF_;
+  //4lMass Histogram
+  TH1D* MassFullHistPPPF_;
+  TH1D* MassFullHistPPFF_;
 
   TH1D* WeightsHistmmee_;
   TH1D* WeightsHisteemm_;
