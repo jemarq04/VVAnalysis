@@ -17,7 +17,7 @@ for yr in $year; do
   elif [[ $yr = Run3Combined ]]; then lumi=62.412;
   elif [[ $yr = 2024 ]]; then lumi=109.33;
   fi
-  frfile=data/fakeScaleFactorsRun3-ZZ4l$yr.root
+  frfile=data/fakeScaleFactorsRun3-ZZ4lRun3Combined.root
 
   #NOTE: Eventually the scale factor file listed below will exist with fake rates.
   #   For now, use this in the call so that the appropriate scale factors are retrieved with correctionlib
