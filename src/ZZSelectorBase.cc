@@ -76,8 +76,11 @@ void ZZSelectorBase::SetScaleFactors()
     throw std::invalid_argument("Must pass valid pileup weights SF");
   }
   try{
-    if (yearcfg != "2024") //TODO: Add when available
+    if (yearcfg != "2024"){//TODO: Add when available
+      if (GetInputList()->FindObject("eIdSF") == nullptr)
+        throw std::invalid_argument("");
       eIdSF_ = correction::CorrectionSet::from_file(((TNamed*)GetInputList()->FindObject("eIdSF"))->GetTitle());
+    }
   }
   catch (...){
     throw std::invalid_argument("Must pass valid electron Run SF");
@@ -93,8 +96,11 @@ void ZZSelectorBase::SetScaleFactors()
   }
   try{
     //mIdSF_ = correction::CorrectionSet::from_file(TString::Format("%s/MUO/%s/muon_Z.json.gz", basename.c_str(), yearstring.c_str()).Data());
-    if (yearcfg != "2024") //TODO: Add when available
+    if (yearcfg != "2024"){//TODO: Add when available
+      if (GetInputList()->FindObject("mIdSF") == nullptr)
+        throw std::invalid_argument("");
       mIdSF_ = correction::CorrectionSet::from_file(((TNamed*)GetInputList()->FindObject("mIdSF"))->GetTitle());
+    }
   }
   catch (...){
     throw std::invalid_argument("Must pass valid muon ID SF");
