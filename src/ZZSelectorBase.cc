@@ -51,6 +51,7 @@ void ZZSelectorBase::SetScaleFactors()
     else if (yearcfg == "2024" || (yearcfg == "Run3Combined" && name.find("_2024") != std::string::npos)){
       yearstring = "2024_Summer24";
       EleRecoSF_Name_ = "2024Prompt";
+      yearcfg = "2024";
     }
     else
       throw std::invalid_argument("");
