@@ -159,11 +159,19 @@ def getListOfEWKFilenames(analysis=""):
         return outlist
 
     return []
-def getListOfDYFilenames():
-    return[
-        "DYJetsToLL_M10to50",
-        "DYJetsToLLM-50",
-        ]
+def getListOfDYFilenames(analysis=""):
+    outlist = [
+        "DYm10to50-2j",
+        "DYm50-2j",
+    ]
+    if "2022" in analysis:
+        outlist = ["%s_%sEE" % (name, suffix) for name in outlist for suffix in ["pre", "post"]]
+    elif "2023" in analysis:
+        outlist = ["%s_%sBPix" % (name, suffix) for name in outlist for suffix in ["pre", "post"]]
+    elif "Run3Combined" in analysis:
+        outlist = ["%s_%s" % (name, suffix) for name in outlist for suffix in ["2022_preEE", "2022_postEE", "2023_preBPix", "2023_postBPix"]]
+
+    return outlist
 def getListOfNonpromptFilenames():
     return ["tt-lep",
         "st-schan",

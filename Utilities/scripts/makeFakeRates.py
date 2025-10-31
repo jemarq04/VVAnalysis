@@ -178,10 +178,10 @@ def main():
         OutputTools.writeOutputListItem(allewk, fOut)
         allewk.Delete()
 
-        #allDYJets = makeCompositeHists(fOut,"DYMC", ConfigureJobs.getListOfFilesWithXSec(
-        #    ConfigureJobs.getListOfDYFilenames()),True)
-        #OutputTools.writeOutputListItem(allDYJets, fOut)
-        #allDYJets.Delete()
+        allDYJets = makeCompositeHists(fOut,"DYMC", ConfigureJobs.getListOfFilesWithXSec(
+            ConfigureJobs.getListOfDYFilenames("ZplusL%s" % args["year"])),True, lumi=args["lumi"])
+        OutputTools.writeOutputListItem(allDYJets, fOut)
+        allDYJets.Delete()
 
         #allnonprompt = makeCompositeHists("NonpromptMC", ConfigureJobs.getListOfFilesWithXSec(
         #    ConfigureJobs.getListOfNonpromptFilenames()))
