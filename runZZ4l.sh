@@ -15,6 +15,7 @@ for yr in $year; do
   if [[ $yr = 2022 ]]; then lumi=34.652;
   elif [[ $yr = 2023 ]]; then lumi=27.76;
   elif [[ $yr = Run3Combined ]]; then lumi=62.412;
+  #elif [[ $yr = Run3Combined ]]; then lumi=171.742;
   elif [[ $yr = 2024 ]]; then lumi=109.33;
   fi
   frfile=data/fakeScaleFactorsRun3-ZZ4lRun3Combined.root
