@@ -96,7 +96,6 @@ void ZZSelectorBase::SetScaleFactors()
     throw std::invalid_argument("Must pass valid electron Reco SF");
   }
   try{
-    //mIdSF_ = correction::CorrectionSet::from_file(TString::Format("%s/MUO/%s/muon_Z.json.gz", basename.c_str(), yearstring.c_str()).Data());
     if (yearcfg != "2024"){//TODO: Add when available
       if (GetInputList()->FindObject("mIdSF") == nullptr)
         throw std::invalid_argument("");
