@@ -77,11 +77,9 @@ void ZZSelectorBase::SetScaleFactors()
     throw std::invalid_argument("Must pass valid pileup weights SF");
   }
   try{
-    if (yearcfg != "2024"){//TODO: Add when available
-      if (GetInputList()->FindObject("eIdSF") == nullptr)
-        throw std::invalid_argument("");
-      eIdSF_ = correction::CorrectionSet::from_file(((TNamed*)GetInputList()->FindObject("eIdSF"))->GetTitle());
-    }
+    if (GetInputList()->FindObject("eIdSF") == nullptr)
+      throw std::invalid_argument("");
+    eIdSF_ = correction::CorrectionSet::from_file(((TNamed*)GetInputList()->FindObject("eIdSF"))->GetTitle());
   }
   catch (...){
     throw std::invalid_argument("Must pass valid electron Run SF");
