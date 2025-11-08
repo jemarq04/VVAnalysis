@@ -94,11 +94,9 @@ void ZZSelectorBase::SetScaleFactors()
     throw std::invalid_argument("Must pass valid electron Reco SF");
   }
   try{
-    if (yearcfg != "2024"){//TODO: Add when available
-      if (GetInputList()->FindObject("mIdSF") == nullptr)
-        throw std::invalid_argument("");
-      mIdSF_ = correction::CorrectionSet::from_file(((TNamed*)GetInputList()->FindObject("mIdSF"))->GetTitle());
-    }
+    if (GetInputList()->FindObject("mIdSF") == nullptr)
+      throw std::invalid_argument("");
+    mIdSF_ = correction::CorrectionSet::from_file(((TNamed*)GetInputList()->FindObject("mIdSF"))->GetTitle());
   }
   catch (...){
     throw std::invalid_argument("Must pass valid muon ID SF");
