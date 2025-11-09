@@ -1,0 +1,64 @@
+{
+  "electrons": {
+    "desc": "HZZ electron ID SFs for Run 3 samples. Converted using electron SFs from https://github.com/CJLST/ZZAnalysis/tree/Run3/AnalysisStep/data/LeptonEffScaleFactors",
+    "sfname": "EGamma_SF2D",
+    "uncname": "EGamma_Unc2D",
+    "inputs": {
+      "eta": "Electron eta",
+      "pt": "Electron pT [GeV]"
+    },
+    "corrections": {
+      "2022BCD": {
+        "file": "inputs/2022/SF2022eleID_preEE.root",
+        "desc": "2022BCD (preEE) HZZ electron ID SFs"
+      },
+      "2022EFG": {
+        "file": "inputs/2022/SF2022eleID_postEE.root",
+        "desc": "2022EFG (postEE) HZZ electron ID SFs"
+      },
+      "2023C": {
+        "file": "inputs/2022/SF2022eleID_postEE.root",
+        "desc": "2022EFG (postEE) HZZ electron ID SFs, to be used for 2023 until newer SFs available"
+      },
+      "2023D": {
+        "file": "inputs/2022/SF2022eleID_postEE.root",
+        "desc": "2022EFG (postEE) HZZ electron ID SFs, to be used for 2023 until newer SFs available"
+      },
+      "2024": {
+        "file": "inputs/2024/SF2024eleID.root",
+        "desc": "2024 HZZ electron ID SFs (preliminary)"
+      }
+    }
+  },
+  "muons": {
+    "desc": "HZZ muon ID SFs for Run 3 samples. Converted using muon SFs from https://github.com/CJLST/ZZAnalysis/tree/Run3/AnalysisStep/data/LeptonEffScaleFactors",
+    "sfname": "FINAL",
+    "uncname": "ERROR",
+    "inputs": {
+      "eta": "Muon eta",
+      "pt": "Muon pT [GeV]"
+    },
+    "corrections": {
+      "2022BCD": {
+        "file": "inputs/2022/final_HZZ_SF_Run3_2022_mupogsysts_newLoose_abseta3_fix_BCD_RMS.root",
+        "desc": "2022BCD (preEE) HZZ muon ID SFs"
+      },
+      "2022EFG": {
+        "file": "inputs/2022/final_HZZ_SF_Run3_2022_mupogsysts_newLoose_abseta3_fix_EFG_RMS.root",
+        "desc": "2022EFG (postEE) HZZ muon ID SFs"
+      },
+      "2023C": {
+        "file": "inputs/2023/final_HZZ_SF_2023C_RMS_mupogsysts.root",
+        "desc": "2023C (preBPix) HZZ muon ID SFs"
+      },
+      "2023D": {
+        "file": "inputs/2023/final_HZZ_SF_2023D_RMS_mupogsysts.root",
+        "desc": "2023D (postBPix) HZZ muon ID SFs"
+      },
+      "2024": {
+        "file": "inputs/2024/prelimiary_HZZ_SF_2024_RMS_mupogsystsC.root",
+        "desc": "2024 HZZ muon ID SFs (preliminary)"
+      }
+    }
+  }
+}
