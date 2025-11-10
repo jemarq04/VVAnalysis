@@ -398,13 +398,13 @@ void ZZSelector::ApplyScaleFactors()
     if (eIdSF_ != nullptr)
     {
       if (pt_e1 > EleSF_MIN_PT_)
-        weight *= eIdSF_->at(yearcfg.c_str())->evaluate({l1Eta, pt_e1});
+        weight *= eIdSF_->at(yearcfg.c_str())->evaluate({l1Eta, pt_e1, "nominal"});
       if (pt_e2 > EleSF_MIN_PT_)
-        weight *= eIdSF_->at(yearcfg.c_str())->evaluate({l2Eta, pt_e2});
+        weight *= eIdSF_->at(yearcfg.c_str())->evaluate({l2Eta, pt_e2, "nominal"});
       if (pt_e3 > EleSF_MIN_PT_)
-        weight *= eIdSF_->at(yearcfg.c_str())->evaluate({l3Eta, pt_e3});
+        weight *= eIdSF_->at(yearcfg.c_str())->evaluate({l3Eta, pt_e3, "nominal"});
       if (pt_e4 > EleSF_MIN_PT_)
-        weight *= eIdSF_->at(yearcfg.c_str())->evaluate({l4Eta, pt_e4});
+        weight *= eIdSF_->at(yearcfg.c_str())->evaluate({l4Eta, pt_e4, "nominal"});
     }
     if (eRecoSF_ != nullptr)
     {
@@ -444,9 +444,9 @@ void ZZSelector::ApplyScaleFactors()
     if (eIdSF_ != nullptr)
     {
       if (pt_e1 > EleSF_MIN_PT_)
-        weight *= eIdSF_->at(yearcfg.c_str())->evaluate({l1Eta, pt_e1});
+        weight *= eIdSF_->at(yearcfg.c_str())->evaluate({l1Eta, pt_e1, "nominal"});
       if (pt_e2 > EleSF_MIN_PT_)
-        weight *= eIdSF_->at(yearcfg.c_str())->evaluate({l2Eta, pt_e2});
+        weight *= eIdSF_->at(yearcfg.c_str())->evaluate({l2Eta, pt_e2, "nominal"});
     }
     if (eRecoSF_ != nullptr)
     {
@@ -467,9 +467,9 @@ void ZZSelector::ApplyScaleFactors()
     if (mIdSF_ != nullptr)
     {
       if (pt_m3 > MuSF_MIN_PT_)
-        weight *= mIdSF_->at(yearcfg.c_str())->evaluate({l3Eta, pt_m3});
+        weight *= mIdSF_->at(yearcfg.c_str())->evaluate({l3Eta, pt_m3, "nominal"});
       if (pt_m4 > MuSF_MIN_PT_)
-        weight *= mIdSF_->at(yearcfg.c_str())->evaluate({l4Eta, pt_m4});
+        weight *= mIdSF_->at(yearcfg.c_str())->evaluate({l4Eta, pt_m4, "nominal"});
     }
   }
   else if (channel_ == mmee)
@@ -481,16 +481,16 @@ void ZZSelector::ApplyScaleFactors()
     if (mIdSF_ != nullptr)
     {
       if (pt_m1 > MuSF_MIN_PT_)
-        weight *= mIdSF_->at(yearcfg.c_str())->evaluate({l1Eta, pt_m1});
+        weight *= mIdSF_->at(yearcfg.c_str())->evaluate({l1Eta, pt_m1, "nominal"});
       if (pt_m2 > MuSF_MIN_PT_)
-        weight *= mIdSF_->at(yearcfg.c_str())->evaluate({l2Eta, pt_m2});
+        weight *= mIdSF_->at(yearcfg.c_str())->evaluate({l2Eta, pt_m2, "nominal"});
     }
     if (eIdSF_ != nullptr)
     {
       if (pt_e3 > EleSF_MIN_PT_)
-        weight *= eIdSF_->at(yearcfg.c_str())->evaluate({l3Eta, pt_e3});
+        weight *= eIdSF_->at(yearcfg.c_str())->evaluate({l3Eta, pt_e3, "nominal"});
       if (pt_e4 > EleSF_MIN_PT_)
-        weight *= eIdSF_->at(yearcfg.c_str())->evaluate({l4Eta, pt_e4});
+        weight *= eIdSF_->at(yearcfg.c_str())->evaluate({l4Eta, pt_e4, "nominal"});
     }
     if (eRecoSF_ != nullptr)
     {
@@ -518,13 +518,13 @@ void ZZSelector::ApplyScaleFactors()
     if (mIdSF_ != nullptr)
     {
       if (pt_m1 > MuSF_MIN_PT_)
-        weight *= mIdSF_->at(yearcfg.c_str())->evaluate({l1Eta, pt_m1});
+        weight *= mIdSF_->at(yearcfg.c_str())->evaluate({l1Eta, pt_m1, "nominal"});
       if (pt_m2 > MuSF_MIN_PT_)
-        weight *= mIdSF_->at(yearcfg.c_str())->evaluate({l2Eta, pt_m2});
+        weight *= mIdSF_->at(yearcfg.c_str())->evaluate({l2Eta, pt_m2, "nominal"});
       if (pt_m3 > MuSF_MIN_PT_)
-        weight *= mIdSF_->at(yearcfg.c_str())->evaluate({l3Eta, pt_m3});
+        weight *= mIdSF_->at(yearcfg.c_str())->evaluate({l3Eta, pt_m3, "nominal"});
       if (pt_m4 > MuSF_MIN_PT_)
-        weight *= mIdSF_->at(yearcfg.c_str())->evaluate({l4Eta, pt_m4});
+        weight *= mIdSF_->at(yearcfg.c_str())->evaluate({l4Eta, pt_m4, "nominal"});
     }
   }
   if (pileupSF_ != nullptr)
@@ -628,17 +628,17 @@ void ZZSelector::ShiftEfficiencies(Systematic variation)
       if (eIdSF_ != nullptr)
       {
         if (pt_e1 > EleSF_MIN_PT_)
-          weight *= eIdSF_->at((yearcfg + "_" + shift).c_str())->evaluate({l1Eta, pt_e1})
-            / eIdSF_->at(yearcfg.c_str())->evaluate({l1Eta, pt_e1});
+          weight *= eIdSF_->at(yearcfg.c_str())->evaluate({l1Eta, pt_e1, shift})
+            / eIdSF_->at(yearcfg.c_str())->evaluate({l1Eta, pt_e1, "nominal"});
         if (pt_e2 > EleSF_MIN_PT_)
-          weight *= eIdSF_->at((yearcfg + "_" + shift).c_str())->evaluate({l2Eta, pt_e2})
-            / eIdSF_->at(yearcfg.c_str())->evaluate({l2Eta, pt_e2});
+          weight *= eIdSF_->at(yearcfg.c_str())->evaluate({l2Eta, pt_e2, shift})
+            / eIdSF_->at(yearcfg.c_str())->evaluate({l2Eta, pt_e2, "nominal"});
         if (pt_e3 > EleSF_MIN_PT_)
-          weight *= eIdSF_->at((yearcfg + "_" + shift).c_str())->evaluate({l3Eta, pt_e3})
-            / eIdSF_->at(yearcfg.c_str())->evaluate({l3Eta, pt_e3});
+          weight *= eIdSF_->at(yearcfg.c_str())->evaluate({l3Eta, pt_e3, shift})
+            / eIdSF_->at(yearcfg.c_str())->evaluate({l3Eta, pt_e3, "nominal"});
         if (pt_e4 > EleSF_MIN_PT_)
-          weight *= eIdSF_->at((yearcfg + "_" + shift).c_str())->evaluate({l4Eta, pt_e4})
-            / eIdSF_->at(yearcfg.c_str())->evaluate({l4Eta, pt_e4});
+          weight *= eIdSF_->at(yearcfg.c_str())->evaluate({l4Eta, pt_e4, shift})
+            / eIdSF_->at(yearcfg.c_str())->evaluate({l4Eta, pt_e4, "nominal"});
       }
     }
   } // channel eeee
@@ -677,11 +677,11 @@ void ZZSelector::ShiftEfficiencies(Systematic variation)
     {
       if (eIdSF_ != nullptr){
         if (pt_e1 > EleSF_MIN_PT_)
-          weight *= eIdSF_->at((yearcfg + "_" + shift).c_str())->evaluate({l1Eta, pt_e1})
-            / eIdSF_->at(yearcfg.c_str())->evaluate({l1Eta, pt_e1});
+          weight *= eIdSF_->at(yearcfg.c_str())->evaluate({l1Eta, pt_e1, shift})
+            / eIdSF_->at(yearcfg.c_str())->evaluate({l1Eta, pt_e1, "nominal"});
         if (pt_e2 > EleSF_MIN_PT_)
-          weight *= eIdSF_->at((yearcfg + "_" + shift).c_str())->evaluate({l2Eta, pt_e2})
-            / eIdSF_->at(yearcfg.c_str())->evaluate({l2Eta, pt_e2});
+          weight *= eIdSF_->at(yearcfg.c_str())->evaluate({l2Eta, pt_e2, shift})
+            / eIdSF_->at(yearcfg.c_str())->evaluate({l2Eta, pt_e2, "nominal"});
       }
     }
     else if (variation == muonEfficiencyUp || variation == muonEfficiencyDown)
@@ -689,11 +689,11 @@ void ZZSelector::ShiftEfficiencies(Systematic variation)
       if (mIdSF_ != nullptr)
       {
         if (pt_m3 > MuSF_MIN_PT_)
-          weight *= mIdSF_->at((yearcfg + "_" + shift).c_str())->evaluate({l3Eta, pt_m3})
-            / mIdSF_->at(yearcfg.c_str())->evaluate({l3Eta, pt_m3});
+          weight *= mIdSF_->at(yearcfg.c_str())->evaluate({l3Eta, pt_m3, shift})
+            / mIdSF_->at(yearcfg.c_str())->evaluate({l3Eta, pt_m3, "nominal"});
         if (pt_m4 > MuSF_MIN_PT_)
-          weight *= mIdSF_->at((yearcfg + "_" + shift).c_str())->evaluate({l4Eta, pt_m4})
-            / mIdSF_->at(yearcfg.c_str())->evaluate({l4Eta, pt_m4});
+          weight *= mIdSF_->at(yearcfg.c_str())->evaluate({l4Eta, pt_m4, shift})
+            / mIdSF_->at(yearcfg.c_str())->evaluate({l4Eta, pt_m4, "nominal"});
       }
     }
   }
@@ -708,11 +708,11 @@ void ZZSelector::ShiftEfficiencies(Systematic variation)
       if (mIdSF_ != nullptr)
       {
         if (pt_m1 > MuSF_MIN_PT_)
-          weight *= mIdSF_->at((yearcfg + "_" + shift).c_str())->evaluate({l1Eta, pt_m1})
-            / mIdSF_->at(yearcfg.c_str())->evaluate({l1Eta, pt_m1});
+          weight *= mIdSF_->at(yearcfg.c_str())->evaluate({l1Eta, pt_m1, shift})
+            / mIdSF_->at(yearcfg.c_str())->evaluate({l1Eta, pt_m1, "nominal"});
         if (pt_m2 > MuSF_MIN_PT_)
-          weight *= mIdSF_->at((yearcfg + "_" + shift).c_str())->evaluate({l2Eta, pt_m2})
-            / mIdSF_->at(yearcfg.c_str())->evaluate({l2Eta, pt_m2});
+          weight *= mIdSF_->at(yearcfg.c_str())->evaluate({l2Eta, pt_m2, shift})
+            / mIdSF_->at(yearcfg.c_str())->evaluate({l2Eta, pt_m2, "nominal"});
       }
     }
     else if (variation == electronRecoEffUp || variation == electronRecoEffDown)
@@ -743,11 +743,11 @@ void ZZSelector::ShiftEfficiencies(Systematic variation)
     {
       if (eIdSF_ != nullptr){
         if (pt_e3 > EleSF_MIN_PT_)
-          weight *= eIdSF_->at((yearcfg + "_" + shift).c_str())->evaluate({l3Eta, pt_e3})
-            / eIdSF_->at(yearcfg.c_str())->evaluate({l3Eta, pt_e3});
+          weight *= eIdSF_->at(yearcfg.c_str())->evaluate({l3Eta, pt_e3, shift})
+            / eIdSF_->at(yearcfg.c_str())->evaluate({l3Eta, pt_e3, "nominal"});
         if (pt_e4 > EleSF_MIN_PT_)
-          weight *= eIdSF_->at((yearcfg + "_" + shift).c_str())->evaluate({l4Eta, pt_e4})
-            / eIdSF_->at(yearcfg.c_str())->evaluate({l4Eta, pt_e4});
+          weight *= eIdSF_->at(yearcfg.c_str())->evaluate({l4Eta, pt_e4, shift})
+            / eIdSF_->at(yearcfg.c_str())->evaluate({l4Eta, pt_e4, "nominal"});
       }
     }
   }
@@ -760,17 +760,17 @@ void ZZSelector::ShiftEfficiencies(Systematic variation)
     if (mIdSF_ != nullptr)
     {
       if (pt_m1 > MuSF_MIN_PT_)
-          weight *= mIdSF_->at((yearcfg + "_" + shift).c_str())->evaluate({l1Eta, pt_m1})
-            / mIdSF_->at(yearcfg.c_str())->evaluate({l1Eta, pt_m1});
+          weight *= mIdSF_->at(yearcfg.c_str())->evaluate({l1Eta, pt_m1, shift})
+            / mIdSF_->at(yearcfg.c_str())->evaluate({l1Eta, pt_m1, "nominal"});
       if (pt_m2 > MuSF_MIN_PT_)
-          weight *= mIdSF_->at((yearcfg + "_" + shift).c_str())->evaluate({l2Eta, pt_m2})
-            / mIdSF_->at(yearcfg.c_str())->evaluate({l2Eta, pt_m2});
+          weight *= mIdSF_->at(yearcfg.c_str())->evaluate({l2Eta, pt_m2, shift})
+            / mIdSF_->at(yearcfg.c_str())->evaluate({l2Eta, pt_m2, "nominal"});
       if (pt_m3 > MuSF_MIN_PT_)
-          weight *= mIdSF_->at((yearcfg + "_" + shift).c_str())->evaluate({l3Eta, pt_m3})
-            / mIdSF_->at(yearcfg.c_str())->evaluate({l3Eta, pt_m3});
+          weight *= mIdSF_->at(yearcfg.c_str())->evaluate({l3Eta, pt_m3, shift})
+            / mIdSF_->at(yearcfg.c_str())->evaluate({l3Eta, pt_m3, "nominal"});
       if (pt_m4 > MuSF_MIN_PT_)
-          weight *= mIdSF_->at((yearcfg + "_" + shift).c_str())->evaluate({l4Eta, pt_m4})
-            / mIdSF_->at(yearcfg.c_str())->evaluate({l4Eta, pt_m4});
+          weight *= mIdSF_->at(yearcfg.c_str())->evaluate({l4Eta, pt_m4, shift})
+            / mIdSF_->at(yearcfg.c_str())->evaluate({l4Eta, pt_m4, "nominal"});
     }
   }
 }
