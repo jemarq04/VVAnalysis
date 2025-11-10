@@ -17,12 +17,16 @@
         "desc": "2022EFG (postEE) HZZ electron ID SFs"
       },
       "2023C": {
-        "file": "inputs/2022/SF2022eleID_postEE.root",
-        "desc": "2022EFG (postEE) HZZ electron ID SFs, to be used for 2023 until newer SFs available"
+        "file": "inputs/2023/SF2023eleID_preBPix.root",
+        "desc": "2023C (preBPix) HZZ electron ID SFs"
       },
       "2023D": {
-        "file": "inputs/2022/SF2022eleID_postEE.root",
-        "desc": "2022EFG (postEE) HZZ electron ID SFs, to be used for 2023 until newer SFs available"
+        "file": "inputs/2023/SF2023eleID_postBPix.root",
+        "desc": "2023D (postBPix) HZZ electron ID SFs"
+      },
+      "2023D_Hole": {
+        "file": "inputs/2023/SF2023eleID_postBPix_Hole.root",
+        "desc": "2023D (postBPix) HZZ electron ID SFs"
       },
       "2024": {
         "file": "inputs/2024/SF2024eleID.root",
