@@ -17,6 +17,7 @@ def writeSFs(info, fname, redo_systs=False, flatten=False):
     HUNC_NAME = info["uncname"]
     CORRS = info["corrections"]
     INPUTS = info["inputs"]
+    OUTPUT = info["output"]
 
     corrections = []
     for name in CORRS:
@@ -60,8 +61,8 @@ def writeSFs(info, fname, redo_systs=False, flatten=False):
                 item.description = CORRS[name]["desc"]
                 for i,val in enumerate(INPUTS.values()):
                     item.inputs[i].description = val
-                item.output.name = "weight"
-                item.output.description = "HZZ ID scale factor"
+                item.output.name = OUTPUT["name"]
+                item.output.description = OUTPUT["desc"]
                 corrections.append(item)
         else:
             # Create combined correction object
@@ -75,7 +76,7 @@ def writeSFs(info, fname, redo_systs=False, flatten=False):
                     inputs=corr_inputs+[
                         cs.Variable(name="systematic", type="string", description="nominal/up/down"),
                     ],
-                    output=cs.Variable(name="weight", type="real", description="HZZ ID scale factor"),
+                    output=cs.Variable(name=OUTPUT["name"], type="real", description=OUTPUT["desc"]),
                     data=cs.Category(
                         nodetype="category",
                         input="systematic",
@@ -98,14 +99,13 @@ def main():
     parser.add_argument("leptons", choices=["electrons", "muons"], help="convert HZZ ID SFs for electrons/muons")
     args = parser.parse_args()
 
-    mapping={"electrons": "Electron", "muons": "Muon"}
-    if args.outfile == "" or os.path.isdir(args.outfile):
-        args.outfile = os.path.join(args.outfile, f'{mapping[args.leptons]}SF_HZZ.json')
     if not os.path.isfile(args.infile):
         parser.error("invalid input JSON file")
-
     with open(args.infile) as infile:
         info = json.load(infile)
+
+    if args.outfile == "" or os.path.isdir(args.outfile):
+        args.outfile = os.path.join(args.outfile, f'{info[args.leptons]["name"]}.json')
 
     print(f'Writing correction JSON to {args.outfile}...')
     writeSFs(info[args.leptons], args.outfile, args.redo_systs, args.flatten)
