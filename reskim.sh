@@ -60,7 +60,7 @@ for group in $jobsdir/*/; do
     echo Skipping...
     continue
   fi
-  #echo ${groupname%%-$jobtype$year*}
+  echo Checking ${groupname%%-$jobtype$year*}...
 
   for dir in $group/submit/*/; do
     name=$(basename $dir)
