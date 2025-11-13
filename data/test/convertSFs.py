@@ -22,7 +22,8 @@ def writeSFs(info, fname, redo_systs=False, flatten=False):
     corrections = []
     for name in CORRS:
         if not os.path.isfile(CORRS[name]["file"]):
-            print(f' error: file not found: {CORRS[name]["file"]}')
+            print(f' File not found: {CORRS[name]["file"]}')
+            continue
         print(f' Converting {name}...')
 
         # Create uncertainty histograms if needed
@@ -32,9 +33,18 @@ def writeSFs(info, fname, redo_systs=False, flatten=False):
                 hist = infile.Get(HIST_NAME)
                 if HUNC_NAME not in infile.GetListOfKeys():
                     hunc = hist.Clone(HUNC_NAME)
-                    for i in range(1,hist.GetNbinsX()+1):
-                        for j in range(1,hist.GetNbinsY()+1):
-                            hunc.SetBinContent(i, j, hist.GetBinError(i, j))
+                    if hist.InheritsFrom("TH3"):
+                        for i in range(1,hist.GetNbinsX()+1):
+                            for j in range(1,hist.GetNbinsY()+1):
+                                for k in range(1,hist.GetNbinsZ()+1):
+                                    hunc.SetBinContent(i, j, k, hist.GetBinError(i, j, k))
+                    elif hist.InheritsFrom("TH2"):
+                        for i in range(1,hist.GetNbinsX()+1):
+                            for j in range(1,hist.GetNbinsY()+1):
+                                hunc.SetBinContent(i, j, hist.GetBinError(i, j))
+                    else:
+                        for i in range(1,hist.GetNbinsX()+1):
+                            hunc.SetBinContent(i, hist.GetBinError(i))
                 else:
                     hunc = infile.Get(HUNC_NAME)
 
@@ -54,10 +64,7 @@ def writeSFs(info, fname, redo_systs=False, flatten=False):
         if flatten:
             # Append correction objects
             for syst,item in corr_items.items():
-                if syst == "nominal":
-                    item.name = name
-                else:
-                    item.name = f'{name}_{syst}'
+                item.name = f'{name}_{syst}' if syst != "nominal" else name
                 item.description = CORRS[name]["desc"]
                 for i,val in enumerate(INPUTS.values()):
                     item.inputs[i].description = val
@@ -91,24 +98,24 @@ def writeSFs(info, fname, redo_systs=False, flatten=False):
         json.dump(json.loads(cset.json(exclude_unset=True)), outfile, indent=2)
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-s", "--redo-systs", action="store_true", help="re-calculate up/down systematic histograms")
-    parser.add_argument("-i", "--infile", default="data.json", help="input JSON file containing needed information on converting SFs (default: data.json)")
-    parser.add_argument("-o", "--outfile", default="", help="output JSON file or directory (default: out/{Lepton}SF_HZZ.json)")
-    parser.add_argument("--flatten", action="store_true", help="store systematic up/down variations as separate corrections")
-    parser.add_argument("leptons", choices=["electrons", "muons"], help="convert HZZ ID SFs for electrons/muons")
-    args = parser.parse_args()
-
-    if not os.path.isfile(args.infile):
+    data_file = "data.json"
+    if not os.path.isfile(data_file):
         parser.error("invalid input JSON file")
-    with open(args.infile) as infile:
+    with open(data_file) as infile:
         info = json.load(infile)
 
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-s", "--redo-systs", action="store_true", help="re-calculate up/down systematic histograms")
+    parser.add_argument("-o", "--outfile", default="", help="output JSON file or directory (default: out/{name}.json)")
+    parser.add_argument("--flatten", action="store_true", help="store systematic up/down variations as separate corrections")
+    parser.add_argument("key", choices=info.keys(), help="convert SFs for the provided key")
+    args = parser.parse_args()
+
     if args.outfile == "" or os.path.isdir(args.outfile):
-        args.outfile = os.path.join(args.outfile, f'{info[args.leptons]["name"]}.json')
+        args.outfile = os.path.join(args.outfile, f'{info[args.key]["name"]}.json')
 
     print(f'Writing correction JSON to {args.outfile}...')
-    writeSFs(info[args.leptons], args.outfile, args.redo_systs, args.flatten)
+    writeSFs(info[args.key], args.outfile, args.redo_systs, args.flatten)
 
     print("Done.")
 
