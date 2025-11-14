@@ -16,7 +16,7 @@ import subprocess,pdb
 def getComLineArgs():
     parser = UserInput.getDefaultParser()
     parser.add_argument("--lumi", "-l", type=float,
-        default=37.90, help="luminosity value (in fb-1)")
+        default=None, help="luminosity value (in fb-1)")
     parser.add_argument("--output_file", "-o", type=str,
         default="test.root", help="Output file name")
     parser.add_argument("--test", action='store_true',
@@ -57,6 +57,9 @@ def makeHistFile(args):
     if manager_path not in sys.path:
         sys.path.insert(0, "/".join([manager_path, 
             ConfigureJobs.getManagerName(), "Utilities/python"]))
+
+    if args['lumi'] is None:
+        args['lumi'] = ConfigureJobs.getLuminosity(args['year'], "", manager_path)
 
     today = datetime.date.today().strftime("%d%b%Y")
     

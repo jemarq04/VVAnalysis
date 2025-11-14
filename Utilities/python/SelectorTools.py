@@ -21,11 +21,8 @@ class SelectorDriver(object):
             "WGen" : "WGenSelector",
             "ZGen" : "ZGenSelector",
             "ThreeLep" : "ThreeLepSelector",
-            "ZZ4l2022" : "ZZSelector",
-            "ZZ4l2023" : "ZZSelector",
-            "ZZ4l2024" : "ZZSelector",
-            "ZZ4lRun3Combined": "ZZSelector",
         }
+        selector_map.update({f"ZZ4l{year}": "ZZSelector" for year in ConfigureJobs.getLumiMap().keys()})
 
         self.analysis = analysis
         self.selection = selection

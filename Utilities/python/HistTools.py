@@ -363,3 +363,82 @@ def addaQGCTheoryHists(rtfile_name, plot_groups, base_hist_name):
                 aqgc_hist.Delete()
         aqgc_dir.Delete()
     rtfile.Close()
+
+# Turn off overflow for FR hists (> 50 is pretty much all EWK anyway)
+def makeFakeRateCompositeHists(hist_file,name, members, addRatios=True, overflow=False, lumi=None):
+    composite = ROOT.TList()
+    composite.SetName(name)
+    if name=="AllEWK":
+        print("EWK members: ",members)
+    for directory in [str(i) for i in list(members.keys())]:
+        for histname in getFakeRateHistNames(["eee", "eem", "emm", "mmm"]):
+            #print("histname:", histname)
+            #print("hist_file:", hist_file)
+            #print("directory:",directory)
+            hist = hist_file.Get("/".join([directory, str(histname)]))
+            #print("hist:", hist)
+            if hist:
+                sumhist = composite.FindObject(hist.GetName())
+                if "data" not in directory and hist.GetEntries() > 0:
+                    sumweights_hist = hist_file.Get("/".join([directory, "sumweights"]))
+                    sumweights = sumweights_hist.Integral()
+                    hist.Scale(members[directory]*1000*lumi/sumweights)
+                if overflow and isinstance(hist, ROOT.TH1):
+                    xbins = hist.GetNbinsX()
+                    ybins = hist.GetNbinsY()
+                    for i in range(1,xbins):
+                        setbin = hist.GetBin(i, ybins)
+                        obin = hist.GetBin(i, ybins+1)
+                        hist.SetBinContent(setbin,
+                            hist.GetBinContent(obin)+hist.GetBinContent(setbin))
+                    for i in range(1, ybins):
+                        setbin = hist.GetBin(xbins, i)
+                        obin = hist.GetBin(xbins+1, i)
+                        hist.SetBinContent(setbin,
+                            hist.GetBinContent(obin)+hist.GetBinContent(setbin))
+                    setbin = hist.GetBin(xbins, ybins)
+                    obin = hist.GetBin(xbins+1, ybins+1)
+                    hist.SetBinContent(setbin,
+                        hist.GetBinContent(obin)+hist.GetBinContent(setbin))
+            else:
+                raise RuntimeError("hist %s was not produced for "
+                    "dataset %s!" % (histname, directory))
+            if not sumhist:
+                sumhist = hist.Clone()
+                composite.Add(sumhist)
+            else:
+                sumhist.Add(hist)
+    for hist_name in getFakeRateHistNames([]):
+        etot = composite.FindObject(hist_name+"_eee").Clone()
+        etot.SetName(hist_name+"_allE")
+        etot.Add(composite.FindObject(hist_name+"_emm"))
+        composite.Add(etot)
+        mtot = composite.FindObject(hist_name+"_mmm").Clone()
+        mtot.SetName(hist_name+"_allMu")
+        mtot.Add(composite.FindObject(hist_name+"_eem"))
+        composite.Add(mtot)
+    if addRatios:
+        ratios = getFakeRateRatios(composite)
+        for ratio in ratios:
+            composite.Add(ratio)
+    return composite
+
+def getFakeRateRatios(hists):
+    ratios = []
+    for hist in hists:
+        if "Tight" not in hist.GetName():
+            continue
+        ratio = hist.Clone()
+        ratio.SetName(hist.GetName().replace("passingTight", "ratio"))
+        if not ratio.GetSumw2():
+            ratio.Sumw2()
+        ratio.Divide(hists.FindObject(hist.GetName().replace("Tight", "Loose")))
+        ratios.append(ratio)
+    return ratios
+
+def getFakeRateHistNames(channels):
+    base_hists = [x+y for x in ["passingLooseE", "passingTightE","passingLooseMu", "passingTightMu"] \
+            for y in ["1DEta", "1DPt_barrel","1DPt_endcap", "2D"]]
+    if len(channels) == 0:
+        return base_hists
+    return [x+"_"+y for x in base_hists for y in channels]

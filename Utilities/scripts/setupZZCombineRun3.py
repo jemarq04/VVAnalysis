@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 import argparse
+from python import ConfigureJobs
 
 def main():
     parser = argparse.ArgumentParser()
@@ -10,6 +11,7 @@ def main():
     parser.add_argument("-f", "--fit-var", default="Mass", 
         help="fit variable (default: Mass)")
     parser.add_argument("-l", "--lumi", help="luminosity")
+    parser.add_argument("-a", "--analysis", default="Run3Combined", help="name of analysis")
     parser.add_argument("-c", "--channels",
         type=lambda x : [i.strip() for i in x.split(',')],
         default=["eeee", "eemm", "mmee", "mmmm"],
@@ -29,15 +31,13 @@ def main():
         2023: "HistFiles/Hists-ZZ4l2023.root",
         2024: "HistFiles/Hists-ZZ4l2024.root",
     }
+    lumi_info = ConfigureJobs.getLumiMap()
+    years = lumi_info[args.analysis]["years"]
     lumiMap = {
-        2022: 34.652,
-        2023: 27.76,
-        2024: 109.33,
+        int(year): float("%.3f" % ConfigureJobs.getLuminosity(year)) for year in years
     }
-    lumiUncMap = {
-        2022: 1.014,
-        2023: 1.013,
-        2024: 0.0, #TODO, unavailable at the moment
+    lumiUncMap = { #TODO: 2024 still set to 0.0
+        int(year): lumi_info[year]["unc"] for year in years
     }
     sig_procs = ["qqZZ-powheg"]
     bkg_procs = ["ggZZ", "VVV", "nonprompt"]
