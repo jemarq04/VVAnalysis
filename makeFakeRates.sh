@@ -1,10 +1,18 @@
 if [[ $# -ne 1 ]]; then
-  echo usage: $0 YEAR
-  exit 1
-elif [[ ! $1 =~ ^202[2-3]$ && ! $1 = Run3Combined ]]; then
-  echo invalid year: $1
+  echo usage: $0 YEAR/ALL
+  echo
+  echo "YEAR/ALL: year for analysis or 'all' to run all Run 3"
   exit 1
 fi
 
-./Utilities/scripts/makeFakeRates.py -a ZZ4l$1 -f ZZ4l$1 --year $1 -s ZplusLSkim --uwvv --noHistConfig --output_file fakeRates-ZZ4l$1.root && ./ScaleFactors/wrapFakeRates.py -o data/fakeScaleFactorsRun3-ZZ4l$1.root fakeRates-ZZ4l$1.root
-echo Done.
+years=$1
+[[ $years = all ]] && years="2022 2023 2024"
+
+for year in $years; do
+
+  ./Utilities/scripts/makeFakeRates.py -a ZZ4l$year -f ZZ4l$year --year $year -s ZplusLSkim --uwvv --noHistConfig --output_file fakeRates-ZZ4l$year.root
+  [[ $? -ne 0 ]] && continue #skip next step if error
+  ./ScaleFactors/wrapFakeRates.py -o data/fakeScaleFactorsRun3-ZZ4l$year.root fakeRates-ZZ4l$year.root
+
+  echo "$yr done!!==================================="
+done
