@@ -12,18 +12,12 @@ year=$1
 [[ $year = all ]] && year="2022 2023 2024"
 
 for yr in $year; do
-  if [[ $yr = 2022 ]]; then lumi=34.652;
-  elif [[ $yr = 2023 ]]; then lumi=27.76;
-  #elif [[ $yr = Run3Combined ]]; then lumi=62.412;
-  elif [[ $yr = Run3Combined ]]; then lumi=171.362;
-  elif [[ $yr = 2024 ]]; then lumi=108.95;
-  fi
   frfile=data/fakeScaleFactorsRun3-ZZ4lRun3Combined.root
 
   #NOTE: Eventually the scale factor file listed below will exist with fake rates.
   #   For now, use this in the call so that the appropriate scale factors are retrieved with correctionlib
-  #./Utilities/scripts/makeHistFile.py -f ZZ4l$yr -l $lumi -a ZZ4l$yr -s LooseLeptons --output_file "test$yr" --year $yr --uwvv -c eeee,eemm,mmee,mmmm -j 12 -sf #--with_Gen
-  ./Utilities/scripts/makeHistFile.py -f ZZ4l$yr -l $lumi -a ZZ4l$yr -s LooseLeptons --output_file "test$yr" --year $yr --uwvv -c eeee,eemm,mmee,mmmm -j 12 -sf --with_background -F $frfile
+  #./Utilities/scripts/makeHistFile.py -f ZZ4l$yr -a ZZ4l$yr -s LooseLeptons --output_file "test$yr" --year $yr --uwvv -c eeee,eemm,mmee,mmmm -j 12 -sf #--with_Gen
+  ./Utilities/scripts/makeHistFile.py -f ZZ4l$yr -a ZZ4l$yr -s LooseLeptons --output_file "test$yr" --year $yr --uwvv -c eeee,eemm,mmee,mmmm -j 12 -sf --with_background -F $frfile
 
   echo "$yr done!!==================================="
 done

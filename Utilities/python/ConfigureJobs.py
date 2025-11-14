@@ -76,6 +76,14 @@ def getManagerPath():
                         % config_name)
     return config['Setup']['dataset_manager_path'] + "/"
 
+def getLumiMap(manager_path = ""):
+    if manager_path == "":
+        manager_path = getManagerPath()
+    lumi_path = "%s/%s/luminosityMap.json" % (manager_path, getManagerName())
+    with open(lumi_path) as infile:
+        info = json.load(infile)
+    return info
+
 def getCombinePath():
     config = configparser.ConfigParser()
     config.read_file(open("Templates/config.%s" % os.environ["USER"]))
@@ -105,6 +113,8 @@ def getListOfGenFilenames(analysis='ZZ'):
         ]
     return []
 def getListOfEWKFilenames(analysis=""):
+    lumi_info = getLumiMap()
+
     if "ZZ4l" in analysis:
         outlist = [
             #"zz4l-amcatnlo",
@@ -117,12 +127,12 @@ def getListOfEWKFilenames(analysis=""):
             "ggZZ2e2tau",
             "ggZZ2mu2tau",
         ]
-        if "ZZ4l2022" in analysis:
-            outlist = ["%s_%sEE" % (name, suffix) for name in outlist for suffix in ["pre", "post"]]
-        elif "ZZ4l2023" in analysis:
-            outlist = ["%s_%sBPix" % (name, suffix) for name in outlist for suffix in ["pre", "post"]]
-        elif "ZZ4lRun3Combined" in analysis:
-            outlist = ["%s_%s" % (name, suffix) for name in outlist for suffix in ["2022_preEE", "2022_postEE", "2023_preBPix", "2023_postBPix"]]
+        for year in lumi_info.keys():
+            if f"ZZ4l{year}" in analysis:
+                eras = ["_%s" % x for x in getLuminosityEras(year)]
+                if not eras:
+                    eras = [""]
+                outlist = ["%s%s" % (name, era) for name in outlist for era in eras]
         return outlist
     elif "ZplusL" in analysis:
         outlist = [
@@ -150,28 +160,30 @@ def getListOfEWKFilenames(analysis=""):
             "ggZZ2e2tau",
             "ggZZ2mu2tau",
         ]
-        if "ZplusL2022" in analysis:
-            outlist = ["%s_%sEE" % (name, suffix) for name in outlist for suffix in ["pre", "post"]]
-        elif "ZplusL2023" in analysis:
-            outlist = ["%s_%sBPix" % (name, suffix) for name in outlist for suffix in ["pre", "post"]]
-        elif "ZplusLRun3Combined" in analysis:
-            outlist = ["%s_%s" % (name, suffix) for name in outlist for suffix in ["2022_preEE", "2022_postEE", "2023_preBPix", "2023_postBPix"]]
+        for year in lumi_info.keys():
+            if f"ZplusL{year}" in analysis:
+                eras = ["_%s" % x for x in getLuminosityEras(year)]
+                if not eras:
+                    eras = [""]
+                outlist = ["%s%s" % (name, era) for name in outlist for era in eras]
         return outlist
 
     return []
 def getListOfDYFilenames(analysis=""):
+    lumi_info = getLumiMap()
     outlist = [
         "DYm10to50-2j",
         "DYm50-2j",
     ]
-    if "2022" in analysis:
-        outlist = ["%s_%sEE" % (name, suffix) for name in outlist for suffix in ["pre", "post"]]
-    elif "2023" in analysis:
-        outlist = ["%s_%sBPix" % (name, suffix) for name in outlist for suffix in ["pre", "post"]]
-    elif "Run3Combined" in analysis:
-        outlist = ["%s_%s" % (name, suffix) for name in outlist for suffix in ["2022_preEE", "2022_postEE", "2023_preBPix", "2023_postBPix"]]
 
+    for year in lumi_info.keys():
+        if year in analysis:
+            eras = ["_%s" % x for x in getLuminosityEras(year)]
+            if not eras:
+                eras = [""]
+            outlist = ["%s%s" % (name, era) for name in outlist for era in eras]
     return outlist
+
 def getListOfNonpromptFilenames():
     return ["tt-lep",
         "st-schan",
@@ -234,13 +246,14 @@ def getListOfFiles(filelist, selection, manager_path="", analysis=""):
     mc_info = UserInput.readAllInfo("/".join([data_path, "montecarlo/montecarlo*"]))
     analysis_info = UserInput.readInfo("/".join([data_path, analysis, selection])) \
         if analysis != "" else []
+    lumi_info = getLumiMap(manager_path)
     valid_names = (list(data_info.keys()) + list(mc_info.keys())) if not analysis_info else list(analysis_info.keys())
     names = []
     for name in filelist:
         if ".root" in name:
             names.append(name)
-        elif any("ZZ4l%s" % year in name for year in ["2022", "2023", "2024", "Run3Combined"]):
-            key = ["ZZ4l%s" % year for year in ["2022", "2023", "2024", "Run3Combined"] if "ZZ4l%s" % year in name][0]
+        elif any("ZZ4l%s" % year in name for year in lumi_info.keys()):
+            key = ["ZZ4l%s" % year for year in lumi_info.keys() if "ZZ4l%s" % year in name][0]
             dataset_file = manager_path + \
                 "%s/FileInfo/%s/%s.json" % (getManagerName(), key, selection)
             allnames = list(json.load(open(dataset_file)).keys())
@@ -339,3 +352,48 @@ def getTriggerName(sample_name, analysis, selection):
             if name in sample_name:
                 return "-t " + name
     return "-t MonteCarlo"
+
+def getLuminosityEras(year, manager_path=""):
+    lumi_info = getLumiMap(manager_path)
+
+    if year not in lumi_info:
+        raise ValueError("Invalid year: %s. Must be present in lumi map" % year)
+
+    if "eras" not in lumi_info[year]:
+        if "years" in lumi_info[year]:
+            outlist = []
+            for yr in lumi_info[year]["years"]:
+                if "eras" in lumi_info[yr]:
+                    outlist += [f"{yr}_{era}" for era in lumi_info[yr]["eras"].keys()]
+                else:
+                    outlist += [yr]
+            return outlist
+        else:
+            return []
+    else:
+        return list(lumi_info[year]["eras"].keys())
+
+def getLuminosity(year, era="", manager_path=""):
+    if manager_path == "":
+        manager_path = getManagerPath()
+    lumi_info = getLumiMap(manager_path)
+
+    if year not in lumi_info:
+        raise ValueError("Invalid year: %s. Must be present in lumi map" % year)
+    if "years" in lumi_info[year]:
+        return sum(getLuminosity(yr, "", manager_path) for yr in lumi_info[year]["years"])
+    elif "lumi" not in lumi_info[year]:
+        if era != "" and era not in lumi_info[year]["eras"]:
+            raise ValueError("Invalid era (%s) for year: %s" % (era, year))
+    elif era != "":
+        raise ValueError("No eras present for year: %s. Must be present in lumi map" % year)
+
+    if era == "":
+        if "lumi" in lumi_info[year]:
+            lumi = lumi_info[year]["lumi"]
+        else:
+            lumi = sum(lumi_info[year]["eras"].values())
+    else:
+        lumi = lumi_info[year]["eras"][era]
+
+    return lumi
