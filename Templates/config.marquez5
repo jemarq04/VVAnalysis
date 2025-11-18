@@ -1,7 +1,7 @@
 [Setup]
 user = marquez5
 analysis = ZZ
-dataset_manager_path = /afs/hep.wisc.edu/home/marquez5/public/SMEFTsim/uwvv_analysis/histograms_run3/src/Data_manager
+dataset_manager_path = $CMSSW_BASE/src/Data_manager
 dataset_manager_name = ZZ4lDatasetManager
 combine_path = %(dataset_manager_path)s/HiggsCombine/CMSSW_10_2_13/src/HiggsAnalysis/CombinedLimit
 output_path = /eos/user/u/%(user)s/%(analysis)sAnalysisData

@@ -74,7 +74,7 @@ def getManagerPath():
     if "dataset_manager_path" not in config['Setup']:
         raise ValueError("dataset_manager_path not specified in config file %s"
                         % config_name)
-    return config['Setup']['dataset_manager_path'] + "/"
+    return config['Setup']['dataset_manager_path'].replace("$CMSSW_BASE", os.environ["CMSSW_BASE"]) + "/"
 
 def getLumiMap(manager_path = ""):
     if manager_path == "":
