@@ -88,7 +88,7 @@ def getCombinePath():
     config = configparser.ConfigParser()
     config.read_file(open("Templates/config.%s" % os.environ["USER"]))
     if "combine_path" not in config['Setup']:
-        raise ValueError("dataset_manager_path not specified in config file Template/config.%s" 
+        raise ValueError("combine_path not specified in config file Template/config.%s" 
                             % os.environ["USER"])
     return config['Setup']['combine_path'] + "/"
 def getListOfGenFilenames(analysis='ZZ'):
