@@ -175,6 +175,16 @@ def getListOfDYFilenames(analysis=""):
         "DYm10to50-2j",
         "DYm50-2j",
     ]
+    #TODO: Replace with checks to plotgroups json file. Add symlinks for ZplusL
+    if any(year in analysis for year in ["2024", "2025"]):
+        outlist = [
+            "DY2e-m10to50",
+            "DY2m-m10to50",
+            "DY2t-m10to50",
+            "DY2e-m50-2j",
+            "DY2m-m50-2j",
+            "DY2t-m50-2j",
+        ]
 
     for year in lumi_info.keys():
         if year in analysis:

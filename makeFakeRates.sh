@@ -9,10 +9,6 @@ years=$1
 [[ $years = all ]] && years="2022 2023 2024"
 
 for year in $years; do
-
   ./Utilities/scripts/makeFakeRates.py -a ZZ4l$year -f ZZ4l$year --year $year -s ZplusLSkim --uwvv --noHistConfig --output_file fakeRates-ZZ4l$year.root
-  [[ $? -ne 0 ]] && continue #skip next step if error
-  ./ScaleFactors/wrapFakeRates.py -o data/fakeScaleFactorsRun3-ZZ4l$year.root fakeRates-ZZ4l$year.root
-
-  echo "$yr done!!==================================="
+  echo "$year done!!==================================="
 done
