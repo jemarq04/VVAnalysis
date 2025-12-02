@@ -65,6 +65,20 @@ for group in $jobsdir/*/; do
   for dir in $group/submit/*/; do
     name=$(basename $dir)
     if [[ ! -e $outdir/$groupname/$name.root ]]; then
+      valid_inputs=true
+      while read line; do
+        if [[ ! -e $line ]]; then
+          valid_inputs=false
+          break
+        fi
+      done < $dir/$name.inputs
+      if ! $valid_inputs; then
+        echo "Inputs for $dir cannot be found:"
+        cat $dir/$name.inputs
+        echo "Skipping..."
+        continue
+      fi
+
       echo Skimming $(cat $dir/$name.inputs)...
       ./skimNtuples.py -s $selections -a $jobtype$year -t $trigger -f $dir/$name.inputs -o temp_reskim.root && mv -v temp_reskim.root $outdir/$groupname/$name.root
       echo
