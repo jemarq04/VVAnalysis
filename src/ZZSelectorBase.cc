@@ -73,8 +73,10 @@ void ZZSelectorBase::SetScaleFactors()
   }
   */
   try{
-    if (yearcfg != "2024") //TODO: Add when available
+    if (yearcfg != "2024")
       pileupSF_ = correction::CorrectionSet::from_file(TString::Format("%s/LUM/%s/puWeights.json.gz", basename.c_str(), yearstring.c_str()).Data());
+    else
+      pileupSF_ = correction::CorrectionSet::from_file(TString::Format("%s/LUM/%s/puWeights_BCDEFGHI.json.gz", basename.c_str(), yearstring.c_str()).Data());
   }
   catch (...){
     throw std::invalid_argument("Must pass valid pileup weights SF");
