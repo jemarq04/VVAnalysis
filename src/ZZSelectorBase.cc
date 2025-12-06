@@ -54,7 +54,10 @@ void ZZSelectorBase::SetScaleFactors()
       yearcfg = "2024";
     }
     else if (yearcfg == "2025" || (yearcfg == "Run3Combined" && name.find("_2025") != std::string::npos)){
-      return; //no SFs available for 2025 yet
+      //no SFs available for 2025 yet
+      yearstring = "Run3-24CDEReprocessingFGHIPrompt-Summer24-NanoAODv15";
+      EleRecoSF_Name_ = "2024Prompt";
+      yearcfg = "2024";
     }
     else
       throw std::invalid_argument("");
