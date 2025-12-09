@@ -29,9 +29,7 @@ Bool_t disambiguateFinalStatesZL::Notify()
   return kTRUE;
 }
 
-void disambiguateFinalStatesZL::Begin(TTree * /*tree*/)
-{
-}
+void disambiguateFinalStatesZL::Begin(TTree * /*tree*/){}
 
 void disambiguateFinalStatesZL::SlaveBegin(TTree * /*tree*/)
 {
@@ -44,27 +42,22 @@ Bool_t disambiguateFinalStatesZL::Process(Long64_t entry)
   b_evt->GetEntry(entry);
   b_run->GetEntry(entry);
 
-  if ( !(run == fCurrentRun && evt == fCurrentEvt) )
-  {
+  if (run != fCurrentRun || evt != fCurrentEvt)
     findBestEntry();
-  }
 
   fCurrentRun = run;
   fCurrentEvt = evt;
-  
   // TODO Understand why this gives segfault for chains
   // with multiple entries
-  if ( fCutFormula && fCutFormula->EvalInstance() > 0. )
+  if (fCutFormula && fCutFormula->EvalInstance() > 0.)
   {
     b_Mass->GetEntry(entry);
-    Float_t discriminant = fabs(Mass-91.1876);
     fEntriesToCompare.push_back(entry);
-    fEntryDiscriminants.push_back(discriminant);
+    fEntryDiscriminants.push_back(fabs(Mass-91.1876));
   }
 
-  if ( entry == fChain->GetEntries()-1 ) {
+  if (entry == fChain->GetEntries()-1)
     findBestEntry();
-  }
 
   return kTRUE;
 }
@@ -76,27 +69,24 @@ void disambiguateFinalStatesZL::SlaveTerminate()
   fBestCandidateEntryList = nullptr;
 }
 
-void disambiguateFinalStatesZL::Terminate()
-{
-}
+void disambiguateFinalStatesZL::Terminate(){}
 
 void disambiguateFinalStatesZL::findBestEntry()
 {
   Long64_t bestEntry = -1L;
   Float_t lowestDiscriminant = 1e100;
+
   for (size_t i=0; i<fEntriesToCompare.size(); ++i)
   {
-    if ( lowestDiscriminant > fEntryDiscriminants[i] )
+    if (fEntryDiscriminants[i] < lowestDiscriminant)
     {
       lowestDiscriminant = fEntryDiscriminants[i];
       bestEntry = fEntriesToCompare[i];
     }
   }
 
-  if ( bestEntry >= 0 )
-  {
+  if (bestEntry >= 0)
     fBestCandidateEntryList->Enter(bestEntry);
-  }
 
   fEntriesToCompare.clear();
   fEntryDiscriminants.clear();
