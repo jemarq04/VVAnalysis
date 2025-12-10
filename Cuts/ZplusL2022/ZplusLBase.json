@@ -18,6 +18,5 @@
           ]
     },
     "Event" : [
-        "(pvndof >= 4 && abs(pvZ) < 24 && pvRho < 2)"
     ]
 }
