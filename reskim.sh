@@ -67,7 +67,10 @@ for group in $jobsdir/*/; do
     if [[ ! -e $outdir/$groupname/$name.root ]]; then
       valid_inputs=true
       while read line; do
-        if [[ ! -e $line ]]; then
+        if [[ $line = root* && ! -e ${line/*store/\/hdfs\/store} ]]; then
+          valid_inputs=false
+          break
+        elif [[ ! -e $line ]]; then
           valid_inputs=false
           break
         fi
