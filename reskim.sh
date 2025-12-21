@@ -67,10 +67,14 @@ for group in $jobsdir/*/; do
     if [[ ! -e $outdir/$groupname/$name.root ]]; then
       valid_inputs=true
       while read line; do
-        if [[ $line = root* && ! -e ${line/*store/\/hdfs\/store} ]]; then
-          valid_inputs=false
-          break
+        if [[ $line = root* ]]; then
+          if [[ ! -e ${line/*store/\/hdfs\/store} ]]; then
+            valid_inputs=false
+            break
+          fi
         elif [[ ! -e $line ]]; then
+          echo does not start with root? $line
+          [[ $line = root* ]] && echo but it does...
           valid_inputs=false
           break
         fi
