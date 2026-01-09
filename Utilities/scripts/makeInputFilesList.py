@@ -9,7 +9,6 @@
 #
 # Author: Kenneth Long, U. Wisconsin 01-10-2015
 
-import glob
 import argparse
 import subprocess
 from os import listdir
@@ -45,8 +44,7 @@ def makeLocalFileList(output_file, file_path, only_root_files):
         for file_name in files:
             if only_root_files and ".root" not in file_name:
                 continue
-            file_name=file_path+file_name
-            file_list.write(file_name+"\n")
+            file_list.write(file_path+file_name+"\n")
 
 def main():
     args = getComLineArgs()

@@ -32,8 +32,8 @@ isfile = any(os.path.isfile(name) or os.path.exists(name.rstrip("/*"))
 filelist = ConfigureJobs.getListOfFiles(args.filelist, path) if \
     not isfile else args.filelist
 states = [x.strip() for x in args.channels.split(",")]
-state_yields = dict((i,0) for i in ["eeee", "eemm", "mmmm"])
-totals = dict((i,0) for i in ["eeee","eemm", "mmmm"])
+state_yields = dict.fromkeys(["eeee", "eemm", "mmmm"], 0)
+totals = dict.fromkeys(["eeee", "eemm", "mmmm"], 0)
 totals["processed"] = 0
 total = 0
 if args.checkDuplicates:
@@ -70,8 +70,7 @@ for name in filelist:
     print("File path is %s" % file_path)
     metaChain.Add(file_path)
     state_yields["processed"] = 0
-    for state in states:
-        state = state.strip()
+    for state in [s.strip() for s in states]:
         chain = ROOT.TChain("%s/ntuple" % state)
         chain.Add(file_path)
         ApplySelection.setAliases(chain, state, "Cuts/ZZ4l2022/aliases.json")
@@ -86,7 +85,7 @@ for name in filelist:
             output_file = file_name if output_dir == "" else "/".join([output_dir, name, file_name])
             #print output_file
             if args.printEventNums:
-                outfile = open(output_file, "wa")
+                outfile = open(output_file, "w")
             outfile.write("# Made with cut: %s\n" % args.cut_string)
             for row in cut_tree:
                 eventId = '{0}:{1}:{2}'.format(row.run, row.lumi,row.evt)
@@ -129,7 +128,8 @@ print("")
 print("Results for all files:")
 total = 0
 for state, count in totals.items():
-    if state == "processed": continue
+    if state == "processed":
+        continue
     print("Summed events for all files in %s state is %i" % (state, count))
     total += count
 print("Summed events for all files in all states is %i" % total)
@@ -142,6 +142,6 @@ else:
 if args.printEventNums:
     file_name = "summary.txt"
     summary_file = file_name if output_dir == "" else "/".join([output_dir, file_name])
-    with open(summary_file, "wa") as summary:
+    with open(summary_file, "w") as summary:
         summary.write(str(event_info))
 

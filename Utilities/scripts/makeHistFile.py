@@ -3,7 +3,6 @@ import ROOT
 from python import SelectorTools
 from python import UserInput
 from python import ConfigureJobs
-import os
 import sys
 
 def writeOutputListItem(item, directory):
@@ -40,12 +39,25 @@ def getComLineArgs():
                         "by commas")
     return vars(parser.parse_args())
 
+def getRatios(hists):
+    ratios = []
+    for hist in hists:
+        if "Tight" not in hist.GetName():
+            continue
+        ratio = hist.Clone()
+        ratio.SetName(hist.GetName().replace("passingTight", "ratio"))
+        if not ratio.GetSumw2():
+            ratio.Sumw2()
+        ratio.Divide(hists.FindObject(hist.GetName().replace("Tight", "Loose")))
+        ratios.append(ratio)
+    return ratios
+
 def getDifference(name, dir1, dir2, addRatios=True):
     differences = ROOT.TList()
     differences.SetName(name)
-    channels = ["eee", "eem", "emm", "mmm"]
     for histname in [i.GetName() for i in fOut.Get(dir1).GetListOfKeys()]:
-        if histname == "sumweights": continue
+        if histname == "sumweights":
+            continue
         hist1 = fOut.Get("/".join([dir1, histname]))
         hist2 = fOut.Get("/".join([dir2, histname]))
         if hist1 and hist2:
@@ -72,7 +84,8 @@ def makeCompositeHists(name, members, lumi):
             print("Skipping invalid filename %s" % directory)
             continue
         for histname in [i.GetName() for i in fOut.Get(directory).GetListOfKeys()]:
-            if histname == "sumweights": continue
+            if histname == "sumweights":
+                continue
             hist = fOut.Get("/".join([directory, histname]))
             if hist:
                 sumhist = composite.FindObject(hist.GetName())

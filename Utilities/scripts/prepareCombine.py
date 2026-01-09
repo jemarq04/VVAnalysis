@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import ROOT
-from python import SelectorTools
 from python import UserInput
 from python import ConfigureJobs
 from python.prettytable import PrettyTable
@@ -44,7 +43,10 @@ def getComLineArgs():
                         "by commas")
     return vars(parser.parse_args())
 
-def makeCompositeHists(hist_file, name, members, lumi, hists=[]):
+def makeCompositeHists(hist_file, name, members, lumi, hists=None):
+    if hists is None:
+        hists = []
+
     composite = ROOT.TList()
     composite.SetName(name)
     for directory in [str(i) for i in list(members.keys())]:
@@ -54,7 +56,8 @@ def makeCompositeHists(hist_file, name, members, lumi, hists=[]):
         if hists == []:
             hists = [i.GetName() for i in hist_file.Get(directory).GetListOfKeys()]
         for histname in hists:
-            if histname == "sumweights": continue
+            if histname == "sumweights":
+                continue
             hist = hist_file.Get("/".join([directory, histname]))
             if hist:
                 sumhist = composite.FindObject(hist.GetName())
@@ -184,7 +187,7 @@ output_info.add_row(["nonprompt", card_info["eee"]["nonprompt"],
     card_info["mmm"]["nonprompt"], 
     sum([card_info[c]["nonprompt"] for c in chans])]
 )
-background = {c : 0 for c in chans}
+background = dict.fromkeys(chans, 0)
 for chan,yields in card_info.items():
     for name,value in yields.items():
         if name not in ["wzjj_ewk", "wzjj_vbfnlo", "output_file"]:

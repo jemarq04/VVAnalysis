@@ -11,6 +11,7 @@ ROOT.gROOT.SetBatch(True)
 import user_input
 import argparse
 import os
+import sys
 
 def getComLineArgs():
     parser = argparse.ArgumentParser()
@@ -31,7 +32,7 @@ os.chdir(sys.path[0])
 datasets = user_input.readJson("../MetaData/ntuple_info.json")
 for name, info in datasets.items():
     proof_name = '_'.join([name, args.selection])
-    if proof.GetDataSet(proof_name) == None or reRegister :
+    if proof.GetDataSet(proof_name) is None or reRegister:
         filelist = ROOT.TFileCollection(proof_name, proof_name)
         num_files = filelist.Add(info["file_path"])
         proof.RegisterDataSet(proof_name, filelist, 'OVnostagedcheck:')

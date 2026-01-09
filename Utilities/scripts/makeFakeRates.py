@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import ROOT
-import glob
 import datetime
 from python import UserInput
 from python import ConfigureJobs
@@ -34,7 +33,7 @@ def writeOutputListItem(item, directory):
 
 def getHistNames(channels):
     base_hists = [x+y for x in ["passingLoose", "passingTight"] \
-            for y in "1DEta", "1DPt", "2D"]
+            for y in ["1DEta", "1DPt", "2D"]]
     if len(channels) == 0:
         return base_hists
     return [x+"_"+y for x in base_hists for y in channels]

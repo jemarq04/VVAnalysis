@@ -1,9 +1,5 @@
 #!/usr/bin/env python3
-import ROOT
 import argparse
-import os
-from .python import ConfigureJobs
-import datetime
 
 parser = argparse.ArgumentParser() 
 parser.add_argument("-f", "--filelist", 

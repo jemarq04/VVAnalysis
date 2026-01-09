@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 import ROOT
-import glob
-import datetime
 from . import ConfigureJobs
 
 def writeOutputListItem(item, directory):
@@ -22,9 +20,14 @@ def writeOutputListItem(item, directory):
 
 def applySelector(filelist, selector_name, selection, 
         rootfile,
-        analysis="WZxsec2016", channels=["eee", "eem", "emm", "mmm"], 
-        extra_inputs = [],
+        analysis="WZxsec2016", channels=None,
+        extra_inputs=None,
         addsumweights=False, proof=False):
+    if channels is None:
+        channels = ["eee", "eem", "emm", "mmm"]
+    if extra_inputs is None:
+        extra_inputs = []
+
     path = ConfigureJobs.getManagerPath()
     for dataset in ConfigureJobs.getListOfFiles(filelist, path, selection):
         for chan in channels:
@@ -43,8 +46,8 @@ def applySelector(filelist, selector_name, selection,
                 proof_path = "_".join([dataset, analysis, 
                     selection+("#/%s/ntuple" % chan)])
                 ROOT.gProof.Process(proof_path, select, "")
-                proof_meta_path = "_".join([dataset, analysis, 
-                    selection+"#/metaInfo/metaInfo"])
+                #proof_meta_path = "_".join([dataset, analysis, 
+                #    selection+"#/metaInfo/metaInfo"])
                 ## TODO proof draw command for meta tree
                 #proof.DrawSelect(proof_path, "1>>sumweights", "")
             else: 

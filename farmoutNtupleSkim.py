@@ -1,16 +1,12 @@
 #!/usr/bin/env python3
-import argparse
-import json
 import os
 import sys
 import datetime
 import subprocess
-import glob
 from Utilities.python import UserInput
 from Utilities.python import ConfigureJobs
 import math
 import logging
-import pdb
 
 def getComLineArgs():
     parser = UserInput.getDefaultParser()
@@ -73,7 +69,8 @@ def callFarmout(output_dir, script_name, noSubmit):
         status = subprocess.call(farmout_command, stdout=log, stderr=log)
     if status != 0:
         print("Error in submitting files to condor. Check the log file: %s" % log_file_name)
-    if noSubmit: status = -1
+    if noSubmit:
+        status = -1
     return status
 def farmoutNtupleSkim(sample_name, path, selection, analysis, version, scaleFacs, deduplicateAcrossChannels, noSubmit, extraArgs, job_name=None):
     farmout_dict = {}
@@ -85,14 +82,11 @@ def farmoutNtupleSkim(sample_name, path, selection, analysis, version, scaleFacs
     )
     job_name = job_name if job_name is not None else ConfigureJobs.getJobName(sample_name, analysis, selection, version) 
     farmout_dict['base_dir'] = os.path.dirname(os.path.realpath(sys.argv[0]))
-    first_selection = selection.split(",")[0].strip()
+    #first_selection = selection.split(",")[0].strip()
     #pdb.set_trace()
     submission_dir = ("/nfs_scratch/%s/%s") \
         % (os.getlogin(), '{:%Y-%m-%d}_%sAnalysisJobs'.format(datetime.date.today()) %analysis)
-    try:
-        os.mkdir(submission_dir)
-    except:
-        pass
+    os.mkdir(submission_dir)
     farmout_dict['job_dir'] = submission_dir + "/" + job_name
     #This is to make sure the copyTree function does not fail with memory allocation due to big trees especiall in ZZ4l samples!
     if ("Run" not in sample_name):
@@ -141,7 +135,7 @@ def createRunJob(base_dir, job_dir, selection, analysis, trigger_name, addScaleF
 def main():
     #for selection in selection_map.iteritems():
     args = getComLineArgs()
-    if not "CMSSW_BASE" in os.environ:
+    if "CMSSW_BASE" not in os.environ:
         print("cmsenv not found")
         return
     path = "%s/src/Data_manager" % os.environ["CMSSW_BASE"]

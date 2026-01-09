@@ -2,12 +2,9 @@
 import ROOT
 import argparse
 import os
-import json
-import sys
 from collections import OrderedDict
 from Utilities.python import ApplySelection
 from Utilities.python.prettytable import PrettyTable
-import pdb
 
 def getComLineArgs():
     parser = argparse.ArgumentParser()

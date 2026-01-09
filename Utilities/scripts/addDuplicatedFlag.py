@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import ROOT
 import argparse
-import os
 from array import array
 
 def eventsbyChannel(setList):

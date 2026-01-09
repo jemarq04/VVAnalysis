@@ -1,11 +1,7 @@
 #!/usr/bin/env python3
 import ROOT
-from collections import OrderedDict
 from . import ConfigureJobs
-import os
-import sys
 from . import UserInput
-import time
 
 class CutString(object):
     def __init__(self):
@@ -29,8 +25,8 @@ def buildCutString(state, selections, analysis, trigger):
             trigger_string = getTriggerCutString(trigger, analysis)
             if not cut_string.contains(trigger_string):
                 cut_string.append(trigger_string)
-        counts = dict((lep, state.count(lep)) for lep in state)
-        current = dict((lep, 0) for lep in state)
+        counts = {lep: state.count(lep) for lep in state}
+        current = dict.fromkeys(state, 0)
         for lep in state:
             current[lep] += 1
             lep_name = ''.join([lep, "" if counts[lep] == 1 else str(current[lep])])
@@ -51,7 +47,7 @@ def applySelection(tree, state, selection, analysis, trigger):
     cut_string = buildCutString(state, analysis, selection, trigger)
     #tree.SetProof()
     listname = '_'.join(["list", state])
-    num_passing = tree.Draw(">>" + listname, cut_string.getString(), "entrylist")
+    tree.Draw(">>" + listname, cut_string.getString(), "entrylist")
     #tlist = ROOT.gProof.GetOutputList().FindObject(listname) 
-    tlist = ROOT.gDirectory.FindObject(listname);
+    tlist = ROOT.gDirectory.FindObject(listname)
     tree.SetEntryList(tlist)
