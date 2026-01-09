@@ -36,7 +36,7 @@ def getComLineArgs():
         default="test.root", help="Output file name")
     parser.add_argument("--folder_name", type=str,
         default="", help="Name for combine folder (date by default)")
-    parser.add_argument("-b", "--hist_names", 
+    parser.add_argument("-b", "--hist_names",
                         type=lambda x : [i.strip() for i in x.split(',')],
                         default=["all"], help="List of histograms, "
                         "as defined in AnalysisDatasetManager, separated "
@@ -85,7 +85,7 @@ ROOT.gROOT.SetBatch(True)
 chans = ["eee", "eem", "emm", "mmm"]
 args = getComLineArgs()
 
-manager_path = ConfigureJobs.getManagerPath() 
+manager_path = ConfigureJobs.getManagerPath()
 sys.path.append("/".join([manager_path, "AnalysisDatasetManager",
     "Utilities/python"]))
 
@@ -99,7 +99,7 @@ fOut = ROOT.TFile(args['output_file'], "recreate")
 fIn = ROOT.TFile(args['input_file'])
 
 card_info = {
-    "eee" : { 
+    "eee" : {
         "wzjj-vbfnlo" : 0,
         "wzjj-ewk" : 0,
         "wz-mgmlm" : 0,
@@ -140,11 +140,11 @@ def getStatHists(hist, name, chan):
     for i in range(hist.GetNbinsX()):
         up = hist.GetBinContent(i)+hist.GetBinErrorUp(i)
         down = hist.GetBinContent(i)-hist.GetBinErrorLow(i)
-        statUp_hist.SetBinContent(i, up if up > 0 else 0) 
-        statDown_hist.SetBinContent(i, down if down > 0 else 0) 
+        statUp_hist.SetBinContent(i, up if up > 0 else 0)
+        statDown_hist.SetBinContent(i, down if down > 0 else 0)
     return [statUp_hist, statDown_hist]
 
-alldata = makeCompositeHists(fIn, "AllData", 
+alldata = makeCompositeHists(fIn, "AllData",
     ConfigureJobs.getListOfFilesWithXSec(["WZxsec2016data"], manager_path), args['lumi'],
     ["mjj_" + c for c in chans])
 writeOutputListItem(alldata, fOut)
@@ -170,21 +170,21 @@ for plot_group in ["wz-mgmlm", "wzjj-vbfnlo", "wzjj-ewk", "top-ewk", "zg", "vv"]
     name = plot_group.replace("-", "_")
     for chan in chans:
         hist = group.FindObject("mjj_"+chan)
-        card_info[chan][name] = round(hist.Integral(), 4) 
+        card_info[chan][name] = round(hist.Integral(), 4)
         card_info[chan]["output_file"] = args['output_file']
         stat_hists = getStatHists(hist, plot_group, chan)
         group.extend(stat_hists)
     writeOutputListItem(group, fOut)
-    output_info.add_row([plot_group, card_info["eee"][name], 
-        card_info["eem"][name], 
-        card_info["emm"][name], 
-        card_info["mmm"][name], 
+    output_info.add_row([plot_group, card_info["eee"][name],
+        card_info["eem"][name],
+        card_info["emm"][name],
+        card_info["mmm"][name],
         sum([card_info[c][name] for c in chans])]
     )
-output_info.add_row(["nonprompt", card_info["eee"]["nonprompt"], 
-    card_info["eem"]["nonprompt"], 
-    card_info["emm"]["nonprompt"], 
-    card_info["mmm"]["nonprompt"], 
+output_info.add_row(["nonprompt", card_info["eee"]["nonprompt"],
+    card_info["eem"]["nonprompt"],
+    card_info["emm"]["nonprompt"],
+    card_info["mmm"]["nonprompt"],
     sum([card_info[c]["nonprompt"] for c in chans])]
 )
 background = dict.fromkeys(chans, 0)
@@ -192,21 +192,21 @@ for chan,yields in card_info.items():
     for name,value in yields.items():
         if name not in ["wzjj_ewk", "wzjj_vbfnlo", "output_file"]:
             background[chan] += float(value)
-output_info.add_row(["Total background", 
-    round(background["eee"], 4), 
-    round(background["eem"], 4), 
-    round(background["emm"], 4), 
+output_info.add_row(["Total background",
+    round(background["eee"], 4),
+    round(background["eem"], 4),
+    round(background["emm"], 4),
     round(background["mmm"], 4),
-    round(sum([background[c] for c in chans]), 4), 
+    round(sum([background[c] for c in chans]), 4),
 ])
 for name in ["wzjj_ewk", "wzjj_vbfnlo"]:
-    significance_info.add_row([name, 
-        round(card_info["eee"][name]/math.sqrt(background["eee"]), 4), 
-        round(card_info["eem"][name]/math.sqrt(background["eem"]), 4), 
-        round(card_info["emm"][name]/math.sqrt(background["emm"]), 4), 
-        round(card_info["mmm"][name]/math.sqrt(background["mmm"]), 4), 
+    significance_info.add_row([name,
+        round(card_info["eee"][name]/math.sqrt(background["eee"]), 4),
+        round(card_info["eem"][name]/math.sqrt(background["eem"]), 4),
+        round(card_info["emm"][name]/math.sqrt(background["emm"]), 4),
+        round(card_info["mmm"][name]/math.sqrt(background["mmm"]), 4),
         round(sum([card_info[c][name] for c in chans])
-            /math.sqrt(sum([background[c] for c in chans])), 4), 
+            /math.sqrt(sum([background[c] for c in chans])), 4),
     ])
 
 combine_dir = "/afs/cern.ch/user/k/kelong/work/HiggsCombine/CMSSW_7_4_7/src/HiggsAnalysis/CombinedLimit"
@@ -231,11 +231,11 @@ for chan, chan_dict in card_info.items():
     chan_dict["signal_yield"] = chan_dict[signal]
     ConfigureJobs.fillTemplatedFile(
         'Templates/CombineCards/WZjj_EWK_template_%s.txt' % chan,
-        '%s/WZjj_%s_%s.txt' % (output_dir, signal_abv, chan), 
+        '%s/WZjj_%s_%s.txt' % (output_dir, signal_abv, chan),
         chan_dict
     )
 ConfigureJobs.fillTemplatedFile(
     'Templates/CombineCards/runCombine_Template.sh',
-    '%s/runCombine_%s.sh' % (output_dir, signal_abv), 
+    '%s/runCombine_%s.sh' % (output_dir, signal_abv),
     {"sample" : signal_abv}
 )

@@ -47,7 +47,7 @@ def getEventScore(original_file):
                 if(abs(i.e1_e2_Mass-91.1876) < abs(i.m1_m2_Mass-91.1876)):
                     mass_discriminant=abs(i.e1_e2_Mass-91.1876)
                     Z2PtSum = (i.m1Pt + i.m2Pt)
-                else: 
+                else:
                     mass_discriminant=abs(i.m1_m2_Mass-91.1876)
                     Z2PtSum = (i.e1Pt + i.e2Pt)
                 score.append(mass_discriminant)
@@ -66,7 +66,7 @@ def getEventScore(original_file):
 def getSetIntersections(setList):
     SetIntersectionList=[]
     ab = set.intersection(setList[0],setList[1])
-    bc = set.intersection(setList[1],setList[2]) 
+    bc = set.intersection(setList[1],setList[2])
     ac = set.intersection(setList[0],setList[2])
     SetIntersectionList.append(ab)
     SetIntersectionList.append(bc)
@@ -75,7 +75,7 @@ def getSetIntersections(setList):
 
 #flagduplicates function calls a list of dictionaries events_score, events(list of sets to be modified) and SetIntersectionList
 def flagduplicates(IntersectionList,dictList):
-    eeee_flag=[] 
+    eeee_flag=[]
     eemm_flag=[]
     mmmm_flag=[]
     FlaggedEventsList=[]
@@ -96,7 +96,7 @@ def flagduplicates(IntersectionList,dictList):
             if((event_score_eeee[i][0] < event_score_eemm[i][0]) or ((event_score_eeee[i][0] == event_score_eemm[i][0]) and (event_score_eeee[i][1] > event_score_eemm[i][1]))):
                 eemm_flag.append(i)
             else:
-                eeee_flag.append(i) 
+                eeee_flag.append(i)
     if(len(eemm_mmmm) > 0):
         #use i as the key to get the "score" list in the relevant dictionaries
         #mass_discriminant = score[0], Z2PtSum = score[1]
@@ -177,7 +177,7 @@ original_file = ROOT.TFile(args.input_file, "UPDATE")
 
 events,events_score = getEventScore(original_file)
 #eeee_eemm,eemm_mmmm,eeee_mmmm => SetIntersectionList[0],[1],[2] respectively
-IntersectionList = getSetIntersections(events) 
+IntersectionList = getSetIntersections(events)
 eventsbyChannel(events)
 print("No.of events in eeee_eemm intersection: ",len(IntersectionList[0]))
 print("No.of events in eemm_mmmm intersection: ",len(IntersectionList[1]))

@@ -1,6 +1,6 @@
 {
     "Object" : {
-        "e" : [ 
+        "e" : [
             "({object_name}ZZLooseID > 0.5)"
         ],
         "m" : [
@@ -10,11 +10,11 @@
     "State" : {
         "eee" : ["((e1_e2_SS >= 1 || e1_e2_Mass >= 4.0) && (e1_e3_SS >= 1 || e1_e3_Mass >= 4.0) && (e2_e3_SS >= 1 ||  e2_e3_Mass >= 4.0))"
         ],
-        "mmm" : ["((m1_m2_SS >= 1 || m1_m2_Mass >= 4.0) && (m1_m3_SS >= 1 || m1_m3_Mass >= 4.0) && (m2_m3_SS >= 1 ||  m2_m3_Mass >= 4.0))" 
+        "mmm" : ["((m1_m2_SS >= 1 || m1_m2_Mass >= 4.0) && (m1_m3_SS >= 1 || m1_m3_Mass >= 4.0) && (m2_m3_SS >= 1 ||  m2_m3_Mass >= 4.0))"
         ],
-        "eem" : ["((e1_e2_SS >= 1 || e1_e2_Mass >= 4.0) && (e1_m_SS >= 1 || e1_m_Mass >= 4.0) && (e2_m_SS >= 1 ||  e2_m_Mass >= 4.0))" 
+        "eem" : ["((e1_e2_SS >= 1 || e1_e2_Mass >= 4.0) && (e1_m_SS >= 1 || e1_m_Mass >= 4.0) && (e2_m_SS >= 1 ||  e2_m_Mass >= 4.0))"
         ],
-        "emm" : ["((m1_m2_SS >= 1 || m1_m2_Mass >= 4.0) && (e_m1_SS >= 1 || e_m1_Mass >= 4.0) && (e_m2_SS >= 1 ||  e_m2_Mass >= 4.0))" 
+        "emm" : ["((m1_m2_SS >= 1 || m1_m2_Mass >= 4.0) && (e_m1_SS >= 1 || e_m1_Mass >= 4.0) && (e_m2_SS >= 1 ||  e_m2_Mass >= 4.0))"
           ]
     },
     "Event" : [

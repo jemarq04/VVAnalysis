@@ -6,8 +6,8 @@ from python import ConfigureJobs,ApplySelection
 from python.prettytable import PrettyTable
 import datetime
 
-parser = argparse.ArgumentParser() 
-parser.add_argument("-f", "--filelist", 
+parser = argparse.ArgumentParser()
+parser.add_argument("-f", "--filelist",
                     type=lambda x : [i.strip() for i in x.split(',')],
                     required=True, help="List of input file names "
                     "to be processed (separated by commas)")
@@ -27,7 +27,7 @@ parser.add_argument("-o", "--output_dir", required=False, type=str,
 args = parser.parse_args()
 path = "/cms/kdlong" if "hep.wisc.edu" in os.environ['HOSTNAME'] else \
         "/afs/cern.ch/user/u/uhussain/work"
-isfile = any(os.path.isfile(name) or os.path.exists(name.rstrip("/*")) 
+isfile = any(os.path.isfile(name) or os.path.exists(name.rstrip("/*"))
                 for name in args.filelist)
 filelist = ConfigureJobs.getListOfFiles(args.filelist, path) if \
     not isfile else args.filelist
@@ -44,7 +44,7 @@ if args.output_selection == "":
     args.output_selection = args.selection
 output_dir = ""
 if args.printEventNums:
-    output_dir = '/'.join([args.output_dir, 
+    output_dir = '/'.join([args.output_dir,
             "EventYields_Usama_{:%Y-%m-%d}".format(datetime.date.today()),
             args.output_selection])
 
@@ -144,4 +144,3 @@ if args.printEventNums:
     summary_file = file_name if output_dir == "" else "/".join([output_dir, file_name])
     with open(summary_file, "w") as summary:
         summary.write(str(event_info))
-

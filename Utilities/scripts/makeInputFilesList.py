@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
-# This script takes a directory as input and creates a new file (name 
-# specifed by the user) with a list of filenames in the format required by 
-# farmoutAnalysisJobs. 
+# This script takes a directory as input and creates a new file (name
+# specifed by the user) with a list of filenames in the format required by
+# farmoutAnalysisJobs.
 
-#That is, containing a list of all the files in the directoy, one file 
-# name per line. For filenames begining with /hdfs, /hdfs is removed. 
+#That is, containing a list of all the files in the directoy, one file
+# name per line. For filenames begining with /hdfs, /hdfs is removed.
 #
 # Author: Kenneth Long, U. Wisconsin 01-10-2015
 
@@ -48,7 +48,7 @@ def makeLocalFileList(output_file, file_path, only_root_files):
 
 def main():
     args = getComLineArgs()
-    if "store" in args['file_path'][:7] or "hdfs" in args['file_path'][:7]: 
+    if "store" in args['file_path'][:7] or "hdfs" in args['file_path'][:7]:
         makeHDFSFileList(args['output_file'], args['file_path'], args['only_root_files'])
     else:
         makeLocalFileList(args['output_file'], args['file_path'], args['only_root_files'])

@@ -23,7 +23,7 @@ def writeOutputListItem(item, directory):
 
 def getComLineArgs():
     parser = UserInput.getDefaultParser()
-    parser.add_argument("--proof", "-p", 
+    parser.add_argument("--proof", "-p",
         action='store_true', help="Don't use proof")
     parser.add_argument("--lumi", "-l", type=float,
         default=35.87, help="luminosity value (in fb-1)")
@@ -32,7 +32,7 @@ def getComLineArgs():
     parser.add_argument("--output_selection", type=str,
         default="", help="Selection stage of output file "
         "(Same as input if not give)")
-    parser.add_argument("-b", "--hist_names", 
+    parser.add_argument("-b", "--hist_names",
                         type=lambda x : [i.strip() for i in x.split(',')],
                         default=["all"], help="List of histograms, "
                         "as defined in AnalysisDatasetManager, separated "
@@ -73,7 +73,7 @@ def getDifference(name, dir1, dir2, addRatios=True):
     if addRatios:
         ratios = getRatios(differences)
         for ratio in ratios:
-            differences.Add(ratio) 
+            differences.Add(ratio)
     return differences
 
 def makeCompositeHists(name, members, lumi):
@@ -117,9 +117,9 @@ ROOT.gROOT.SetBatch(True)
 
 args = getComLineArgs()
 manager_path = ConfigureJobs.getManagerPath()
-sys.path.append("/".join([manager_path, 
+sys.path.append("/".join([manager_path,
     "AnalysisDatasetManager", "Utilities/python"]))
-import HistTools 
+import HistTools
 
 tmpFileName = args['output_file']
 fOut = ROOT.TFile(tmpFileName, "recreate")
@@ -147,23 +147,23 @@ selection = args['selection'].replace("LooseLeptons", "") \
 analysis = "/".join([args['analysis'], selection])
 hists = HistTools.getAllHistNames(manager_path, analysis) \
     if "all" in args['hist_names'] else args['hist_names']
-    
+
 hist_inputs = [getHistExpr(hists, analysis)]
 tselection = [ROOT.TNamed("selection", args['output_selection'])]
 
 if args['proof']:
     ROOT.TProof.Open('workers=12')
 background = SelectorTools.applySelector(["WZxsec2016data"] +
-    ConfigureJobs.getListOfEWKFilenames(), 
-        "WZBackgroundSelector", args['selection'], fOut, 
+    ConfigureJobs.getListOfEWKFilenames(),
+        "WZBackgroundSelector", args['selection'], fOut,
         extra_inputs=fr_inputs+hist_inputs+tselection, proof=args['proof'])
-mc = SelectorTools.applySelector(["WZxsec2016"], "WZSelector", args['selection'], fOut, 
+mc = SelectorTools.applySelector(["WZxsec2016"], "WZSelector", args['selection'], fOut,
         extra_inputs=sf_inputs+hist_inputs+tselection, addsumweights=True, proof=args['proof'])
 
-alldata = makeCompositeHists("AllData", 
+alldata = makeCompositeHists("AllData",
     ConfigureJobs.getListOfFilesWithXSec(["WZxsec2016data"], manager_path), args['lumi'])
 writeOutputListItem(alldata, fOut)
-nonpromptmc = makeCompositeHists("NonpromptMC", ConfigureJobs.getListOfFilesWithXSec( 
+nonpromptmc = makeCompositeHists("NonpromptMC", ConfigureJobs.getListOfFilesWithXSec(
     ConfigureJobs.getListOfNonpromptFilenames(), manager_path), args['lumi'])
 writeOutputListItem(nonpromptmc, fOut)
 ewkmc = makeCompositeHists("AllEWK", ConfigureJobs.getListOfFilesWithXSec(

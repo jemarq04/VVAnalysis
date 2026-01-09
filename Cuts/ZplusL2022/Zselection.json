@@ -1,6 +1,6 @@
 {
     "Object" : {
-        "e" : [ 
+        "e" : [
         ],
         "m" : [
         ]
@@ -15,6 +15,6 @@
         "emm" : ["((m1_m2_Mass >= 40 && m1_m2_Mass < 120 && m1_m2_SS < 1) && (m1ZZTightID > 0.5 && m2ZZTightID > 0.5 && m1ZZIsoPass > 0.5 && m2ZZIsoPass > 0.5))"
         ]
     },
-    "Event" : [      
+    "Event" : [
     ]
 }

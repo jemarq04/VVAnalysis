@@ -1,5 +1,5 @@
 #!/bin/bash
-# This script was created at ${time} with the command: 
+# This script was created at ${time} with the command:
 #     ${command}
 #
 # To resubmit failed jobs: ./farmout.sh --resubmit-failed-jobs

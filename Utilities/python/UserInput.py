@@ -13,7 +13,7 @@ def readJson(json_file_name):
         try:
             json_info = json.load(json_file)
         except ValueError as err:
-            print("Error reading JSON file %s. The error message was:" % json_file_name) 
+            print("Error reading JSON file %s. The error message was:" % json_file_name)
             print(err)
     return json_info
 def getDefaultParser():
@@ -27,7 +27,7 @@ def getDefaultParser():
     parser.add_argument("-a", "--analysis", type=str,
                         required=False, default="ZZ4l2022",
                         help="Analysis name, used in selecting the cut json")
-    parser.add_argument("-f", "--filenames", 
+    parser.add_argument("-f", "--filenames",
                         type=lambda x : [i.strip() for i in x.split(',')],
                         default=["ZZ4l2022"], help="List of input file names, "
                         "as defined in ZZ4lDatasetManager, separated "

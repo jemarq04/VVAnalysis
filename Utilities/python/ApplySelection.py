@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import ROOT
 from . import ConfigureJobs
 from . import UserInput
@@ -48,6 +47,6 @@ def applySelection(tree, state, selection, analysis, trigger):
     #tree.SetProof()
     listname = '_'.join(["list", state])
     tree.Draw(">>" + listname, cut_string.getString(), "entrylist")
-    #tlist = ROOT.gProof.GetOutputList().FindObject(listname) 
+    #tlist = ROOT.gProof.GetOutputList().FindObject(listname)
     tlist = ROOT.gDirectory.FindObject(listname)
     tree.SetEntryList(tlist)

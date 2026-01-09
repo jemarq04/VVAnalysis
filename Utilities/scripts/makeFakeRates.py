@@ -7,7 +7,7 @@ from python import ConfigureJobs
 channels = ["eee", "eem", "emm", "mmm"]
 def getComLineArgs():
     parser = UserInput.getDefaultParser()
-    parser.add_argument("--proof", "-p", 
+    parser.add_argument("--proof", "-p",
         action='store_true', help="Don't use proof")
     parser.add_argument("--lumi", "-l", type=float,
         default=35.87, help="luminosity value (in fb-1)")
@@ -56,16 +56,16 @@ def makeCompositeHists(name, members, addRatios=True, overflow=True):
                     for i in range(1,xbins):
                         setbin = hist.GetBin(i, ybins)
                         obin = hist.GetBin(i, ybins+1)
-                        hist.SetBinContent(setbin, 
+                        hist.SetBinContent(setbin,
                             hist.GetBinContent(obin)+hist.GetBinContent(setbin))
                     for i in range(1, ybins):
                         setbin = hist.GetBin(xbins, i)
                         obin = hist.GetBin(xbins+1, i)
-                        hist.SetBinContent(setbin, 
+                        hist.SetBinContent(setbin,
                             hist.GetBinContent(obin)+hist.GetBinContent(setbin))
                     setbin = hist.GetBin(xbins, ybins)
                     obin = hist.GetBin(xbins+1, ybins+1)
-                    hist.SetBinContent(setbin, 
+                    hist.SetBinContent(setbin,
                         hist.GetBinContent(obin)+hist.GetBinContent(setbin))
             else:
                 raise RuntimeError("hist %s was not produced for "
@@ -87,7 +87,7 @@ def makeCompositeHists(name, members, addRatios=True, overflow=True):
     if addRatios:
         ratios = getRatios(composite)
         for ratio in ratios:
-            composite.Add(ratio) 
+            composite.Add(ratio)
     return composite
 
 def getDifference(name, dir1, dir2, addRatios=True, composite=True):
@@ -108,7 +108,7 @@ def getDifference(name, dir1, dir2, addRatios=True, composite=True):
     if addRatios:
         ratios = getRatios(differences)
         for ratio in ratios:
-            differences.Add(ratio) 
+            differences.Add(ratio)
     return differences
 
 def getRatios(hists):
@@ -136,7 +136,7 @@ fOut = ROOT.TFile(fileName, "recreate")
 selector_name = "FakeRateSelector"
 path = ConfigureJobs.getManagerPath()
 for dataset in ConfigureJobs.getListOfFiles(args['filenames'], path, args['selection']):
-    for chan in channels: 
+    for chan in channels:
         select = getattr(ROOT, selector_name)()
         inputs = ROOT.TList()
         select.SetInputList(inputs)
@@ -147,18 +147,18 @@ for dataset in ConfigureJobs.getListOfFiles(args['filenames'], path, args['selec
         ROOT.gROOT.cd()
         sumweights_hist = ROOT.TH1D("sumweights", "sumweights", 1,0,100)
         if proof:
-            proof_path = "_".join([dataset, args['analysis'], 
+            proof_path = "_".join([dataset, args['analysis'],
                 args['selection']+("#/%s/ntuple" % chan)])
             proof.Process(proof_path, select, "")
-            proof_meta_path = "_".join([dataset, args['analysis'], 
+            proof_meta_path = "_".join([dataset, args['analysis'],
                 args['selection']+"#/metaInfo/metaInfo"])
             ## TODO proof draw command for meta tree
             #proof.DrawSelect(proof_path, "1>>sumweights", "")
-        else: 
+        else:
             chain = ROOT.TChain("%s/ntuple" % chan)
             meta_chain = ROOT.TChain("metaInfo/metaInfo")
             try:
-                file_path = ConfigureJobs.getInputFilesPath(dataset, 
+                file_path = ConfigureJobs.getInputFilesPath(dataset,
                     path, args['selection'], args['analysis'])
                 print(file_path)
                 chain.Add(file_path)

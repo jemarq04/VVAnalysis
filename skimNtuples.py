@@ -86,7 +86,7 @@ def getDeduplicatedListForTree(tree, analysis, state, cut_string):
             l2_cand_Iso = "m2ZZIsoPass"
             l3_cand_Iso = "m3ZZIsoPass"
             l4_cand_Iso = "m4ZZIsoPass"
-        else: 
+        else:
             l1_l2_cand_mass = "e1_e2_Mass"
             l1_cand_pt = "e1Pt"
             l2_cand_pt = "e2Pt"
@@ -108,11 +108,11 @@ def getDeduplicatedListForTree(tree, analysis, state, cut_string):
     print("selector: ",selector.GetStatus())
     return entryList
 def getDeduplicatedListForChain(input_files, analysis, state, cut_string):
-    fullEntryList = ROOT.TEntryList() 
+    fullEntryList = ROOT.TEntryList()
     for i, input_file in enumerate(input_files):
         rtfile = ROOT.TFile.Open(input_file)
         tree = rtfile.Get("%s/ntuple" % state)
-        entryList = getDeduplicatedListForTree(tree, analysis, state, cut_string) 
+        entryList = getDeduplicatedListForTree(tree, analysis, state, cut_string)
         entryList.SetName(rtfile.GetName())
         entryList.SetTreeNumber(i)
         entryList.SetTree(tree)
@@ -166,7 +166,7 @@ def skimNtuple(selections, analysis, trigger, filelist, output_file_name,saveGen
                 Gentree = ROOT.TChain("%sGen/ntuple" % state)
                 for file_path in input_files:
                     Gentree.Add(file_path)
-            else: 
+            else:
                 input_file = ROOT.TFile.Open(input_files[0])
                 Gentree = input_file.Get("%sGen/ntuple" % state)
             writeGenTreeToFile(output_file,state,Gentree)
@@ -176,7 +176,7 @@ def skimNtuple(selections, analysis, trigger, filelist, output_file_name,saveGen
             tree = ROOT.TChain("%s/ntuple" % state)
             for file_path in input_files:
                 tree.Add(file_path)
-        else: 
+        else:
             input_file = ROOT.TFile.Open(input_files[0])
             tree = input_file.Get("%s/ntuple" % state)
         event_counts["Input"][state] = tree.GetEntries()
@@ -187,7 +187,7 @@ def skimNtuple(selections, analysis, trigger, filelist, output_file_name,saveGen
             print("deduplicate: ", applyDeduplicate)
             print("selection_group: ", selection_group)
             cuts = ApplySelection.CutString()
-            cuts.append(ApplySelection.buildCutString(state, 
+            cuts.append(ApplySelection.buildCutString(state,
                 selection_group.split(","), analysis, trigger if i == 0 else "").getString())
             cut_string = cuts.getString()
             print("INFO: Cut string for channel %s is: %s" % (state, cut_string))
@@ -198,21 +198,21 @@ def skimNtuple(selections, analysis, trigger, filelist, output_file_name,saveGen
             if applyDeduplicate:
                 print(cut_string)
                 entryList = getDeduplicatedListForTree(tree, analysis, state, cut_string) \
-                    if len(input_files) == 1 else getDeduplicatedListForChain(input_files, analysis, state, cut_string) 
+                    if len(input_files) == 1 else getDeduplicatedListForChain(input_files, analysis, state, cut_string)
                 tree.SetEntryList(entryList)
             if not isFirstOfMultistep:
-                event_counts[selection_group][state] = writeNtupleToFile(output_file, tree, state, 
+                event_counts[selection_group][state] = writeNtupleToFile(output_file, tree, state,
                     cut_string, applyDeduplicate)
-                print("Entries after each step: ", event_counts[selection_group][state]) 
+                print("Entries after each step: ", event_counts[selection_group][state])
             else:
-                event_counts[selection_group][state] = writeNtupleToFile(tmpfile, tree, state, 
+                event_counts[selection_group][state] = writeNtupleToFile(tmpfile, tree, state,
                     cut_string, applyDeduplicate)
                 tree = tmpfile.Get("%s/ntuple" % state)
                 print("Entries after first step: ", tree.GetEntries())
         if tmpfile:
             tmpfile.Close()
     writeMetaTreeToFile(output_file, metaTree)
-    
+
     if "WZ" in analysis or "ZplusL" in analysis:
         event_info = PrettyTable(["Selection", "eee", "eem", "emm", "mmm"])
         for selection, events in event_counts.items():
@@ -229,13 +229,13 @@ def skimNtuple(selections, analysis, trigger, filelist, output_file_name,saveGen
     else:
         print("NOTE: Events NOT deduplicated! Event may appear in multiple rows of ntuple!\n")
     print(event_info.get_string())
-    
+
     if tmpfile != 0:
         os.remove(tmpfile.GetName())
 def main():
     args = getComLineArgs()
     print(args['filelist'])
-    skimNtuple(args['selections'], args['analysis'], args['trigger'], args['filelist'], 
+    skimNtuple(args['selections'], args['analysis'], args['trigger'], args['filelist'],
         args['output_file_name'], args['save_genTrees'], not args['no_deduplicate'])
     exit(0)
 if __name__ == "__main__":

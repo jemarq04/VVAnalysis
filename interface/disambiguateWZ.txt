@@ -31,7 +31,7 @@ public :
 
   TEntryList     *fBestCandidateEntryList;
 
-  // TODO Add TTreeFormula, fix issue when using chain.Process 
+  // TODO Add TTreeFormula, fix issue when using chain.Process
   // over multiple files (currently segfaults)
   TTreeFormula   *fCutFormula;
 
@@ -64,4 +64,3 @@ private :
 };
 
 #endif
-

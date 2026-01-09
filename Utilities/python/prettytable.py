@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-#
 # PrettyTable 0.5
 # Copyright (c) 2009, Luke Maurits <luke@maurits.id.au>
 # All rights reserved.
@@ -362,7 +360,7 @@ class PrettyTable:
             latex_line = line.replace("& ", "", 1)
             latex_string += latex_line[::-1].replace("&",r"\\",1)[::-1] + "\n"
         latex_string += "\\hline\n\\end{tabular}"
-        return latex_string 
+        return latex_string
 
     def _stringify_hrule(self, fields=None, border=True):
 
@@ -631,5 +629,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-

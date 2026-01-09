@@ -1,9 +1,9 @@
 /*
  * TSelector deduplicate events in combinatorical ntuple
  * by choosing event with l1_l2_Mass pairing closest to
- * M_PDG(Z) = 91.1876 
+ * M_PDG(Z) = 91.1876
  * with the highest scalar Pt sum of the remaining leptons
- * used as a tiebreaker. 
+ * used as a tiebreaker.
  *
  * Modified from K. Long, U. Wisconsin
  *

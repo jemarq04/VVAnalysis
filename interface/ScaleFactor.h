@@ -1,7 +1,7 @@
 /* Scale Factor class for applying scale factors in ROOT hists etc.
  *
  * By N. Smith, U. Wisconsin
- * 
+ *
  */
 #ifndef ScaleFactors_h
 #define ScaleFactors_h

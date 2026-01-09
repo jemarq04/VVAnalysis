@@ -10,7 +10,7 @@ def buildevents(state, datasets, deduplicate=False):
     chain = ROOT.TChain("%s/ntuple" % state)
     for i in glob.glob(datasets):
         chain.Add(str(i)+"/*")
-    
+
     events = []
     event_map = {}
     for i in chain:
@@ -28,7 +28,7 @@ def buildevents(state, datasets, deduplicate=False):
                 if not (i.singleESingleMuPass or i.singleMuSingleEPass or i.doubleMuPass or i.singleMuPass or i.singleIsoMuPass):
                     continue
         events.append('{0}:{1}:{2}'.format(i.run,i.lumi,i.evt))
-        event_map.update({'{0}:{1}:{2}'.format(i.run,i.lumi,i.evt) : 
+        event_map.update({'{0}:{1}:{2}'.format(i.run,i.lumi,i.evt) :
             i.GetFile().GetName() +
             "\n\tPass DoubleMuon = %s" % i.doubleMuPass +
             "\n\tPass DoubleMuDZ = %s" % i.doubleMuDZPass +
@@ -42,7 +42,7 @@ def buildevents(state, datasets, deduplicate=False):
 allevents = []
 events,event_map = buildevents("mmm", "Wselection/2017-05-29-data_*Muon*")
 checkduplicates(events)
-    
+
 print("\n", "-"*80)
 print("DoubleMuon")
 events, _ = buildevents("mmm", "Wselection/2017-05-29-data_DoubleMuon*")

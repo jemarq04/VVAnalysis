@@ -4,33 +4,33 @@ kmax 14  number of nuisance parameters (sources of systematical uncertainties)
 ------------
 
 shapes WZjj_EWK  * ${output_file} ${signal_name}/mjj_$$CHANNEL  ${signal_name}/mjj_$$SYSTEMATIC_$$CHANNEL
-shapes WZjj_QCD  * ${output_file} wz-mgmlm/mjj_$$CHANNEL       wz-mgmlm/mjj_$$SYSTEMATIC_$$CHANNEL 
-shapes vv        * ${output_file} vv/mjj_$$CHANNEL             vv/mjj_$$SYSTEMATIC_$$CHANNEL 
-shapes top-ewk   * ${output_file} top-ewk/mjj_$$CHANNEL        top-ewk/mjj_$$SYSTEMATIC_$$CHANNEL 
-shapes zg        * ${output_file} zg/mjj_$$CHANNEL             zg/mjj_$$SYSTEMATIC_$$CHANNEL 
+shapes WZjj_QCD  * ${output_file} wz-mgmlm/mjj_$$CHANNEL       wz-mgmlm/mjj_$$SYSTEMATIC_$$CHANNEL
+shapes vv        * ${output_file} vv/mjj_$$CHANNEL             vv/mjj_$$SYSTEMATIC_$$CHANNEL
+shapes top-ewk   * ${output_file} top-ewk/mjj_$$CHANNEL        top-ewk/mjj_$$SYSTEMATIC_$$CHANNEL
+shapes zg        * ${output_file} zg/mjj_$$CHANNEL             zg/mjj_$$SYSTEMATIC_$$CHANNEL
 
 shapes nonprompt * ${output_file} DataEWKCorrected/mjj_Fakes_$$CHANNEL DataEWKCorrected/mjj_Fakes_$$SYSTEMATIC_$$CHANNEL
 shapes data_obs *  ${output_file} AllData/mjj_$$CHANNEL
 
-bin          emm   
-observation  -1.0 
+bin          emm
+observation  -1.0
 
 ------------
 # now we list the expected events for signal and all backgrounds in that bin
 # the second 'process' line must have a positive number for backgrounds, and 0 for signal
 # then we list the independent sources of uncertainties, and give their effect (syst. error)
 # on each process and bin
-bin                     emm             emm             emm         emm             emm         emm         
-process                 WZjj_EWK        WZjj_QCD        vv          top-ewk         zg          nonprompt   
-process                 0               1               2           3               4           5           
-rate                    ${signal_yield} ${wz_mgmlm}     ${vv}       ${top_ewk}      ${zg}       ${nonprompt} 
-------------                                                                                                                                                                                                                 
-lumi            lnN     1.025           1.025           1.025       1.025           1.025       -          
-PDF             lnN     1.05            1.05            1.05        1.05            1.05        -          
-bkgd_scale      lnN     -               -               1.05        1.05            1.1         -          
+bin                     emm             emm             emm         emm             emm         emm
+process                 WZjj_EWK        WZjj_QCD        vv          top-ewk         zg          nonprompt
+process                 0               1               2           3               4           5
+rate                    ${signal_yield} ${wz_mgmlm}     ${vv}       ${top_ewk}      ${zg}       ${nonprompt}
+------------
+lumi            lnN     1.025           1.025           1.025       1.025           1.025       -
+PDF             lnN     1.05            1.05            1.05        1.05            1.05        -
+bkgd_scale      lnN     -               -               1.05        1.05            1.1         -
 WZjj_ewk_scale  lnN     1.1             -               -           -               -           -
-WZjj_qcd_scale  lnN     -               1.15            -           -               -           -          
-norm_nonprompt  lnN     -               -               -           -               -           1.4        
+WZjj_qcd_scale  lnN     -               1.15            -           -               -           -
+norm_nonprompt  lnN     -               -               -           -               -           1.4
 jes             shape   1               1               1           1               0           -
 jer             shape   1               1               1           1               0           -
 ${signal_name}_stat shape 1             -               -           -               -           -

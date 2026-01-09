@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import ROOT
 from . import ConfigureJobs
 
@@ -18,7 +17,7 @@ def writeOutputListItem(item, directory):
         print(repr(item))
     directory.cd()
 
-def applySelector(filelist, selector_name, selection, 
+def applySelector(filelist, selector_name, selection,
         rootfile,
         analysis="WZxsec2016", channels=None,
         extra_inputs=None,
@@ -43,18 +42,18 @@ def applySelector(filelist, selector_name, selection,
             ROOT.gROOT.cd()
             sumweights_hist = 0
             if proof:
-                proof_path = "_".join([dataset, analysis, 
+                proof_path = "_".join([dataset, analysis,
                     selection+("#/%s/ntuple" % chan)])
                 ROOT.gProof.Process(proof_path, select, "")
-                #proof_meta_path = "_".join([dataset, analysis, 
+                #proof_meta_path = "_".join([dataset, analysis,
                 #    selection+"#/metaInfo/metaInfo"])
                 ## TODO proof draw command for meta tree
                 #proof.DrawSelect(proof_path, "1>>sumweights", "")
-            else: 
+            else:
                 chain = ROOT.TChain("%s/ntuple" % chan)
                 meta_chain = ROOT.TChain("metaInfo/metaInfo")
                 try:
-                    file_path = ConfigureJobs.getInputFilesPath(dataset, 
+                    file_path = ConfigureJobs.getInputFilesPath(dataset,
                         path, selection, analysis)
                     print("File path is", file_path)
                     chain.Add(file_path)
@@ -83,4 +82,3 @@ def applySelector(filelist, selector_name, selection,
                     out.SetOwner()
                     ROOT.SetOwnership(out, False)
                     out.Delete()
-

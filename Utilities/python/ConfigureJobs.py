@@ -42,7 +42,7 @@ def getJobName(sample_name, analysis, selection, version):
     selections = selection.split(",")
     selection_name = "To".join([selections[0],selections[-1]]) \
         if len(selections) > 1 else selections[0]
-    return '-'.join([date, sample_name, analysis, selection_name, 
+    return '-'.join([date, sample_name, analysis, selection_name,
         ("v%s" % version) if version.isdigit() else version])
 def getNumberAndSizeOfLocalFiles(path_to_files):
     file_list = glob.glob(path_to_files)
@@ -161,7 +161,7 @@ def getInputFilesPath(sample_name, manager_path,selection, analysis):
     #print "filename: ",filename
     return filename
 def getCutsJsonName(selection, analysis):
-    return "/".join(["Cuts", analysis, selection + ".json"]) 
+    return "/".join(["Cuts", analysis, selection + ".json"])
 def getTriggerName(sample_name,analysis, selection):
     trigger_names = [
         "DoubleEG", "SingleElectron", "EGamma0", "EGamma1", "EGamma2", "EGamma3", "EGamma",

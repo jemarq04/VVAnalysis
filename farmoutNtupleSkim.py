@@ -14,7 +14,7 @@ def getComLineArgs():
                         help="Add lepton and pilup scale factors to "
                         "ntuple (by default they are not added)")
     parser.add_argument("--deduplicateAcrossChannels", action='store_true',
-                        help="Add a flag deduplicated==1 to ntuple for an event" 
+                        help="Add a flag deduplicated==1 to ntuple for an event"
                         "in a channel (eeee/eemm/mmmm) that does not belong to that"
                         "channel. This deduplication across channels only needs to happen"
                         "in MC samples")
@@ -51,7 +51,7 @@ def callFarmout(output_dir, script_name, noSubmit):
             '\n    %s\n' % ' '.join(sys.argv))
         log.write('Using VVAnalysis code by Kenneth Long (U. Wisconsin):\n')
         log.write('https://github.com/uhussain/VVAnalysis\n\n')
-        log.write('The git hash of the commit used and the output of git diff is below\n') 
+        log.write('The git hash of the commit used and the output of git diff is below\n')
         log.write('-'*80 + '\n')
         log.write('-'*80 + '\n')
     with open(log_file_name, 'a') as log:
@@ -75,12 +75,12 @@ def callFarmout(output_dir, script_name, noSubmit):
 def farmoutNtupleSkim(sample_name, path, selection, analysis, version, scaleFacs, deduplicateAcrossChannels, noSubmit, extraArgs, job_name=None):
     farmout_dict = {}
     farmout_dict['input_files_path'] = ConfigureJobs.getInputFilesPath(
-        sample_name, 
+        sample_name,
         path,
-        ConfigureJobs.getPreviousStep(selection, analysis), 
+        ConfigureJobs.getPreviousStep(selection, analysis),
         analysis
     )
-    job_name = job_name if job_name is not None else ConfigureJobs.getJobName(sample_name, analysis, selection, version) 
+    job_name = job_name if job_name is not None else ConfigureJobs.getJobName(sample_name, analysis, selection, version)
     farmout_dict['base_dir'] = os.path.dirname(os.path.realpath(sys.argv[0]))
     #first_selection = selection.split(",")[0].strip()
     #pdb.set_trace()
@@ -99,24 +99,24 @@ def farmoutNtupleSkim(sample_name, path, selection, analysis, version, scaleFacs
     farmout_dict['command'] = ' '.join(sys.argv)
     script_name = '/'.join([farmout_dict['job_dir'], 'farmout.sh'])
     os.mkdir(farmout_dict['job_dir'])
-    ConfigureJobs.fillTemplatedFile('/'.join([farmout_dict['base_dir'], 
+    ConfigureJobs.fillTemplatedFile('/'.join([farmout_dict['base_dir'],
         'Templates/farmout_template.sh']),
-        script_name, 
+        script_name,
         farmout_dict
     )
-    createRunJob(farmout_dict['base_dir'], 
+    createRunJob(farmout_dict['base_dir'],
         farmout_dict['job_dir'],
         selection,
         analysis,
         ConfigureJobs.getTriggerName(sample_name,analysis, selection),
         scaleFacs and ("Run" not in sample_name),
-        deduplicateAcrossChannels and ("Run" not in sample_name), 
+        deduplicateAcrossChannels and ("Run" not in sample_name),
         extraArgs
     )
     status = callFarmout(farmout_dict['job_dir'], script_name, noSubmit)
     if status == 0:
         print("Submitted jobs for %s file set to condor." % sample_name)
-    elif status == -1: 
+    elif status == -1:
         print("Test run: submit directory created but not submitted")
     else:
         print("Jobs not submitted")
@@ -148,8 +148,8 @@ def main():
     print(filelist)
     for file_name in filelist:
         try:
-            farmoutNtupleSkim(file_name, path, args['selection'], 
-                args['analysis'], args['version'], args['scaleFacs'], args['deduplicateAcrossChannels'], 
+            farmoutNtupleSkim(file_name, path, args['selection'],
+                args['analysis'], args['version'], args['scaleFacs'], args['deduplicateAcrossChannels'],
                 args['noSubmit'], args['extraArgs'], args['jobName'])
         except (ValueError, OSError) as error:
             logging.warning(error)

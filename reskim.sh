@@ -1,3 +1,5 @@
+#!/bin/bash
+
 if [[ $# -lt 1 ]]; then
   echo usage: $0 JOBS_DIR OUT_DIR INCLUDE_MC
   echo

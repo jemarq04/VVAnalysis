@@ -1,6 +1,6 @@
 {
     "Object" : {
-        "e" : [ 
+        "e" : [
         ],
         "m" : [
         ]
@@ -10,11 +10,11 @@
         ],
         "mmm" : ["(nZZLooseMu == 3 && nZZLooseElec == 0)"
         ],
-        "eem" : ["(nZZLooseElec == 2 && nZZLooseMu == 1)" 
+        "eem" : ["(nZZLooseElec == 2 && nZZLooseMu == 1)"
         ],
-        "emm" : ["(nZZLooseElec == 1 && nZZLooseMu == 2)" 
+        "emm" : ["(nZZLooseElec == 1 && nZZLooseMu == 2)"
           ]
     },
-    "Event" : [ 
+    "Event" : [
     ]
 }

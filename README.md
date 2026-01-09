@@ -1,14 +1,14 @@
 # VVAnalysis: Run 3 Skimming
 
-This branch of the reposirory is used to skim [**UWVV**](https://github.com/jemarq04/UWVV/tree/Run3) ZZ4l ntuples with further selections and trigger cuts. 
+This branch of the reposirory is used to skim [**UWVV**](https://github.com/jemarq04/UWVV/tree/Run3) ZZ4l ntuples with further selections and trigger cuts.
 There is also a script used for choosing the best ZZ candidate in a given ZZ4l event found [here](src/disambiguateFinalStates.cc).
 
 The skimmed ntuples are then used as inputs in the **Run3Analysis** branch of this repository to create final histograms.
 
 ## Setup
 
-To set up this code, make a fork of this repository (including branches Run3Skims and Run3Analysis) and the 
-[ZZ4lDatasetManager](https://github.com/jemarq04/ZZ4lDatasetManager/) repository (including branches `for_skimming_Run3` and `for_merging_Run3`). 
+To set up this code, make a fork of this repository (including branches Run3Skims and Run3Analysis) and the
+[ZZ4lDatasetManager](https://github.com/jemarq04/ZZ4lDatasetManager/) repository (including branches `for_skimming_Run3` and `for_merging_Run3`).
 Then, run the following code replacing `YourGithubUsername` accordingly.
 
 ```bash
@@ -37,10 +37,10 @@ In `Dataset_manager/ZZ4lDatasetManager/FileInfo/ZZ4l2022`, clear `ntuples.json` 
 ```
 
 You can use asterisks in other parts of the file path if you have multiple folders.
- 
+
 The `file_path` points to the ntuples created from UWVV jobs. For submission with CRAB, these ntuples are often located in the `hdfs` directory.
 If ntuples are produced in parallel on another server, you may want to transfer the sample to hep.wisc.edu machine for this skimming (and later processing).
-`CustomDataSetName` and `CustomGroupName` are arbitrary names you can assign to your sample. They will follow the sample in the remaining processing, 
+`CustomDataSetName` and `CustomGroupName` are arbitrary names you can assign to your sample. They will follow the sample in the remaining processing,
 and it is better that the two names are different and not too general. There can be multiple datasets to a given plot group (e.g. `ZZZ_preEE` and `ZZZ_postEE`).
 
 ## Submitting condor jobs:
@@ -50,7 +50,7 @@ First, make sure your grid certificate is authenticated. You can do so by runnin
 ```bash
 voms-proxy-init --voms=cms --valid=48:00
 ```
- 
+
 Then, to run the job, simply run the following while in this directory:
 
 ```bash
@@ -59,14 +59,14 @@ Then, to run the job, simply run the following while in this directory:
 
 where `<YEAR>` is the year for the desired ZZ4l analysis. To see a help screen for this script, run `./submitSkim_ZZ.sh` without any agruments. A common option is
 `--e-gen`, which can be used for MC to keep gen-level results. However, it needs to be turned off for data.
- 
-This will create job folder in your `/nfs_scratch/` directory, and submit jobs to condor. You can check the job status with normal condor commands. 
+
+This will create job folder in your `/nfs_scratch/` directory, and submit jobs to condor. You can check the job status with normal condor commands.
 If an error occurs, you will need to remove the corresponding job folder (and maybe use `condor_rm`), and resubmit the jobs with the same command.
 
-The skimmied ntuple files will be stored in your `/hdfs/store/user/wiscUserName` folder, so create that directory if it doesn't exist. 
+The skimmied ntuple files will be stored in your `/hdfs/store/user/wiscUserName` folder, so create that directory if it doesn't exist.
 By default, it will be in the folder named `ZZ4l<YEAR>AnalysisJobs_<DATE>`.
 
 ### Fake rates
 
 Similar to the above instructions, there is a helper script to submit Z+L skimming jobs: [`submitSkim_ZL.sh`](submitSkim_ZL.sh). This requires
-updating the JSON files present in the appropriate directories (e.g. `FileData/ZplusL2022`). 
+updating the JSON files present in the appropriate directories (e.g. `FileData/ZplusL2022`).
