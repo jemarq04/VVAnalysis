@@ -1,6 +1,5 @@
 from python import HistTools, OutputTools, ConfigureJobs
 import ROOT
-import array
 import argparse
 
 parser = argparse.ArgumentParser()

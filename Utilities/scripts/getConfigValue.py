@@ -12,7 +12,7 @@ if not os.path.isfile(config_name):
 
 config = configparser.ConfigParser()
 config.read_file(open(config_name))
-if not args.variable in config['Setup']:
+if args.variable not in config['Setup']:
     raise ValueError("variable %s does not exist in config file Template/config" % args.variable)
 
 print(config['Setup'][args.variable])

@@ -1,14 +1,12 @@
 import ROOT
 import os
 from python import ConfigureJobs,ApplySelection
-from python.prettytable import PrettyTable
 import argparse
-import datetime
 
-def chunks(l, n):
+def chunks(thelist, n):
     """Yield successive n-sized chunks from l."""
-    for i in range(0, len(l), n):
-        yield l[i:i + n]
+    for i in range(0, len(thelist), n):
+        yield thelist[i:i + n]
 
 def getEventSelectionExpr(path, comparison, channel):
     events = []

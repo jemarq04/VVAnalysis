@@ -9,7 +9,6 @@
 #
 # Author: Kenneth Long, U. Wisconsin 01-10-2015
 
-import glob
 import argparse
 import subprocess
 

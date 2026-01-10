@@ -22,7 +22,7 @@ class Process():
         if channels is None:
             channels = []
         self.name = name
-        self.yields = {ch: 0 for ch in channels + ["all"]}
+        self.yields = dict.fromkeys(channels + ["all"], 0)
 
         self.variations = []
 
@@ -129,7 +129,7 @@ class CombineCardGenerator():
             with open(filename) as json_file:
                 plot_groups = json.load(json_file)
         except ValueError as err:
-            raise ValueError(f'cannot find file {filename}. error was {err}')
+            raise ValueError(f'cannot find file {filename}. error was {err}') from err
 
         for procs in [self.sig_procs, self.bkg_procs, self.data]:
             for procname in procs:
@@ -195,10 +195,10 @@ class CombineCardGenerator():
             with open("%s/%s_%s.txt" % (outdir, self.analysis, chan), "w") as outfile:
                 # Card header
                 outfile.write(f'# With input file {self.hist_infile.GetName()}\n')
-                outfile.write(f'imax 1  number of channels\n')
+                outfile.write('imax 1  number of channels\n')
                 outfile.write(f'jmax {len(self.sig_procs)+len(self.bkg_procs)-1:<2d} number of backgrounds plus signals minus 1\n')
-                outfile.write(f'kmax *  number of nuisance parameters (sources of systematical uncertainties)\n')
-                outfile.write(f'------------\n\n')
+                outfile.write('kmax *  number of nuisance parameters (sources of systematical uncertainties)\n')
+                outfile.write('------------\n\n')
 
                 # Defining shape uncertainties
                 fit_variable_name = self.fit_variable + (f"_{chan}" if chan != "all" else "")
@@ -218,13 +218,13 @@ class CombineCardGenerator():
                 outfile.write(f'shapes {"data_obs":<{self.longest_procname}} * {outdir}/{self.analysis}.root data/{fit_variable_name}\n\n')
                 outfile.write(f'bin         {chan}\n')
                 outfile.write(f'observation {self.data["data"].yields[chan]}\n\n')
-                outfile.write(f'------------\n\n')
+                outfile.write('------------\n\n')
 
                 # Begin systematics table
                 numcols = 2 + len(self.sig_procs) + len(self.bkg_procs)
                 headers = []
                 headers.append(["bin", ""] + [chan] * (numcols-2))
-                headers.append(["process", ""] + [procname for procname in list(self.sig_procs.keys()) + list(self.bkg_procs.keys())])
+                headers.append(["process", ""] + list(self.sig_procs.keys()) + list(self.bkg_procs.keys()))
                 headers.append(["process", ""] + [str(num-1) for num in range(numcols-2)])
                 headers.append(["rate", ""] + \
                         ["%.4f" % proc.yields[chan] for proc in self.sig_procs.values()] + \

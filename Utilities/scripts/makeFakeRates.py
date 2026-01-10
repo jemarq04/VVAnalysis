@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
 import ROOT
-import glob
 import datetime
 from python import UserInput,OutputTools
 from python import ConfigureJobs
 from python import SelectorTools,HistTools
 import logging
-import sys
 
 ROOT.gROOT.SetBatch(True)
 
@@ -85,7 +83,7 @@ def main():
         else:
             selector.setFileList(*args['inputs_from_file'])
 
-        mc = selector.applySelector()
+        selector.applySelector()
         fOut.Close()
 
     if args["steps"] in ["ewk", "all"]:

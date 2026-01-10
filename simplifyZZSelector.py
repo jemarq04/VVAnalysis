@@ -1,4 +1,5 @@
-import string,os,sys,pdb
+import string
+import os
 
 #Overwrite: If true, the filled template file will be copied and overwrite the respective Selector.cc file
 overwrite = False
@@ -202,14 +203,14 @@ with open("src/ZZSelectorTemplateFilledTmp.cc","r") as fout2:
                 elif "//End filling ntuple" in line:
                     line = line + "*/\n"
 
-            if not "LepPtFull" in hists1DList:
+            if "LepPtFull" not in hists1DList:
                 if "// sort lepton pt" in line:
                     line = "/*" + line
 
                 if "//finish sorting lepton pt" in line:
                     line = line + "*/" + "\n"
 
-            if not "\n" in line:
+            if "\n" not in line:
                 print("Line doesn't contain \\n")
                 line+= "\n"
 
@@ -217,8 +218,8 @@ with open("src/ZZSelectorTemplateFilledTmp.cc","r") as fout2:
                 for key in list(mapdict.keys()):
                     if mapdict[key] in line:
                         for item in odict[key]:
-                            if item in line and line.find(item) < line.find("variation") and not item in ldict[key]:
-                                if not "//" in line or line.find("//") > line.find("SafeHistFill"):
+                            if item in line and line.find(item) < line.find("variation") and item not in ldict[key]:
+                                if "//" not in line or line.find("//") > line.find("SafeHistFill"):
                                     line = "//" + line
 
 
@@ -340,7 +341,7 @@ with open("src/ZZGenSelectorTemplateFilledTmp.cc","r") as fout2Gen:
             #    if "//finish sorting lepton pt" in line:
             #        line = line + "*/" + "\n"
 
-            if not "\n" in line:
+            if "\n" not in line:
                 print("Line doesn't contain \\n")
                 line+= "\n"
 
@@ -348,8 +349,8 @@ with open("src/ZZGenSelectorTemplateFilledTmp.cc","r") as fout2Gen:
                 for key in list(Genmapdict.keys()):
                     if Genmapdict[key] in line:
                         for item in Genodict[key]:
-                            if item in line and line.find(item) < line.find("variation") and not item in Genldict[key]:
-                                if not "//" in line or line.find("//") > line.find("SafeHistFill"):
+                            if item in line and line.find(item) < line.find("variation") and item not in Genldict[key]:
+                                if "//" not in line or line.find("//") > line.find("SafeHistFill"):
                                     line = "//" + line
 
 

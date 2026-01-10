@@ -1,5 +1,4 @@
 import ROOT
-import pdb
 import json
 import array
 import math
@@ -9,7 +8,7 @@ with open('varsFile.json') as var_json_file:
 
 _binning = {}
 for key in list(myvar_dict.keys()): #key is the variable
-    if "Mass" in key and not "Full" in key:
+    if "Mass" in key and "Full" not in key:
         _binning[key] = myvar_dict["MassAllj"]["_binning"]
     else:
         _binning[key] = myvar_dict[key]["_binning"]
@@ -30,7 +29,8 @@ def rebin(hist,varName):
     hist.SetBinError(Nbins, lastbin_error)
     hist.SetBinContent(Nbins+1,0)
     hist.SetBinError(Nbins+1,0)
-    if not hist.GetSumw2(): hist.Sumw2()
+    if not hist.GetSumw2():
+        hist.Sumw2()
     return hist
 
 def listh(h): #return list
@@ -42,8 +42,8 @@ def percentDiff(h1,h2):
     list = [abs(h1.GetBinContent(i)-h2.GetBinContent(i))/(h1.GetBinContent(i)+h2.GetBinContent(i))*2.*100. for i in range(1,h1.GetNbinsX()+1)]
     return list
 
-def printr(l,ro):
-    print([round(x,ro) for x in l])
+def printr(thelist,ro):
+    print([round(x,ro) for x in thelist])
 
 #VFP = "preVFP"
 legacy_datasets = ["ZZTo4L","GluGluToContinToZZTo4e","GluGluToContinToZZTo2e2mu","GluGluToContinToZZTo4mu"]
@@ -117,8 +117,7 @@ for var in vars:
         #Have to do this manually for now
         #hpre is the prelagacy histogram
 
-        exec("hpre = ROOT.TH1D(histname,histname,%s)"%initBins[var] )
-
+        hpre = ROOT.TH1D(histname, histname, initBins[var])
         hULFull = hpre.Clone(histname+"_ULFull")
         hULEcal = hpre.Clone(histname+"_ULEcal")
 
@@ -142,13 +141,13 @@ for var in vars:
                 lumipairs = [(lumi1,"preVFP"),(lumi2,"postVFP")]
                 #additional = "/evt.L1prefiringWeight"
 
-            for lumi,VFP in lumipairs:
+            for _,VFP in lumipairs:
                 if i == 0:
                     tag = ""
                 else:
                     tag = VFP + ("L1Full" if i==1 else "L1ECAL")
 
-                for j,ds in enumerate(datasets):
+                for ds in datasets:
                     treename = ds + tag + treetag + chan
                     foldername = ds + tag
                     tree = fin.Get(treename)

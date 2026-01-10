@@ -15,7 +15,7 @@ import configparser
     #import ConfigParser as configparser
     #from six.moves import configparser
 
-def get2DBinning(xvar="mjj", yvar="etajj", analysis='WZ'):
+def get2DBinning(xvar="mjj", yvar="etajj"):
     #return (array.array('d', [500, 1000,1500, 2000, 2500]),
     # [0, 150, 300, 450] # for MT(WZ)
 #    return (array.array('d', [500, 1000, 1350, 1750, 2000, 2500]),
@@ -354,14 +354,6 @@ def getInputFilesPath(sample_name, selection, analysis, manager_path=""):
 
 def getCutsJsonName(selection, analysis):
     return "/".join(["Cuts", analysis, selection])
-
-def getTriggerName(sample_name, analysis, selection):
-    trigger_names = ["MuonEG", "DoubleMuon", "DoubleEG", "SingleMuon", "SingleElectron"]
-    if "data" in sample_name and getPreviousStep(selection, analysis) == "ntuples":
-        for name in trigger_names:
-            if name in sample_name:
-                return "-t " + name
-    return "-t MonteCarlo"
 
 def getLuminosityEras(year, manager_path=""):
     lumi_info = getLumiMap(manager_path)

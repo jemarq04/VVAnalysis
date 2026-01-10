@@ -100,7 +100,8 @@ def writeSFs(info, fname, redo_systs=False, flatten=False):
 def main():
     data_file = "data.json"
     if not os.path.isfile(data_file):
-        parser.error("invalid input JSON file")
+        print(f"invalid input JSON file: {data_file}")
+        exit(1)
     with open(data_file) as infile:
         info = json.load(infile)
 

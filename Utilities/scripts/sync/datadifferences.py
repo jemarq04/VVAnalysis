@@ -5,10 +5,10 @@ from Utilities.python import ApplySelection
 #comparison = "SvenjaNotKenneth"
 comparison = "KennethNotSvenja"
 
-def chunks(l, n):
+def chunks(thelist, n):
     """Yield successive n-sized chunks from l."""
-    for i in range(0, len(l), n):
-        yield l[i:i + n]
+    for i in range(0, len(thelist), n):
+        yield thelist[i:i + n]
 
 for chan in ["eee", "eem", "emm", "mmm"]:
     print("Info for chan", chan)

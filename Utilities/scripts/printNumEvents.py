@@ -31,8 +31,8 @@ isfile = any(os.path.isfile(name) or os.path.exists(name.rstrip("/*"))
 filelist = ConfigureJobs.getListOfFiles(args.filelist, args.selection) if \
     not isfile else args.filelist
 states = [x.strip() for x in args.channels.split(",")]
-state_yields = dict((i,0) for i in ["eee", "emm", "eem", "mmm"])
-totals = dict((i,0) for i in ["eee", "emm", "eem", "mmm"])
+state_yields = dict.fromkeys(["eee", "emm", "eem", "mmm"], 0)
+totals = dict.fromkeys(["eee", "emm", "eem", "mmm"], 0)
 totals["processed"] = 0
 total = 0
 if args.checkDuplicates:
@@ -83,7 +83,7 @@ for name in filelist:
                     selection=args.output_selection, name=name, chan=(state if args.channels != "" else ""))
             output_file = file_name if output_dir == "" else "/".join([output_dir, name, file_name])
             if args.printEventNums:
-                outfile = open(output_file, "wa")
+                outfile = open(output_file, "w")
             outfile.write("# Made with cut: %s\n" % args.cut_string)
             for row in cut_tree:
                 eventId = '{0}:{1}:{2}'.format(row.run, row.lumi,row.evt)
@@ -123,7 +123,8 @@ print("")
 print("Results for all files:")
 total = 0
 for state, count in totals.items():
-    if state == "processed": continue
+    if state == "processed":
+        continue
     print("Summed events for all files in %s state is %i" % (state, count))
     total += count
 print("Summed events for all files in all states is %i" % total)
@@ -136,5 +137,5 @@ else:
 if args.printEventNums:
     file_name = "summary.txt"
     summary_file = file_name if output_dir == "" else "/".join([output_dir, file_name])
-    with open(summary_file, "wa") as summary:
+    with open(summary_file, "w") as summary:
         summary.write(str(event_info))

@@ -9,7 +9,7 @@ import os
 import logging
 import sys
 import datetime
-import subprocess,pdb
+import subprocess
 
 #logging.basicConfig(level=logging.DEBUG)
 
@@ -157,7 +157,7 @@ def makeHistFile(args):
         selector.setDatasets(args['filenames'])
     else:
         selector.setFileList(*args['inputs_from_file'])
-    mc = selector.applySelector()
+    selector.applySelector()
 
     print("Pause here")
     #sys.exit()
@@ -167,7 +167,7 @@ def makeHistFile(args):
         selector.setInputs(sf_inputs+hist_inputs+fr_inputs)
         output_name = tmpFileName.replace(".root", "bkgd.root")
         selector.setOutputfile(output_name)
-        bkgd = selector.applySelector()
+        selector.applySelector()
         combinedNames.append(output_name)
     #pdb.set_trace()
     if args['with_Gen']:
@@ -183,7 +183,7 @@ def makeHistFile(args):
             selector.setDatasets(ConfigureJobs.getListOfGenFilenames(args['analysis']))
         else:
             selector.setFileList(*args['inputs_from_file'])
-        gen = selector.applySelector()
+        selector.applySelector()
         selector.setChannels(args['channels'])
         selector.outputFile().Close()
 

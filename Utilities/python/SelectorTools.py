@@ -1,14 +1,11 @@
 #!/usr/bin/env python3
 import ROOT
 import glob
-import datetime
 from . import ConfigureJobs, OutputTools
-import sys
 import os
 import multiprocessing
 import subprocess
 import logging
-from . import UserInput
 
 class SelectorDriver(object):
     def __init__(self, analysis, selection, input_tier, year):
@@ -288,7 +285,7 @@ class SelectorDriver(object):
 
 
     def processParallelByDataset(self, datasets, chan):
-        numCores = min(self.numCores, len(datasets))
+        #numCores = min(self.numCores, len(datasets))
         p = multiprocessing.Pool(processes=self.numCores)
         p.map(self, [[dataset, f, chan] for dataset, f in datasets.items()])
         # Store arrays in temp files, since it can get way too big to keep around in memory
@@ -330,7 +327,7 @@ class SelectorDriver(object):
         #TriggerStr = "(singleIsoMuPass || doubleMuDZPass || tripleMuPass)"
         #TriggerStr = "((singleIsoMuPass || doubleMuDZPass || tripleMuPass) && (singleEPass || doubleEPass || tripleEPass))"
         #TriggerStr = "(!(singleIsoMuPass || doubleMuDZPass || tripleMuPass) && (singleEPass || doubleEPass || tripleEPass))"
-        TriggerStr = "((singleIsoMuPass || doubleMuDZPass || tripleMuPass) && (singleEPass))"
+        #TriggerStr = "((singleIsoMuPass || doubleMuDZPass || tripleMuPass) && (singleEPass))"
         #TriggerStr = "((singleIsoMuPass || doubleMuDZPass || tripleMuPass) && (doubleEPass))"
         #TriggerStr = "((singleIsoMuPass || doubleMuDZPass || tripleMuPass) && (singleEPass || doubleEPass))"
         #TriggerStr = "((singleIsoMuPass || doubleMuDZPass || tripleMuPass) && (tripleEPass))"

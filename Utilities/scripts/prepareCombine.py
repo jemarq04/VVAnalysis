@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import ROOT
-from python import SelectorTools, HistTools
+from python import HistTools
 from python import UserInput,OutputTools,ConfigureJobs
 from python.prettytable import PrettyTable
 import datetime
@@ -51,7 +51,10 @@ def getComLineArgs():
                         "by commas")
     return vars(parser.parse_args())
 
-def combineChannels(group, chans, variations=[], central=True):
+def combineChannels(group, chans, variations=None, central=True):
+    if variations is None:
+        variations = []
+
     if central:
         variations.append("")
     for var in variations:
@@ -376,7 +379,7 @@ output_info.add_row(["nonprompt", card_info["eee"]["nonprompt"],
     card_info["mmm"]["nonprompt"],
     sum([card_info[c]["nonprompt"] for c in chans])]
 )
-background = {c : 0 for c in chans}
+background = dict.fromkeys(chans, 0)
 for chan,yields in card_info.items():
     if chan == "all":
         continue

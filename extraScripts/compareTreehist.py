@@ -26,7 +26,8 @@ def rebin(hist,varName):
     hist.SetBinError(Nbins, lastbin_error)
     hist.SetBinContent(Nbins+1,0)
     hist.SetBinError(Nbins+1,0)
-    if not hist.GetSumw2(): hist.Sumw2()
+    if not hist.GetSumw2():
+        hist.Sumw2()
     return hist
 
 def listh(h): #return list
@@ -45,8 +46,8 @@ def Ratiol(list1,list2):
     return ratios
     #return [x/y for x,y in zip (list1,list2)]
 
-def printr(l,ro):
-    print([round(x,ro) for x in l])
+def printr(thelist,ro):
+    print([round(x,ro) for x in thelist])
 
 #main, nonprompt background, gen
 fm = ROOT.TFile("TreeFile_ZZSelector_Hists27Apr2023-ZZ4l2016_Moriondsel_Inclusive.root")
@@ -85,7 +86,7 @@ for i,fin in enumerate([fm,fb,fg]):
                 hist2 = fh.Get(ds+"/GenMass_"+chan)
 
             hist2 = rebin(hist2,"MassAllj")
-            for evt in tree:
+            for _ in tree:
                 #pdb.set_trace()
                 if i !=2:
                     exec("hist.Fill(evt.Mass_%s,evt.weight_%s)"%(chan,chan))

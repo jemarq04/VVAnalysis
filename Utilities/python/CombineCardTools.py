@@ -2,7 +2,6 @@ import logging
 from . import ConfigureJobs
 from . import HistTools
 from . import OutputTools
-from prettytable import PrettyTable
 import os
 import ROOT
 
@@ -44,7 +43,10 @@ class CombineCardTools(object):
     def setFitVariable(self, variable):
         self.fitVariable = variable
 
-    def setVariations(self, variations, exclude=[]):
+    def setVariations(self, variations, exclude=None):
+        if exclude is None:
+            exclude=[]
+
         if not self.processes:
             raise ValueError("No processes defined, can't set variations")
         for process in list(self.processes.keys()):
@@ -79,12 +81,15 @@ class CombineCardTools(object):
         if not os.path.isdir(outputFolder):
             os.makedirs(outputFolder)
 
-    def addTheoryVar(self, processName, varName, entries, central=0, exclude=[]):
+    def addTheoryVar(self, processName, varName, entries, central=0, exclude=None):
+        if exclude is None:
+            exclude=[]
+
         if "scale" not in varName.lower() and "pdf" not in varName.lower():
             raise ValueError("Invalid theory uncertainty %s. Must be type 'scale' or 'pdf'" % varName)
         name = "scale" if "scale" in varName.lower() else "pdf"
 
-        if not processName in self.theoryVariations:
+        if processName not in self.theoryVariations:
             self.theoryVariations[processName] = {}
 
         self.theoryVariations[processName].update({ name : {
@@ -96,7 +101,7 @@ class CombineCardTools(object):
         })
 
     def getRootFile(self, rtfile, mode=None):
-        if type(rtfile) == str:
+        if type(rtfile) is str:
             if mode:
                 return ROOT.TFile.Open(rtfile, mode)
             else:
@@ -158,7 +163,7 @@ class CombineCardTools(object):
         return plots
 
     # processName needs to match a PlotGroup
-    def loadHistsForProcess(self, processName, scaleNorm=1):
+    def loadHistsForProcess(self, processName):
         plotsToRead = self.listOfHistsByProcess(processName)
 
         group = HistTools.makeCompositeHists(self.inputFile, processName,
@@ -212,7 +217,10 @@ class CombineCardTools(object):
         OutputTools.writeOutputListItem(processHists, self.outputFile)
         processHists.Delete()
 
-    def writeCards(self, chan, nuisances, year="", extraArgs={}):
+    def writeCards(self, chan, nuisances, year="", extraArgs=None):
+        if extraArgs is None:
+            extraArgs = {}
+
         chan_dict = self.yields[chan].copy()
         chan_dict.update(extraArgs)
         chan_dict["nuisances"] = nuisances

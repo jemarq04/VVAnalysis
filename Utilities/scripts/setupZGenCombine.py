@@ -3,7 +3,6 @@ from python import ConfigureJobs
 import sys
 import ROOT
 import logging
-import array
 
 ROOT.gROOT.SetBatch(True)
 logging.basicConfig(level=logging.DEBUG)

@@ -7,7 +7,8 @@ def getDifference(fOut, name, dir1, dir2, ratioFunc=None):
     differences = ROOT.TList()
     differences.SetName(name)
     for histname in [i.GetName() for i in fOut.Get(dir1).GetListOfKeys()]:
-        if histname == "sumweights": continue
+        if histname == "sumweights":
+            continue
         hist1 = fOut.Get("/".join([dir1, histname]))
         hist2 = fOut.Get("/".join([dir2, histname]))
         if hist1 and hist2:
@@ -151,17 +152,17 @@ def getHessianPDFVariationHists(init2D_hist, entries, name, rebin=None, central=
             upaction, downaction, central, #downaction, central
     )
 
-def getAllHessianPDFHists():
-    hists, hist_name = getLHEWeightHists(init2D_hist, entries, name, "pdf", rebin)
-    return hists
-
 def getPDFPercentVariation(values):
     denom = values[84] + values[16]
     if denom == 0:
         return 0
     return abs(values[84] - values[16])/denom
 
-def getScaleHists(scale_hist2D, name, rebin=None, entries=[i for i in range(1,10)], central=0, exclude=[7,9]):
+def getScaleHists(scale_hist2D, name, rebin=None, entries=None, central=0, exclude=None):
+    if entries is None:
+        entries = list(range(1,10))
+    if exclude is None:
+        exclude = [7.9]
     hists, hist_name = getLHEWeightHists(scale_hist2D, entries, name, "QCDscale", rebin)
     return getVariationHists(hists, name, hist_name, lambda x: x[-1], lambda x: x[1], central)
 
@@ -180,7 +181,8 @@ def getVariationHists(hists, process_name, histUp_name, up_action, down_action, 
         histUp.SetBinContent(i, up_action(vals))
         histDown.SetBinContent(i, down_action(vals))
         # For now, skip this check on aQGC for now, since they're screwed up
-        if "aqgc" in process_name: continue
+        if "aqgc" in process_name:
+            continue
     logging.debug("For process %s: Central, down, up: %s, %s, %s" % (process_name, histCentral.Integral() if histCentral else 0, histDown.Integral(), histUp.Integral()))
     if histCentral and False: # Off for now, it can happen that groups have some hists with no weights which screws this up
         isValidVariation(process_name, histCentral, histUp, histDown)
@@ -257,7 +259,7 @@ def addOverflow(hist):
     addOverflowAndUnderflow(hist, underflow=False, overflow=True)
 
 def addOverflowAndUnderflow(hist, underflow=True, overflow=True):
-    if not "TH1" in hist.ClassName():
+    if "TH1" not in hist.ClassName():
         return
     if overflow:
         # Returns num bins + overflow + underflow
@@ -295,7 +297,7 @@ def makeCompositeHists(hist_file, name, members, lumi, hists=None, hist_filter=N
             tmphist = hist_file.Get("/".join([directory, histname]))
             if not tmphist:
                 raise RuntimeError("Failed to produce histogram %s" % "/".join([directory, histname]))
-            toRebin = rebin and not "TH2" in tmphist.ClassName()
+            toRebin = rebin and "TH2" not in tmphist.ClassName()
             hist = tmphist.Clone() if not toRebin else tmphist.Rebin(len(rebin)-1, histname, rebin)
             tmphist.Delete()
             if hist:

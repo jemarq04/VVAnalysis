@@ -135,7 +135,7 @@ def makeDataPlots(param, obj, outdir):
     text_box.Draw()
     texS,texS1=getLumiTextBox()
 
-    if (not "2D" in param) and ("Eta" in param):
+    if ("2D" not in param) and ("Eta" in param):
         data_uncorr_graph = getTGraphAsymmErrors(frfile, "AllData", param, obj)
         data_uncorr_graph.SetTitle("")
         data_uncorr_graph.Draw("P")
@@ -198,7 +198,7 @@ def makeMCPlots(param, obj, outdir):
     text_box.Draw()
     texS,texS1=getLumiTextBox()
 
-    if (not "2D" in param) and ("Eta" in param):
+    if ("2D" not in param) and ("Eta" in param):
         data_uncorr_graph = getTGraphAsymmErrors(frfile, "DYMC", param, obj)
         data_uncorr_graph.SetTitle("")
         data_uncorr_graph.Draw("P")

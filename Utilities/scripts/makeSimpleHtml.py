@@ -60,7 +60,7 @@ def writeHTML(path, name):
                     '  <table>\n'
             )
         for i, image_file in enumerate(image_files):
-            file_name = image_file.strip().split('/')[-1].strip()
+            #file_name = image_file.strip().split('/')[-1].strip()
             if i % 3 == 0:
                 index.write('  <tr style="text-align: center;">\n')
             index.write(getTableRow(image_file.split("/")[-1]))

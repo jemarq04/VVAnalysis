@@ -142,8 +142,8 @@ class PrettyTable:
 
         try:
             assert int(padding_width) >= 0
-        except AssertionError:
-            raise Exception("Invalid value for padding_width: %s!" % str(padding_width))
+        except AssertionError as err:
+            raise Exception("Invalid value for padding_width: %s!" % str(padding_width)) from err
 
         self.padding_width = padding_width
         self.cache = {}
@@ -158,9 +158,9 @@ class PrettyTable:
         left_padding - number of spaces, must be a positive integer"""
 
         try:
-            assert left_padding == None or int(left_padding) >= 0
-        except AssertionError:
-            raise Exception("Invalid value for left_padding: %s!" % str(left_padding))
+            assert left_padding is None or int(left_padding) >= 0
+        except AssertionError as err:
+            raise Exception("Invalid value for left_padding: %s!" % str(left_padding)) from err
 
         self.left_padding = left_padding
         self.cache = {}
@@ -175,9 +175,9 @@ class PrettyTable:
         right_padding - number of spaces, must be a positive integer"""
 
         try:
-            assert right_padding == None or int(right_padding) >= 0
-        except AssertionError:
-            raise Exception("Invalid value for right_padding: %s!" % str(right_padding))
+            assert right_padding is None or int(right_padding) >= 0
+        except AssertionError as err:
+            raise Exception("Invalid value for right_padding: %s!" % str(right_padding)) from err
 
         self.right_padding = right_padding
         self.cache = {}
@@ -466,14 +466,14 @@ class PrettyTable:
             tmp_html_func=self._get_formatted_html_string
         else:
             tmp_html_func=self._get_simple_html_string
-        string = tmp_html_func(start, end, fields, sortby, reversesort, header, border, hrules, attributes)
+        string = tmp_html_func(start, end, fields, sortby, reversesort, border, attributes)
 
         if self.caching:
             self.html_cache[key] = string
 
         return string
 
-    def _get_simple_html_string(self, start, end, fields, sortby, reversesort, header, border, hrules, attributes):
+    def _get_simple_html_string(self, start, end, fields, sortby, reversesort, border, attributes):
 
         bits = []
         # Slow but works
@@ -494,10 +494,10 @@ class PrettyTable:
         bits.append("    </tr>")
         # Data
         if sortby:
-            rows = self._get_sorted_rows(stard, end, sortby, reversesort)
+            rows = self._get_sorted_rows(start, end, sortby, reversesort)
         else:
             rows = self.rows
-        for row in self.rows:
+        for row in rows:
             bits.append("    <tr>")
             for field, datum in zip(self.fields, row):
                 if fields and field not in fields:
@@ -537,7 +537,7 @@ class PrettyTable:
             rows = self._get_sorted_rows(start, end, sortby, reversesort)
         else:
             rows = self.rows
-        for row in self.rows:
+        for row in rows:
             bits.append("    <tr>")
             for field, align, datum in zip(self.fields, self.aligns, row):
                 if fields and field not in fields:

@@ -1,9 +1,7 @@
 import ROOT as r
 import os
-import pdb
 import json
 import subprocess
-from optparse import OptionParser
 
 lumitext = "36.3"
 

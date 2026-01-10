@@ -57,7 +57,7 @@ def main():
     if not os.path.isdir(args.outdir):
         try:
             os.mkdir(args.outdir)
-        except:
+        except OSError:
             parser.error(f'error creating directory {args.outdir}')
 
     # Create the generator by supplying
@@ -76,11 +76,11 @@ def main():
 
     systematics_lnN = {
         "bkgStat": {"nonprompt": "1.4"},
-        "trigger": {proc: "1.020" for proc in all_procs},
+        "trigger": dict.fromkeys(all_procs, "1.020"),
         "CMS_lumi": {proc: str(lumiUncMap[args.year]) for proc in all_procs},
     }
     systematics_shape = {
-        "CMS_pileup": {proc: "1" for proc in all_procs},
+        "CMS_pileup": dict.fromkeys(all_procs, "1"),
     }
 
     # Add systematics by supplying
@@ -106,14 +106,14 @@ def main():
             for syst in ["CMS_eff_e", "CMS_RecoEff_e"]:
                 generator.AddSystematics(
                     syst,
-                    {proc: "1" for proc in all_procs},
+                    dict.fromkeys(all_procs, "1"),
                     channel=channel,
                     shape=True
                 )
         if "m" in channel:
             generator.AddSystematics(
                 "CMS_eff_m",
-                {proc: "1" for proc in all_procs},
+                dict.fromkeys(all_procs, "1"),
                 channel=channel,
                 shape=True
             )

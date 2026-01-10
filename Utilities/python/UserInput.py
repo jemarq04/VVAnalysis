@@ -1,11 +1,7 @@
 import json
-import copy
 import glob
 import argparse
-import datetime
-from collections import OrderedDict
 from . import ConfigureJobs
-import sys
 import ROOT
 import imp
 import os
