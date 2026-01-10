@@ -6,8 +6,8 @@ from python import ConfigureJobs,ApplySelection
 from python.prettytable import PrettyTable
 import datetime
 
-parser = argparse.ArgumentParser() 
-parser.add_argument("-f", "--filelist", 
+parser = argparse.ArgumentParser()
+parser.add_argument("-f", "--filelist",
                     type=lambda x : [i.strip() for i in x.split(',')],
                     required=True, help="List of input file names "
                     "to be processed (separated by commas)")
@@ -26,7 +26,7 @@ parser.add_argument("-o", "--output_dir", required=False, type=str,
                     #default="/eos/user/k/kelong/WZAnalysisData/SyncWithJakob")
                     default="/eos/user/k/kelong/WZAnalysisData/SyncWithCarlos")
 args = parser.parse_args()
-isfile = any(os.path.isfile(name) or os.path.exists(name.rstrip("/*")) 
+isfile = any(os.path.isfile(name) or os.path.exists(name.rstrip("/*"))
                 for name in args.filelist)
 filelist = ConfigureJobs.getListOfFiles(args.filelist, args.selection) if \
     not isfile else args.filelist
@@ -43,7 +43,7 @@ if args.output_selection == "":
     args.output_selection = args.selection
 output_dir = ""
 if args.printEventNums:
-    output_dir = '/'.join([args.output_dir, 
+    output_dir = '/'.join([args.output_dir,
             "EventYields_Kenneth_{:%Y-%m-%d}".format(datetime.date.today()),
             args.output_selection])
 
@@ -51,7 +51,7 @@ event_info = PrettyTable(["Filename", "eee", "eem", "emm", "mmm", "All states", 
 for name in filelist:
     if not isfile:
         try:
-            file_path = ConfigureJobs.getInputFilesPath(name, 
+            file_path = ConfigureJobs.getInputFilesPath(name,
                 args.selection, "WZxsec2016")
         except ValueError as e:
             print(e)
@@ -138,4 +138,3 @@ if args.printEventNums:
     summary_file = file_name if output_dir == "" else "/".join([output_dir, file_name])
     with open(summary_file, "wa") as summary:
         summary.write(str(event_info))
-

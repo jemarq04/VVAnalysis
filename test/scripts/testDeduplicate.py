@@ -7,7 +7,7 @@ import ROOT
 for state in ['eee', 'eem', 'emm', 'mmm']:
     chain = ROOT.TChain("%s/ntuple" % state)
     chain.Add("/data/kelong/DibosonAnalysisData/Preselection/2016-11-02-wz3lnu-powheg-WZxsec2016-preselection-v1/skim-ntuplize_cfg-086609CA-D81B-E611-BF6C-002590D9D896.root")
-    selector = ROOT.TSelector.GetSelector("../../Utilities/Selectors/disambiguateFinalStates.C+") 
+    selector = ROOT.TSelector.GetSelector("../../Utilities/Selectors/disambiguateFinalStates.C+")
     print( '-'*80)
     print( 'channel is %s' % state )
     print( "Initial number of entries is %i" % chain.GetEntries())

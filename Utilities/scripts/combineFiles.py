@@ -14,7 +14,7 @@ def main():
     parser.add_argument("-o", "--outfile", help="output file (default: Hists<DATE>-<ANALYSIS>.root or fakeRates-<ANALYSIS>.root)")
     parser.add_argument("-a", "--analysis", default="ZZ4lRun3Combined", help="name of combined analysis in dataset manager")
     parser.add_argument("-y", "--years", default=[],
-        type=lambda x: [i.strip() for i in x.split(",")], 
+        type=lambda x: [i.strip() for i in x.split(",")],
         help="comma-separated list of years")
     parser.add_argument("infiles", nargs="+", help="list of infiles to combine")
     args = parser.parse_args()
@@ -71,7 +71,7 @@ def main():
                     sample = infile.Get(key.GetName())
                     if not sample.InheritsFrom("TDirectory") or key.GetName() in skip_dirs:
                         continue
-                    
+
                     new_key = key.GetName()
                     if not new_key.startswith("data"):
                         if not eras:
@@ -91,7 +91,7 @@ def main():
         key_ZZ = args.analysis if is_ZZ else "ZZ4l" + args.analysis.split("ZplusL")[1]
 
         if is_ZZ:
-            alldata = HistTools.makeCompositeHists(outfile,"AllData", 
+            alldata = HistTools.makeCompositeHists(outfile,"AllData",
                 ConfigureJobs.getListOfFilesWithXSec([f"{key_ZZ}data"], manager_path), lumi,
                 underflow=False, overflow=False)
         else:

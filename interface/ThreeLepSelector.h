@@ -60,7 +60,7 @@ public :
   Float_t Electron_sip3d[N_KEEP_MU_E_];
   Bool_t Electron_convVeto[N_KEEP_MU_E_];
   UChar_t Electron_lostHits[N_KEEP_MU_E_];
-  
+
   UInt_t nMuon;
   Float_t Muon_pt[N_KEEP_MU_E_];
   Float_t Muon_eta[N_KEEP_MU_E_];
@@ -78,7 +78,7 @@ public :
   Bool_t Muon_isGlobal[N_KEEP_MU_E_];
   Bool_t Muon_isPFcand[N_KEEP_MU_E_];
   Int_t Muon_tightCharge[N_KEEP_MU_E_];
-  
+
   Int_t numPU;
 
   UInt_t nJet;
@@ -91,10 +91,10 @@ public :
   Float_t Jet_neHEF[N_KEEP_JET_];
   Float_t Jet_neEmEF[N_KEEP_JET_];
   Int_t Jet_nConstituents[N_KEEP_JET_];
-  Float_t Jet_chHEF[N_KEEP_JET_];  
+  Float_t Jet_chHEF[N_KEEP_JET_];
   Float_t Jet_chEmEF[N_KEEP_JET_];
   Int_t   Jet_jetId[N_KEEP_JET_];
-  
+
   ClassDefOverride(ThreeLepSelector,0);
 
   /*******************************************************/
@@ -103,7 +103,7 @@ public :
   /* \\ // ||=|| ||_// || ||=|| ||=)  ||    ||==   \\    */
   /*  \V/  || || || \\ || || || ||_)) ||__| ||___ \_))   */
   /*******************************************************/
-  
+
   Float_t weight;
   BranchManager b;
   std::vector<GoodPart> goodLeptons;
@@ -115,7 +115,7 @@ public :
   bool passZVeto;
   BTagCalibration calib;
   BTagCalibrationReader btag_reader; // central sys type
-                                
+
   /************************************************************/
   /* _____ __ __ __  __   ___ ______ __   ___   __  __  __    */
   /* ||    || || ||\ ||  //   | || | ||  // \\  ||\ || (( \   */
@@ -127,7 +127,7 @@ public :
   void setupElectrons();
   void setupJets();
   void setupChannel();
-  
+
   bool isGoodMuon(size_t);
   bool isLooseMuon(size_t);
   bool isGoodJet(size_t);
@@ -135,11 +135,11 @@ public :
   bool isGoodElectron(size_t);
   bool isLooseElectron(size_t);
   bool isLooseMVAElectron(size_t);
-  
+
   bool doesNotOverlap(size_t);
   bool passFullIso(LorentzVector&, int, int);
   bool doesPassZVeto(GoodPart&, std::vector<GoodPart>&);
-  
+
   //// General Functions
   int getSRBin() const;
   void clearValues();
@@ -161,4 +161,3 @@ public :
 };
 
 #endif
-

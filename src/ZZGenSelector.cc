@@ -465,7 +465,7 @@ void ZZGenSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::st
 //Begin filling ntuple
    if (writeNtp_){
     SafeSetBranch(ftntp_, getBranchName("Genweight", variation.second), &Genweight);
-    SafeSetBranch(ftntp_, getBranchName("GenMass", variation.second), &GenMass); 
+    SafeSetBranch(ftntp_, getBranchName("GenMass", variation.second), &GenMass);
     ftntp_->Fill();
   }
 //End filling ntuple

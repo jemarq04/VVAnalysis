@@ -49,4 +49,3 @@ with root_open("foo_new.root", "recreate") as f1:
 
 # close old file
 f0Again.close()
-

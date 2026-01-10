@@ -21,7 +21,7 @@ public :
     // Derived values
     LorentzVector wCand;
     LorentzVector wCandMet;
-    
+
     // Readers to access the data (delete the ones you do not need).
     virtual void    Init(TTree *tree) override;
     WGenSelector(TTree * /*tree*/ =0) { }
@@ -36,6 +36,3 @@ protected:
 };
 
 #endif
-
-
-

@@ -1,5 +1,5 @@
-import ROOT 
-import pdb 
+import ROOT
+import pdb
 import json
 import array
 import math
@@ -20,7 +20,7 @@ def rebin(hist,varName):
     #No need to rebin certain variables but still might need overflow check
     if varName not in ['eta']:
         bins=array.array('d',_binning[varName])
-        Nbins=len(bins)-1 
+        Nbins=len(bins)-1
         hist=hist.Rebin(Nbins,hist.GetName()+"NoConfusion",bins)
     else:
         Nbins = hist.GetSize() - 2
@@ -34,7 +34,7 @@ def rebin(hist,varName):
     return hist
 
 def listh(h): #return list
-    
+
     list = [h.GetBinContent(i) for i in range(1,h.GetNbinsX()+1)]
     return list
 
@@ -116,12 +116,12 @@ for var in vars:
 
         #Have to do this manually for now
         #hpre is the prelagacy histogram
-     
+
         exec("hpre = ROOT.TH1D(histname,histname,%s)"%initBins[var] )
 
         hULFull = hpre.Clone(histname+"_ULFull")
         hULEcal = hpre.Clone(histname+"_ULEcal")
-        
+
         #Fill all relevant MC datasets to the 3 histograms
         for i,h in enumerate([hpre,hULFull,hULEcal]):
             if i == 0:
@@ -159,13 +159,13 @@ for var in vars:
                     #pdb.set_trace()
                     for evt in tree:
                         varp = var.replace("[0]","0").replace("[1]","1")
-                        
+
                         if "abs" in varp:
                             exec("h.Fill(abs(evt.%s),evt.%s*xsecs[j]*lumi*1000/sumweights%s)"%(varp.replace("abs",""),weightExpr,additional))
                         elif "Mass" in var and "j" in var:
                             tmp_nj = int(var.replace("Mass","").replace("j","").replace("Full","") )
                             if tmp_nj == 4:
-                                if evt.nJets>=4:    
+                                if evt.nJets>=4:
                                     exec("h.Fill(evt.Mass,evt.%s*xsecs[j]*lumi*1000/sumweights%s)"%(weightExpr,additional))
                             else:
                                 if evt.nJets == tmp_nj:
@@ -173,13 +173,13 @@ for var in vars:
                         else:
                             varp = varp.replace("Full","") #Full and on-shell variables aren't processed together
                             exec("h.Fill(evt.%s,evt.%s*xsecs[j]*lumi*1000/sumweights%s)"%(varp,weightExpr,additional))
-            
+
             h = rebin(h,var)
             hdict[var][chan].append(h)
             #print(h.GetName())
-            
+
             #print(listh(h))
-    
+
     # Analyze results
 
     for k,h in enumerate(hdict[var]["eemm"]):
@@ -201,14 +201,14 @@ for var in vars:
         for perc in perlist:
             if chan == "total" and perc>=3.:
                 print("WARNING: >3 percent for one entry in total")
-            
+
             if chan == "mmmm" and perc>=5.:
                 print("WARNING: >5 percent for one entry in 4m")
-        
+
         #print("Weighted events prelegacy and legacy for ECAL weight")
         #print(hdict[var][chan][0].Integral(1,hdict[var][chan][0].GetNbinsX()))
         #print(hdict[var][chan][2].Integral(1,hdict[var][chan][0].GetNbinsX()))
-    
+
 fout = ROOT.TFile("L1HistOutput.root","RECREATE")
 fout.cd()
 for var in vars:

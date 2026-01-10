@@ -11,7 +11,7 @@ def listToStr(list):
             empty += '\"'+st+'\",'
         else:
             empty += '\"'+st+'\"'
-    
+
     return '{%s}'%empty
 
 
@@ -60,7 +60,7 @@ systHist_Ori= [
       "LepEta"]
 
 systHistList = baseList
-#systHistList = ["yield", "Mass", "MassFull", "nJets", "jetPt[1]", "jetPt[0]", "jetEta[0]", "jetEta[1]", "absjetEta[0]", "absjetEta[1]", "mjj", "dEtajj", 
+#systHistList = ["yield", "Mass", "MassFull", "nJets", "jetPt[1]", "jetPt[0]", "jetEta[0]", "jetEta[1]", "absjetEta[0]", "absjetEta[1]", "mjj", "dEtajj",
 #"Mass0j", "Mass1j", "Mass2j", "Mass3j", "Mass34j", "Mass4j", "Mass0jFull", "Mass1jFull", "Mass2jFull", "Mass3jFull", "Mass34jFull", "Mass4jFull"]
 
 
@@ -179,7 +179,7 @@ ldict["jetTest2D"] = jetTest2DList
 ldict["jethists1D"] = jethists1DList
 ldict["weighthists1D"] = weighthists1DList
 
-#mapdict["systHists"] = 
+#mapdict["systHists"] =
 mapdict["hists1D"] = "histMap1D_"
 mapdict["jetTest2D"] = "jetTestMap2D_"
 mapdict["jethists1D"] = "jethistMap1D_"
@@ -205,7 +205,7 @@ with open("src/ZZSelectorTemplateFilledTmp.cc","r") as fout2:
             if not "LepPtFull" in hists1DList:
                 if "// sort lepton pt" in line:
                     line = "/*" + line
-                
+
                 if "//finish sorting lepton pt" in line:
                     line = line + "*/" + "\n"
 
@@ -220,8 +220,8 @@ with open("src/ZZSelectorTemplateFilledTmp.cc","r") as fout2:
                             if item in line and line.find(item) < line.find("variation") and not item in ldict[key]:
                                 if not "//" in line or line.find("//") > line.find("SafeHistFill"):
                                     line = "//" + line
-            
-            
+
+
             foutf.write(line)
 
 print("src/ZZSelectorFilled.template produced")
@@ -336,7 +336,7 @@ with open("src/ZZGenSelectorTemplateFilledTmp.cc","r") as fout2Gen:
             #if not "LepPtFull" in hists1DList:
             #    if "// sort lepton pt" in line:
             #        line = "/*" + line
-            #    
+            #
             #    if "//finish sorting lepton pt" in line:
             #        line = line + "*/" + "\n"
 
@@ -351,8 +351,8 @@ with open("src/ZZGenSelectorTemplateFilledTmp.cc","r") as fout2Gen:
                             if item in line and line.find(item) < line.find("variation") and not item in Genldict[key]:
                                 if not "//" in line or line.find("//") > line.find("SafeHistFill"):
                                     line = "//" + line
-            
-            
+
+
             foutfGen.write(line)
 
 print("src/ZZGenSelectorFilled.template produced")

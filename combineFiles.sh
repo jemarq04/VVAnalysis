@@ -1,3 +1,5 @@
+#!/bin/bash
+
 if [[ $# -eq 0 ]]; then
   echo "usage: $0 INFILE [INFILE...]"
   echo

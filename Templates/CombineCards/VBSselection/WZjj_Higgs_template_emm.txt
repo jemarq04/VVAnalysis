@@ -4,31 +4,31 @@ kmax ${nuisances} number of nuisance parameters (sources of systematical uncerta
 ------------
 
 shapes EW-WZjj   * ${output_file} ${signal_name}/${fit_variable}_$$CHANNEL  ${signal_name}/${fit_variable}_$$SYSTEMATIC_$$CHANNEL
-shapes QCD-WZjj  * ${output_file} QCD-WZjj/${fit_variable}_$$CHANNEL       QCD-WZjj/${fit_variable}_$$SYSTEMATIC_$$CHANNEL 
-shapes vv        * ${output_file} vv/${fit_variable}_$$CHANNEL             vv/${fit_variable}_$$SYSTEMATIC_$$CHANNEL 
-shapes top-ewk   * ${output_file} top-ewk/${fit_variable}_$$CHANNEL        top-ewk/${fit_variable}_$$SYSTEMATIC_$$CHANNEL 
-shapes zg        * ${output_file} zg/${fit_variable}_$$CHANNEL             zg/${fit_variable}_$$SYSTEMATIC_$$CHANNEL 
+shapes QCD-WZjj  * ${output_file} QCD-WZjj/${fit_variable}_$$CHANNEL       QCD-WZjj/${fit_variable}_$$SYSTEMATIC_$$CHANNEL
+shapes vv        * ${output_file} vv/${fit_variable}_$$CHANNEL             vv/${fit_variable}_$$SYSTEMATIC_$$CHANNEL
+shapes top-ewk   * ${output_file} top-ewk/${fit_variable}_$$CHANNEL        top-ewk/${fit_variable}_$$SYSTEMATIC_$$CHANNEL
+shapes zg        * ${output_file} zg/${fit_variable}_$$CHANNEL             zg/${fit_variable}_$$SYSTEMATIC_$$CHANNEL
 
-shapes Higgs * ${output_file} chargedHiggsWZ-m$$MASS/${fit_variable}_$$CHANNEL chargedHiggsWZ-m$$MASS/${fit_variable}_$$SYSTEMATIC_$$CHANNEL 
+shapes Higgs * ${output_file} chargedHiggsWZ-m$$MASS/${fit_variable}_$$CHANNEL chargedHiggsWZ-m$$MASS/${fit_variable}_$$SYSTEMATIC_$$CHANNEL
 
 shapes nonprompt * ${output_file} DataEWKCorrected/${fit_variable}_Fakes_$$CHANNEL DataEWKCorrected/${fit_variable}_Fakes_$$SYSTEMATIC_$$CHANNEL
 shapes data_obs  *  ${output_file} AllData/${fit_variable}_$$CHANNEL
 
-bin          emm   
-observation  -1.0 
+bin          emm
+observation  -1.0
 
 ------------
 # now we list the expected events for signal and all backgrounds in that bin
 # the second 'process' line must have a positive number for backgrounds, and 0 for signal
 # then we list the independent sources of uncertainties, and give their effect (syst. error)
 # on each process and bin
-bin                           emm           emm             emm             emm         emm             emm         emm         
-process                       Higgs         EW-WZjj         QCD-WZjj        vv          top-ewk         zg          nonprompt   
-process                       -1            6               1               2           3               4           5           
-rate                          -1            ${signal_yield} ${QCD_WZjj}     ${vv}       ${top_ewk}      ${zg}       ${nonprompt} 
-------------                                                                                                                                                                                                                             
-lumi2016_13TeV          lnN   1.025         1.025           1.025           1.025       1.025           1.025       -          
-CMS_norm_QCD-WZjj       lnN   -             -               1.10            -           -               -           -          
+bin                           emm           emm             emm             emm         emm             emm         emm
+process                       Higgs         EW-WZjj         QCD-WZjj        vv          top-ewk         zg          nonprompt
+process                       -1            6               1               2           3               4           5
+rate                          -1            ${signal_yield} ${QCD_WZjj}     ${vv}       ${top_ewk}      ${zg}       ${nonprompt}
+------------
+lumi2016_13TeV          lnN   1.025         1.025           1.025           1.025       1.025           1.025       -
+CMS_norm_QCD-WZjj       lnN   -             -               1.10            -           -               -           -
 CMS_norm_nonprompt_eee  lnN   -             -               -               -           -               -           -
 CMS_norm_nonprompt_eem  lnN   -             -               -               -           -               -           -
 CMS_norm_nonprompt_emm  lnN   -             -               -               -           -               -           1.3

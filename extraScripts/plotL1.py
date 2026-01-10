@@ -31,10 +31,10 @@ def getLumiTextBox():
     return texS,texS1,texS2
 
 def redrawXaxis(h,varName):
-    
+
     if "Full" in varName and "Mass" in varName:
             xaxis = r.TGaxis(h.GetXaxis().GetXmin(),h.GetMinimum(),h.GetXaxis().GetXmax(),h.GetMinimum(),h.GetXaxis().GetXmin(),h.GetXaxis().GetXmax(),510,"G")
-        
+
             xaxis.SetMoreLogLabels(True)
             xaxis.SetTickLength(0.03)
             #xaxis.SetLabelSize(0.025)
@@ -120,7 +120,7 @@ with open('varsFile.json') as var_json_file:
 units = {}
 prettyVars = {}
 for key in list(myvar_dict.keys()): #key is the variable
-    
+
     units[key] = myvar_dict[key]["units"]
     prettyVars[key] = myvar_dict[key]["prettyVars"]
 
@@ -144,35 +144,35 @@ for var in vars:
         chanp = chan
         if chan == "total":
             chanp = "Total"
-          
-            
+
+
         h1,h2,h3 = fin.Get(var+"_"+chanp+"NoConfusion"),fin.Get(var+"_"+chanp+"_ULFullNoConfusion"),fin.Get(var+"_"+chanp+"_ULEcalNoConfusion")
-        
+
         max1 = max(h1.GetMaximum(),h2.GetMaximum(),h3.GetMaximum())
-        
+
         min1 = min(h1.GetMinimum(),h2.GetMinimum(),h3.GetMinimum(),0.)
-        
+
         maxfac = 1.2
         if var=="Mass34jFull":
             maxfac = 1.5
         for i,h in enumerate([h1,h2,h3]):
             h.SetMaximum(maxfac*max1)
             h.SetMinimum(min1)
-          
+
             h.SetLineStyle(lineStyles[i])
             h.SetLineColor(colors[i])
             h.GetXaxis().SetLabelSize(0)
             h.GetXaxis().SetTickLength(0)
             h.SetLineWidth(4*h.GetLineWidth())
 
-              
+
         #c1.Divide(2,1)
 
         c1.cd()
         if "Full" in var:
             r.gPad.SetLogx()
         else:
-            r.gPad.SetLogx(0)  
+            r.gPad.SetLogx(0)
 
         legend1 = plotHist(h1,h2,h3,"Prelegacy","UL L1Full","UL L1ECAL")
         t1,t2,t3 = getLumiTextBox()
@@ -191,11 +191,11 @@ for var in vars:
                     geq = "#geq"
                 texf2 = extraTex(0.65,0.5,"Events with %s%s jet(s)"%(geq,tmp_nj))
         if "[0]" in var:
-            texf = extraTex(0.65,0.68,"Events with #geq 1 jet")    
+            texf = extraTex(0.65,0.68,"Events with #geq 1 jet")
         if "[1]" in var:
-            texf = extraTex(0.65,0.68,"Events with #geq 2 jets")   
+            texf = extraTex(0.65,0.68,"Events with #geq 2 jets")
 
-       
+
         c1.SaveAs(os.path.join(outdir,"%s_%s.png"%(var,chan)))
 
         if chan == "total":
@@ -205,6 +205,5 @@ for var in vars:
 
         c1.Clear()
 
-pdfcommand.append(os.path.join("./","2016L1.pdf"))  
+pdfcommand.append(os.path.join("./","2016L1.pdf"))
 subprocess.call(pdfcommand)
-

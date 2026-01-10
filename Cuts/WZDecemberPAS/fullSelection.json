@@ -1,6 +1,6 @@
 {
     "Object" : {
-        "e" : [ 
+        "e" : [
             "{object_name}Pt > 10",
             "{object_name}AbsEta <  2.5",
             "{object_name}CBIDMedium"
@@ -36,6 +36,6 @@
         "Zlep1_Pt > 20",
         "Wlep_Pt > 20",
         "pfMetEt > 30"
-        
+
     ]
 }

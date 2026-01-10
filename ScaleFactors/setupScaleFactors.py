@@ -4,7 +4,7 @@
 # Currently used for lepton scale factors and pileup weights.
 #
 # Modified from N. Smith, U. Wisconsin
-# 
+#
 
 import ROOT
 import argparse
@@ -88,26 +88,26 @@ if year=="2016":
     electronLowReco16SF.Set2DHist(float2double(eLowRecoFile.Get('EGamma_SF2D')))
     fScales.cd()
     electronLowReco16SF.Write()
-    
+
     #Electron (Pt>20 Reco SF from POG https://twiki.cern.ch/twiki/bin/viewauth/CMS/Egamma2016DataRecommendations
     electronReco16SF = ROOT.ScaleFactor("electronReco16SF", "Run '16 Electron Reco SF, x=Eta, y=Pt")
     eRecoFile = ROOT.TFile.Open('data/Ele_Reco_2016.root')
     electronReco16SF.Set2DHist(float2double(eRecoFile.Get('EGamma_SF2D')))
     fScales.cd()
     electronReco16SF.Write()
-    
+
     electronRun16SF = ROOT.ScaleFactor("electronRun16SF", "Run '16 Electron HZZ ID SF, x=Eta, y=Pt")
     eidFile = ROOT.TFile.Open('data/ElectronSF_Legacy_2016_NoGap.root')
     electronRun16SF.Set2DHist(float2double(eidFile.Get('EGamma_SF2D')))
     fScales.cd()
     electronRun16SF.Write()
-    
+
     electronRun16GapSF = ROOT.ScaleFactor("electronRun16GapSF", "Run '16 GapElectron HZZ ID SF, x=Eta, y=Pt")
     eleGsfFile = ROOT.TFile.Open('data/ElectronSF_Legacy_2016_Gap.root')
     electronRun16GapSF.Set2DHist(float2double(eleGsfFile.Get('EGamma_SF2D')))
     fScales.cd()
     electronRun16GapSF.Write()
-    
+
     muonRun16SF = ROOT.ScaleFactor("muonRun16SF", "Muon Run '16 Trk+ID+ISO SF, x=abs(Eta), y=Pt")
     mid16File = ROOT.TFile.Open('data/MoriondSFs/final_HZZ_SF_2016_legacy_mupogsysts_newLoose_noTracking_1610.root')
     muonRun16SF.Set2DHist(float2double(mid16File.Get('FINAL')),float2double(mid16File.Get('ERROR')),float2double(mid16File.Get('ERROR')))
@@ -119,26 +119,26 @@ elif year=="2017":
     electronLowReco17SF.Set2DHist(float2double(eLowRecoFile.Get('EGamma_SF2D')))
     fScales.cd()
     electronLowReco17SF.Write()
-    
+
     #Electron (Pt>20 Reco SF from POG https://twiki.cern.ch/twiki/bin/viewauth/CMS/Egamma2017DataRecommendations
     electronReco17SF = ROOT.ScaleFactor("electronReco17SF", "Run '17 Electron Reco SF, x=Eta, y=Pt")
     eRecoFile = ROOT.TFile.Open('data/Ele_Reco_2017.root')
     electronReco17SF.Set2DHist(float2double(eRecoFile.Get('EGamma_SF2D')))
     fScales.cd()
     electronReco17SF.Write()
-    
+
     electronRun17SF = ROOT.ScaleFactor("electronRun17SF", "Run '17 Electron HZZ ID SF, x=Eta, y=Pt")
     eidFile = ROOT.TFile.Open('data/ElectronSF_Legacy_2017_NoGap.root')
     electronRun17SF.Set2DHist(float2double(eidFile.Get('EGamma_SF2D')))
     fScales.cd()
     electronRun17SF.Write()
-    
+
     electronRun17GapSF = ROOT.ScaleFactor("electronRun17GapSF", "Run '17 GapElectron HZZ ID SF, x=Eta, y=Pt")
     eleGsfFile = ROOT.TFile.Open('data/ElectronSF_Legacy_2017_Gap.root')
     electronRun17GapSF.Set2DHist(float2double(eleGsfFile.Get('EGamma_SF2D')))
     fScales.cd()
     electronRun17GapSF.Write()
-    
+
     muonRun17SF = ROOT.ScaleFactor("muonRun17SF", "Muon Run '17 Trk+ID+ISO SF, x=abs(Eta), y=Pt")
     midFile = ROOT.TFile.Open('data/MoriondSFs/ScaleFactors_mu_Moriond2018_final.root')
     muonRun17SF.Set2DHist(float2double(midFile.Get('FINAL')),float2double(midFile.Get('ERROR')),float2double(midFile.Get('ERROR')))
@@ -151,26 +151,26 @@ elif year=="2018":
     electronLowReco18SF.Set2DHist(float2double(eLowRecoFile.Get('EGamma_SF2D')))
     fScales.cd()
     electronLowReco18SF.Write()
-    
+
     #Electron (Pt>20 Reco SF from POG https://twiki.cern.ch/twiki/bin/viewauth/CMS/Egamma2018DataRecommendations
     electronReco18SF = ROOT.ScaleFactor("electronReco18SF", "Run '18 Electron Reco SF, x=Eta, y=Pt")
     eRecoFile = ROOT.TFile.Open('data/Ele_Reco_2018.root')
     electronReco18SF.Set2DHist(float2double(eRecoFile.Get('EGamma_SF2D')))
     fScales.cd()
     electronReco18SF.Write()
-    
+
     electronRun18SF = ROOT.ScaleFactor("electronRun18SF", "Run '18 Electron HZZ ID SF, x=Eta, y=Pt")
     eidFile = ROOT.TFile.Open('data/ElectronSF_Legacy_2018_NoGap.root')
     electronRun18SF.Set2DHist(float2double(eidFile.Get('EGamma_SF2D')))
     fScales.cd()
     electronRun18SF.Write()
-    
+
     electronRun18GapSF = ROOT.ScaleFactor("electronRun18GapSF", "Run '18 GapElectron HZZ ID SF, x=Eta, y=Pt")
     eleGsfFile = ROOT.TFile.Open('data/ElectronSF_Legacy_2018_Gap.root')
     electronRun18GapSF.Set2DHist(float2double(eleGsfFile.Get('EGamma_SF2D')))
     fScales.cd()
     electronRun18GapSF.Write()
-    
+
     muonRun18SF = ROOT.ScaleFactor("muonRun18SF", "Muon Run '18 Trk+ID+ISO SF, x=abs(Eta), y=Pt")
     mid18File = ROOT.TFile.Open('data/final_HZZ_muon_SF_2018_IsBDT_0610.root')
     muonRun18SF.Set2DHist(float2double(mid18File.Get('FINAL')),float2double(mid18File.Get('ERROR')),float2double(mid18File.Get('ERROR')))

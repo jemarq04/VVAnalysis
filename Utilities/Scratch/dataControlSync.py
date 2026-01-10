@@ -16,7 +16,7 @@ with open("controlevent.txt", "w") as outfile:
                 chain.Add(value["file_path"])
         print("Chan is", chan)
         ApplySelection.setAliases(chain, chan, "Cuts/WZxsec2016/aliases.json")
-        cut_chain = chain.CopyTree(selection) 
+        cut_chain = chain.CopyTree(selection)
         print(cut_chain.GetEntries())
         for row in cut_chain:
             outfile.write("DATA "+" ".join([str(v) for v in [row.run,row.lumi,row.evt]]) + " " +

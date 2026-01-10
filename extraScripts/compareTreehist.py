@@ -1,5 +1,5 @@
-import ROOT 
-import pdb 
+import ROOT
+import pdb
 import json
 import array
 import math
@@ -16,7 +16,7 @@ def rebin(hist,varName):
     #No need to rebin certain variables but still might need overflow check
     if varName not in ['eta']:
         bins=array.array('d',_binning[varName])
-        Nbins=len(bins)-1 
+        Nbins=len(bins)-1
         hist=hist.Rebin(Nbins,hist.GetName()+"NoConfusion",bins)
     else:
         Nbins = hist.GetSize() - 2
@@ -30,7 +30,7 @@ def rebin(hist,varName):
     return hist
 
 def listh(h): #return list
-    
+
     list = [h.GetBinContent(i) for i in range(1,h.GetNbinsX()+1)]
     return list
 
@@ -71,7 +71,7 @@ for i,fin in enumerate([fm,fb,fg]):
             treename = ds+treetag+chan
             tree = fin.Get(treename)
             histname = ds+chan+"_MassHist_"+ftags[i]
-            
+
             #Following lines didn't work, gets null
             #hist = tree.Draw(prefix+"Mass>>%s(1215,70,2500)"%histname,prefix+"weight")
             #hist = ROOT.gDirectory.Get(histname)
@@ -91,7 +91,7 @@ for i,fin in enumerate([fm,fb,fg]):
                     exec("hist.Fill(evt.Mass_%s,evt.weight_%s)"%(chan,chan))
                 else:
                     exec("hist.Fill(evt.GenMass_%s,evt.Genweight_%s)"%(chan,chan))
-            
+
             hist = rebin(hist,"MassAllj")
             l1 = listh(hist)
             l2 = listh(hist2)
@@ -101,6 +101,3 @@ for i,fin in enumerate([fm,fb,fg]):
             #rintr(l2,7)
             printr(Ratiol(l1,l2),7)
             print("")
-                    
-                
-            

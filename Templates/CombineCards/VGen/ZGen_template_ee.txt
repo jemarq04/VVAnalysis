@@ -5,19 +5,17 @@ kmax ${nuisances} number of nuisance parameters (sources of systematical uncerta
 
 shapes ${dy_sample} * ${output_file} ${dy_sample}/${fit_variable}_$$CHANNEL ${dy_sample}/${fit_variable}_$$CHANNEL_$$SYSTEMATIC
 shapes nonprompt * ${output_file} nonprompt/${fit_variable}_$$CHANNEL  nonprompt/${fit_variable}_$$CHANNEL_$$SYSTEMATIC
-shapes data_obs * ${output_file} ${data_name}/${fit_variable}_$$CHANNEL 
+shapes data_obs * ${output_file} ${data_name}/${fit_variable}_$$CHANNEL
 
 bin          ee
 observation  -1
 
 ------------
-bin                             ee              ee             
+bin                             ee              ee
 process                         ${dy_sample}        nonprompt
-process                         -1              1               
+process                         -1              1
 rate                            ${dy_lo_2018}        ${nonprompt}
-------------                                                    
-lumi2016_13TeV          lnN     1.025           1.025           
+------------
+lumi2016_13TeV          lnN     1.025           1.025
 dummyErr_ee             lnN     1.02                -
 QCDscale_${dy_sample}   shape   1               -
-
-

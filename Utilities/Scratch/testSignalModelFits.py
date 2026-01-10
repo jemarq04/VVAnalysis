@@ -27,7 +27,7 @@ for chan in ["eee", "eem", "emm", "mmm"]:
                 val = bkhist.GetBinContent(i)
                 bkhist.SetBinContent(i, random.gauss(val, val*random.uniform(0.1, 0.4)))
         hist.Add(bkhist)
-    
+
     nphist = combine_file.Get("DataEWKCorrected/mjj_etajj_unrolled_Fakes_%s" % chan)
     if smearBkgd:
         for i in range(1, hist.GetNbinsX()+1):
@@ -43,7 +43,7 @@ for chan in ["eee", "eem", "emm", "mmm"]:
 print(new_dir.Write())
 combine_file.cd()
 combine_dir = combine_file.Get("AllData")
-combine_dir.cd() 
+combine_dir.cd()
 if not combine_dir:
     combine_dir = ROOT.TDirectoryFile("AllData", "AllData")
 for i in new_dir.GetListOfKeys():

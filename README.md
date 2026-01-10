@@ -6,8 +6,8 @@ code working elsewhere.
 
 ## Setup
 
-To set up this code, make a fork of this repository (including branches Run3Skims and Run3Analysis) and the 
-[ZZ4lDatasetManager](https://github.com/jemarq04/ZZ4lDatasetManager/) repository (including branches `for_skimming_Run3` and `for_merging_Run3`). 
+To set up this code, make a fork of this repository (including branches Run3Skims and Run3Analysis) and the
+[ZZ4lDatasetManager](https://github.com/jemarq04/ZZ4lDatasetManager/) repository (including branches `for_skimming_Run3` and `for_merging_Run3`).
 Then, run the following code replacing `YourGithubUsername` accordingly.
 
 ```bash
@@ -19,8 +19,8 @@ git clone https://github.com/YourGithubUsername/ZZ4lDatasetManager -b for_mergin
 scram build -j 12
 ```
 
-Then go to [`Analysis/VVAnalysis/Templates`](Templates/) copy `config.template` to `config.YourUserName`, and modify its first 3 lines to your username and 
-data manager path (after setting it up in the next step). Note that this username is your UW HEP username. 
+Then go to [`Analysis/VVAnalysis/Templates`](Templates/) copy `config.template` to `config.YourUserName`, and modify its first 3 lines to your username and
+data manager path (after setting it up in the next step). Note that this username is your UW HEP username.
 
 ## Running jobs
 
@@ -58,8 +58,8 @@ Finally, to run the job, simply run the following while in this directory:
 ./runZZ4l2022.sh
 ```
 
-It will produce a series of temporary files, and eventually merge them into one single output root file, which contains the set of histograms we need and we can feed them 
-into the [**ZZPlotting**](https://github.com/jemarq04/ZZPlotting/) repository for final plots. With the updated codes it will also fill the selected events 
+It will produce a series of temporary files, and eventually merge them into one single output root file, which contains the set of histograms we need and we can feed them
+into the [**ZZPlotting**](https://github.com/jemarq04/ZZPlotting/) repository for final plots. With the updated codes it will also fill the selected events
 into ntuple files.
 
 ## Configuring the jobs
@@ -76,16 +76,16 @@ lines to [`ZZSelector.cc`](src/ZZSelector.cc) (and [`ZZSelector.template`](src/Z
 the plot object `Z1PolCos` you would first create the following plot object entry:
 
 ```json
-  "Z1PolCos": {  
-        "Initialize": {  
+  "Z1PolCos": {
+        "Initialize": {
             "type": "TH1D",
             "nbins": 100,
             "xmin": -1,
             "xmax": 1
         },
-        "Attributes": {  
-            "GetXaxis().SetTitle": "cos#theta^{*}_{Z1}",  
-            "GetYaxis().SetTitle": "Events", 
+        "Attributes": {
+            "GetXaxis().SetTitle": "cos#theta^{*}_{Z1}",
+            "GetYaxis().SetTitle": "Events",
             "GetYaxis().SetTitleOffset": 1.2
         }
     },
@@ -101,4 +101,3 @@ If you wanted to add LHE re-weighing capabilities, you'd also need to look for t
 ```C++
 SafeHistFill(weighthistMap1D_, getHistName("Z1PolCos", variation.second), Z1PolCos, i, lheWeights[i] / lheWeights[0] * weight);
 ```
-

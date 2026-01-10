@@ -17,12 +17,12 @@ variations = [i for x in ["CMS_scale_j", "CMS_res_j", \
     "CMS_eff_m", "CMS_scale_m", "CMS_eff_e", "CMS_scale_e", "CMS_pileup", "CMS_scale_unclEnergy"] for i in [x+"Up", x+"Down"]]
 jeVariations = [i for x in ["CMS_scale_j", "CMS_res_j"] for i in [x+"Up", x+"Down"]]
 
-transformed_mjj_etajj_hists = HistTools.getTransformedHists(input_file, 
+transformed_mjj_etajj_hists = HistTools.getTransformedHists(input_file,
         ConfigureJobs.getListOfFiles(ConfigureJobs.getListOfEWKFilenames() + \
             ConfigureJobs.getListOfNonpromptFilenames() + \
             ['wzjj-vbfnlo-sf', 'wzjj-vbfnlo-of', ] + \
                 ['wz3lnu-mg5amcnlo','wz3lnu-powheg', 'zz4l-mg5amcnlo'] + \
-                ['AllData', 'WZxsec2016data', 'DataEWKCorrected'], 
+                ['AllData', 'WZxsec2016data', 'DataEWKCorrected'],
             'Wselection'),
         ["mjj_etajj_2D_%s" % c for c in ConfigureJobs.getChannels()] + \
         ["mjj_etajj_2D_Fakes_%s" % c for c in ConfigureJobs.getChannels()] + \
@@ -34,11 +34,11 @@ transformed_mjj_etajj_hists = HistTools.getTransformedHists(input_file,
 )
 transformed_mjj_dRjj_hists = []
 if adddRjj:
-    transformed_mjj_dRjj_hists = HistTools.getTransformedHists(input_file, 
+    transformed_mjj_dRjj_hists = HistTools.getTransformedHists(input_file,
             ConfigureJobs.getListOfFiles(ConfigureJobs.getListOfEWKFilenames() + \
                 ['wzjj-vbfnlo-sf', 'wzjj-vbfnlo-of', ] + \
                     ['wz3lnu-mg5amcnlo','wz3lnu-powheg', 'zz4l-mg5amcnlo'] + \
-                    ['AllData', 'WZxsec2016data', 'DataEWKCorrected'], 
+                    ['AllData', 'WZxsec2016data', 'DataEWKCorrected'],
                 'Wselection'),
             ["mjj_dRjj_2D_%s" % c for c in ConfigureJobs.getChannels()] + \
             ["mjj_dRjj_2D_Fakes_%s" % c for c in ConfigureJobs.getChannels()] + \
@@ -68,11 +68,11 @@ if addControlRegion:
             new_folder.Add(hist)
     transformed_hists += unrolled_hists_wcontrol
 
-#transformed_mjj_mtwz_hists = HistTools.getTransformedHists(input_file, 
+#transformed_mjj_mtwz_hists = HistTools.getTransformedHists(input_file,
 #        ConfigureJobs.getListOfFiles(ConfigureJobs.getListOfEWKFilenames() + \
 #            ['wzjj-vbfnlo-sf', 'wzjj-vbfnlo-of', ] + \
 #                ['wz3lnu-mg5amcnlo','wz3lnu-powheg', 'zz4l-mg5amcnlo'] + \
-#                ['AllData', 'WZxsec2016data', 'DataEWKCorrected'], 
+#                ['AllData', 'WZxsec2016data', 'DataEWKCorrected'],
 #             'Wselection'),
 #        ["mjj_mtwz_2D_%s" % c for c in ConfigureJobs.getChannels()] + \
 #            ["mjj_mtwz_2D_Fakes_%s" % c for c in ConfigureJobs.getChannels()],

@@ -5,7 +5,7 @@ import ROOT
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-o", "--outfile", default="scaleFactors.root", 
+    parser.add_argument("-o", "--outfile", default="scaleFactors.root",
                         help="output file name")
     parser.add_argument("infile", help="input fakeRates.root file")
     args = parser.parse_args()

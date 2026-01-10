@@ -1,7 +1,7 @@
 #include "Analysis/VVAnalysis/interface/FakeRateSelector.h"
 #include <TStyle.h>
 
-void FakeRateSelector::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::string> variation) { 
+void FakeRateSelector::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::string> variation) {
   ZZSelectorBase::LoadBranchesUWVV(entry, variation);
   //In HZZ AN it says: |M_inv(l1,l2)- MZ| < 7 GeV, to reduce the contribution from photon (asymmetric) conversions populating low masses.
   if (Z1Mass > 98.1876 || Z1Mass < 84.1876)
@@ -24,21 +24,21 @@ void FakeRateSelector::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, st
   //else if (channel_ == eem || channel_ == mmm) {
   //    loose_weight /= mIsoSF_->Evaluate2D(std::abs(l3Eta), l3Pt);
   //}
-  //Electron barrel up to |eta| = 1.479 
+  //Electron barrel up to |eta| = 1.479
   if((channel_ == eee) || (channel_ == emm)){
     if(eta_fillval < 1.479)
       passingLooseE1DPt_barrel_->Fill(pt_fillval, loose_weight);
-    else 
+    else
       passingLooseE1DPt_endcap_->Fill(pt_fillval, loose_weight);
 
     passingLooseE2D_->Fill(pt_fillval, eta_fillval, loose_weight);
     passingLooseE1DEta_->Fill(eta_fillval, loose_weight);
   }
-  //Muon barrel up to |eta| = 1.2 
+  //Muon barrel up to |eta| = 1.2
   else if (channel_ == eem || channel_ == mmm) {
     if(eta_fillval < 1.2)
       passingLooseMu1DPt_barrel_->Fill(pt_fillval, loose_weight);
-    else 
+    else
       passingLooseMu1DPt_endcap_->Fill(pt_fillval, loose_weight);
 
     passingLooseMu2D_->Fill(pt_fillval, eta_fillval, loose_weight);
@@ -48,17 +48,17 @@ void FakeRateSelector::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, st
     if((channel_ == eee) || (channel_ == emm)){
       if(eta_fillval < 1.479)
         passingTightE1DPt_barrel_->Fill(pt_fillval, loose_weight);
-      else 
+      else
         passingTightE1DPt_endcap_->Fill(pt_fillval, loose_weight);
 
       passingTightE2D_->Fill(pt_fillval, eta_fillval, weight);
       passingTightE1DEta_->Fill(eta_fillval, weight);
     }
-    //Muon barrel up to |eta| = 1.2 
+    //Muon barrel up to |eta| = 1.2
     else if (channel_ == eem || channel_ == mmm) {
       if(eta_fillval < 1.2)
         passingTightMu1DPt_barrel_->Fill(pt_fillval, loose_weight);
-      else 
+      else
         passingTightMu1DPt_endcap_->Fill(pt_fillval, loose_weight);
 
       passingTightMu2D_->Fill(pt_fillval, eta_fillval, weight);
@@ -97,7 +97,7 @@ void FakeRateSelector::SetupNewDirectory()
   AddObject<TH2D>(passingLooseE2D_, ("passingLooseE2D_"+channelName_).c_str(), "|#eta|; p_{T} [GeV]", ElePtbins, Ele_Pt_bins, nEleEtabins,Ele_eta_bins);
   AddObject<TH1D>(passingLooseE1DEta_, ("passingLooseE1DEta_"+channelName_).c_str(), "Loose leptons; |#eta|", nEleEtabins,Ele_eta_bins);
   AddObject<TH1D>(passingTightE1DPt_barrel_, ("passingTightE1DPt_barrel_"+channelName_).c_str(), "Tight leptons; p_{T} [GeV]", ElePtbins, Ele_Pt_bins);
-  AddObject<TH1D>(passingTightE1DPt_endcap_, ("passingTightE1DPt_endcap_"+channelName_).c_str(), "Tight leptons; p_{T} [GeV]", ElePtbins, Ele_Pt_bins);  
+  AddObject<TH1D>(passingTightE1DPt_endcap_, ("passingTightE1DPt_endcap_"+channelName_).c_str(), "Tight leptons; p_{T} [GeV]", ElePtbins, Ele_Pt_bins);
   AddObject<TH1D>(passingLooseE1DPt_barrel_, ("passingLooseE1DPt_barrel_"+channelName_).c_str(), "Loose leptons; p_{T} [GeV]", ElePtbins, Ele_Pt_bins);
   AddObject<TH1D>(passingLooseE1DPt_endcap_, ("passingLooseE1DPt_endcap_"+channelName_).c_str(), "Loose leptons; p_{T} [GeV]", ElePtbins, Ele_Pt_bins);
 
@@ -106,7 +106,7 @@ void FakeRateSelector::SetupNewDirectory()
   AddObject<TH2D>(passingLooseMu2D_, ("passingLooseMu2D_"+channelName_).c_str(), "|#eta|; p_{T} [GeV]", MuPtbins, Mu_Pt_bins, nMuEtabins,Mu_eta_bins);
   AddObject<TH1D>(passingLooseMu1DEta_, ("passingLooseMu1DEta_"+channelName_).c_str(), "Loose leptons; |#eta|", nMuEtabins,Mu_eta_bins);
   AddObject<TH1D>(passingTightMu1DPt_barrel_, ("passingTightMu1DPt_barrel_"+channelName_).c_str(), "Tight leptons; p_{T} [GeV]", MuPtbins, Mu_Pt_bins);
-  AddObject<TH1D>(passingTightMu1DPt_endcap_, ("passingTightMu1DPt_endcap_"+channelName_).c_str(), "Tight leptons; p_{T} [GeV]", MuPtbins, Mu_Pt_bins);  
+  AddObject<TH1D>(passingTightMu1DPt_endcap_, ("passingTightMu1DPt_endcap_"+channelName_).c_str(), "Tight leptons; p_{T} [GeV]", MuPtbins, Mu_Pt_bins);
   AddObject<TH1D>(passingLooseMu1DPt_barrel_, ("passingLooseMu1DPt_barrel_"+channelName_).c_str(), "Loose leptons; p_{T} [GeV]", MuPtbins, Mu_Pt_bins);
   AddObject<TH1D>(passingLooseMu1DPt_endcap_, ("passingLooseMu1DPt_endcap_"+channelName_).c_str(), "Loose leptons; p_{T} [GeV]", MuPtbins, Mu_Pt_bins);
 }

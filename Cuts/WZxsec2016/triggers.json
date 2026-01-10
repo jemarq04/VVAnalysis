@@ -1,4 +1,4 @@
-{ 
+{
     "MonteCarlo" : "(singleMuPass || singleIsoMuPass || singleEPass || singleESingleMuPass || singleMuSingleEPass || doubleMuPass || doubleMuDZPass || doubleEPass)",
     "DoubleMuon" : "(doubleMuPass || doubleMuDZPass)",
     "DoubleEG" : "doubleEPass && !(doubleMuPass || doubleMuDZPass)",

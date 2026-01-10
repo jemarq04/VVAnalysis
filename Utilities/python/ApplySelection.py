@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import ROOT
 from collections import OrderedDict
 from . import ConfigureJobs
@@ -52,6 +51,6 @@ def applySelection(tree, state, selection, analysis, trigger):
     #tree.SetProof()
     listname = '_'.join(["list", state])
     num_passing = tree.Draw(">>" + listname, cut_string.getString(), "entrylist")
-    #tlist = ROOT.gProof.GetOutputList().FindObject(listname) 
+    #tlist = ROOT.gProof.GetOutputList().FindObject(listname)
     tlist = ROOT.gDirectory.FindObject(listname);
     tree.SetEntryList(tlist)

@@ -14,7 +14,7 @@ def getComLineArgs():
                         "separated by commas. They must be defined in "
                         "Cuts/<analysis>/<selection_name>.json")
     parser.add_argument("-t", "--trigger", type=str, default="",
-                        choices=["DoubleEG", "DoubleMuon", "MuonEG", 
+                        choices=["DoubleEG", "DoubleMuon", "MuonEG",
                             "SingleMuon", "SingleElectron", "MonteCarlo", ""],
                         help="Name of trigger to select in data")
     parser.add_argument("-f", "--filelist", type=str,
@@ -41,7 +41,7 @@ def writeNtupleToFile(output_file, tree, state, cut_string, deduplicate):
     entries = save_tree.GetEntries()
     #tree.Delete()
     #save_tree.Delete()
-    return entries 
+    return entries
 def getDeduplicatedListForTree(tree, analysis, state, cut_string):
     selector = ROOT.disambiguateFinalStates()
     zcand_name = "e1_e2_Mass" if state.count('e') >= 2 else "m1_m2_Mass"
@@ -51,11 +51,11 @@ def getDeduplicatedListForTree(tree, analysis, state, cut_string):
     entryList = selector.GetOutputList().FindObject('bestCandidates')
     return entryList
 def getDeduplicatedListForChain(input_files, analysis, state, cut_string):
-    fullEntryList = ROOT.TEntryList() 
+    fullEntryList = ROOT.TEntryList()
     for i, input_file in enumerate(input_files):
         rtfile = ROOT.TFile.Open(input_file)
         tree = rtfile.Get("%s/ntuple" % state)
-        entryList = getDeduplicatedListForTree(tree, analysis, state, cut_string) 
+        entryList = getDeduplicatedListForTree(tree, analysis, state, cut_string)
         entryList.SetName(rtfile.GetName())
         entryList.SetTreeNumber(i)
         entryList.SetTree(tree)
@@ -92,7 +92,7 @@ def skimNtuple(selections, analysis, trigger, filelist, output_file_name, dedupl
             tree = ROOT.TChain("%s/ntuple" % state)
             for file_path in input_files:
                 tree.Add(file_path)
-        else: 
+        else:
             input_file = ROOT.TFile.Open(input_files[0])
             tree = input_file.Get("%s/ntuple" % state)
         event_counts["Input"][state] = tree.GetEntries()
@@ -101,7 +101,7 @@ def skimNtuple(selections, analysis, trigger, filelist, output_file_name, dedupl
         for i, selection_group in enumerate(selection_groups):
             applyDeduplicate = deduplicate if i == 0 else False
             cuts = ApplySelection.CutString()
-            cuts.append(ApplySelection.buildCutString(state, 
+            cuts.append(ApplySelection.buildCutString(state,
                 selection_group.split(","), analysis, trigger if i == 0 else "").getString())
             cut_string = cuts.getString()
             print("INFO: Cut string for channel %s is: %s" % (state, cut_string))
@@ -110,13 +110,13 @@ def skimNtuple(selections, analysis, trigger, filelist, output_file_name, dedupl
             isFirstOfMultistep = (i == 0 and len(selection_groups) > 1)
             if applyDeduplicate:
                 entryList = getDeduplicatedListForTree(tree, analysis, state, cut_string) \
-                    if len(input_files) == 1 else getDeduplicatedListForChain(input_files, analysis, state, cut_string) 
+                    if len(input_files) == 1 else getDeduplicatedListForChain(input_files, analysis, state, cut_string)
                 tree.SetEntryList(entryList)
             if not isFirstOfMultistep:
-                event_counts[selection_group][state] = writeNtupleToFile(output_file, tree, state, 
+                event_counts[selection_group][state] = writeNtupleToFile(output_file, tree, state,
                     cut_string, applyDeduplicate)
             else:
-                event_counts[selection_group][state] = writeNtupleToFile(tmpfile, tree, state, 
+                event_counts[selection_group][state] = writeNtupleToFile(tmpfile, tree, state,
                     cut_string, applyDeduplicate)
                 tree = tmpfile.Get("%s/ntuple" % state)
         if tmpfile:
@@ -132,12 +132,12 @@ def skimNtuple(selections, analysis, trigger, filelist, output_file_name, dedupl
     else:
         print("NOTE: Events NOT deduplicated! Event may appear in multiple rows of ntuple!\n")
     print(event_info.get_string())
-    
+
     if tmpfile != 0:
         os.remove(tmpfile.GetName())
 def main():
     args = getComLineArgs()
-    skimNtuple(args['selections'], args['analysis'], args['trigger'], args['filelist'], 
+    skimNtuple(args['selections'], args['analysis'], args['trigger'], args['filelist'],
         args['output_file_name'], not args['no_deduplicate'])
     exit(0)
 if __name__ == "__main__":

@@ -20,7 +20,7 @@ class ZGenSelector : public NanoGenSelectorBase {
 public :
     // Derived values
     LorentzVector zCand;
-    
+
     // Readers to access the data (delete the ones you do not need).
     virtual void    Init(TTree *tree) override;
     ZGenSelector(TTree * /*tree*/ =0) { }
@@ -35,7 +35,3 @@ protected:
 };
 
 #endif
-
-
-
-

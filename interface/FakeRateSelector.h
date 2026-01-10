@@ -14,7 +14,7 @@
 #include <vector>
 
 
-class FakeRateSelector : public ZZSelectorBase { 
+class FakeRateSelector : public ZZSelectorBase {
 public :
     TH2D* passingTightE2D_;
     TH1D* passingTightE1DPt_barrel_;

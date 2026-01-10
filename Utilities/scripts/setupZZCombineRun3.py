@@ -8,7 +8,7 @@ def main():
     parser.add_argument("-i", "--infile", help="name of input histogram file")
     parser.add_argument("-o", "--outdir", default="combine",
         help="name of output directory for the datacard(s)")
-    parser.add_argument("-f", "--fit-var", default="Mass", 
+    parser.add_argument("-f", "--fit-var", default="Mass",
         help="fit variable (default: Mass)")
     parser.add_argument("-l", "--lumi", help="luminosity")
     parser.add_argument("-a", "--analysis", default="Run3Combined", help="name of analysis")
@@ -60,7 +60,7 @@ def main():
         except:
             parser.error(f'error creating directory {args.outdir}')
 
-    # Create the generator by supplying 
+    # Create the generator by supplying
     #  - the analysis (e.g. ZZ4l2022)
     #  - the fit variable (right now it only accepts one)
     #  - the file to read from
@@ -83,7 +83,7 @@ def main():
         "CMS_pileup": {proc: "1" for proc in all_procs},
     }
 
-    # Add systematics by supplying 
+    # Add systematics by supplying
     #  - the name of the systematic (e.g. CMS_eff_e)
     #  - a dictionary of values for each signal and background process
     #  - whether or not it is a 'shape' uncertainty
@@ -118,10 +118,9 @@ def main():
                 shape=True
             )
 
-    # Finally, you can create the cards by specifying the 
+    # Finally, you can create the cards by specifying the
     # output directory for them.
     generator.GenerateCards(args.outdir)
 
 if __name__ == "__main__":
     main()
-

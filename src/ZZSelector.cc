@@ -942,7 +942,7 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
   //weight = 1; //NOTE: unweighted
   //if (entry == 0 && variation.first == Central)
   //  std::cout << fChain->GetTree()->GetDirectory()->GetFile()->GetName() << std::endl;
-  
+
   // require TightZZLeptons for prompt
   if (!PassesZZSelectionLoose(isNonPrompt_)) return;
 
@@ -963,7 +963,7 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
   float jpt1_tmp = -9999;
   float jeta1_tmp = -9999;
 
-  //mjj and dEtajj has default values already (but dEtajj=-1 is small although unphysical... unlike -9999), but need to assign values for temporary jetPt[1] and jetEta[1] 
+  //mjj and dEtajj has default values already (but dEtajj=-1 is small although unphysical... unlike -9999), but need to assign values for temporary jetPt[1] and jetEta[1]
   if (nJets_tmp >= 1){
     jpt0_tmp = jetPt->at(0);
     jeta0_tmp = jetEta->at(0);
@@ -978,19 +978,19 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
   if (writeNtp_ && writeNtpFullRange)
   {
     SafeSetBranch(ftntp_, getBranchName("weight", variation.second), &weight);
-    SafeSetBranch(ftntp_, getBranchName("Mass", variation.second), &Mass); 
-    SafeSetBranch(ftntp_, getBranchName("nJets", variation.second), &nJets_tmp); 
-    SafeSetBranch(ftntp_, getBranchName("jetPt0", variation.second), &jpt0_tmp); 
-    SafeSetBranch(ftntp_, getBranchName("jetEta0", variation.second), &jeta0_tmp); 
+    SafeSetBranch(ftntp_, getBranchName("Mass", variation.second), &Mass);
+    SafeSetBranch(ftntp_, getBranchName("nJets", variation.second), &nJets_tmp);
+    SafeSetBranch(ftntp_, getBranchName("jetPt0", variation.second), &jpt0_tmp);
+    SafeSetBranch(ftntp_, getBranchName("jetEta0", variation.second), &jeta0_tmp);
 
-    SafeSetBranch(ftntp_, getBranchName("run", variation.second), &run); 
-    SafeSetBranch(ftntp_, getBranchName("lumi", variation.second), &lumi); 
-    SafeSetBranch(ftntp_, getBranchName("evt", variation.second), &evt); 
+    SafeSetBranch(ftntp_, getBranchName("run", variation.second), &run);
+    SafeSetBranch(ftntp_, getBranchName("lumi", variation.second), &lumi);
+    SafeSetBranch(ftntp_, getBranchName("evt", variation.second), &evt);
 
-    SafeSetBranch(ftntp_, getBranchName("jetPt1", variation.second), &jpt1_tmp); 
-    SafeSetBranch(ftntp_, getBranchName("jetEta1", variation.second), &jeta1_tmp); 
+    SafeSetBranch(ftntp_, getBranchName("jetPt1", variation.second), &jpt1_tmp);
+    SafeSetBranch(ftntp_, getBranchName("jetEta1", variation.second), &jeta1_tmp);
 
-    SafeSetBranch(ftntp_, getBranchName("mjj", variation.second), &mjj);   
+    SafeSetBranch(ftntp_, getBranchName("mjj", variation.second), &mjj);
     SafeSetBranch(ftntp_, getBranchName("dEtajj", variation.second), &dEtajj);
 
     if (isMC_)
@@ -1272,21 +1272,21 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
 
   if (writeNtp_ && !writeNtpFullRange){
     SafeSetBranch(ftntp_, getBranchName("weight", variation.second), &weight);
-    SafeSetBranch(ftntp_, getBranchName("Mass", variation.second), &Mass); 
-    SafeSetBranch(ftntp_, getBranchName("nJets", variation.second), &nJets_tmp); 
-    SafeSetBranch(ftntp_, getBranchName("jetPt0", variation.second), &jpt0_tmp); 
-    SafeSetBranch(ftntp_, getBranchName("jetEta0", variation.second), &jeta0_tmp); 
+    SafeSetBranch(ftntp_, getBranchName("Mass", variation.second), &Mass);
+    SafeSetBranch(ftntp_, getBranchName("nJets", variation.second), &nJets_tmp);
+    SafeSetBranch(ftntp_, getBranchName("jetPt0", variation.second), &jpt0_tmp);
+    SafeSetBranch(ftntp_, getBranchName("jetEta0", variation.second), &jeta0_tmp);
 
-    SafeSetBranch(ftntp_, getBranchName("run", variation.second), &run); 
-    SafeSetBranch(ftntp_, getBranchName("lumi", variation.second), &lumi); 
-    SafeSetBranch(ftntp_, getBranchName("evt", variation.second), &evt); 
+    SafeSetBranch(ftntp_, getBranchName("run", variation.second), &run);
+    SafeSetBranch(ftntp_, getBranchName("lumi", variation.second), &lumi);
+    SafeSetBranch(ftntp_, getBranchName("evt", variation.second), &evt);
 
 
 
-    SafeSetBranch(ftntp_, getBranchName("jetPt1", variation.second), &jpt1_tmp); 
-    SafeSetBranch(ftntp_, getBranchName("jetEta1", variation.second), &jeta1_tmp); 
+    SafeSetBranch(ftntp_, getBranchName("jetPt1", variation.second), &jpt1_tmp);
+    SafeSetBranch(ftntp_, getBranchName("jetEta1", variation.second), &jeta1_tmp);
 
-    SafeSetBranch(ftntp_, getBranchName("mjj", variation.second), &mjj);   
+    SafeSetBranch(ftntp_, getBranchName("mjj", variation.second), &mjj);
     SafeSetBranch(ftntp_, getBranchName("dEtajj", variation.second), &dEtajj);
 
 

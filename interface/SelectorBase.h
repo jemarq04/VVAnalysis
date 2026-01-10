@@ -38,11 +38,11 @@ class SelectorBase : public TSelector {
     };
 
     enum Channel {
-      e,           m,         
-      ee,          em,        mm,     
+      e,           m,
+      ee,          em,        mm,
       eee,         eem,       emm,    mmm,
       eeee,        eemm,      mmee,   mmmm,
-      Inclusive,   Unknown,   lll,    
+      Inclusive,   Unknown,   lll,
     };
 
     enum Selection {
@@ -77,7 +77,7 @@ class SelectorBase : public TSelector {
       electronScaleUp,           electronScaleDown,
       pileupUp,                  pileupDown,
       //L1prefiringWeightUp,       L1prefiringWeightDown,
-    }; 
+    };
 
     /****************************/
     /*  __  __                  */
@@ -115,10 +115,10 @@ class SelectorBase : public TSelector {
       {"VBSBackgroundControlLoose_Full", VBSBackgroundControlLoose_Full},
       {"Inclusive2Jet", Inclusive2Jet},
       {"Inclusive2Jet_Full", Inclusive2Jet_Full},
-      {"TightWithLooseVeto", TightWithLooseVeto}, 
+      {"TightWithLooseVeto", TightWithLooseVeto},
       {"FourTopPlots", FourTopPlots},
       {"FourTopCutBasedEl", FourTopCutBasedEl},
-      {"FourTopMVAEl", FourTopMVAEl}, 
+      {"FourTopMVAEl", FourTopMVAEl},
     };
 
     std::map<std::string, Year> yearMap_ = {
@@ -129,7 +129,7 @@ class SelectorBase : public TSelector {
     };
 
     std::map<std::string, Channel> channelMap_ = {
-      {"e", e},                   {"m", m},         
+      {"e", e},                   {"m", m},
       {"ee", ee},                 {"em", em},       {"mm", mm},
       {"eee", eee},               {"eem", eem},     {"emm", emm},     {"mmm", mmm},
       {"eeee", eeee},             {"eemm", eemm},   {"mmee", mmee},   {"mmmm", mmmm},
@@ -152,7 +152,7 @@ class SelectorBase : public TSelector {
     bool applyScaleFactors_;
     bool applyPrefiringCorr_;
     bool writeNtp_ = false; //Whether to write selected events into ntuple
-    std::string ftntpName_; //Tree name containing dataset, channel 
+    std::string ftntpName_; //Tree name containing dataset, channel
 
     // Readers to access the data (delete the ones you do not need).
     SelectorBase(TTree * /*tree*/ =0) { }
@@ -190,7 +190,7 @@ class SelectorBase : public TSelector {
       allObjects_.insert((TNamed**) &ptr);
     };
 
-    void UpdateDirectory();    
+    void UpdateDirectory();
     ClassDef(SelectorBase,0);
 
   protected:
@@ -244,7 +244,7 @@ class SelectorBase : public TSelector {
 
     // Filling Functions
     template<typename T, typename... Args>
-    void SafeHistFill(std::map<std::string, T*> container, 
+    void SafeHistFill(std::map<std::string, T*> container,
         std::string histname, Args... args) {
       if (container[histname] != nullptr)
         container[histname]->Fill(args...);

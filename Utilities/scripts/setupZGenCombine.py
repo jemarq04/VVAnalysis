@@ -10,7 +10,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 cardtool = CombineCardTools.CombineCardTools()
 
-manager_path = ConfigureJobs.getManagerPath() 
+manager_path = ConfigureJobs.getManagerPath()
 sys.path.append("/".join([manager_path, "AnalysisDatasetManager",
     "Utilities/python"]))
 
@@ -52,6 +52,6 @@ nuissance_map = {"ee" : 3, "mm" : 3 }
 for chan in channels: #+ ["all"]:
     cardtool.setTemplateFileName("Templates/CombineCards/VGen/ZGen_template_{channel}.txt")
     logging.info("Writting cards for channel %s" % chan)
-    cardtool.writeCards(chan, nuissance_map[chan], 
+    cardtool.writeCards(chan, nuissance_map[chan],
         #extraArgs={"data_name" : "dy_lo", "dy_sample" : "dy_lo"})
         extraArgs={"data_name" : "dy_lo_2018", "dy_sample" : "dy_lo_2018"})

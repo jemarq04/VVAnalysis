@@ -28,7 +28,7 @@ void NanoGenSelectorBase::SetBranchesNanoAOD() {
     fChain->SetBranchAddress("GenMET_phi", &GenMET_phi, &b_GenMET_phi);
 }
 
-void NanoGenSelectorBase::LoadBranchesNanoAOD(Long64_t entry, std::pair<Systematic, std::string> variation) { 
+void NanoGenSelectorBase::LoadBranchesNanoAOD(Long64_t entry, std::pair<Systematic, std::string> variation) {
     weight = 1;
     b_nGenPart->GetEntry(entry);
     b_GenMET_pt->GetEntry(entry);
@@ -88,7 +88,7 @@ void NanoGenSelectorBase::LoadBranchesNanoAOD(Long64_t entry, std::pair<Systemat
             neutrinos.push_back(reco::GenParticle(0, vec, reco::Particle::Point(), GenPart_pdgId[i], GenPart_status[i], true));
         }
     }
-    std::sort(leptons.begin(), leptons.end(), 
+    std::sort(leptons.begin(), leptons.end(),
         [](const reco::GenParticle& a, const reco::GenParticle& b) { return a.pt() > b.pt(); });
 
     for (size_t i = 0; i < nGenJet; i++) {

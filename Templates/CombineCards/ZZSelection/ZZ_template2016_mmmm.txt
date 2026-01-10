@@ -3,16 +3,16 @@ jmax 5  number of backgrounds plus signals minus 1
 kmax ${nuisances} number of nuisance parameters (sources of systematical uncertainties)
 ------------
 
-shapes zzjj4l_ewk * ${output_file} zzjj4l_ewk/${fit_variable}_$$CHANNEL       zzjj4l_ewk/${fit_variable}_$$SYSTEMATIC_$$CHANNEL 
-shapes HZZ_signal * ${output_file} HZZ_signal/${fit_variable}_$$CHANNEL       HZZ_signal/${fit_variable}_$$SYSTEMATIC_$$CHANNEL 
-shapes qqZZ_powheg * ${output_file} qqZZ_powheg/${fit_variable}_$$CHANNEL     qqZZ_powheg/${fit_variable}_$$SYSTEMATIC_$$CHANNEL 
-shapes ggZZ * ${output_file} ggZZ/${fit_variable}_$$CHANNEL                   ggZZ/${fit_variable}_$$SYSTEMATIC_$$CHANNEL 
-shapes VVV  * ${output_file} VVV/${fit_variable}_$$CHANNEL                    VVV/${fit_variable}_$$SYSTEMATIC_$$CHANNEL 
+shapes zzjj4l_ewk * ${output_file} zzjj4l_ewk/${fit_variable}_$$CHANNEL       zzjj4l_ewk/${fit_variable}_$$SYSTEMATIC_$$CHANNEL
+shapes HZZ_signal * ${output_file} HZZ_signal/${fit_variable}_$$CHANNEL       HZZ_signal/${fit_variable}_$$SYSTEMATIC_$$CHANNEL
+shapes qqZZ_powheg * ${output_file} qqZZ_powheg/${fit_variable}_$$CHANNEL     qqZZ_powheg/${fit_variable}_$$SYSTEMATIC_$$CHANNEL
+shapes ggZZ * ${output_file} ggZZ/${fit_variable}_$$CHANNEL                   ggZZ/${fit_variable}_$$SYSTEMATIC_$$CHANNEL
+shapes VVV  * ${output_file} VVV/${fit_variable}_$$CHANNEL                    VVV/${fit_variable}_$$SYSTEMATIC_$$CHANNEL
 
 shapes nonprompt * ${output_file} nonprompt/${fit_variable}_Fakes_$$CHANNEL nonprompt/${fit_variable}_Fakes_$$SYSTEMATIC_$$CHANNEL
 shapes data_obs  * ${output_file} data/${fit_variable}_$$CHANNEL
 
-bin          mmmm   
+bin          mmmm
 observation  ${data}
 
 ------------
@@ -22,15 +22,15 @@ observation  ${data}
 # then we list the independent sources of uncertainties, and give their effect (syst. error)
 # on each process and bin
 
-bin                                 mmmm              mmmm              mmmm               mmmm       mmmm          mmmm         
-process                          zzjj4l_ewk        HZZ_signal        qqZZ_powheg           ggZZ       VVV         nonprompt  
+bin                                 mmmm              mmmm              mmmm               mmmm       mmmm          mmmm
+process                          zzjj4l_ewk        HZZ_signal        qqZZ_powheg           ggZZ       VVV         nonprompt
 process                              4               3                 -1                  0         1              2
 rate                             ${zzjj4l_ewk}    ${HZZ_signal}      ${qqZZ_powheg}        ${ggZZ}    ${VVV}       ${nonprompt}
----------------------------------------------------------------------------------------------------------------------------------                                                                                                                                                                                                                    
+---------------------------------------------------------------------------------------------------------------------------------
 bkg_mmmm_16               lnN           -               -                  -                 -           -          1.2
 bkg_mm_16                 lnN           -               -                  -                 -           -           1.2
-trigger_mmmm_16           lnN          1.01            1.01             1.01                1.01         1.01        -       
-trigger_mm_16             lnN          1.01            1.01             1.01                1.01         1.01        -       
+trigger_mmmm_16           lnN          1.01            1.01             1.01                1.01         1.01        -
+trigger_mm_16             lnN          1.01            1.01             1.01                1.01         1.01        -
 CMS_eff_m               shape           1              1                 1                 1            1          0
 CMS_pileup              shape          1              1                 1                 1            1          0
 CMS_lumi                  lnN            1.01            1.01             1.01               1.01         1.01       1.01
@@ -40,5 +40,5 @@ QCDscale_VVV            shape             0              0                   0  
 pdf_HZZ_signal          shape             0                  1                 0                 0               0           0
 pdf_VVV                 shape             0                  0                  0                0               1           0
 theoAcc                 lnN           -                 -                 1.02              1.02          -           -
-                                                    
-* autoMCStats 1                         
+
+* autoMCStats 1

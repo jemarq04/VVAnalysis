@@ -38,8 +38,8 @@ class Process():
 
 
 class CombineCardGenerator():
-    def __init__(self, analysis: str, fit_variable: str, 
-                 hist_infile: Union[str, ROOT.TFile], sig_procs: list, 
+    def __init__(self, analysis: str, fit_variable: str,
+                 hist_infile: Union[str, ROOT.TFile], sig_procs: list,
                  bkg_procs: list, channels: list=None, lumi: float=None,
                  auto_stats: bool=False, add_overflow: bool=False):
         if channels is None:
@@ -77,7 +77,7 @@ class CombineCardGenerator():
         else:
             raise ValueError
 
-    def AddSystematics(self, name: str, values: dict, channel: str="all", 
+    def AddSystematics(self, name: str, values: dict, channel: str="all",
                        shape: bool=False):
         """
         Adds systematics to the processes.
@@ -86,7 +86,7 @@ class CombineCardGenerator():
             name (str):
                 name of systematic (e.g. CMS_eff_e)
             values (dict(str: str)):
-                values of the systematics for a given process name 
+                values of the systematics for a given process name
                 (e.g. {"ggZZ": "1.025", "VVV": "-"})
             channel (str):
                 specifies the channel this systematic should apply to
@@ -121,7 +121,7 @@ class CombineCardGenerator():
 
     def _LoadHistInfo(self):
         # Access plot groups
-        manager_path = ConfigureJobs.getManagerPath() 
+        manager_path = ConfigureJobs.getManagerPath()
         manager_name = ConfigureJobs.getManagerName()
         plot_groups = {}
         filename = "%s/%s/PlotGroups/%s.json" % (manager_path, manager_name, self.analysis)
@@ -229,14 +229,14 @@ class CombineCardGenerator():
                 headers.append(["rate", ""] + \
                         ["%.4f" % proc.yields[chan] for proc in self.sig_procs.values()] + \
                         ["%.4f" % proc.yields[chan] for proc in self.bkg_procs.values()])
-        
+
                 table = []
                 for syst in self.systematics[chan]:
                     table.append([syst.name, "shape" if syst.shape else "lnN"] + \
                             [syst.systematics[procname] for procname in self.sig_procs] + \
                             [syst.systematics[procname] for procname in self.bkg_procs])
 
-                longest_cells = [0] * numcols 
+                longest_cells = [0] * numcols
                 for row in headers + table:
                     for i in range(numcols):
                         if len(row[i]) > longest_cells[i]:

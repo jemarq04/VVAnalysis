@@ -25,12 +25,12 @@ for chan in ["eee", "eem", "emm", "mmm"]:
             event_num = line.strip().split(",")
             if len(event_num) == 3:
                 events.append("(run == {0} && lumi == {1} && evt == {2})".format(*event_num))
-    
+
     for i, eventlist in enumerate(chunks(events, 40)):
         evtstring = " || ".join(eventlist)
         chain.GetPlayer().SetScanRedirect(True)
         #outfile_name = "/eos/user/k/kelong/WZAnalysisData/SyncWithSvenja/Differences_29Aug2017/3LooseLeptons/MuonEG/Details/%s_%s.txt" % (comparison, chan)
-        outfile_name = file_name.replace("Wselection", "Wselection/Details") 
+        outfile_name = file_name.replace("Wselection", "Wselection/Details")
         if i > 0:
             outfile_name = outfile_name.replace(".txt", "%i.text" % i)
         chain.GetPlayer().SetScanFileName(outfile_name)

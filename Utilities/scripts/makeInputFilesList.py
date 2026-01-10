@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
-# This script takes a directory as input and creates a new file (name 
-# specifed by the user) with a list of filenames in the format required by 
-# farmoutAnalysisJobs. 
+# This script takes a directory as input and creates a new file (name
+# specifed by the user) with a list of filenames in the format required by
+# farmoutAnalysisJobs.
 
-#That is, containing a list of all the files in the directoy, one file 
-# name per line. For filenames begining with /hdfs, /hdfs is removed. 
+#That is, containing a list of all the files in the directoy, one file
+# name per line. For filenames begining with /hdfs, /hdfs is removed.
 #
 # Author: Kenneth Long, U. Wisconsin 01-10-2015
 

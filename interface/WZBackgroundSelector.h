@@ -9,7 +9,7 @@ class WZBackgroundSelector : public WZSelector {
 public :
     ScaleFactor * fakeRate_allE_;
     ScaleFactor * fakeRate_allMu_;
-    
+
     TH1D* mjjHistPPF_;
     TH1D* mjjHistPFP_;
     TH1D* mjjHistFPP_;
@@ -24,7 +24,7 @@ public :
     TH1D* ZMassHistFPF_;
     TH1D* ZMassHistPFF_;
     TH1D* ZMassHistFFF_;
-    
+
     virtual void    SetupNewDirectory() override;
     virtual void    SlaveBegin(TTree *tree) override;
 

@@ -22,7 +22,7 @@ for chan in chans:
     #hist = combine_file.Get("wzjj-vbfnlo/mjj_etajj_unrolled_%s" % chan).Clone()
     sig_hist = combine_file.Get("wzjj-ewk/" +hist_name + chan)
     sig_hist.SetBinContent(1, 0)
-    sig_hist.SetBinError(1,0) 
+    sig_hist.SetBinError(1,0)
     hist.Add(sig_hist)
     if smearSig:
         for i in range(2, hist.GetNbinsX()+1):
@@ -36,16 +36,16 @@ for chan in chans:
                 val = bkhist.GetBinContent(i)
                 bkhist.SetBinContent(i, random.gauss(val, val*random.uniform(0.1, 0.4)))
         bkhist.SetBinContent(1, 0)
-        bkhist.SetBinError(1,0) 
+        bkhist.SetBinError(1,0)
         hist.Add(bkhist)
-    
+
     nphist = combine_file.Get("DataEWKCorrected/" +hist_name +"Fakes_"+ chan)
     if smearBkgd:
         for i in range(1, hist.GetNbinsX()+1):
             val = nphist.GetBinContent(i)
             nphist.SetBinContent(i, random.gauss(val, val*0.3))
-    nphist.SetBinContent(1,0) 
-    nphist.SetBinError(1,0) 
+    nphist.SetBinContent(1,0)
+    nphist.SetBinError(1,0)
     hist.Add(nphist)
     if forcePoisson:
         for i in range(1, hist.GetNbinsX()+1):
@@ -60,7 +60,7 @@ if not noWrite:
     combine_dir = combine_file.Get("AllData")
     if not combine_dir:
         combine_dir = ROOT.TDirectoryFile("AllData", "AllData")
-    combine_dir.cd() 
+    combine_dir.cd()
     for chan in chans:
         hist = new_dir.Get(hist_name+chan).Clone()
         ROOT.SetOwnership(hist, False)

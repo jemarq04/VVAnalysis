@@ -12,7 +12,7 @@ import shutil
 cardtool = CombineCardTools.CombineCardTools()
 
 
-manager_path = ConfigureJobs.getManagerPath() 
+manager_path = ConfigureJobs.getManagerPath()
 manager_name = ConfigureJobs.getManagerName()
 #print("manager_path: ", manager_path)
 #print("manager_name: ", manager_name)
@@ -24,7 +24,7 @@ config_factory = ConfigHistFactory(
     "%s/%s" % (manager_path, manager_name),
     "ZZ4l2016/LooseLeptons",
 )
-#manager_path = ConfigureJobs.getManagerPath() 
+#manager_path = ConfigureJobs.getManagerPath()
 #manager_name = ConfigureJobs.getManagerName()
 ##print("manager_path: ", manager_path)
 #if manager_path not in sys.path:
@@ -37,7 +37,7 @@ config_factory = ConfigHistFactory(
 #        atgcSamples[str(name)]= str(allnames[name]['plot_group'])
 #print(atgcSamples)
 
-plot_groups = ["HZZ_signal","qqZZ_powheg","zzjj4l_ewk","ggZZ", "VVV", "data", "nonprompt",] 
+plot_groups = ["HZZ_signal","qqZZ_powheg","zzjj4l_ewk","ggZZ", "VVV", "data", "nonprompt",]
 plotGroupsMap = {name : config_factory.getPlotGroupMembers(name) for name in plot_groups}
 xsecs  = ConfigureJobs.getListOfFilesWithXSec([f for files in list(plotGroupsMap.values()) for f in files])
 
@@ -75,7 +75,7 @@ try:
 except OSError as e:
     logging.warning(e)
     pass
-output_folder = "CombineStudies/ZZ/%sFitFullRunII_Oct29" % fitvar 
+output_folder = "CombineStudies/ZZ/%sFitFullRunII_Oct29" % fitvar
 cardtool.setOutputFolder(output_folder)
 
 for year in ["2016","2017","2018"]:

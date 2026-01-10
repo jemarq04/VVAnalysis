@@ -36,4 +36,3 @@ for name, info in datasets.items():
         num_files = filelist.Add(info["file_path"])
         proof.RegisterDataSet(proof_name, filelist, 'OVnostagedcheck:')
 os.chdir(current_path)
-

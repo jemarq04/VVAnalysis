@@ -57,13 +57,13 @@ class SelectorDriver(object):
 
     def isGen(self):
         self.selector_name = self.selector_name.replace("BackgroundSelector", "GenSelector")
-    
+
     def isFake(self):
         self.selector_name = self.selector_name.replace("ZZ", "FakeRate")
 
     def outputFile(self):
         return self.outfile
-    
+
     def setOutputfile(self, outfile_name):
         if self.outfile:
             self.outfile.Close()
@@ -90,7 +90,7 @@ class SelectorDriver(object):
         self.addTNamed("ntupleType", self.ntupleType)
         self.addTNamed("selection", self.selection)
         self.addTNamed("year", self.year)
-        
+
     def setNtupleType(self, ntupleType):
         self.ntupleType = ntupleType
         self.addTNamed("ntupleType", self.ntupleType)
@@ -117,7 +117,7 @@ class SelectorDriver(object):
             raise ValueError("The first file to process (nPerJob*jobNum) = (%i*%i)" % (nPerJob, jobNum) \
                     + " is greater than the number of entries in file %s (%s)." % (list_of_files, maxNum))
         lastEntry = min(nPerJob*(jobNum+1), maxNum)
-        
+
         for line in filelist[firstEntry:lastEntry]:
             if "@" not in line:
                 dataset = "Unknown"
@@ -138,7 +138,7 @@ class SelectorDriver(object):
                 dataset, file_path = [f.strip() for f in dataset.split("@")]
             else:
                 try:
-                    file_path = ConfigureJobs.getInputFilesPath(dataset, 
+                    file_path = ConfigureJobs.getInputFilesPath(dataset,
                         self.input_tier, self.analysis)
                 except ValueError as e:
                     logging.warning(e)
@@ -154,7 +154,7 @@ class SelectorDriver(object):
             logging.info("Processing channel %s" % chan)
             if self.numCores > 1:
                 self.processParallelByDataset(self.datasets, chan)
-            else: 
+            else:
                 for dataset, file_path in self.datasets.items():
                     self.processDataset(dataset, file_path, chan)
 
@@ -205,9 +205,9 @@ class SelectorDriver(object):
 
         if not ntuple_written or ntuple_written.ClassName() != "TTree":
             logging.warning("No filled ntuple found for dataset %s" % dataset)
-            
+
             #logging.warning('For filled ntuple skipping dataset %s' % dataset)
-            
+
 
         if addSumweights:
             dataset_list.Add(ROOT.gROOT.FindObject("sumweights"))
@@ -216,13 +216,13 @@ class SelectorDriver(object):
             chanNum = self.channels.index(chan)
             #Shouldn't matter whether recreate or update for hists, since the temp files will be deleted after hadd
             self.current_file = ROOT.TFile.Open(self.tempfileName(dataset), "recreate" if chanNum == 0 else "update")
-        
+
         #Always create temp file for ntuple case regardless of whether multithread
         if not os.path.isdir("FilledNtuples"):
             os.mkdir("FilledNtuples")
-        
+
         OutputTools.writeOutputListItem(dataset_list, self.current_file)
-        
+
         if self.current_file != self.outfile:
             self.current_file.Close()
 
@@ -230,7 +230,7 @@ class SelectorDriver(object):
         self.current_Treefile.cd()
         ntuple_written.Write() #write TTree
         self.current_Treefile.Close()
-        
+
         #dataset_list.Delete()
         #ntuple_written.Delete()
         output_list.Delete()
@@ -240,7 +240,7 @@ class SelectorDriver(object):
         xrootd = "/store" in file_path.split("/hdfs/")[0][:7]
         xrootd_user = "/store/user" in file_path.split("/hdfs/")[0][:12]
         if not (xrootd or os.path.isfile(file_path) or os.path.isdir(file_path.rsplit("/", 1)[0].rstrip("/*"))):
-            raise ValueError("Invalid path! Skipping dataset. Path was %s" 
+            raise ValueError("Invalid path! Skipping dataset. Path was %s"
                 % file_path)
 
         # Assuming these are user files on HDFS, otherwise it won't work
@@ -272,27 +272,27 @@ class SelectorDriver(object):
 
     def combineParallelTreeFiles(self, tempfiles, chan):
         tempfiles = list(filter(os.path.isfile, tempfiles))
-        
+
         if chan != "Inclusive":
             outfile = "FilledNtuples/TreeFile_"+self.outfile_name.replace(".root", "_%s.root" % chan)
         else:
             outfile = "FilledNtuples/TreeFile_%s_"%self.selector_name + self.outfile_name.replace(".root", "_%s.root" % chan)
-            
+
         outfileMerged = ROOT.TFile.Open(outfile,"recreate")
-        outfileMerged.Close() 
+        outfileMerged.Close()
         for f in tempfiles:
             os.system("rootcp %s:* %s"%(f,outfile))
-        
-       
+
+
         list(map(os.remove, tempfiles))
-       
+
 
     def processParallelByDataset(self, datasets, chan):
         numCores = min(self.numCores, len(datasets))
         p = multiprocessing.Pool(processes=self.numCores)
         p.map(self, [[dataset, f, chan] for dataset, f in datasets.items()])
         # Store arrays in temp files, since it can get way too big to keep around in memory
-        tempfiles = [self.tempfileName(d) for d in datasets] 
+        tempfiles = [self.tempfileName(d) for d in datasets]
         tempTreeFiles = ["FilledNtuples/TreeFile_"+self.tempfileName(d) for d in datasets]
         self.combineParallelFiles(tempfiles, chan)
         self.combineParallelTreeFiles(tempTreeFiles, chan)
@@ -317,16 +317,16 @@ class SelectorDriver(object):
         tree = rtfile.Get(tree_name)
         if not tree:
             raise ValueError(("tree %s not found for file %s. " \
-                    "Either the file is corrupted or the ntupleType (%s) is wrong.") 
+                    "Either the file is corrupted or the ntupleType (%s) is wrong.")
                 % (tree_name, filename, self.ntupleType)
             )
         logging.debug("Processing tree %s for file %s." % (tree.GetName(), rtfile.GetName()))
-        
+
         #Codes for trigger test
         #aliases = UserInput.readJson("Cuts/%s/aliases.json" % self.analysis)
         #for nameAlias, valueAlias in aliases["Event"].iteritems():
         #    tree.SetAlias(nameAlias, valueAlias)
-        
+
         #TriggerStr = "(singleIsoMuPass || doubleMuDZPass || tripleMuPass)"
         #TriggerStr = "((singleIsoMuPass || doubleMuDZPass || tripleMuPass) && (singleEPass || doubleEPass || tripleEPass))"
         #TriggerStr = "(!(singleIsoMuPass || doubleMuDZPass || tripleMuPass) && (singleEPass || doubleEPass || tripleEPass))"

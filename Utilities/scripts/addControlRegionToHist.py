@@ -8,7 +8,7 @@ parser.add_argument("--input_file", "-i", type=str,
     default="test.root", help="Output file name")
 parser.add_argument("--hist_name", "-n", type=str,
     default="MTWZ", help="Name of histogram to add CR to")
-parser.add_argument("--rebin", type=lambda x: [float(i) for i in x.split(",")], 
+parser.add_argument("--rebin", type=lambda x: [float(i) for i in x.split(",")],
                     default=ConfigureJobs.getBinning(isHiggs=True),
                     help="Rebin values, comma separated list")
 args = parser.parse_args()
@@ -62,4 +62,3 @@ for key in input_file.GetListOfKeys():
 if saveToFile:
     for folder in output:
         OutputTools.writeOutputListItem(folder, input_file)
-

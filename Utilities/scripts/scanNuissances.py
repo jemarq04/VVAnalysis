@@ -66,4 +66,3 @@ for nuisance in nuisances:
             (res["mu"], res["errUp"], res["errDown"]))
     print("    Only from nuisance: +%0.3f -%0.3f" % \
             (res["nuOnlyErrUp"], res["nuOnlyErrDown"]))
-

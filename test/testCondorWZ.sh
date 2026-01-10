@@ -58,7 +58,7 @@ make_2016_datalist() {
     make_file_list "MuonEG/Run2016G-Nano1June2019-v1" "data_MuonEG_Run2016G-Nano1June2019-v1" 0
     make_file_list "MuonEG/Run2016H-Nano1June2019-v1" "data_MuonEG_Run2016H-Nano1June2019-v1" 0
 }
- 
+
 make_2017_datalist() {
     # No reason data and MC can't go together but it's easier for now to do one or the other
     make_file_list "SingleMuon/Run2017B-Nano1June2019-v1" "data_SingleMuon_Run2017B-Nano1June2019-v1" 0
@@ -101,7 +101,7 @@ copy_manager_files() {
 
     #Need to send the relavent files to the condor machine (could also count on afs)
     pushd FileInfo
-    cp -r ${adm_path}/FileInfo/${analysis} ${analysis} 
+    cp -r ${adm_path}/FileInfo/${analysis} ${analysis}
     cp -r ${adm_path}/FileInfo/data .
     cp -r ${adm_path}/FileInfo/montecarlo .
     popd

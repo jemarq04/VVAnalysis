@@ -15,7 +15,7 @@ struct BranchManager {
 
   void SetTree(TTree* fChain_) {
     fChain = fChain_;
-  } 
+  }
 
   template<typename T>
   void SetBranch(std::string name, T& holder) {
@@ -38,7 +38,7 @@ struct BranchManager {
   void SetSpecificEntry(int entry, std::string name) {
     specificBranch[name]->GetEntry(entry);
   }
-  
+
   void CleanUp() {
     branchHolder.clear();
     specificBranch.clear();
@@ -46,4 +46,3 @@ struct BranchManager {
 };
 
 #endif
-

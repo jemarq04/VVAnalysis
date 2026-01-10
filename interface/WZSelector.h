@@ -73,7 +73,7 @@ public :
     Float_t l1PtScaleCorrErr;
     Float_t l2PtScaleCorrErr;
     Float_t l3PtScaleCorrErr;
-    
+
     TBranch* b_l3MtToMET;
     TBranch* b_MtToMET;
     TBranch* b_pdfWeights;
@@ -127,7 +127,7 @@ protected:
     virtual void    SetBranchesUWVV() override;
     void LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::string> variation) override;
     void FillHistograms(Long64_t entry, std::pair<Systematic, std::string> variation) override;
-    void FillVBSHistograms(float weight, bool noBlind, 
+    void FillVBSHistograms(float weight, bool noBlind,
             std::pair<Systematic, std::string> variation);
     bool PassesBaseSelection(Long64_t entry, bool tightLeps, Selection selection);
     bool PassesVBSSelection(bool noBlind);
@@ -139,4 +139,3 @@ protected:
 };
 
 #endif
-

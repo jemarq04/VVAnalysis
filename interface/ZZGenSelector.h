@@ -7,8 +7,8 @@
 
 class ZZGenSelector : public SelectorBase {
 public :
-    
-    float GendPhiZZ; //DeltaPhi between Z1 and Z2 
+
+    float GendPhiZZ; //DeltaPhi between Z1 and Z2
     float GendRZZ; //DeltaR between Z1 and Z2
     std::vector<float>* scaleWeights = NULL;
     std::vector<float>* pdfWeights = NULL;
@@ -24,10 +24,10 @@ public :
     Float_t GenZ1pt;
     Float_t GenZ2pt;
     Float_t GenZ1Phi;
-    Float_t GenZ2Phi; 
+    Float_t GenZ2Phi;
     Float_t GenZ1Eta;
     Float_t GenZ2Eta;
-    
+
     Float_t Genl1Pt;
     Float_t Genl2Pt;
     Float_t Genl3Pt;
@@ -43,7 +43,7 @@ public :
     std::vector<float>* GenjetPt=NULL;
     std::vector<float>* GenjetEta=NULL;
     Float_t Genmjj;
-    
+
     TBranch* b_Genmjj;
     TBranch* b_GenjetPt;
     TBranch* b_GenjetEta;
@@ -71,7 +71,7 @@ public :
     TBranch* b_Genl1Phi;
     TBranch* b_Genl2Phi;
     TBranch* b_Genl3Phi;
-    TBranch* b_Genl4Phi; 
+    TBranch* b_Genl4Phi;
 
     TBranch* b_pdfWeights;
     TBranch* b_scaleWeights;
@@ -88,8 +88,8 @@ protected:
     void LoadBranchesNanoAOD(Long64_t entry, std::pair<Systematic, std::string> variation) override;
     virtual void    SetBranchesNanoAOD() override;
     virtual void    SetBranchesUWVV() override;
-    
-    void SetVariables(Long64_t entry); 
+
+    void SetVariables(Long64_t entry);
     bool ZZSelection();
     bool Z4lSelection();
     bool ZSelection();
@@ -99,4 +99,3 @@ protected:
 };
 
 #endif
-

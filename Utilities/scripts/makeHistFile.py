@@ -39,11 +39,11 @@ def getComLineArgs():
         help="apply scale factors")
     parser.add_argument("--fakerates_file", "-F", type=str,
         default="", help="fake rates file name")
-    parser.add_argument("-c", "--channels", 
+    parser.add_argument("-c", "--channels",
                         type=lambda x : [i.strip() for i in x.split(',')],
                         default=["eee","eem","emm","mmm"], help="List of channels"
                         "separated by commas. NOTE: set to Inclusive for NanoAOD")
-    parser.add_argument("-b", "--hist_names", 
+    parser.add_argument("-b", "--hist_names",
                         type=lambda x : [i.strip() for i in x.split(',')],
                         default=["all"], help="List of histograms, "
                         "as defined in %s, separated "
@@ -55,16 +55,16 @@ def makeHistFile(args):
 
     manager_path = ConfigureJobs.getManagerPath()
     if manager_path not in sys.path:
-        sys.path.insert(0, "/".join([manager_path, 
+        sys.path.insert(0, "/".join([manager_path,
             ConfigureJobs.getManagerName(), "Utilities/python"]))
 
     if args['lumi'] is None:
         args['lumi'] = ConfigureJobs.getLuminosity(args['year'], "", manager_path)
 
     today = datetime.date.today().strftime("%d%b%Y")
-    
+
     if args['test']:
-        tmpFileName = "Hists%s-%s.root" % (today, args['output_file']) 
+        tmpFileName = "Hists%s-%s.root" % (today, args['output_file'])
     else:
         tmpFileName = "Hists%s-%s.root" % (today, args['output_file']) if args['selection'] == "SignalSync" \
             else "Hists%s-%s.root" % (today, args['analysis'])
@@ -92,8 +92,8 @@ def makeHistFile(args):
             basename = ROOT.TNamed("basename", "%s/src/Analysis/VVAnalysis/data/XPOG" % os.environ["CMSSW_BASE"])
             yearcfg = ROOT.TNamed("yearcfg", args["year"])
 
-            sf_inputs = [basename, yearcfg] 
-            
+            sf_inputs = [basename, yearcfg]
+
             # Optional inputs
             #sf_inputs.append(ROOT.TNamed("qqZZ_kfac", "data/qqZZ_kfacs.json"))
             sf_inputs.append(ROOT.TNamed("eIdSF", "data/ElectronSF_HZZ.json"))
@@ -200,14 +200,14 @@ def makeHistFile(args):
     #sys.exit()
     fOut = ROOT.TFile.Open(tmpFileName, "update")
     #pdb.set_trace()
-    alldata = HistTools.makeCompositeHists(fOut,"AllData", 
+    alldata = HistTools.makeCompositeHists(fOut,"AllData",
         ConfigureJobs.getListOfFilesWithXSec([args['analysis']+"data"], manager_path), args['lumi'],
         underflow=False, overflow=False)
     OutputTools.writeOutputListItem(alldata, fOut)
     alldata.Delete()
 
     if "ZZ4l" not in args['analysis']:
-        nonpromptmc = HistTools.makeCompositeHists(fOut, "NonpromptMC", ConfigureJobs.getListOfFilesWithXSec( 
+        nonpromptmc = HistTools.makeCompositeHists(fOut, "NonpromptMC", ConfigureJobs.getListOfFilesWithXSec(
             ConfigureJobs.getListOfNonpromptFilenames(), manager_path), args['lumi'],
             underflow=False, overflow=False)
         nonpromptmc.Delete()
