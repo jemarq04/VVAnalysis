@@ -6,8 +6,8 @@
 #include "Analysis/VVAnalysis/interface/disambiguateFinalStates.h"
 #include "Analysis/VVAnalysis/interface/disambiguateFinalStatesZL.h"
 
-namespace {
-  namespace {
+namespace{
+  namespace{
     FakeRateSelector pFakeRateSelector;
     WZSelectorBase pWZSelectorBase;
     WZSelector pWZSelector;
@@ -15,5 +15,5 @@ namespace {
     ScaleFactor pScaleFactor;
     disambiguateFinalStates pDisambiguator;
     disambiguateFinalStates pDisambiguatorZL;
-  }  // namespace
-}  // namespace
+  }
+}
