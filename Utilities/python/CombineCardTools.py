@@ -5,6 +5,7 @@ from . import OutputTools
 import os
 import ROOT
 
+
 class CombineCardTools(object):
     def __init__(self):
         self.fitVariable = ""
@@ -45,7 +46,7 @@ class CombineCardTools(object):
 
     def setVariations(self, variations, exclude=None):
         if exclude is None:
-            exclude=[]
+            exclude = []
 
         if not self.processes:
             raise ValueError("No processes defined, can't set variations")
@@ -65,7 +66,7 @@ class CombineCardTools(object):
 
     def setVariationsByProcess(self, process, variations):
         if "Up" not in variations and "Down" not in variations:
-            variations = [x+y for x in variations for y in ["Up", "Down"]]
+            variations = [x + y for x in variations for y in ["Up", "Down"]]
         self.variations[process] = variations
 
     def weightHistName(self, channel, process):
@@ -83,7 +84,7 @@ class CombineCardTools(object):
 
     def addTheoryVar(self, processName, varName, entries, central=0, exclude=None):
         if exclude is None:
-            exclude=[]
+            exclude = []
 
         if "scale" not in varName.lower() and "pdf" not in varName.lower():
             raise ValueError("Invalid theory uncertainty %s. Must be type 'scale' or 'pdf'" % varName)
@@ -92,13 +93,16 @@ class CombineCardTools(object):
         if processName not in self.theoryVariations:
             self.theoryVariations[processName] = {}
 
-        self.theoryVariations[processName].update({ name : {
-                "entries" : entries,
-                "central" : central,
-                "exclude" : exclude,
-                "combine" : "envelope" if name == "scale" else ("hessian" if "hessian" in varName else "mc"),
+        self.theoryVariations[processName].update(
+            {
+                name: {
+                    "entries": entries,
+                    "central": central,
+                    "exclude": exclude,
+                    "combine": "envelope" if name == "scale" else ("hessian" if "hessian" in varName else "mc"),
+                }
             }
-        })
+        )
 
     def getRootFile(self, rtfile, mode=None):
         if type(rtfile) is str:
@@ -112,7 +116,7 @@ class CombineCardTools(object):
         self.templateName = templateName
 
     def setOutputFile(self, outputFile):
-        #self.outputFile = self.getRootFile("/".join([self.outputFolder, outputFile]), "RECREATE")
+        # self.outputFile = self.getRootFile("/".join([self.outputFolder, outputFile]), "RECREATE")
         self.outputFile = self.getRootFile(outputFile, "RECREATE")
 
     def setInputFile(self, inputFile):
@@ -166,22 +170,28 @@ class CombineCardTools(object):
     def loadHistsForProcess(self, processName):
         plotsToRead = self.listOfHistsByProcess(processName)
 
-        group = HistTools.makeCompositeHists(self.inputFile, processName,
-                    {proc : self.crossSectionMap[proc] for proc in self.processes[processName]},
-                    self.lumi, plotsToRead, rebin=self.rebin, overflow=False)
+        group = HistTools.makeCompositeHists(
+            self.inputFile,
+            processName,
+            {proc: self.crossSectionMap[proc] for proc in self.processes[processName]},
+            self.lumi,
+            plotsToRead,
+            rebin=self.rebin,
+            overflow=False,
+        )
 
         fitVariable = self.getFitVariable(processName)
-        #TODO:Make optional
+        # TODO:Make optional
         processedHists = []
         for chan in self.channels:
             histName = "_".join([fitVariable, chan]) if chan != "all" else fitVariable
             hist = group.FindObject(histName)
-            #TODO: Make optional
+            # TODO: Make optional
             if "data" not in processName.lower():
                 HistTools.removeZeros(hist)
             HistTools.addOverflow(hist)
             processedHists.append(histName)
-            self.yields[chan].update({processName : round(hist.Integral(), 4) if hist.Integral() > 0 else 0.0001})
+            self.yields[chan].update({processName: round(hist.Integral(), 4) if hist.Integral() > 0 else 0.0001})
 
             if chan == self.channels[0]:
                 self.yields["all"][processName] = self.yields[chan][processName]
@@ -194,15 +204,28 @@ class CombineCardTools(object):
                     logging.warning("Failed to find %s. Skipping" % self.weightHistName(chan, processName))
                     continue
                 theoryVars = self.theoryVariations[processName]
-                scaleHists = HistTools.getScaleHists(weightHist, processName, self.rebin,
-                        entries=theoryVars['scale']['entries'], central=theoryVars['scale']['central'])
-                pdfFunction = getattr(HistTools, "get%sPDFVariationHists" % ("Hessian" if "hessian" in theoryVars['pdf']['combine'] else "MC"))
-                pdfHists = pdfFunction(weightHist, theoryVars['pdf']['entries'], processName,
-                        self.rebin, central=theoryVars['pdf']['central'])
-                group.extend(scaleHists+pdfHists)
-        #TODO: You may want to combine channels before removing zeros
+                scaleHists = HistTools.getScaleHists(
+                    weightHist,
+                    processName,
+                    self.rebin,
+                    entries=theoryVars["scale"]["entries"],
+                    central=theoryVars["scale"]["central"],
+                )
+                pdfFunction = getattr(
+                    HistTools,
+                    "get%sPDFVariationHists" % ("Hessian" if "hessian" in theoryVars["pdf"]["combine"] else "MC"),
+                )
+                pdfHists = pdfFunction(
+                    weightHist,
+                    theoryVars["pdf"]["entries"],
+                    processName,
+                    self.rebin,
+                    central=theoryVars["pdf"]["central"],
+                )
+                group.extend(scaleHists + pdfHists)
+        # TODO: You may want to combine channels before removing zeros
         self.combineChannels(group)
-        #TODO: Make optional
+        # TODO: Make optional
         list(map(HistTools.addOverflow, [x for x in group if (x.GetName() not in processedHists)]))
         if "data" not in group.GetName().lower():
             list(map(HistTools.removeZeros, [x for x in group if (x.GetName() not in processedHists)]))
@@ -229,7 +252,6 @@ class CombineCardTools(object):
         outputCard = self.templateName.split("/")[-1].format(channel=chan, year=year)
         outputCard = outputCard.replace("template", "")
         outputCard = outputCard.replace("__", "_")
-        ConfigureJobs.fillTemplatedFile(self.templateName.format(channel=chan, year=year),
-            "/".join([self.outputFolder, outputCard]),
-            chan_dict
+        ConfigureJobs.fillTemplatedFile(
+            self.templateName.format(channel=chan, year=year), "/".join([self.outputFolder, outputCard]), chan_dict
         )

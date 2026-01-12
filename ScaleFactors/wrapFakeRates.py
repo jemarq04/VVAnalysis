@@ -3,10 +3,10 @@ import os
 import argparse
 import ROOT
 
+
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-o", "--outfile", default="scaleFactors.root",
-                        help="output file name")
+    parser.add_argument("-o", "--outfile", default="scaleFactors.root", help="output file name")
     parser.add_argument("infile", help="input fakeRates.root file")
     args = parser.parse_args()
 
@@ -15,13 +15,13 @@ def main():
 
     print("INFO: Adding tight fake rates to %s" % args.outfile)
 
-    fScales      = ROOT.TFile(args.outfile, 'recreate')
+    fScales = ROOT.TFile(args.outfile, "recreate")
     fakeRateFile = ROOT.TFile.Open(args.infile)
 
     eZZTightFakeRate = ROOT.ScaleFactor("eZZTightFakeRate", "Fake rate from Z+jet")
     mZZTightFakeRate = ROOT.ScaleFactor("mZZTightFakeRate", "Fake rate from Z+jet")
-    eZZTightFakeRate.Set2DHist(fakeRateFile.Get('DataEWKCorrected/ratioE2D_allE'), 0, 0, ROOT.ScaleFactor.AsInHist)
-    mZZTightFakeRate.Set2DHist(fakeRateFile.Get('DataEWKCorrected/ratioMu2D_allMu'), 0, 0, ROOT.ScaleFactor.AsInHist)
+    eZZTightFakeRate.Set2DHist(fakeRateFile.Get("DataEWKCorrected/ratioE2D_allE"), 0, 0, ROOT.ScaleFactor.AsInHist)
+    mZZTightFakeRate.Set2DHist(fakeRateFile.Get("DataEWKCorrected/ratioMu2D_allMu"), 0, 0, ROOT.ScaleFactor.AsInHist)
 
     fScales.cd()
     mZZTightFakeRate.Write()
@@ -29,6 +29,7 @@ def main():
 
     fakeRateFile.Close()
     fScales.Close()
+
 
 if __name__ == "__main__":
     main()

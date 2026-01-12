@@ -7,17 +7,18 @@ import multiprocessing
 import subprocess
 import logging
 
+
 class SelectorDriver(object):
     def __init__(self, analysis, selection, input_tier, year):
         # TODO: Make this a configurable argument
-        #logging.basicConfig(level=logging.DEBUG)
+        # logging.basicConfig(level=logging.DEBUG)
         logging.basicConfig(level=logging.WARNING)
 
         selector_map = {
-            "Zstudy" : "ZSelector",
-            "WGen" : "WGenSelector",
-            "ZGen" : "ZGenSelector",
-            "ThreeLep" : "ThreeLepSelector",
+            "Zstudy": "ZSelector",
+            "WGen": "WGenSelector",
+            "ZGen": "ZGenSelector",
+            "ThreeLep": "ThreeLepSelector",
         }
         selector_map.update({f"ZZ4l{year}": "ZZSelector" for year in ConfigureJobs.getLumiMap().keys()})
 
@@ -25,9 +26,11 @@ class SelectorDriver(object):
         self.selection = selection
         self.input_tier = input_tier
         if analysis not in list(selector_map.keys()):
-            raise ValueError("Analysis does not point to " \
+            raise ValueError(
+                "Analysis does not point to "
                 "a defined selector. Please edit "
-                "Utilities/python/SelectorTools.py to add it.")
+                "Utilities/python/SelectorTools.py to add it."
+            )
         self.selector_name = selector_map[analysis]
         self.addSumweights = True
         self.ntupleType = "NanoAOD"
@@ -109,11 +112,13 @@ class SelectorDriver(object):
             raise ValueError("Number of files per job must be >= 1.")
         jobNum = int(jobNum)
         maxNum = len(filelist)
-        firstEntry = nPerJob*jobNum
+        firstEntry = nPerJob * jobNum
         if firstEntry > maxNum:
-            raise ValueError("The first file to process (nPerJob*jobNum) = (%i*%i)" % (nPerJob, jobNum) \
-                    + " is greater than the number of entries in file %s (%s)." % (list_of_files, maxNum))
-        lastEntry = min(nPerJob*(jobNum+1), maxNum)
+            raise ValueError(
+                "The first file to process (nPerJob*jobNum) = (%i*%i)" % (nPerJob, jobNum)
+                + " is greater than the number of entries in file %s (%s)." % (list_of_files, maxNum)
+            )
+        lastEntry = min(nPerJob * (jobNum + 1), maxNum)
 
         for line in filelist[firstEntry:lastEntry]:
             if "@" not in line:
@@ -135,8 +140,7 @@ class SelectorDriver(object):
                 dataset, file_path = [f.strip() for f in dataset.split("@")]
             else:
                 try:
-                    file_path = ConfigureJobs.getInputFilesPath(dataset,
-                        self.input_tier, self.analysis)
+                    file_path = ConfigureJobs.getInputFilesPath(dataset, self.input_tier, self.analysis)
                 except ValueError as e:
                     logging.warning(e)
                     continue
@@ -155,16 +159,18 @@ class SelectorDriver(object):
                 for dataset, file_path in self.datasets.items():
                     self.processDataset(dataset, file_path, chan)
 
-                #Multiple files in 1-thread case also, and do the combination here instead of inside processParallel
-                tempTreeFiles = ["FilledNtuples/TreeFile_"+self.tempfileName(dataset) for dataset in self.datasets]
+                # Multiple files in 1-thread case also, and do the combination here instead of inside processParallel
+                tempTreeFiles = ["FilledNtuples/TreeFile_" + self.tempfileName(dataset) for dataset in self.datasets]
                 self.combineParallelTreeFiles(tempTreeFiles, chan)
 
         if len(self.channels) > 1 and self.numCores > 1:
             tempfiles = [self.outfile_name.replace(".root", "_%s.root" % c) for c in self.channels]
             self.combineParallelFiles(tempfiles, "Inclusive")
 
-        #Same tree files regardless of single or multi-thread
-        tempTreefiles = ["FilledNtuples/TreeFile_"+self.outfile_name.replace(".root", "_%s.root" % c) for c in self.channels]
+        # Same tree files regardless of single or multi-thread
+        tempTreefiles = [
+            "FilledNtuples/TreeFile_" + self.outfile_name.replace(".root", "_%s.root" % c) for c in self.channels
+        ]
         self.combineParallelTreeFiles(tempTreefiles, "Inclusive")
 
     def processDataset(self, dataset, file_path, chan):
@@ -173,9 +179,15 @@ class SelectorDriver(object):
         select.SetInputList(self.inputs)
         self.addTNamed("name", dataset)
         # Only add for one channel
-        addSumweights = self.addSumweights and self.channels.index(chan) == 0 and "data" not in dataset and "Background" not in self.selector_name and "Gen" not in self.selector_name
+        addSumweights = (
+            self.addSumweights
+            and self.channels.index(chan) == 0
+            and "data" not in dataset
+            and "Background" not in self.selector_name
+            and "Gen" not in self.selector_name
+        )
         if addSumweights:
-            #print("Should only go here once!")
+            # print("Should only go here once!")
             sumweights_hist = ROOT.gROOT.FindObject("sumweights")
             # Avoid accidentally combining sumweights across datasets
             if sumweights_hist:
@@ -190,31 +202,30 @@ class SelectorDriver(object):
         output_list = select.GetOutputList()
         name = self.inputs.FindObject("name").GetTitle()
         dataset_list = output_list.FindObject(name)
-        ntuple_written = output_list.FindObject(name + "_fTreeNtuple_"+ chan)
+        ntuple_written = output_list.FindObject(name + "_fTreeNtuple_" + chan)
         if not dataset_list or dataset_list.ClassName() != "TList":
             logging.warning("No output found for dataset %s" % dataset)
             dataset_list = output_list.FindObject("Unknown")
             if dataset_list and dataset_list.ClassName() == "TList":
                 logging.warning('Falling back to dataset "Unknown"')
             else:
-                logging.warning('Skipping dataset %s' % dataset)
+                logging.warning("Skipping dataset %s" % dataset)
                 return False
 
         if not ntuple_written or ntuple_written.ClassName() != "TTree":
             logging.warning("No filled ntuple found for dataset %s" % dataset)
 
-            #logging.warning('For filled ntuple skipping dataset %s' % dataset)
-
+            # logging.warning('For filled ntuple skipping dataset %s' % dataset)
 
         if addSumweights:
             dataset_list.Add(ROOT.gROOT.FindObject("sumweights"))
         if self.numCores > 1:
             self.outfile.Close()
             chanNum = self.channels.index(chan)
-            #Shouldn't matter whether recreate or update for hists, since the temp files will be deleted after hadd
+            # Shouldn't matter whether recreate or update for hists, since the temp files will be deleted after hadd
             self.current_file = ROOT.TFile.Open(self.tempfileName(dataset), "recreate" if chanNum == 0 else "update")
 
-        #Always create temp file for ntuple case regardless of whether multithread
+        # Always create temp file for ntuple case regardless of whether multithread
         if not os.path.isdir("FilledNtuples"):
             os.mkdir("FilledNtuples")
 
@@ -223,13 +234,13 @@ class SelectorDriver(object):
         if self.current_file != self.outfile:
             self.current_file.Close()
 
-        self.current_Treefile = ROOT.TFile.Open("FilledNtuples/TreeFile_"+self.tempfileName(dataset), "recreate")
+        self.current_Treefile = ROOT.TFile.Open("FilledNtuples/TreeFile_" + self.tempfileName(dataset), "recreate")
         self.current_Treefile.cd()
-        ntuple_written.Write() #write TTree
+        ntuple_written.Write()  # write TTree
         self.current_Treefile.Close()
 
-        #dataset_list.Delete()
-        #ntuple_written.Delete()
+        # dataset_list.Delete()
+        # ntuple_written.Delete()
         output_list.Delete()
         return True
 
@@ -237,17 +248,15 @@ class SelectorDriver(object):
         xrootd = "/store" in file_path.split("/hdfs/")[0][:7]
         xrootd_user = "/store/user" in file_path.split("/hdfs/")[0][:12]
         if not (xrootd or os.path.isfile(file_path) or os.path.isdir(file_path.rsplit("/", 1)[0].rstrip("/*"))):
-            raise ValueError("Invalid path! Skipping dataset. Path was %s"
-                % file_path)
+            raise ValueError("Invalid path! Skipping dataset. Path was %s" % file_path)
 
         # Assuming these are user files on HDFS, otherwise it won't work
-        if (xrootd and not xrootd_user):
-            xrd = 'root://%s/' % ConfigureJobs.getXrdRedirector()
+        if xrootd and not xrootd_user:
+            xrd = "root://%s/" % ConfigureJobs.getXrdRedirector()
             filenames = [xrd + file_path]
             return filenames
-        filenames =  glob.glob(file_path) if not xrootd_user else \
-                ConfigureJobs.getListOfHDFSFiles(file_path)
-        filenames = ['root://cmsxrootd.hep.wisc.edu/' + f if "/store/user" in f[0:12] else f for f in filenames]
+        filenames = glob.glob(file_path) if not xrootd_user else ConfigureJobs.getListOfHDFSFiles(file_path)
+        filenames = ["root://cmsxrootd.hep.wisc.edu/" + f if "/store/user" in f[0:12] else f for f in filenames]
         return filenames
 
     def getTreeName(self, chan):
@@ -271,26 +280,26 @@ class SelectorDriver(object):
         tempfiles = list(filter(os.path.isfile, tempfiles))
 
         if chan != "Inclusive":
-            outfile = "FilledNtuples/TreeFile_"+self.outfile_name.replace(".root", "_%s.root" % chan)
+            outfile = "FilledNtuples/TreeFile_" + self.outfile_name.replace(".root", "_%s.root" % chan)
         else:
-            outfile = "FilledNtuples/TreeFile_%s_"%self.selector_name + self.outfile_name.replace(".root", "_%s.root" % chan)
+            outfile = "FilledNtuples/TreeFile_%s_" % self.selector_name + self.outfile_name.replace(
+                ".root", "_%s.root" % chan
+            )
 
-        outfileMerged = ROOT.TFile.Open(outfile,"recreate")
+        outfileMerged = ROOT.TFile.Open(outfile, "recreate")
         outfileMerged.Close()
         for f in tempfiles:
-            os.system("rootcp %s:* %s"%(f,outfile))
-
+            os.system("rootcp %s:* %s" % (f, outfile))
 
         list(map(os.remove, tempfiles))
 
-
     def processParallelByDataset(self, datasets, chan):
-        #numCores = min(self.numCores, len(datasets))
+        # numCores = min(self.numCores, len(datasets))
         p = multiprocessing.Pool(processes=self.numCores)
         p.map(self, [[dataset, f, chan] for dataset, f in datasets.items()])
         # Store arrays in temp files, since it can get way too big to keep around in memory
         tempfiles = [self.tempfileName(d) for d in datasets]
-        tempTreeFiles = ["FilledNtuples/TreeFile_"+self.tempfileName(d) for d in datasets]
+        tempTreeFiles = ["FilledNtuples/TreeFile_" + self.tempfileName(d) for d in datasets]
         self.combineParallelFiles(tempfiles, chan)
         self.combineParallelTreeFiles(tempTreeFiles, chan)
 
@@ -298,12 +307,18 @@ class SelectorDriver(object):
     def processDatasetHelper(self, args):
         self.processDataset(*args)
 
-    def processLocalFiles(self, selector, file_path, addSumweights, chan,):
+    def processLocalFiles(
+        self,
+        selector,
+        file_path,
+        addSumweights,
+        chan,
+    ):
         filenames = []
         for entry in file_path:
             filenames.extend(self.getFileNames(entry))
         for i, filename in enumerate(filenames):
-            self.processFile(selector, filename, addSumweights, chan, i+1)
+            self.processFile(selector, filename, addSumweights, chan, i + 1)
 
     def processFile(self, selector, filename, addSumweights, chan, filenum=1):
         logging.debug("Processing file: %s" % filename)
@@ -313,26 +328,26 @@ class SelectorDriver(object):
         tree_name = self.getTreeName(chan)
         tree = rtfile.Get(tree_name)
         if not tree:
-            raise ValueError(("tree %s not found for file %s. " \
-                    "Either the file is corrupted or the ntupleType (%s) is wrong.")
+            raise ValueError(
+                ("tree %s not found for file %s. Either the file is corrupted or the ntupleType (%s) is wrong.")
                 % (tree_name, filename, self.ntupleType)
             )
         logging.debug("Processing tree %s for file %s." % (tree.GetName(), rtfile.GetName()))
 
-        #Codes for trigger test
-        #aliases = UserInput.readJson("Cuts/%s/aliases.json" % self.analysis)
-        #for nameAlias, valueAlias in aliases["Event"].iteritems():
+        # Codes for trigger test
+        # aliases = UserInput.readJson("Cuts/%s/aliases.json" % self.analysis)
+        # for nameAlias, valueAlias in aliases["Event"].iteritems():
         #    tree.SetAlias(nameAlias, valueAlias)
 
-        #TriggerStr = "(singleIsoMuPass || doubleMuDZPass || tripleMuPass)"
-        #TriggerStr = "((singleIsoMuPass || doubleMuDZPass || tripleMuPass) && (singleEPass || doubleEPass || tripleEPass))"
-        #TriggerStr = "(!(singleIsoMuPass || doubleMuDZPass || tripleMuPass) && (singleEPass || doubleEPass || tripleEPass))"
-        #TriggerStr = "((singleIsoMuPass || doubleMuDZPass || tripleMuPass) && (singleEPass))"
-        #TriggerStr = "((singleIsoMuPass || doubleMuDZPass || tripleMuPass) && (doubleEPass))"
-        #TriggerStr = "((singleIsoMuPass || doubleMuDZPass || tripleMuPass) && (singleEPass || doubleEPass))"
-        #TriggerStr = "((singleIsoMuPass || doubleMuDZPass || tripleMuPass) && (tripleEPass))"
+        # TriggerStr = "(singleIsoMuPass || doubleMuDZPass || tripleMuPass)"
+        # TriggerStr = "((singleIsoMuPass || doubleMuDZPass || tripleMuPass) && (singleEPass || doubleEPass || tripleEPass))"
+        # TriggerStr = "(!(singleIsoMuPass || doubleMuDZPass || tripleMuPass) && (singleEPass || doubleEPass || tripleEPass))"
+        # TriggerStr = "((singleIsoMuPass || doubleMuDZPass || tripleMuPass) && (singleEPass))"
+        # TriggerStr = "((singleIsoMuPass || doubleMuDZPass || tripleMuPass) && (doubleEPass))"
+        # TriggerStr = "((singleIsoMuPass || doubleMuDZPass || tripleMuPass) && (singleEPass || doubleEPass))"
+        # TriggerStr = "((singleIsoMuPass || doubleMuDZPass || tripleMuPass) && (tripleEPass))"
         tree.Process(selector, "")
-        #tree.Process(selector, TriggerStr)
+        # tree.Process(selector, TriggerStr)
         logging.debug("Processed with selector %s." % selector.GetName())
         if addSumweights:
             self.fillSumweightsHist(rtfile, filenum)
@@ -350,7 +365,7 @@ class SelectorDriver(object):
         meta_tree = rtfile.Get(meta_tree_name)
         ROOT.gROOT.cd()
         sumweights_hist = ROOT.gROOT.FindObject("sumweights")
-        tmplabel = sumweights_hist.GetName()+"_i"
+        tmplabel = sumweights_hist.GetName() + "_i"
         tmpweights_hist = sumweights_hist.Clone(tmplabel)
         meta_tree.Draw("%i>>%s" % (filenum, tmplabel), sumweights_branch)
         sumweights_hist.Add(tmpweights_hist)

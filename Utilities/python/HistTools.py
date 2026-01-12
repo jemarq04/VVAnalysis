@@ -3,6 +3,7 @@ import ROOT
 import logging
 import math
 
+
 def getDifference(fOut, name, dir1, dir2, ratioFunc=None):
     differences = ROOT.TList()
     differences.SetName(name)
@@ -15,11 +16,9 @@ def getDifference(fOut, name, dir1, dir2, ratioFunc=None):
             diff = hist1.Clone()
             diff.Add(hist2, -1)
         elif not hist1:
-            logging.warning("Hist %s was not produced for " \
-                "dataset(s) %s" % (histname, dir1))
+            logging.warning("Hist %s was not produced for dataset(s) %s" % (histname, dir1))
         elif not hist2:
-            logging.warning("Hist %s was not produced for " \
-                "dataset(s) %s" % (histname, dir2))
+            logging.warning("Hist %s was not produced for dataset(s) %s" % (histname, dir2))
         differences.Add(diff)
     if ratioFunc:
         ratios = ratioFunc(differences)
@@ -27,19 +26,20 @@ def getDifference(fOut, name, dir1, dir2, ratioFunc=None):
             differences.Add(ratio)
     return differences
 
+
 def makeUnrolledHist(init_2D_hist, xbins, ybins, name=""):
-    nbins = (len(xbins)-1)*(len(ybins)-1)
+    nbins = (len(xbins) - 1) * (len(ybins) - 1)
     hists_half_rolled = []
-    for i in range(len(ybins)-1):
+    for i in range(len(ybins) - 1):
         ylower = ybins[i]
-        yupper = ybins[i+1]
-        hist_name = ("%s_%0.1fTo%0.1f" % (init_2D_hist.GetName(), ylower, yupper)).replace(".","p")
+        yupper = ybins[i + 1]
+        hist_name = ("%s_%0.1fTo%0.1f" % (init_2D_hist.GetName(), ylower, yupper)).replace(".", "p")
         # Global bin number = nbinx + nbinsx*nbiny
-        lower_bin = init_2D_hist.FindBin(0,ylower)/init_2D_hist.GetNbinsX()
+        lower_bin = init_2D_hist.FindBin(0, ylower) / init_2D_hist.GetNbinsX()
         # Range is inclusive, so don't count upper bin twice
-        upper_bin = init_2D_hist.FindBin(0,yupper*(1-0.0001))/init_2D_hist.GetNbinsX()
+        upper_bin = init_2D_hist.FindBin(0, yupper * (1 - 0.0001)) / init_2D_hist.GetNbinsX()
         ybinned_hist = init_2D_hist.ProjectionX(hist_name, lower_bin, upper_bin, "e")
-        ybinned_hist = ybinned_hist.Rebin(len(xbins)-1, hist_name+"_rebin", xbins)
+        ybinned_hist = ybinned_hist.Rebin(len(xbins) - 1, hist_name + "_rebin", xbins)
         hists_half_rolled.append(ybinned_hist)
 
     if name == "":
@@ -47,17 +47,18 @@ def makeUnrolledHist(init_2D_hist, xbins, ybins, name=""):
     unrolled_hist = ROOT.TH1D(name, "Unrolled", nbins, 0, nbins)
     unrolled_hist.SetDirectory(init_2D_hist.GetDirectory())
     for i, hist in enumerate(hists_half_rolled):
-        for j in range(1, hist.GetNbinsX()+1):
-            entry = i*(hist.GetNbinsX()) + j
+        for j in range(1, hist.GetNbinsX() + 1):
+            entry = i * (hist.GetNbinsX()) + j
             content = hist.GetBinContent(j)
             error = hist.GetBinError(j)
             if j == hist.GetNbinsX():
-                content += hist.GetBinContent(j+1)
-                error += hist.GetBinError(j+1)
+                content += hist.GetBinContent(j + 1)
+                error += hist.GetBinError(j + 1)
             unrolled_hist.SetBinContent(entry, content)
             unrolled_hist.SetBinError(entry, error)
 
     return unrolled_hist
+
 
 def make1DaQGCHists(orig_file, input2D_hists, plot_info, rebin=None):
     output_folders = []
@@ -75,15 +76,16 @@ def make1DaQGCHists(orig_file, input2D_hists, plot_info, rebin=None):
             # https://root.cern.ch/root/html532/src/TH2.cxx.html#2253
             tmphist = init_2D_hist.ProjectionX("temphist", entry, entry, "e")
             hist_name = init_2D_hist_name.replace("lheWeights_", "")
-            hist1D = tmphist.Clone(hist_name) if not rebin else tmphist.Rebin(len(rebin)-1, hist_name, rebin)
+            hist1D = tmphist.Clone(hist_name) if not rebin else tmphist.Rebin(len(rebin) - 1, hist_name, rebin)
             tmphist.Delete()
             ROOT.SetOwnership(hist1D, False)
             output_list.Add(hist1D)
         output_folders.append(output_list)
     return output_folders
 
+
 def removeZeros(hist):
-    for i in range(hist.GetNbinsX()+2):
+    for i in range(hist.GetNbinsX() + 2):
         if hist.GetBinContent(i) <= 0:
             if "Up" in hist.GetName():
                 hist.SetBinContent(i, 0.0001)
@@ -92,22 +94,21 @@ def removeZeros(hist):
             else:
                 hist.SetBinContent(i, 0.00005)
 
+
 def getStatHists(hist, name, chan, signal):
     stat_hists = []
     variation_names = []
-    for i in range(1, hist.GetNbinsX()+1):
+    for i in range(1, hist.GetNbinsX() + 1):
         if "data" in name:
             continue
-        if not (signal  == "wzjj_ewk" and "wzjj-vbfnlo" in name) \
-                and not (signal  == "wzjj_vbfnlo" and "wzjj-ewk" in name):
+        if not (signal == "wzjj_ewk" and "wzjj-vbfnlo" in name) and not (
+            signal == "wzjj_vbfnlo" and "wzjj-ewk" in name
+        ):
             variation_names.append("%s_%s_statBin%i" % (name, chan, i))
-        statUp_hist = hist.Clone(hist.GetName().replace(
-            chan, "%s_%s_statBin%sUp_%s" % (name, chan, i, chan)))
-        statDown_hist = hist.Clone(hist.GetName().replace(
-            chan, "%s_%s_statBin%iDown_%s" % (name, chan, i, chan)))
-        up = hist.GetBinContent(i)+hist.GetBinErrorUp(i) if \
-                hist.GetBinContent(i) > 0 else hist.GetBinErrorUp(i)
-        down = hist.GetBinContent(i)-hist.GetBinErrorLow(i)
+        statUp_hist = hist.Clone(hist.GetName().replace(chan, "%s_%s_statBin%sUp_%s" % (name, chan, i, chan)))
+        statDown_hist = hist.Clone(hist.GetName().replace(chan, "%s_%s_statBin%iDown_%s" % (name, chan, i, chan)))
+        up = hist.GetBinContent(i) + hist.GetBinErrorUp(i) if hist.GetBinContent(i) > 0 else hist.GetBinErrorUp(i)
+        down = hist.GetBinContent(i) - hist.GetBinErrorLow(i)
         statUp_hist.SetBinContent(i, up)
         statDown_hist.SetBinContent(i, down if down > 0 else 0.0001)
         stat_hists.extend([statUp_hist, statDown_hist][:])
@@ -115,11 +116,13 @@ def getStatHists(hist, name, chan, signal):
         removeZeros(hist)
     return (stat_hists, variation_names)
 
+
 def getWeightHistProjection(init2D_hist, name, entry, rebin):
-    hist_name = init2D_hist.GetName().replace("lheWeights", name+"_weight%i" % entry)
+    hist_name = init2D_hist.GetName().replace("lheWeights", name + "_weight%i" % entry)
     tmphist = init2D_hist.ProjectionX("temp", entry, entry, "e")
-    hist = tmphist.Clone(hist_name) if not rebin else tmphist.Rebin(len(rebin)-1, hist_name, rebin)
+    hist = tmphist.Clone(hist_name) if not rebin else tmphist.Rebin(len(rebin) - 1, hist_name, rebin)
     return hist
+
 
 def getLHEWeightHists(init2D_hist, entries, name, variation_name, rebin=None):
     hists = []
@@ -129,42 +132,50 @@ def getLHEWeightHists(init2D_hist, entries, name, variation_name, rebin=None):
     hist_name = init2D_hist.GetName().replace("lheWeights", "%s_%sUp" % (variation_name, name))
     return hists, hist_name
 
+
 def getMCPDFVariationHists(init2D_hist, entries, name, rebin=None, central=0):
     hists, hist_name = getLHEWeightHists(init2D_hist, entries, name, "pdf", rebin)
     if central == -1:
-        upaction = lambda x: x[int(0.84*len(entries))]
-        downaction = lambda x: x[int(0.16*len(entries))]
+        upaction = lambda x: x[int(0.84 * len(entries))]
+        downaction = lambda x: x[int(0.16 * len(entries))]
     else:
-        upaction = lambda x : x[central]*(1+getPDFPercentVariation(x))
-        downaction = lambda x: x[central]*(1-getPDFPercentVariation(x))
+        upaction = lambda x: x[central] * (1 + getPDFPercentVariation(x))
+        downaction = lambda x: x[central] * (1 - getPDFPercentVariation(x))
 
-    return getVariationHists(hists, name, hist_name,
-            upaction, downaction, central
-    )
+    return getVariationHists(hists, name, hist_name, upaction, downaction, central)
+
 
 def getHessianPDFVariationHists(init2D_hist, entries, name, rebin=None, central=0):
     hists, hist_name = getLHEWeightHists(init2D_hist, entries, name, "pdf", rebin)
-    #centralIndex = central if central != -1 else int(len(entries)/2)
-    sumsq = lambda x: math.sqrt(sum([0 if y < 0.01 else ((x[central] - y)**2) for y in x]))
+    # centralIndex = central if central != -1 else int(len(entries)/2)
+    sumsq = lambda x: math.sqrt(sum([0 if y < 0.01 else ((x[central] - y) ** 2) for y in x]))
     upaction = lambda x: x[central] + sumsq(x)
     downaction = lambda x: x[central] - sumsq(x)
-    return getVariationHists(hists, name, hist_name,
-            upaction, downaction, central, #downaction, central
+    return getVariationHists(
+        hists,
+        name,
+        hist_name,
+        upaction,
+        downaction,
+        central,  # downaction, central
     )
+
 
 def getPDFPercentVariation(values):
     denom = values[84] + values[16]
     if denom == 0:
         return 0
-    return abs(values[84] - values[16])/denom
+    return abs(values[84] - values[16]) / denom
+
 
 def getScaleHists(scale_hist2D, name, rebin=None, entries=None, central=0, exclude=None):
     if entries is None:
-        entries = list(range(1,10))
+        entries = list(range(1, 10))
     if exclude is None:
         exclude = [7.9]
     hists, hist_name = getLHEWeightHists(scale_hist2D, entries, name, "QCDscale", rebin)
     return getVariationHists(hists, name, hist_name, lambda x: x[-1], lambda x: x[1], central)
+
 
 def getVariationHists(hists, process_name, histUp_name, up_action, down_action, central=0):
     histUp = hists[central].Clone(histUp_name)
@@ -172,7 +183,7 @@ def getVariationHists(hists, process_name, histUp_name, up_action, down_action, 
 
     histCentral = hists.pop(central) if central != -1 else None
     # Include overflow
-    for i in range(0, histUp.GetNbinsX()+2):
+    for i in range(0, histUp.GetNbinsX() + 2):
         vals = []
         for hist in hists:
             vals.append(hist.GetBinContent(i))
@@ -183,80 +194,109 @@ def getVariationHists(hists, process_name, histUp_name, up_action, down_action, 
         # For now, skip this check on aQGC for now, since they're screwed up
         if "aqgc" in process_name:
             continue
-    logging.debug("For process %s: Central, down, up: %s, %s, %s" % (process_name, histCentral.Integral() if histCentral else 0, histDown.Integral(), histUp.Integral()))
-    if histCentral and False: # Off for now, it can happen that groups have some hists with no weights which screws this up
+    logging.debug(
+        "For process %s: Central, down, up: %s, %s, %s"
+        % (process_name, histCentral.Integral() if histCentral else 0, histDown.Integral(), histUp.Integral())
+    )
+    if (
+        histCentral and False
+    ):  # Off for now, it can happen that groups have some hists with no weights which screws this up
         isValidVariation(process_name, histCentral, histUp, histDown)
     return [histUp, histDown]
 
+
 def isValidVariation(process_name, histCentral, histUp, histDown):
-    for i in range(0, histCentral.GetNbinsX()+2):
+    for i in range(0, histCentral.GetNbinsX() + 2):
         if histDown.GetBinContent(i) > histCentral.GetBinContent(i) and histCentral.GetBinContent(i) > 0.01:
-            raise RuntimeError("Down variation >= central value for %s, hist %s"
+            raise RuntimeError(
+                "Down variation >= central value for %s, hist %s"
                 " This shouldn't be possible.\n"
                 "up_hist: %0.4f\n"
                 "down_hist: %0.4f\n"
                 "central_hist: %0.4f\n"
                 "bin: %i\n"
-                % (process_name, histDown.GetName(), histUp.GetBinContent(i), histDown.GetBinContent(i), histCentral.GetBinContent(i), i)
+                % (
+                    process_name,
+                    histDown.GetName(),
+                    histUp.GetBinContent(i),
+                    histDown.GetBinContent(i),
+                    histCentral.GetBinContent(i),
+                    i,
+                )
             )
         if histUp.GetBinContent(i) < histCentral.GetBinContent(i) and histCentral.GetBinContent(i) > 0.01:
-            raise RuntimeError("Up variation <= central value for %s, hist %s."
+            raise RuntimeError(
+                "Up variation <= central value for %s, hist %s."
                 " This shouldn't be possible.\n"
                 "up_hist: %0.4f\n"
                 "down_hist: %0.4f\n"
                 "central_hist: %0.4f\n"
                 "bin: %i\n"
-                % (process_name, histUp.GetName(), histUp.GetBinContent(i), histDown.GetBinContent(i), histCentral.GetBinContent(i), i)
+                % (
+                    process_name,
+                    histUp.GetName(),
+                    histUp.GetBinContent(i),
+                    histDown.GetBinContent(i),
+                    histCentral.GetBinContent(i),
+                    i,
+                )
             )
+
 
 def getTransformed3DScaleHists(scale_hist3D, transformation, transform_args, name):
     scale_hists = []
-    for i in range(1,10):
+    for i in range(1, 10):
         if i == 7 or i == 9:
             continue
-        scale_hist3D.GetZaxis().SetRange(i,i)
+        scale_hist3D.GetZaxis().SetRange(i, i)
         # Order yx matters to have consistent axes!
         scale_hist2D = scale_hist3D.Project3D("yxe")
-        scale_hist_name = scale_hist3D.GetName().replace("lheWeights", name+"_weight%i" % i)
+        scale_hist_name = scale_hist3D.GetName().replace("lheWeights", name + "_weight%i" % i)
         scale_hist2D.SetName(scale_hist_name)
         scale_hist1D = transformation(scale_hist2D, *transform_args)
         scale_hists.append(scale_hist1D)
-    hist_name = scale_hist3D.GetName().replace("2D_lheWeights", "_".join(["unrolled", "QCDscale", name+"Up"]))
+    hist_name = scale_hist3D.GetName().replace("2D_lheWeights", "_".join(["unrolled", "QCDscale", name + "Up"]))
     return getVariationHists(scale_hists, name, hist_name, lambda x: x[-1], lambda x: x[1])
+
 
 def getTransformed3DPDFHists(hist3D, transformation, transform_args, entries, name):
     hists = []
     for i in entries:
-        hist3D.GetZaxis().SetRange(i,i)
+        hist3D.GetZaxis().SetRange(i, i)
         # Order yx matters to have consistent axes!
         hist2D = hist3D.Project3D("yxe")
-        hist_name = hist3D.GetName().replace("lheWeights", name+"_weight%i" % i)
+        hist_name = hist3D.GetName().replace("lheWeights", name + "_weight%i" % i)
         hist2D.SetName(hist_name)
         hist1D = transformation(hist2D, *transform_args)
         hists.append(hist1D)
-    #return hists
-    hist_name = hist3D.GetName().replace("2D_lheWeights", "_".join(["unrolled", "pdf", name+"Up"]))
-    return getVariationHists(hists, name, hist_name,
-            lambda x: x[0]*(1+getPDFPercentVariation(x)),
-            lambda x: x[0]*(1-getPDFPercentVariation(x))
+    # return hists
+    hist_name = hist3D.GetName().replace("2D_lheWeights", "_".join(["unrolled", "pdf", name + "Up"]))
+    return getVariationHists(
+        hists,
+        name,
+        hist_name,
+        lambda x: x[0] * (1 + getPDFPercentVariation(x)),
+        lambda x: x[0] * (1 - getPDFPercentVariation(x)),
     )
 
+
 def addControlRegionToFitHist(control_hist, input_hist, base_name="unrolled"):
-    hist = ROOT.TH1D("tmp", input_hist.GetTitle(),
-            input_hist.GetNbinsX()+1, 0, input_hist.GetNbinsX()+1)
-    hist.SetName(input_hist.GetName().replace(base_name, base_name+"_wCR"))
-    control_err = array.array('d', [0])
-    control_yield = control_hist.IntegralAndError(0, control_hist.GetNbinsX()+1, control_err)
+    hist = ROOT.TH1D("tmp", input_hist.GetTitle(), input_hist.GetNbinsX() + 1, 0, input_hist.GetNbinsX() + 1)
+    hist.SetName(input_hist.GetName().replace(base_name, base_name + "_wCR"))
+    control_err = array.array("d", [0])
+    control_yield = control_hist.IntegralAndError(0, control_hist.GetNbinsX() + 1, control_err)
     hist.SetBinContent(1, control_yield)
     hist.SetBinError(1, control_err[0])
-    for i in range(1, hist.GetNbinsX()+1):
-        hist.SetBinContent(i+1, input_hist.GetBinContent(i))
-        hist.SetBinError(i+1, input_hist.GetBinError(i))
+    for i in range(1, hist.GetNbinsX() + 1):
+        hist.SetBinContent(i + 1, input_hist.GetBinContent(i))
+        hist.SetBinError(i + 1, input_hist.GetBinError(i))
     ROOT.SetOwnership(hist, False)
     return hist
 
+
 def addOverflow(hist):
     addOverflowAndUnderflow(hist, underflow=False, overflow=True)
+
 
 def addOverflowAndUnderflow(hist, underflow=True, overflow=True):
     if "TH1" not in hist.ClassName():
@@ -270,7 +310,10 @@ def addOverflowAndUnderflow(hist, underflow=True, overflow=True):
         add_underflow = hist.GetBinContent(0) + hist.GetBinContent(1)
         hist.SetBinContent(1, add_underflow)
 
-def makeCompositeHists(hist_file, name, members, lumi, hists=None, hist_filter=None, underflow=False, overflow=True, rebin=None):
+
+def makeCompositeHists(
+    hist_file, name, members, lumi, hists=None, hist_filter=None, underflow=False, overflow=True, rebin=None
+):
     composite = ROOT.TList()
     composite.SetName(name)
     for directory in [str(i) for i in list(members.keys())]:
@@ -289,7 +332,7 @@ def makeCompositeHists(hist_file, name, members, lumi, hists=None, hist_filter=N
             sumweights_hist = hist_file.Get("/".join([directory, "sumweights"]))
             if not sumweights_hist:
                 raise RuntimeError("Failed to find sumWeights for dataset %s" % directory)
-            sumweights = sumweights_hist.Integral(1, sumweights_hist.GetNbinsX()+2)
+            sumweights = sumweights_hist.Integral(1, sumweights_hist.GetNbinsX() + 2)
             sumweights_hist.Delete()
         for histname in hists:
             if histname == "sumweights":
@@ -298,17 +341,16 @@ def makeCompositeHists(hist_file, name, members, lumi, hists=None, hist_filter=N
             if not tmphist:
                 raise RuntimeError("Failed to produce histogram %s" % "/".join([directory, histname]))
             toRebin = rebin and "TH2" not in tmphist.ClassName()
-            hist = tmphist.Clone() if not toRebin else tmphist.Rebin(len(rebin)-1, histname, rebin)
+            hist = tmphist.Clone() if not toRebin else tmphist.Rebin(len(rebin) - 1, histname, rebin)
             tmphist.Delete()
             if hist:
                 sumhist = composite.FindObject(hist.GetName())
                 if sumweights:
                     xsec = members[directory if directory in list(members.keys()) else directory.split("__")[0]]
-                    hist.Scale(xsec*1000*lumi/sumweights)
+                    hist.Scale(xsec * 1000 * lumi / sumweights)
                 addOverflowAndUnderflow(hist, underflow, overflow)
             else:
-                raise RuntimeError("hist %s was not produced for "
-                    "dataset %s!" % (histname, directory))
+                raise RuntimeError("hist %s was not produced for dataset %s!" % (histname, directory))
             if not sumhist:
                 sumhist = hist.Clone()
                 composite.Add(sumhist)
@@ -316,6 +358,7 @@ def makeCompositeHists(hist_file, name, members, lumi, hists=None, hist_filter=N
                 sumhist.Add(hist)
             hist.Delete()
     return composite
+
 
 def getTransformedHists(orig_file, folders, input_hists, transformation, transform_inputs):
     output_folders = []
@@ -326,8 +369,7 @@ def getTransformedHists(orig_file, folders, input_hists, transformation, transfo
         for input_hist_name in input_hists:
             orig_hist = orig_file.Get("/".join([folder, input_hist_name]))
             if not orig_hist:
-                if "Fakes" not in input_hist_name and \
-                    "Up" not in input_hist_name and "Down" not in input_hist_name:
+                if "Fakes" not in input_hist_name and "Up" not in input_hist_name and "Down" not in input_hist_name:
                     print("WARNING: Histogram %s not found for dataset %s. Skipping." % (input_hist_name, folder))
                 continue
             new_hist = transformation(orig_hist, *transform_inputs)
@@ -335,6 +377,7 @@ def getTransformedHists(orig_file, folders, input_hists, transformation, transfo
             output_list.Add(new_hist)
         output_folders.append(output_list)
     return output_folders
+
 
 def addaQGCTheoryHists(rtfile_name, plot_groups, base_hist_name):
     rtfile = ROOT.TFile(rtfile_name, "update")
@@ -347,18 +390,22 @@ def addaQGCTheoryHists(rtfile_name, plot_groups, base_hist_name):
         for chan in ["eee", "eem", "emm", "mmm"]:
             central_name = name.split("__")[0]
             varhist_name = "_".join([base_hist_name, "pdf_%sUp" % central_name, chan])
-            hists = [varhist_name, varhist_name.replace("Up", "Down"), varhist_name.replace("pdf", "QCDscale"),
-                    varhist_name.replace("pdf", "QCDscale").replace("Up", "Down")]
+            hists = [
+                varhist_name,
+                varhist_name.replace("Up", "Down"),
+                varhist_name.replace("pdf", "QCDscale"),
+                varhist_name.replace("pdf", "QCDscale").replace("Up", "Down"),
+            ]
             for hist_name in hists:
-                base_hist = rtfile.Get("/".join([central_name, base_hist_name + "_" +chan]))
-                aqgc_hist = rtfile.Get("/".join([name, base_hist_name + "_" +chan]))
+                base_hist = rtfile.Get("/".join([central_name, base_hist_name + "_" + chan]))
+                aqgc_hist = rtfile.Get("/".join([name, base_hist_name + "_" + chan]))
                 var_hist = rtfile.Get("/".join([central_name, hist_name]))
                 aqgc_varhist = var_hist.Clone(hist_name.replace(central_name, name))
-                for i in range(1, base_hist.GetNbinsX()+1):
+                for i in range(1, base_hist.GetNbinsX() + 1):
                     if base_hist.GetBinContent(i) <= 0:
                         continue
-                    scale = aqgc_hist.GetBinContent(i)/base_hist.GetBinContent(i)
-                    aqgc_varhist.SetBinContent(i, aqgc_varhist.GetBinContent(i)*scale)
+                    scale = aqgc_hist.GetBinContent(i) / base_hist.GetBinContent(i)
+                    aqgc_varhist.SetBinContent(i, aqgc_varhist.GetBinContent(i) * scale)
                 aqgc_varhist.Write()
                 var_hist.Delete()
                 base_hist.Delete()
@@ -366,64 +413,62 @@ def addaQGCTheoryHists(rtfile_name, plot_groups, base_hist_name):
         aqgc_dir.Delete()
     rtfile.Close()
 
+
 # Turn off overflow for FR hists (> 50 is pretty much all EWK anyway)
-def makeFakeRateCompositeHists(hist_file,name, members, addRatios=True, overflow=False, lumi=None):
+def makeFakeRateCompositeHists(hist_file, name, members, addRatios=True, overflow=False, lumi=None):
     composite = ROOT.TList()
     composite.SetName(name)
-    if name=="AllEWK":
-        print("EWK members: ",members)
+    if name == "AllEWK":
+        print("EWK members: ", members)
     for directory in [str(i) for i in list(members.keys())]:
         for histname in getFakeRateHistNames(["eee", "eem", "emm", "mmm"]):
-            #print("histname:", histname)
-            #print("hist_file:", hist_file)
-            #print("directory:",directory)
+            # print("histname:", histname)
+            # print("hist_file:", hist_file)
+            # print("directory:",directory)
             hist = hist_file.Get("/".join([directory, str(histname)]))
-            #print("hist:", hist)
+            # print("hist:", hist)
             if hist:
                 sumhist = composite.FindObject(hist.GetName())
                 if "data" not in directory and hist.GetEntries() > 0:
                     sumweights_hist = hist_file.Get("/".join([directory, "sumweights"]))
                     sumweights = sumweights_hist.Integral()
-                    hist.Scale(members[directory]*1000*lumi/sumweights)
+                    hist.Scale(members[directory] * 1000 * lumi / sumweights)
                 if overflow and isinstance(hist, ROOT.TH1):
                     xbins = hist.GetNbinsX()
                     ybins = hist.GetNbinsY()
-                    for i in range(1,xbins):
+                    for i in range(1, xbins):
                         setbin = hist.GetBin(i, ybins)
-                        obin = hist.GetBin(i, ybins+1)
-                        hist.SetBinContent(setbin,
-                            hist.GetBinContent(obin)+hist.GetBinContent(setbin))
+                        obin = hist.GetBin(i, ybins + 1)
+                        hist.SetBinContent(setbin, hist.GetBinContent(obin) + hist.GetBinContent(setbin))
                     for i in range(1, ybins):
                         setbin = hist.GetBin(xbins, i)
-                        obin = hist.GetBin(xbins+1, i)
-                        hist.SetBinContent(setbin,
-                            hist.GetBinContent(obin)+hist.GetBinContent(setbin))
+                        obin = hist.GetBin(xbins + 1, i)
+                        hist.SetBinContent(setbin, hist.GetBinContent(obin) + hist.GetBinContent(setbin))
                     setbin = hist.GetBin(xbins, ybins)
-                    obin = hist.GetBin(xbins+1, ybins+1)
-                    hist.SetBinContent(setbin,
-                        hist.GetBinContent(obin)+hist.GetBinContent(setbin))
+                    obin = hist.GetBin(xbins + 1, ybins + 1)
+                    hist.SetBinContent(setbin, hist.GetBinContent(obin) + hist.GetBinContent(setbin))
             else:
-                raise RuntimeError("hist %s was not produced for "
-                    "dataset %s!" % (histname, directory))
+                raise RuntimeError("hist %s was not produced for dataset %s!" % (histname, directory))
             if not sumhist:
                 sumhist = hist.Clone()
                 composite.Add(sumhist)
             else:
                 sumhist.Add(hist)
     for hist_name in getFakeRateHistNames([]):
-        etot = composite.FindObject(hist_name+"_eee").Clone()
-        etot.SetName(hist_name+"_allE")
-        etot.Add(composite.FindObject(hist_name+"_emm"))
+        etot = composite.FindObject(hist_name + "_eee").Clone()
+        etot.SetName(hist_name + "_allE")
+        etot.Add(composite.FindObject(hist_name + "_emm"))
         composite.Add(etot)
-        mtot = composite.FindObject(hist_name+"_mmm").Clone()
-        mtot.SetName(hist_name+"_allMu")
-        mtot.Add(composite.FindObject(hist_name+"_eem"))
+        mtot = composite.FindObject(hist_name + "_mmm").Clone()
+        mtot.SetName(hist_name + "_allMu")
+        mtot.Add(composite.FindObject(hist_name + "_eem"))
         composite.Add(mtot)
     if addRatios:
         ratios = getFakeRateRatios(composite)
         for ratio in ratios:
             composite.Add(ratio)
     return composite
+
 
 def getFakeRateRatios(hists):
     ratios = []
@@ -438,9 +483,13 @@ def getFakeRateRatios(hists):
         ratios.append(ratio)
     return ratios
 
+
 def getFakeRateHistNames(channels):
-    base_hists = [x+y for x in ["passingLooseE", "passingTightE","passingLooseMu", "passingTightMu"] \
-            for y in ["1DEta", "1DPt_barrel","1DPt_endcap", "2D"]]
+    base_hists = [
+        x + y
+        for x in ["passingLooseE", "passingTightE", "passingLooseMu", "passingTightMu"]
+        for y in ["1DEta", "1DPt_barrel", "1DPt_endcap", "2D"]
+    ]
     if len(channels) == 0:
         return base_hists
-    return [x+"_"+y for x in base_hists for y in channels]
+    return [x + "_" + y for x in base_hists for y in channels]

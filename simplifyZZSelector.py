@@ -1,19 +1,20 @@
 import string
 import os
 
-#Overwrite: If true, the filled template file will be copied and overwrite the respective Selector.cc file
+# Overwrite: If true, the filled template file will be copied and overwrite the respective Selector.cc file
 overwrite = False
 
+
 def listToStr(list):
-#Do something like ['a','b','c'] -> "{\"a\",\"b\",\"c\"}"
+    # Do something like ['a','b','c'] -> "{\"a\",\"b\",\"c\"}"
     empty = ""
     for i, st in enumerate(list):
-        if i< len(list)-1:
-            empty += '\"'+st+'\",'
+        if i < len(list) - 1:
+            empty += '"' + st + '",'
         else:
-            empty += '\"'+st+'\"'
+            empty += '"' + st + '"'
 
-    return '{%s}'%empty
+    return "{%s}" % empty
 
 
 dict = {}
@@ -22,144 +23,301 @@ mapdict = {}
 odict = {}
 
 writeNtuple = True
-baseList = ["yield", "Mass", "MassFull", "nJets", "nJets_central", "jetPt[1]", "jetPt[0]", "jetEta[0]", "jetEta[1]", "absjetEta[0]", "absjetEta[1]", "mjj", "dEtajj", "Mass0j", "Mass1j", "Mass2j", "Mass3j", "Mass34j", "Mass4j", "Mass0jFull", "Mass1jFull", "Mass2jFull", "Mass3jFull", "Mass34jFull", "Mass4jFull"]
+baseList = [
+    "yield",
+    "Mass",
+    "MassFull",
+    "nJets",
+    "nJets_central",
+    "jetPt[1]",
+    "jetPt[0]",
+    "jetEta[0]",
+    "jetEta[1]",
+    "absjetEta[0]",
+    "absjetEta[1]",
+    "mjj",
+    "dEtajj",
+    "Mass0j",
+    "Mass1j",
+    "Mass2j",
+    "Mass3j",
+    "Mass34j",
+    "Mass4j",
+    "Mass0jFull",
+    "Mass1jFull",
+    "Mass2jFull",
+    "Mass3jFull",
+    "Mass34jFull",
+    "Mass4jFull",
+]
 baseList2 = baseList[1:]
 
-systHist_Ori= [
-      "yield",
-      "Mass",
-      "MassFull",
-      "nJets",
-      "nJets_central",
-      "jetPt[1]",
-      "jetPt[0]",
-      "jetEta[0]",
-      "jetEta[1]",
-      "absjetEta[0]",
-      "absjetEta[1]",
-      "mjj",
-      "dEtajj",
-      "Mass0j",
-      "Mass1j",
-      "Mass2j",
-      "Mass3j",
-      "Mass34j",
-      "Mass4j",
-      "Mass0jFull",
-      "Mass1jFull",
-      "Mass2jFull",
-      "Mass3jFull",
-      "Mass34jFull",
-      "Mass4jFull",
-      "ZMass",
-      "ZZPt",
-      "ZZEta",
-      "dPhiZ1Z2",
-      "dRZ1Z2",
-      "ZPt",
-      "LepPt",
-      "LepEta"]
+systHist_Ori = [
+    "yield",
+    "Mass",
+    "MassFull",
+    "nJets",
+    "nJets_central",
+    "jetPt[1]",
+    "jetPt[0]",
+    "jetEta[0]",
+    "jetEta[1]",
+    "absjetEta[0]",
+    "absjetEta[1]",
+    "mjj",
+    "dEtajj",
+    "Mass0j",
+    "Mass1j",
+    "Mass2j",
+    "Mass3j",
+    "Mass34j",
+    "Mass4j",
+    "Mass0jFull",
+    "Mass1jFull",
+    "Mass2jFull",
+    "Mass3jFull",
+    "Mass34jFull",
+    "Mass4jFull",
+    "ZMass",
+    "ZZPt",
+    "ZZEta",
+    "dPhiZ1Z2",
+    "dRZ1Z2",
+    "ZPt",
+    "LepPt",
+    "LepEta",
+]
 
 systHistList = baseList
-#systHistList = ["yield", "Mass", "MassFull", "nJets", "jetPt[1]", "jetPt[0]", "jetEta[0]", "jetEta[1]", "absjetEta[0]", "absjetEta[1]", "mjj", "dEtajj",
-#"Mass0j", "Mass1j", "Mass2j", "Mass3j", "Mass34j", "Mass4j", "Mass0jFull", "Mass1jFull", "Mass2jFull", "Mass3jFull", "Mass34jFull", "Mass4jFull"]
+# systHistList = ["yield", "Mass", "MassFull", "nJets", "jetPt[1]", "jetPt[0]", "jetEta[0]", "jetEta[1]", "absjetEta[0]", "absjetEta[1]", "mjj", "dEtajj",
+# "Mass0j", "Mass1j", "Mass2j", "Mass3j", "Mass34j", "Mass4j", "Mass0jFull", "Mass1jFull", "Mass2jFull", "Mass3jFull", "Mass34jFull", "Mass4jFull"]
 
 
-hist1D_Ori =[
-      "yield", "Z1Mass", "Z2Mass", "ZMass", "ZZPt", "ZZEta", "dPhiZ1Z2", "dRZ1Z2", "ZPt", "LepPt", "LepPtFull", "LepEta", "PassTriggerFull",
-      "LepPt1", "LepPt2", "LepPt3", "LepPt4", "LepPt1Full", "LepPt2Full", "LepPt3Full", "LepPt4Full", "e1PtSortedFull", "e2PtSortedFull", "e1PtSorted", "e2PtSorted",
-      "Mass", "Mass0j", "Mass1j", "Mass2j", "Mass3j", "Mass34j", "Mass4j", "nJets", "nJets_central",
-      "MassFull", "Mass0jFull", "Mass1jFull", "Mass2jFull", "Mass3jFull", "Mass34jFull", "Mass4jFull",
-      "jetPt[0]", "jetPt[1]", "jetPt[2]", "jetEta[0]", "jetEta[1]", "absjetEta[0]", "absjetEta[1]", "jetEta[2]",
-      "jetPhi[0]", "jetPhi[1]", "jetPhi[2]", "mjj", "dEtajj", "SIP3D", "jetPt[01]", "jetEta[01]",
-      "jetEtaAllj", "absjetEtaAllj", "jetEtaAllj50", "absjetEtaAllj50", "jetEtaAllj_120", "absjetEtaAllj_120", "jetEtaAllj50_120", "absjetEtaAllj50_120",
-      "jetEtaAllj_180", "absjetEtaAllj_180", "jetEtaAllj50_180", "absjetEtaAllj50_180",
-      "absjetEtaN1", "jetPtN1", "jetPtN2", "jetPtN3", "absjetEtaN1_100",
-      "PVDZ", "deltaPVDZ_sameZ", "deltaPVDZ_diffZ"]
+hist1D_Ori = [
+    "yield",
+    "Z1Mass",
+    "Z2Mass",
+    "ZMass",
+    "ZZPt",
+    "ZZEta",
+    "dPhiZ1Z2",
+    "dRZ1Z2",
+    "ZPt",
+    "LepPt",
+    "LepPtFull",
+    "LepEta",
+    "PassTriggerFull",
+    "LepPt1",
+    "LepPt2",
+    "LepPt3",
+    "LepPt4",
+    "LepPt1Full",
+    "LepPt2Full",
+    "LepPt3Full",
+    "LepPt4Full",
+    "e1PtSortedFull",
+    "e2PtSortedFull",
+    "e1PtSorted",
+    "e2PtSorted",
+    "Mass",
+    "Mass0j",
+    "Mass1j",
+    "Mass2j",
+    "Mass3j",
+    "Mass34j",
+    "Mass4j",
+    "nJets",
+    "nJets_central",
+    "MassFull",
+    "Mass0jFull",
+    "Mass1jFull",
+    "Mass2jFull",
+    "Mass3jFull",
+    "Mass34jFull",
+    "Mass4jFull",
+    "jetPt[0]",
+    "jetPt[1]",
+    "jetPt[2]",
+    "jetEta[0]",
+    "jetEta[1]",
+    "absjetEta[0]",
+    "absjetEta[1]",
+    "jetEta[2]",
+    "jetPhi[0]",
+    "jetPhi[1]",
+    "jetPhi[2]",
+    "mjj",
+    "dEtajj",
+    "SIP3D",
+    "jetPt[01]",
+    "jetEta[01]",
+    "jetEtaAllj",
+    "absjetEtaAllj",
+    "jetEtaAllj50",
+    "absjetEtaAllj50",
+    "jetEtaAllj_120",
+    "absjetEtaAllj_120",
+    "jetEtaAllj50_120",
+    "absjetEtaAllj50_120",
+    "jetEtaAllj_180",
+    "absjetEtaAllj_180",
+    "jetEtaAllj50_180",
+    "absjetEtaAllj50_180",
+    "absjetEtaN1",
+    "jetPtN1",
+    "jetPtN2",
+    "jetPtN3",
+    "absjetEtaN1_100",
+    "PVDZ",
+    "deltaPVDZ_sameZ",
+    "deltaPVDZ_diffZ",
+]
 
-#hists1DList = baseList
+# hists1DList = baseList
 # This is the list of 1D hists that will be drawn
 hists1DList = [
-      "yield", "Z1Mass", "Z2Mass", "ZMass", "ZZPt", "ZZEta", "dPhiZ1Z2", "dRZ1Z2", "ZPt", "LepPt", "LepPtFull", "LepEta", "PassTriggerFull",
-      "LepPt1", "LepPt2", "LepPt3", "LepPt4", "LepPt1Full", "LepPt2Full", "LepPt3Full", "LepPt4Full", "e1PtSortedFull", "e2PtSortedFull", "e1PtSorted", "e2PtSorted",
-      "Mass", "nJets", "nJets_central", "MassFull", "SIP3D", "PVDZ", "deltaPVDZ_sameZ", "deltaPVDZ_diffZ", "scaleWeightIDs", "Z1PolCos", "Z2PolCos",
-      "Lep1Energy", "Lep2Energy", "Lep3Energy", "Lep4Energy", "LepIso", "Lep1Iso", "Lep2Iso", "Lep3Iso", "Lep4Iso",
-      "Mass0j", "Mass1j", "Mass2j", "Mass3j", "Mass34j", "Mass4j", "Mass0jFull", "Mass1jFull", "Mass2jFull", "Mass3jFull", "Mass34jFull", "Mass4jFull",
-      "jetEta[0]", "absjetEta[0]", "jetEta[1]", "absjetEta[1]", "jetPt[0]", "jetPt[1]", "jetPhi[0]", "jetPhi[1]", "mjj", "dEtajj"
+    "yield",
+    "Z1Mass",
+    "Z2Mass",
+    "ZMass",
+    "ZZPt",
+    "ZZEta",
+    "dPhiZ1Z2",
+    "dRZ1Z2",
+    "ZPt",
+    "LepPt",
+    "LepPtFull",
+    "LepEta",
+    "PassTriggerFull",
+    "LepPt1",
+    "LepPt2",
+    "LepPt3",
+    "LepPt4",
+    "LepPt1Full",
+    "LepPt2Full",
+    "LepPt3Full",
+    "LepPt4Full",
+    "e1PtSortedFull",
+    "e2PtSortedFull",
+    "e1PtSorted",
+    "e2PtSorted",
+    "Mass",
+    "nJets",
+    "nJets_central",
+    "MassFull",
+    "SIP3D",
+    "PVDZ",
+    "deltaPVDZ_sameZ",
+    "deltaPVDZ_diffZ",
+    "scaleWeightIDs",
+    "Z1PolCos",
+    "Z2PolCos",
+    "Lep1Energy",
+    "Lep2Energy",
+    "Lep3Energy",
+    "Lep4Energy",
+    "LepIso",
+    "Lep1Iso",
+    "Lep2Iso",
+    "Lep3Iso",
+    "Lep4Iso",
+    "Mass0j",
+    "Mass1j",
+    "Mass2j",
+    "Mass3j",
+    "Mass34j",
+    "Mass4j",
+    "Mass0jFull",
+    "Mass1jFull",
+    "Mass2jFull",
+    "Mass3jFull",
+    "Mass34jFull",
+    "Mass4jFull",
+    "jetEta[0]",
+    "absjetEta[0]",
+    "jetEta[1]",
+    "absjetEta[1]",
+    "jetPt[0]",
+    "jetPt[1]",
+    "jetPhi[0]",
+    "jetPhi[1]",
+    "mjj",
+    "dEtajj",
 ]
-#hists1DList = [ "yield", "Mass", "Mass0j", "Mass1j", "Mass2j", "Mass3j", "Mass34j", "Mass4j", "nJets", "MassFull", "Mass0jFull", "Mass1jFull", "Mass2jFull", "Mass3jFull", "Mass34jFull", "Mass4jFull", "jetPt[0]", "jetPt[1]","jetEta[0]", "jetEta[1]", "absjetEta[0]", "absjetEta[1]", "mjj", "dEtajj" ]
+# hists1DList = [ "yield", "Mass", "Mass0j", "Mass1j", "Mass2j", "Mass3j", "Mass34j", "Mass4j", "nJets", "MassFull", "Mass0jFull", "Mass1jFull", "Mass2jFull", "Mass3jFull", "Mass34jFull", "Mass4jFull", "jetPt[0]", "jetPt[1]","jetEta[0]", "jetEta[1]", "absjetEta[0]", "absjetEta[1]", "mjj", "dEtajj" ]
 
 jetTest2D_Ori = ["jetPtN1", "jetPtN2", "jetPtN3"]
 jetTest2DList = []
 
 jethists1D_Ori = [
-      "Mass",
-      "Mass0j",
-      "Mass1j",
-      "Mass2j",
-      "Mass3j",
-      "Mass34j",
-      "Mass4j",
-      "MassFull",
-      "Mass0jFull",
-      "Mass1jFull",
-      "Mass2jFull",
-      "Mass3jFull",
-      "Mass34jFull",
-      "Mass4jFull",
-      "nJets",
-      "nJets_central",
-      "jetPt[0]",
-      "jetPt[1]",
-      "jetEta[0]",
-      "jetEta[1]",
-      "absjetEta[0]",
-      "absjetEta[1]",
-      "mjj",
-      "dEtajj",
-  ]
+    "Mass",
+    "Mass0j",
+    "Mass1j",
+    "Mass2j",
+    "Mass3j",
+    "Mass34j",
+    "Mass4j",
+    "MassFull",
+    "Mass0jFull",
+    "Mass1jFull",
+    "Mass2jFull",
+    "Mass3jFull",
+    "Mass34jFull",
+    "Mass4jFull",
+    "nJets",
+    "nJets_central",
+    "jetPt[0]",
+    "jetPt[1]",
+    "jetEta[0]",
+    "jetEta[1]",
+    "absjetEta[0]",
+    "absjetEta[1]",
+    "mjj",
+    "dEtajj",
+]
 jethists1DList = baseList[1:]
 
 weighthists1D_Ori = [
-      "yield",
-      "Mass",
-      "MassFull",
-      "ZMass",
-      "ZZPt",
-      "ZZEta",
-      "dPhiZ1Z2",
-      "dRZ1Z2",
-      "ZPt",
-      "LepPt",
-      "LepEta",
-      "nJets",
-      "nJets_central",
-      "jetPt[1]",
-      "jetPt[0]",
-      "jetEta[0]",
-      "jetEta[1]",
-      "absjetEta[0]",
-      "absjetEta[1]",
-      "mjj",
-      "dEtajj",
-      "Mass0j",
-      "Mass1j",
-      "Mass2j",
-      "Mass3j",
-      "Mass34j",
-      "Mass4j",
-      "Mass0jFull",
-      "Mass1jFull",
-      "Mass2jFull",
-      "Mass3jFull",
-      "Mass34jFull",
-      "Mass4jFull"]
+    "yield",
+    "Mass",
+    "MassFull",
+    "ZMass",
+    "ZZPt",
+    "ZZEta",
+    "dPhiZ1Z2",
+    "dRZ1Z2",
+    "ZPt",
+    "LepPt",
+    "LepEta",
+    "nJets",
+    "nJets_central",
+    "jetPt[1]",
+    "jetPt[0]",
+    "jetEta[0]",
+    "jetEta[1]",
+    "absjetEta[0]",
+    "absjetEta[1]",
+    "mjj",
+    "dEtajj",
+    "Mass0j",
+    "Mass1j",
+    "Mass2j",
+    "Mass3j",
+    "Mass34j",
+    "Mass4j",
+    "Mass0jFull",
+    "Mass1jFull",
+    "Mass2jFull",
+    "Mass3jFull",
+    "Mass34jFull",
+    "Mass4jFull",
+]
 
 weighthists1DList = hists1DList
 if "scaleWeightIDs" in weighthists1DList:
-    weighthists1DList.remove("scaleWeightIDs") #Special case for modified UWVV that shouldn't have a weight plot
-#weighthists1DList = baseList
-#weighthists1DList = ["yield", "Mass", "MassFull", "nJets", "jetPt[1]", "jetPt[0]", "jetEta[0]", "jetEta[1]", "absjetEta[0]", "absjetEta[1]", "mjj", "dEtajj", "Mass0j", "Mass1j", "Mass2j", "Mass3j", "Mass34j", "Mass4j", "Mass0jFull", "Mass1jFull", "Mass2jFull", "Mass3jFull", "Mass34jFull", "Mass4jFull"]
+    weighthists1DList.remove("scaleWeightIDs")  # Special case for modified UWVV that shouldn't have a weight plot
+# weighthists1DList = baseList
+# weighthists1DList = ["yield", "Mass", "MassFull", "nJets", "jetPt[1]", "jetPt[0]", "jetEta[0]", "jetEta[1]", "absjetEta[0]", "absjetEta[1]", "mjj", "dEtajj", "Mass0j", "Mass1j", "Mass2j", "Mass3j", "Mass34j", "Mass4j", "Mass0jFull", "Mass1jFull", "Mass2jFull", "Mass3jFull", "Mass34jFull", "Mass4jFull"]
 
 dict["systHists"] = listToStr(systHistList)
 dict["hists1D"] = listToStr(hists1DList)
@@ -167,8 +325,8 @@ dict["jetTest2D"] = listToStr(jetTest2DList)
 dict["jethists1D"] = listToStr(jethists1DList)
 dict["weighthists1D"] = listToStr(weighthists1DList)
 
-#systHists used in Selector code to check whether need to do syst, so hists1D enough to contain the list for purpose here
-#ldict["systHists"] = systHistList
+# systHists used in Selector code to check whether need to do syst, so hists1D enough to contain the list for purpose here
+# ldict["systHists"] = systHistList
 
 odict["hists1D"] = hist1D_Ori
 odict["jetTest2D"] = jetTest2D_Ori
@@ -180,23 +338,22 @@ ldict["jetTest2D"] = jetTest2DList
 ldict["jethists1D"] = jethists1DList
 ldict["weighthists1D"] = weighthists1DList
 
-#mapdict["systHists"] =
+# mapdict["systHists"] =
 mapdict["hists1D"] = "histMap1D_"
 mapdict["jetTest2D"] = "jetTestMap2D_"
 mapdict["jethists1D"] = "jethistMap1D_"
 mapdict["weighthists1D"] = "weighthistMap1D_"
 
-ft = open("src/ZZSelector.template","r")
+ft = open("src/ZZSelector.template", "r")
 template = string.Template(ft.read())
 output = template.substitute(dict)
-with open("src/ZZSelectorTemplateFilledTmp.cc","w") as fout:
+with open("src/ZZSelectorTemplateFilledTmp.cc", "w") as fout:
     fout.write(output)
 
-with open("src/ZZSelectorTemplateFilledTmp.cc","r") as fout2:
-    with open("src/ZZSelectorFilled.template","w") as foutf:
+with open("src/ZZSelectorTemplateFilledTmp.cc", "r") as fout2:
+    with open("src/ZZSelectorFilled.template", "w") as foutf:
         for line in fout2:
-
-            #For suppressing not used variables warning in compiling
+            # For suppressing not used variables warning in compiling
             if not writeNtuple:
                 if "//Begin filling ntuple" in line:
                     line = "/*" + line
@@ -212,7 +369,7 @@ with open("src/ZZSelectorTemplateFilledTmp.cc","r") as fout2:
 
             if "\n" not in line:
                 print("Line doesn't contain \\n")
-                line+= "\n"
+                line += "\n"
 
             if "SafeHistFill" in line:
                 for key in list(mapdict.keys()):
@@ -222,54 +379,53 @@ with open("src/ZZSelectorTemplateFilledTmp.cc","r") as fout2:
                                 if "//" not in line or line.find("//") > line.find("SafeHistFill"):
                                     line = "//" + line
 
-
             foutf.write(line)
 
 print("src/ZZSelectorFilled.template produced")
 os.remove("src/ZZSelectorTemplateFilledTmp.cc")
 
 
-#Gen Selector
+# Gen Selector
 Gendict = {}
 Genldict = {}
 Genodict = {}
 Genmapdict = {}
 
-GenBaseList = ["Gen"+li for li in baseList]
+GenBaseList = ["Gen" + li for li in baseList]
 
 Genhists1D_Ori = [
-      "GenMass",
-      "GenMass0j",
-      "GenMass1j",
-      "GenMass2j",
-      "GenMass3j",
-      "GenMass34j",
-      "GenMass4j",
-      "GenMassFull",
-      "GenMass0jFull",
-      "GenMass1jFull",
-      "GenMass2jFull",
-      "GenMass3jFull",
-      "GenMass34jFull",
-      "GenMass4jFull",
-      "Genmjj",
-      "GennJets",
-      "Genyield",
-      "GenZMass",
-      "GenZZPt",
-      "GenZZEta",
-      "GenZPt",
-      "GendPhiZ1Z2",
-      "GendRZ1Z2",
-      "GenLepPt",
-      "GenLepEta",
-      "GenjetPt[0]",
-      "GenjetPt[1]",
-      "GenjetEta[0]",
-      "GenjetEta[1]",
-      "GenabsjetEta[0]",
-      "GenabsjetEta[1]",
-      "GendEtajj",
+    "GenMass",
+    "GenMass0j",
+    "GenMass1j",
+    "GenMass2j",
+    "GenMass3j",
+    "GenMass34j",
+    "GenMass4j",
+    "GenMassFull",
+    "GenMass0jFull",
+    "GenMass1jFull",
+    "GenMass2jFull",
+    "GenMass3jFull",
+    "GenMass34jFull",
+    "GenMass4jFull",
+    "Genmjj",
+    "GennJets",
+    "Genyield",
+    "GenZMass",
+    "GenZZPt",
+    "GenZZEta",
+    "GenZPt",
+    "GendPhiZ1Z2",
+    "GendRZ1Z2",
+    "GenLepPt",
+    "GenLepEta",
+    "GenjetPt[0]",
+    "GenjetPt[1]",
+    "GenjetEta[0]",
+    "GenjetEta[1]",
+    "GenabsjetEta[0]",
+    "GenabsjetEta[1]",
+    "GendEtajj",
 ]
 
 
@@ -278,38 +434,39 @@ Genldict["Genhists1D"] = GenBaseList
 Gendict["Genhists1D"] = listToStr(Genldict["Genhists1D"])
 
 Genweighthists1D_Ori = [
-      "Genyield",
-      "GenMass",
-      "GenMassFull",
-      "GenZMass",
-      "GenZZPt",
-      "GenZZEta",
-      "GendPhiZ1Z2",
-      "GendRZ1Z2",
-      "GenZPt",
-      "GenLepPt",
-      "GenLepEta",
-      "GennJets",
-      "GenjetPt[1]",
-      "GenjetPt[0]",
-      "GenjetEta[0]",
-      "GenjetEta[1]",
-      "GenabsjetEta[0]",
-      "GenabsjetEta[1]",
-      "Genmjj",
-      "GendEtajj",
-      "GenMass0j",
-      "GenMass1j",
-      "GenMass2j",
-      "GenMass3j",
-      "GenMass34j",
-      "GenMass4j",
-      "GenMass0jFull",
-      "GenMass1jFull",
-      "GenMass2jFull",
-      "GenMass3jFull",
-      "GenMass34jFull",
-      "GenMass4jFull"]
+    "Genyield",
+    "GenMass",
+    "GenMassFull",
+    "GenZMass",
+    "GenZZPt",
+    "GenZZEta",
+    "GendPhiZ1Z2",
+    "GendRZ1Z2",
+    "GenZPt",
+    "GenLepPt",
+    "GenLepEta",
+    "GennJets",
+    "GenjetPt[1]",
+    "GenjetPt[0]",
+    "GenjetEta[0]",
+    "GenjetEta[1]",
+    "GenabsjetEta[0]",
+    "GenabsjetEta[1]",
+    "Genmjj",
+    "GendEtajj",
+    "GenMass0j",
+    "GenMass1j",
+    "GenMass2j",
+    "GenMass3j",
+    "GenMass34j",
+    "GenMass4j",
+    "GenMass0jFull",
+    "GenMass1jFull",
+    "GenMass2jFull",
+    "GenMass3jFull",
+    "GenMass34jFull",
+    "GenMass4jFull",
+]
 
 Genodict["Genweighthists1D"] = Genweighthists1D_Ori
 Genldict["Genweighthists1D"] = GenBaseList
@@ -318,23 +475,22 @@ Gendict["Genweighthists1D"] = listToStr(Genldict["Genweighthists1D"])
 Genmapdict["Genhists1D"] = "histMap1D_"
 Genmapdict["Genweighthists1D"] = "weighthistMap1D_"
 
-ft2 = open("src/ZZGenSelector.template","r")
+ft2 = open("src/ZZGenSelector.template", "r")
 template2 = string.Template(ft2.read())
 output2 = template2.substitute(Gendict)
-with open("src/ZZGenSelectorTemplateFilledTmp.cc","w") as foutGen:
+with open("src/ZZGenSelectorTemplateFilledTmp.cc", "w") as foutGen:
     foutGen.write(output2)
 
-with open("src/ZZGenSelectorTemplateFilledTmp.cc","r") as fout2Gen:
-    with open("src/ZZGenSelectorFilled.template","w") as foutfGen:
+with open("src/ZZGenSelectorTemplateFilledTmp.cc", "r") as fout2Gen:
+    with open("src/ZZGenSelectorFilled.template", "w") as foutfGen:
         for line in fout2Gen:
-
             if not writeNtuple:
                 if "//Begin filling ntuple" in line:
                     line = "/*" + line
                 elif "//End filling ntuple" in line:
                     line = line + "*/\n"
-            #For suppressing not used variables warning in compiling
-            #if not "LepPtFull" in hists1DList:
+            # For suppressing not used variables warning in compiling
+            # if not "LepPtFull" in hists1DList:
             #    if "// sort lepton pt" in line:
             #        line = "/*" + line
             #
@@ -343,7 +499,7 @@ with open("src/ZZGenSelectorTemplateFilledTmp.cc","r") as fout2Gen:
 
             if "\n" not in line:
                 print("Line doesn't contain \\n")
-                line+= "\n"
+                line += "\n"
 
             if "SafeHistFill" in line:
                 for key in list(Genmapdict.keys()):
@@ -352,7 +508,6 @@ with open("src/ZZGenSelectorTemplateFilledTmp.cc","r") as fout2Gen:
                             if item in line and line.find(item) < line.find("variation") and item not in Genldict[key]:
                                 if "//" not in line or line.find("//") > line.find("SafeHistFill"):
                                     line = "//" + line
-
 
             foutfGen.write(line)
 

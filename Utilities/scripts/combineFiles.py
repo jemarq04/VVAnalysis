@@ -8,22 +8,31 @@ from python import ConfigureJobs
 from python import HistTools
 import datetime
 
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-f", "--force", action="store_true", help="overwrite output file if it exists")
-    parser.add_argument("-o", "--outfile", help="output file (default: Hists<DATE>-<ANALYSIS>.root or fakeRates-<ANALYSIS>.root)")
-    parser.add_argument("-a", "--analysis", default="ZZ4lRun3Combined", help="name of combined analysis in dataset manager")
-    parser.add_argument("-y", "--years", default=[],
+    parser.add_argument(
+        "-o", "--outfile", help="output file (default: Hists<DATE>-<ANALYSIS>.root or fakeRates-<ANALYSIS>.root)"
+    )
+    parser.add_argument(
+        "-a", "--analysis", default="ZZ4lRun3Combined", help="name of combined analysis in dataset manager"
+    )
+    parser.add_argument(
+        "-y",
+        "--years",
+        default=[],
         type=lambda x: [i.strip() for i in x.split(",")],
-        help="comma-separated list of years")
+        help="comma-separated list of years",
+    )
     parser.add_argument("infiles", nargs="+", help="list of infiles to combine")
     args = parser.parse_args()
 
-    #initial error checking
+    # initial error checking
     if not any(args.analysis.startswith(x) for x in ["ZZ4l", "ZplusL"]):
         parser.error(f"invalid analysis, must be type ZZ4l or ZplusL: {args.analysis}")
 
-    #set variables
+    # set variables
     manager_path = ConfigureJobs.getManagerPath()
     manager_name = ConfigureJobs.getManagerName()
     if args.analysis.startswith("ZZ4l"):
@@ -37,7 +46,7 @@ def main():
         else:
             args.outfile = f"fakeRates-{zz_analysis}.root"
 
-    #error checking
+    # error checking
     if not args.force and os.path.isfile(args.outfile):
         parser.error(f"file already exists: {args.outfile}")
     if args.years:
@@ -91,37 +100,61 @@ def main():
         key_ZZ = args.analysis if is_ZZ else "ZZ4l" + args.analysis.split("ZplusL")[1]
 
         if is_ZZ:
-            alldata = HistTools.makeCompositeHists(outfile,"AllData",
-                ConfigureJobs.getListOfFilesWithXSec([f"{key_ZZ}data"], manager_path), lumi,
-                underflow=False, overflow=False)
+            alldata = HistTools.makeCompositeHists(
+                outfile,
+                "AllData",
+                ConfigureJobs.getListOfFilesWithXSec([f"{key_ZZ}data"], manager_path),
+                lumi,
+                underflow=False,
+                overflow=False,
+            )
         else:
-            alldata = HistTools.makeFakeRateCompositeHists(outfile,"AllData",
-                ConfigureJobs.getListOfFilesWithXSec([f"{key_ZZ}data"]))
+            alldata = HistTools.makeFakeRateCompositeHists(
+                outfile, "AllData", ConfigureJobs.getListOfFilesWithXSec([f"{key_ZZ}data"])
+            )
         OutputTools.writeOutputListItem(alldata, outfile)
         alldata.Delete()
 
         print(" Saving AllEWK...")
         if is_ZZ:
-            ewkmc = HistTools.makeCompositeHists(outfile,"AllEWK", ConfigureJobs.getListOfFilesWithXSec(
-                ConfigureJobs.getListOfEWKFilenames(args.analysis), manager_path), lumi,
-                underflow=False, overflow=False)
+            ewkmc = HistTools.makeCompositeHists(
+                outfile,
+                "AllEWK",
+                ConfigureJobs.getListOfFilesWithXSec(ConfigureJobs.getListOfEWKFilenames(args.analysis), manager_path),
+                lumi,
+                underflow=False,
+                overflow=False,
+            )
         else:
-            ewkmc = HistTools.makeFakeRateCompositeHists(outfile,"AllEWK", ConfigureJobs.getListOfFilesWithXSec(
-                ConfigureJobs.getListOfEWKFilenames(args.analysis)), True, lumi=lumi)
+            ewkmc = HistTools.makeFakeRateCompositeHists(
+                outfile,
+                "AllEWK",
+                ConfigureJobs.getListOfFilesWithXSec(ConfigureJobs.getListOfEWKFilenames(args.analysis)),
+                True,
+                lumi=lumi,
+            )
         OutputTools.writeOutputListItem(ewkmc, outfile)
         ewkmc.Delete()
 
         if not is_ZZ:
-            allDYJets = HistTools.makeFakeRateCompositeHists(outfile,"DYMC", ConfigureJobs.getListOfFilesWithXSec(
-                ConfigureJobs.getListOfDYFilenames(args.analysis)),True, lumi=lumi)
+            allDYJets = HistTools.makeFakeRateCompositeHists(
+                outfile,
+                "DYMC",
+                ConfigureJobs.getListOfFilesWithXSec(ConfigureJobs.getListOfDYFilenames(args.analysis)),
+                True,
+                lumi=lumi,
+            )
             OutputTools.writeOutputListItem(allDYJets, outfile)
             allDYJets.Delete()
 
         print(" Saving DataEWKCorrected...")
-        ewkcorr = HistTools.getDifference(outfile, "DataEWKCorrected", "AllData", "AllEWK", None if is_ZZ else HistTools.getFakeRateRatios)
+        ewkcorr = HistTools.getDifference(
+            outfile, "DataEWKCorrected", "AllData", "AllEWK", None if is_ZZ else HistTools.getFakeRateRatios
+        )
         OutputTools.writeOutputListItem(ewkcorr, outfile)
         ewkcorr.Delete()
     print("Done.")
+
 
 if __name__ == "__main__":
     main()

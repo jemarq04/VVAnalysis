@@ -22,7 +22,7 @@
 typedef ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>> LorentzVector;
 
 class ThreeLepSelector : public SelectorBase {
-public :
+public:
   /*****************************************/
   /* ____  ____   ___  __  __   ___ __  __ */
   /* || )) || \\ // \\ ||\ ||  //   ||  || */
@@ -32,7 +32,7 @@ public :
 
   ScaleFactor* pileupSF_;
   ScaleFactor* muonSF_;
-  ScaleFactor* eIdSF_ ;
+  ScaleFactor* eIdSF_;
   ScaleFactor* eGsfSF_;
   ScaleFactor* mIdSF_;
   ScaleFactor* mIsoSF_;
@@ -93,9 +93,9 @@ public :
   Int_t Jet_nConstituents[N_KEEP_JET_];
   Float_t Jet_chHEF[N_KEEP_JET_];
   Float_t Jet_chEmEF[N_KEEP_JET_];
-  Int_t   Jet_jetId[N_KEEP_JET_];
+  Int_t Jet_jetId[N_KEEP_JET_];
 
-  ClassDefOverride(ThreeLepSelector,0);
+  ClassDefOverride(ThreeLepSelector, 0);
 
   /*******************************************************/
   /* __ __  ___  ____  __  ___  ____  __     ____  __    */
@@ -114,7 +114,7 @@ public :
   int nJets, nBJets;
   bool passZVeto;
   BTagCalibration calib;
-  BTagCalibrationReader btag_reader; // central sys type
+  BTagCalibrationReader btag_reader;  // central sys type
 
   /************************************************************/
   /* _____ __ __ __  __   ___ ______ __   ___   __  __  __    */
@@ -148,16 +148,16 @@ public :
   // Overloaded or necesary functions
   void LoadBranchesNanoAOD(Long64_t entry, std::pair<Systematic, std::string> variation) override;
   void FillHistograms(Long64_t entry, std::pair<Systematic, std::string> variation) override;
-  virtual void    SetBranchesNanoAOD() override;
-  virtual void    SetupNewDirectory() override;
+  virtual void SetBranchesNanoAOD() override;
+  virtual void SetupNewDirectory() override;
   virtual std::string GetNameFromFile() override;
   // Readers to access the data (delete the ones you do not need).
-  virtual void    SetScaleFactors() override;
-  virtual void    Init(TTree *tree) override;
+  virtual void SetScaleFactors() override;
+  virtual void Init(TTree* tree) override;
 
   ///ignore
   void LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::string> variation) override;
-  virtual void    SetBranchesUWVV() override;
+  virtual void SetBranchesUWVV() override;
 };
 
 #endif

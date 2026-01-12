@@ -4,8 +4,7 @@
 #include "TParameter.h"
 #include "TString.h"
 
-std::string ZZSelectorBase::GetNameFromFile()
-{
+std::string ZZSelectorBase::GetNameFromFile() {
   std::regex expr = std::regex("20[0-9][0-9]-[0-9][0-9]-[0-9][0-9]-(.*)-ZZ4l20[0-9][0-9]");
   std::smatch matches;
   std::string fileName = fChain->GetTree()->GetDirectory()->GetFile()->GetName();
@@ -13,98 +12,91 @@ std::string ZZSelectorBase::GetNameFromFile()
   std::regex_search(fileName, matches, expr);
   return std::string(matches.str(1));
 }
-void ZZSelectorBase::SetScaleFactors()
-{
+void ZZSelectorBase::SetScaleFactors() {
   std::string yearstring, basename;
 
-  TNamed *name_obj = (TNamed*)GetInputList()->FindObject("name");
-  std::string name = (name_obj != nullptr)? name_obj->GetTitle() : GetNameFromFile();
-  if (name.find("data") != std::string::npos) return;
-  try{
+  TNamed* name_obj = (TNamed*)GetInputList()->FindObject("name");
+  std::string name = (name_obj != nullptr) ? name_obj->GetTitle() : GetNameFromFile();
+  if (name.find("data") != std::string::npos)
+    return;
+  try {
     for (std::string objname : {"basename", "yearcfg"})
       if (GetInputList()->FindObject(objname.c_str()) == nullptr)
         throw std::invalid_argument("Must pass valid year/basename for analysis");
     basename = ((TNamed*)GetInputList()->FindObject("basename"))->GetTitle();
     yearcfg = ((TNamed*)GetInputList()->FindObject("yearcfg"))->GetTitle();
 
-
-    if (yearcfg == "2022" || (yearcfg == "Run3Combined" && name.find("_2022_") != std::string::npos)){
+    if (yearcfg == "2022" || (yearcfg == "Run3Combined" && name.find("_2022_") != std::string::npos)) {
       yearstring = "Run3-22CDSep23-Summer22-NanoAODv12";
       EleRecoSF_Name_ = "2022Re-recoBCD";
-      yearcfg = "2022BCD"; // overwritten to use for HZZ ID SFs
-      if (name.find("_postEE") != std::string::npos){
+      yearcfg = "2022BCD";  // overwritten to use for HZZ ID SFs
+      if (name.find("_postEE") != std::string::npos) {
         yearstring = "Run3-22EFGSep23-Summer22EE-NanoAODv12";
         EleRecoSF_Name_ = "2022Re-recoE+PromptFG";
         yearcfg = "2022EFG";
       }
-    }
-    else if (yearcfg == "2023" || (yearcfg == "Run3Combined" && name.find("_2023_") != std::string::npos)){
+    } else if (yearcfg == "2023" || (yearcfg == "Run3Combined" && name.find("_2023_") != std::string::npos)) {
       yearstring = "Run3-23CSep23-Summer23-NanoAODv12";
       EleRecoSF_Name_ = "2023PromptC";
       yearcfg = "2023C";
-      if (name.find("_postBPix") != std::string::npos){
+      if (name.find("_postBPix") != std::string::npos) {
         yearstring = "Run3-23DSep23-Summer23BPix-NanoAODv12";
         EleRecoSF_Name_ = "2023PromptD";
         yearcfg = "2023D";
       }
-    }
-    else if (yearcfg == "2024" || (yearcfg == "Run3Combined" && name.find("_2024") != std::string::npos)){
+    } else if (yearcfg == "2024" || (yearcfg == "Run3Combined" && name.find("_2024") != std::string::npos)) {
       yearstring = "Run3-24CDEReprocessingFGHIPrompt-Summer24-NanoAODv15";
       EleRecoSF_Name_ = "2024Prompt";
       yearcfg = "2024";
-    }
-    else if (yearcfg == "2025" || (yearcfg == "Run3Combined" && name.find("_2025") != std::string::npos)){
+    } else if (yearcfg == "2025" || (yearcfg == "Run3Combined" && name.find("_2025") != std::string::npos)) {
       //no SFs available for 2025 yet
       yearstring = "Run3-24CDEReprocessingFGHIPrompt-Summer24-NanoAODv15";
       EleRecoSF_Name_ = "2024Prompt";
       yearcfg = "2024";
-    }
-    else
+    } else
       throw std::invalid_argument("");
-  }
-  catch (...){
+  } catch (...) {
     throw std::invalid_argument("Must pass valid year/basename for analysis");
   }
 
-  try{
+  try {
     if (yearcfg != "2024")
-      pileupSF_ = correction::CorrectionSet::from_file(TString::Format("%s/LUM/%s/latest/puWeights.json.gz", basename.c_str(), yearstring.c_str()).Data());
+      pileupSF_ = correction::CorrectionSet::from_file(
+          TString::Format("%s/LUM/%s/latest/puWeights.json.gz", basename.c_str(), yearstring.c_str()).Data());
     else
-      pileupSF_ = correction::CorrectionSet::from_file(TString::Format("%s/LUM/%s/latest/puWeights_BCDEFGHI.json.gz", basename.c_str(), yearstring.c_str()).Data());
-  }
-  catch (...){
+      pileupSF_ = correction::CorrectionSet::from_file(
+          TString::Format("%s/LUM/%s/latest/puWeights_BCDEFGHI.json.gz", basename.c_str(), yearstring.c_str()).Data());
+  } catch (...) {
     throw std::invalid_argument("Must pass valid pileup weights SF");
   }
-  try{
+  try {
     if (GetInputList()->FindObject("eIdSF") == nullptr)
       throw std::invalid_argument("");
     eIdSF_ = correction::CorrectionSet::from_file(((TNamed*)GetInputList()->FindObject("eIdSF"))->GetTitle());
-  }
-  catch (...){
+  } catch (...) {
     throw std::invalid_argument("Must pass valid electron Run SF");
   }
-  try{
-    eRecoSF_ = correction::CorrectionSet::from_file(TString::Format("%s/EGM/%s/latest/electron.json.gz", basename.c_str(), yearstring.c_str()).Data());
-  }
-  catch (...){
+  try {
+    eRecoSF_ = correction::CorrectionSet::from_file(
+        TString::Format("%s/EGM/%s/latest/electron.json.gz", basename.c_str(), yearstring.c_str()).Data());
+  } catch (...) {
     throw std::invalid_argument("Must pass valid electron Reco SF");
   }
-  try{
+  try {
     if (GetInputList()->FindObject("mIdSF") == nullptr)
       throw std::invalid_argument("");
     mIdSF_ = correction::CorrectionSet::from_file(((TNamed*)GetInputList()->FindObject("mIdSF"))->GetTitle());
-  }
-  catch (...){
+  } catch (...) {
     throw std::invalid_argument("Must pass valid muon ID SF");
   }
 
-  try{
-    if (GetInputList()->FindObject("qqZZ_kfac") != nullptr) //Optional argument
+  try {
+    if (GetInputList()->FindObject("qqZZ_kfac") != nullptr)  //Optional argument
       qqZZ_kfac_ = correction::CorrectionSet::from_file(((TNamed*)GetInputList()->FindObject("qqZZ_kfac"))->GetTitle());
-  }
-  catch (...){
+  } catch (...) {
     //throw std::invalid_argument("Must pass valid qqZZ differental kfactor");
-    if (qqZZ_kfac_ != nullptr) qqZZ_kfac_.reset();
+    if (qqZZ_kfac_ != nullptr)
+      qqZZ_kfac_.reset();
   }
 
   //There are L1Prefiring weight and uncertainity in the ZZ UWVV ntuples
@@ -113,24 +105,18 @@ void ZZSelectorBase::SetScaleFactors()
   //    throw std::invalid_argument("Must pass prefiring efficiency map");
 }
 
-void ZZSelectorBase::Init(TTree *tree)
-{
-
+void ZZSelectorBase::Init(TTree* tree) {
   //allChannels_ = {"eeee","eemm","mmee","mmmm","eee", "eem", "emm", "mmm"};
 
   SelectorBase::Init(tree);
 }
 
-void ZZSelectorBase::SetBranchesUWVV()
-{
-  if (isMC_)
-  {
+void ZZSelectorBase::SetBranchesUWVV() {
+  if (isMC_) {
     fChain->SetBranchAddress("genWeight", &genWeight, &b_genWeight);
     //fChain->SetBranchAddress("originalXWGTUP", &originalXWGTUP, &b_originalXWGTUP);
     fChain->SetBranchAddress("nTruePU", &nTruePU, &b_nTruePU);
-  }
-  else
-  {
+  } else {
     //fChain->SetBranchAddress("Flag_duplicateMuonsPass", Flag_duplicateMuonsPass);
     //fChain->SetBranchAddress("Flag_badMuonsPass", Flag_badMuonsPass);
   }
@@ -138,8 +124,7 @@ void ZZSelectorBase::SetBranchesUWVV()
   //std::cout<<"channelName: "<<channelName_<<std::endl;
   //std::cout<<"enum channel_: "<<channel_<<std::endl;
   //std::cout<<"isMC: "<<isMC_<<std::endl;
-  if (channel_ == eeee)
-  {
+  if (channel_ == eeee) {
     //std::cout<<"enum channel_: "<<channel_<<std::endl;
     fChain->SetBranchAddress("run", &run, &b_run);
     fChain->SetBranchAddress("lumi", &lumi, &b_lumi);
@@ -204,8 +189,7 @@ void ZZSelectorBase::SetBranchesUWVV()
   }
   //Add 2e2mu channel also but it still needs to differentiate which one is Z1Mass and which one is Z2Mass leptons
   //This is done with a flag at the time of Process for each event on the fly
-  else if (channel_ == eemm)
-  {
+  else if (channel_ == eemm) {
     //channel_ = eemm;
     //fChain->SetBranchAddress("e1ZZTightIDNoVtx", &l1IsTight, &b_l1IsTight);
     fChain->SetBranchAddress("run", &run, &b_run);
@@ -270,9 +254,7 @@ void ZZSelectorBase::SetBranchesUWVV()
     //in ECAL crystals or not but we need a dummy for the muons? Makes life easier later
     fChain->SetBranchAddress("m1IsLoose", &l3IsGap, &b_l3IsGap);
     fChain->SetBranchAddress("m2IsLoose", &l4IsGap, &b_l4IsGap);
-  }
-  else if (channel_ == mmee)
-  {
+  } else if (channel_ == mmee) {
     //channel_ = mmee;
     fChain->SetBranchAddress("run", &run, &b_run);
     fChain->SetBranchAddress("lumi", &lumi, &b_lumi);
@@ -334,9 +316,7 @@ void ZZSelectorBase::SetBranchesUWVV()
     fChain->SetBranchAddress("e2IsGap", &l2IsGap, &b_l2IsGap);
     fChain->SetBranchAddress("m1IsLoose", &l3IsGap, &b_l3IsGap);
     fChain->SetBranchAddress("m2IsLoose", &l4IsGap, &b_l4IsGap);
-  }
-  else if (channel_ == mmmm)
-  {
+  } else if (channel_ == mmmm) {
     //channel_ = mmmm;
     fChain->SetBranchAddress("run", &run, &b_run);
     fChain->SetBranchAddress("lumi", &lumi, &b_lumi);
@@ -394,9 +374,7 @@ void ZZSelectorBase::SetBranchesUWVV()
     fChain->SetBranchAddress("m2Mass", &l2Mass, &b_l2Mass);
     fChain->SetBranchAddress("m3Mass", &l3Mass, &b_l3Mass);
     fChain->SetBranchAddress("m4Mass", &l4Mass, &b_l4Mass);
-  }
-  else if (channel_ == eee)
-  {
+  } else if (channel_ == eee) {
     //channel_ = eee;
     fChain->SetBranchAddress("run", &run, &b_run);
     fChain->SetBranchAddress("lumi", &lumi, &b_lumi);
@@ -436,9 +414,7 @@ void ZZSelectorBase::SetBranchesUWVV()
     fChain->SetBranchAddress("e1PVDZ", &l1PVDZ, &b_l1PVDZ);
     fChain->SetBranchAddress("e2PVDZ", &l2PVDZ, &b_l2PVDZ);
     fChain->SetBranchAddress("e3PVDZ", &l3PVDZ, &b_l3PVDZ);
-  }
-  else if (channel_ == eem)
-  {
+  } else if (channel_ == eem) {
     //channel_ = eem;
     fChain->SetBranchAddress("run", &run, &b_run);
     fChain->SetBranchAddress("lumi", &lumi, &b_lumi);
@@ -479,9 +455,7 @@ void ZZSelectorBase::SetBranchesUWVV()
     fChain->SetBranchAddress("e1PVDZ", &l1PVDZ, &b_l1PVDZ);
     fChain->SetBranchAddress("e2PVDZ", &l2PVDZ, &b_l2PVDZ);
     fChain->SetBranchAddress("mPVDZ", &l3PVDZ, &b_l3PVDZ);
-  }
-  else if (channel_ == emm)
-  {
+  } else if (channel_ == emm) {
     //channel_ = emm;
     fChain->SetBranchAddress("run", &run, &b_run);
     fChain->SetBranchAddress("lumi", &lumi, &b_lumi);
@@ -521,9 +495,7 @@ void ZZSelectorBase::SetBranchesUWVV()
     fChain->SetBranchAddress("m1PVDZ", &l1PVDZ, &b_l1PVDZ);
     fChain->SetBranchAddress("m2PVDZ", &l2PVDZ, &b_l2PVDZ);
     fChain->SetBranchAddress("ePVDZ", &l3PVDZ, &b_l3PVDZ);
-  }
-  else if (channel_ == mmm)
-  {
+  } else if (channel_ == mmm) {
     //channel_ = mmm;
     fChain->SetBranchAddress("run", &run, &b_run);
     fChain->SetBranchAddress("lumi", &lumi, &b_lumi);
@@ -563,25 +535,19 @@ void ZZSelectorBase::SetBranchesUWVV()
     fChain->SetBranchAddress("m1PVDZ", &l1PVDZ, &b_l1PVDZ);
     fChain->SetBranchAddress("m2PVDZ", &l2PVDZ, &b_l2PVDZ);
     fChain->SetBranchAddress("m3PVDZ", &l3PVDZ, &b_l3PVDZ);
-  }
-  else
+  } else
     throw std::invalid_argument("Invalid channel choice in ZZSelectorBase!");
 
   fChain->SetBranchAddress("type1_pfMETEt", &type1_pfMETEt, &b_type1_pfMETEt);
 }
 
-void ZZSelectorBase::LoadBranchesNanoAOD(Long64_t entry, std::pair<Systematic, std::string> variation)
-{
+void ZZSelectorBase::LoadBranchesNanoAOD(Long64_t entry, std::pair<Systematic, std::string> variation) {
   throw std::domain_error("NanoAOD ntuples not supported for ZZSelector!");
 }
 
-void ZZSelectorBase::SetBranchesNanoAOD()
-{
-  throw std::domain_error("NanoAOD ntuples not supported for ZZSelector!");
-}
+void ZZSelectorBase::SetBranchesNanoAOD() { throw std::domain_error("NanoAOD ntuples not supported for ZZSelector!"); }
 
-void ZZSelectorBase::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::string> variation)
-{
+void ZZSelectorBase::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::string> variation) {
   weight = 1;
   b_l1Pt->GetEntry(entry);
   b_l2Pt->GetEntry(entry);
@@ -607,8 +573,7 @@ void ZZSelectorBase::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std:
   b_run->GetEntry(entry);
   b_lumi->GetEntry(entry);
   b_evt->GetEntry(entry);
-  if (channel_ == eeee || channel_ == eemm || channel_ == mmee || channel_ == mmmm)
-  {
+  if (channel_ == eeee || channel_ == eemm || channel_ == mmee || channel_ == mmmm) {
     b_l4Pt->GetEntry(entry);
     b_l4PVDZ->GetEntry(entry);
     b_l4Energy->GetEntry(entry);
@@ -644,34 +609,28 @@ void ZZSelectorBase::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std:
   b_l3IsTight->GetEntry(entry);
   b_l3IsIso->GetEntry(entry);
   b_l3Iso->GetEntry(entry);
-  if (channel_ == eeee || channel_ == eemm || channel_ == mmee)
-  {
+  if (channel_ == eeee || channel_ == eemm || channel_ == mmee) {
     b_l1IsGap->GetEntry(entry);
     b_l2IsGap->GetEntry(entry);
     b_l3IsGap->GetEntry(entry);
     b_l4IsGap->GetEntry(entry);
   }
-  if (channel_ == eee || channel_ == eem || channel_ == emm || channel_ == mmm)
-  {
+  if (channel_ == eee || channel_ == eem || channel_ == emm || channel_ == mmm) {
     b_l3MtToMET->GetEntry(entry);
   }
   //std::cout<<"IsMC: "<<isMC_<<std::endl;
-  if (isMC_)
-  {
+  if (isMC_) {
     b_genWeight->GetEntry(entry);
     //b_originalXWGTUP->GetEntry(entry);
     b_nTruePU->GetEntry(entry);
-    weight = genWeight; //originalXWGTUP; //genWeight;
+    weight = genWeight;  //originalXWGTUP; //genWeight;
   }
 
-  if (channel_ == mmee)
-  {
+  if (channel_ == mmee) {
     if (e1e2IsZ1(entry))
       weight = 0.0;
     //Makes weight 0 if Z1 is ee hence should not go in _mmee histos
-  }
-  else if (channel_ == eemm)
-  {
+  } else if (channel_ == eemm) {
     if (!(e1e2IsZ1(entry)))
       weight = 0.0;
     //Makes weight 0 if Z1 is mm hence should not go in _eemm
@@ -683,8 +642,7 @@ void ZZSelectorBase::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std:
 //Can I save some kind of flag to identify the order of leptons for each event
 //I think this part might need to be added to the ZZSelector and BackgroundSelector and the condition checked at
 //process time for each event.
-bool ZZSelectorBase::e1e2IsZ1(Long64_t entry)
-{
+bool ZZSelectorBase::e1e2IsZ1(Long64_t entry) {
   //4P Signal region logic where I need to differentiate between two tight pairs and assign Z1 depending on which is closer to mZ
   if (tightZ1Leptons() && tightZ2Leptons())
     return fabs(Z1Mass - 91.1876) < fabs(Z2Mass - 91.1876);
@@ -699,52 +657,16 @@ bool ZZSelectorBase::e1e2IsZ1(Long64_t entry)
 
 // Meant to be a wrapper for the tight ID just in case it changes
 // To be a function of multiple variables
-bool ZZSelectorBase::lep1IsTight()
-{
-  return l1IsTight && l1IsIso;
-}
+bool ZZSelectorBase::lep1IsTight() { return l1IsTight && l1IsIso; }
 
-bool ZZSelectorBase::lep2IsTight()
-{
-  return l2IsTight && l2IsIso;
-}
-bool ZZSelectorBase::tightZ1Leptons()
-{
-  return lep1IsTight() && lep2IsTight();
-}
-bool ZZSelectorBase::lep3IsTight()
-{
-  return l3IsTight && l3IsIso;
-}
-bool ZZSelectorBase::lep4IsTight()
-{
-  return l4IsTight && l4IsIso;
-}
-bool ZZSelectorBase::tightZ2Leptons()
-{
-  return lep3IsTight() && lep4IsTight();
-}
-bool ZZSelectorBase::Z1PF()
-{
-  return lep1IsTight() && !lep2IsTight();
-}
-bool ZZSelectorBase::Z1FP()
-{
-  return lep2IsTight() && !lep1IsTight();
-}
-bool ZZSelectorBase::Z1FF()
-{
-  return !lep1IsTight() && !lep2IsTight();
-}
-bool ZZSelectorBase::Z2PF()
-{
-  return lep3IsTight() && !lep4IsTight();
-}
-bool ZZSelectorBase::Z2FP()
-{
-  return lep4IsTight() && !lep3IsTight();
-}
-bool ZZSelectorBase::Z2FF()
-{
-  return !lep3IsTight() && !lep4IsTight();
-}
+bool ZZSelectorBase::lep2IsTight() { return l2IsTight && l2IsIso; }
+bool ZZSelectorBase::tightZ1Leptons() { return lep1IsTight() && lep2IsTight(); }
+bool ZZSelectorBase::lep3IsTight() { return l3IsTight && l3IsIso; }
+bool ZZSelectorBase::lep4IsTight() { return l4IsTight && l4IsIso; }
+bool ZZSelectorBase::tightZ2Leptons() { return lep3IsTight() && lep4IsTight(); }
+bool ZZSelectorBase::Z1PF() { return lep1IsTight() && !lep2IsTight(); }
+bool ZZSelectorBase::Z1FP() { return lep2IsTight() && !lep1IsTight(); }
+bool ZZSelectorBase::Z1FF() { return !lep1IsTight() && !lep2IsTight(); }
+bool ZZSelectorBase::Z2PF() { return lep3IsTight() && !lep4IsTight(); }
+bool ZZSelectorBase::Z2FP() { return lep4IsTight() && !lep3IsTight(); }
+bool ZZSelectorBase::Z2FF() { return !lep3IsTight() && !lep4IsTight(); }

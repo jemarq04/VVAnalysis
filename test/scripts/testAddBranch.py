@@ -5,14 +5,14 @@ from rootpy.tree import Tree, TreeModel, FloatCol
 class TreeModel0(TreeModel):
     x = FloatCol()
 
+
 # make a tree with one float column, put some crap in it, save the
 # tree to a file
 with root_open("foo.root", "recreate") as f0:
-
     t0 = Tree("t0", model=TreeModel0)
 
     for i in range(10):
-        t0.x = 2. * i
+        t0.x = 2.0 * i
         t0.fill()
 
     t0.write()
@@ -37,10 +37,10 @@ with root_open("foo_new.root", "recreate") as f1:
     t1.set_buffer(t0Again._buffer, create_branches=True)
 
     # New int branch called y
-    t1.create_branches({'y' : 'I'})
+    t1.create_branches({"y": "I"})
 
     # fill the copied branches with old stuff, fill new branches with new stuff
-    for i,_ in enumerate(t0Again):
+    for i, _ in enumerate(t0Again):
         t1.y = i
         t1.fill()
 

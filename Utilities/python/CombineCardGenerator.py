@@ -7,8 +7,9 @@ from . import ConfigureJobs
 from . import HistTools
 from . import OutputTools
 
-class Systematic():
-    def __init__(self, name: str, shape: bool=False):
+
+class Systematic:
+    def __init__(self, name: str, shape: bool = False):
         self.name = name
         self.shape = shape
 
@@ -17,8 +18,9 @@ class Systematic():
     def AddProcesses(self, values: dict):
         self.systematics.update(values)
 
-class Process():
-    def __init__(self, name: str, channels: list=None):
+
+class Process:
+    def __init__(self, name: str, channels: list = None):
         if channels is None:
             channels = []
         self.name = name
@@ -30,24 +32,32 @@ class Process():
         self.xsecs = []
 
     def AddVariations(self, name: str):
-        if all(name+var not in self.variations for var in ["Up", "Down"]):
-            self.variations += [name+var for var in ["Up", "Down"]]
+        if all(name + var not in self.variations for var in ["Up", "Down"]):
+            self.variations += [name + var for var in ["Up", "Down"]]
 
     def LoadXSecs(self):
         self.xsecs = ConfigureJobs.getListOfFilesWithXSec(self.members)
 
 
-class CombineCardGenerator():
-    def __init__(self, analysis: str, fit_variable: str,
-                 hist_infile: Union[str, ROOT.TFile], sig_procs: list,
-                 bkg_procs: list, channels: list=None, lumi: float=None,
-                 auto_stats: bool=False, add_overflow: bool=False):
+class CombineCardGenerator:
+    def __init__(
+        self,
+        analysis: str,
+        fit_variable: str,
+        hist_infile: Union[str, ROOT.TFile],
+        sig_procs: list,
+        bkg_procs: list,
+        channels: list = None,
+        lumi: float = None,
+        auto_stats: bool = False,
+        add_overflow: bool = False,
+    ):
         if channels is None:
             channels = []
         self.analysis = analysis
         self.lumi = lumi
 
-        self.channels = channels # refer to eeee,eemm,mmee,mmmm (NOT Combine channels)
+        self.channels = channels  # refer to eeee,eemm,mmee,mmmm (NOT Combine channels)
         self.all_channels = ["eeee", "eemm", "mmee", "mmmm"]
 
         self.hist_infile = self._GetFile(hist_infile)
@@ -57,7 +67,7 @@ class CombineCardGenerator():
         self.data = {"data": Process("data", self.all_channels)}
         self.sig_procs = {proc: Process(proc, self.all_channels) for proc in sig_procs}
         self.bkg_procs = {proc: Process(proc, self.all_channels) for proc in bkg_procs}
-        #if "data" not in bkg_procs:
+        # if "data" not in bkg_procs:
         #    self.bkg_procs.append(Process("data", channels))
         self.systematics = {ch: [] for ch in channels + ["all"]}
 
@@ -77,8 +87,7 @@ class CombineCardGenerator():
         else:
             raise ValueError
 
-    def AddSystematics(self, name: str, values: dict, channel: str="all",
-                       shape: bool=False):
+    def AddSystematics(self, name: str, values: dict, channel: str = "all", shape: bool = False):
         """
         Adds systematics to the processes.
 
@@ -129,7 +138,7 @@ class CombineCardGenerator():
             with open(filename) as json_file:
                 plot_groups = json.load(json_file)
         except ValueError as err:
-            raise ValueError(f'cannot find file {filename}. error was {err}') from err
+            raise ValueError(f"cannot find file {filename}. error was {err}") from err
 
         for procs in [self.sig_procs, self.bkg_procs, self.data]:
             for procname in procs:
@@ -137,7 +146,7 @@ class CombineCardGenerator():
                 if procname in plot_groups:
                     procs[procname].members += plot_groups[procname]["Members"]
                 else:
-                    print(f'process {procname} not found in {filename}')
+                    print(f"process {procname} not found in {filename}")
                     continue
 
                 # Get plot group xsecs
@@ -145,15 +154,25 @@ class CombineCardGenerator():
 
                 # Get yields from ALL channels
                 plotnames = ["_".join([self.fit_variable, chan]) for chan in self.all_channels]
-                plotnames += ["_".join([self.fit_variable, var, chan]) for var in procs[procname].variations for chan in self.all_channels]
-                group = HistTools.makeCompositeHists(self.hist_infile, procname,
-                    procs[procname].xsecs, self.lumi, hists=plotnames, overflow=self.add_overflow)
+                plotnames += [
+                    "_".join([self.fit_variable, var, chan])
+                    for var in procs[procname].variations
+                    for chan in self.all_channels
+                ]
+                group = HistTools.makeCompositeHists(
+                    self.hist_infile,
+                    procname,
+                    procs[procname].xsecs,
+                    self.lumi,
+                    hists=plotnames,
+                    overflow=self.add_overflow,
+                )
                 self.hist_data[procname] = group
 
                 for chan in self.all_channels:
                     histname = "_".join([self.fit_variable, chan])
                     hist = group.FindObject(histname)
-                    #if "data" not in procname.lower():
+                    # if "data" not in procname.lower():
                     #    HistTools.removeZeros(hist)
 
                     procs[procname].yields[chan] += round(hist.Integral(), 4) if hist.Integral() > 0 else 0.0001
@@ -194,47 +213,59 @@ class CombineCardGenerator():
         for chan in ["all"] + self.channels:
             with open("%s/%s_%s.txt" % (outdir, self.analysis, chan), "w") as outfile:
                 # Card header
-                outfile.write(f'# With input file {self.hist_infile.GetName()}\n')
-                outfile.write('imax 1  number of channels\n')
-                outfile.write(f'jmax {len(self.sig_procs)+len(self.bkg_procs)-1:<2d} number of backgrounds plus signals minus 1\n')
-                outfile.write('kmax *  number of nuisance parameters (sources of systematical uncertainties)\n')
-                outfile.write('------------\n\n')
+                outfile.write(f"# With input file {self.hist_infile.GetName()}\n")
+                outfile.write("imax 1  number of channels\n")
+                outfile.write(
+                    f"jmax {len(self.sig_procs) + len(self.bkg_procs) - 1:<2d} number of backgrounds plus signals minus 1\n"
+                )
+                outfile.write("kmax *  number of nuisance parameters (sources of systematical uncertainties)\n")
+                outfile.write("------------\n\n")
 
                 # Defining shape uncertainties
                 fit_variable_name = self.fit_variable + (f"_{chan}" if chan != "all" else "")
                 fit_variable_name_syst = f"{self.fit_variable}_$SYSTEMATIC" + (f"_{chan}" if chan != "all" else "")
-                for procname,proc in self.sig_procs.items():
+                for procname, proc in self.sig_procs.items():
                     if proc.variations:
-                        outfile.write(f'shapes {procname:<{self.longest_procname}} * {outdir}/{self.analysis}.root ')
-                        outfile.write(f'{procname + "/" + fit_variable_name:<{self.longest_procname+1+len(fit_variable_name)}}  ')
-                        outfile.write(f'{procname}/{fit_variable_name_syst}\n')
-                for procname,proc in self.bkg_procs.items():
+                        outfile.write(f"shapes {procname:<{self.longest_procname}} * {outdir}/{self.analysis}.root ")
+                        outfile.write(
+                            f"{procname + '/' + fit_variable_name:<{self.longest_procname + 1 + len(fit_variable_name)}}  "
+                        )
+                        outfile.write(f"{procname}/{fit_variable_name_syst}\n")
+                for procname, proc in self.bkg_procs.items():
                     if proc.variations:
-                        outfile.write(f'shapes {procname:<{self.longest_procname}} * {outdir}/{self.analysis}.root ')
-                        outfile.write(f'{procname + "/" + fit_variable_name:<{self.longest_procname+1+len(fit_variable_name)}}  ')
-                        outfile.write(f'{procname}/{fit_variable_name_syst}\n')
+                        outfile.write(f"shapes {procname:<{self.longest_procname}} * {outdir}/{self.analysis}.root ")
+                        outfile.write(
+                            f"{procname + '/' + fit_variable_name:<{self.longest_procname + 1 + len(fit_variable_name)}}  "
+                        )
+                        outfile.write(f"{procname}/{fit_variable_name_syst}\n")
                 if self.has_shape_type:
-                    outfile.write('\n')
-                outfile.write(f'shapes {"data_obs":<{self.longest_procname}} * {outdir}/{self.analysis}.root data/{fit_variable_name}\n\n')
-                outfile.write(f'bin         {chan}\n')
-                outfile.write(f'observation {self.data["data"].yields[chan]}\n\n')
-                outfile.write('------------\n\n')
+                    outfile.write("\n")
+                outfile.write(
+                    f"shapes {'data_obs':<{self.longest_procname}} * {outdir}/{self.analysis}.root data/{fit_variable_name}\n\n"
+                )
+                outfile.write(f"bin         {chan}\n")
+                outfile.write(f"observation {self.data['data'].yields[chan]}\n\n")
+                outfile.write("------------\n\n")
 
                 # Begin systematics table
                 numcols = 2 + len(self.sig_procs) + len(self.bkg_procs)
                 headers = []
-                headers.append(["bin", ""] + [chan] * (numcols-2))
+                headers.append(["bin", ""] + [chan] * (numcols - 2))
                 headers.append(["process", ""] + list(self.sig_procs.keys()) + list(self.bkg_procs.keys()))
-                headers.append(["process", ""] + [str(num-1) for num in range(numcols-2)])
-                headers.append(["rate", ""] + \
-                        ["%.4f" % proc.yields[chan] for proc in self.sig_procs.values()] + \
-                        ["%.4f" % proc.yields[chan] for proc in self.bkg_procs.values()])
+                headers.append(["process", ""] + [str(num - 1) for num in range(numcols - 2)])
+                headers.append(
+                    ["rate", ""]
+                    + ["%.4f" % proc.yields[chan] for proc in self.sig_procs.values()]
+                    + ["%.4f" % proc.yields[chan] for proc in self.bkg_procs.values()]
+                )
 
                 table = []
                 for syst in self.systematics[chan]:
-                    table.append([syst.name, "shape" if syst.shape else "lnN"] + \
-                            [syst.systematics[procname] for procname in self.sig_procs] + \
-                            [syst.systematics[procname] for procname in self.bkg_procs])
+                    table.append(
+                        [syst.name, "shape" if syst.shape else "lnN"]
+                        + [syst.systematics[procname] for procname in self.sig_procs]
+                        + [syst.systematics[procname] for procname in self.bkg_procs]
+                    )
 
                 longest_cells = [0] * numcols
                 for row in headers + table:
@@ -246,16 +277,16 @@ class CombineCardGenerator():
                 # Print table
                 for row in headers:
                     for i in range(numcols):
-                        outfile.write(f'{row[i]:<{longest_cells[i]}}    ')
-                    outfile.write('\n')
-                outfile.write(f'{"-" * (sum(longest_cells)+4*len(longest_cells))}\n\n')
+                        outfile.write(f"{row[i]:<{longest_cells[i]}}    ")
+                    outfile.write("\n")
+                outfile.write(f"{'-' * (sum(longest_cells) + 4 * len(longest_cells))}\n\n")
                 for row in table:
                     for i in range(numcols):
-                        outfile.write(f'{row[i]:<{longest_cells[i]}}    ')
-                    outfile.write('\n')
+                        outfile.write(f"{row[i]:<{longest_cells[i]}}    ")
+                    outfile.write("\n")
 
                 if self.auto_stats:
-                    outfile.write('\n* autoMCStats 1\n')
+                    outfile.write("\n* autoMCStats 1\n")
 
     def __del__(self):
         if self.hist_infile:

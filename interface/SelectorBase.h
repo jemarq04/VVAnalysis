@@ -19,76 +19,107 @@
 #include "Analysis/VVAnalysis/interface/ScaleFactor.h"
 
 class SelectorBase : public TSelector {
-  public :
-    std::map<std::string, ScaleFactor*> scaleFactors;
-    TEfficiency* prefireEff_;
+public:
+  std::map<std::string, ScaleFactor*> scaleFactors;
+  TEfficiency* prefireEff_;
 
-    TTree          *fChain = 0;   //!pointer to the analyzed TTree or TChain
+  TTree* fChain = 0;  //!pointer to the analyzed TTree or TChain
 
-    /*********************************/
-    /*  _____ _   _ _   _ __  __      */
-    /* | ____| \ | | | | |  \/  |___  */
-    /* |  _| |  \| | | | | |\/| / __| */
-    /* | |___| |\  | |_| | |  | \__ \ */
-    /* |_____|_| \_|\___/|_|  |_|___/ */
-    /*********************************/
+  /*********************************/
+  /*  _____ _   _ _   _ __  __      */
+  /* | ____| \ | | | | |  \/  |___  */
+  /* |  _| |  \| | | | | |\/| / __| */
+  /* | |___| |\  | |_| | |  | \__ \ */
+  /* |_____|_| \_|\___/|_|  |_|___/ */
+  /*********************************/
 
-    enum NtupleType {
-      UWVV,    NanoAOD,
-    };
+  enum NtupleType {
+    UWVV,
+    NanoAOD,
+  };
 
-    enum Channel {
-      e,           m,
-      ee,          em,        mm,
-      eee,         eem,       emm,    mmm,
-      eeee,        eemm,      mmee,   mmmm,
-      Inclusive,   Unknown,   lll,
-    };
+  enum Channel {
+    e,
+    m,
+    ee,
+    em,
+    mm,
+    eee,
+    eem,
+    emm,
+    mmm,
+    eeee,
+    eemm,
+    mmee,
+    mmmm,
+    Inclusive,
+    Unknown,
+    lll,
+  };
 
-    enum Selection {
-      tightleptons,                 ZZGenFiducial,
-      ZZselection,
-      Wselection,                   Zselection,
-      Wselection_Full,              FakeRateSelectionLoose,
-      FakeRateSelectionTight,       VBSselection_Loose,
-      VBSselection_NoZeppenfeld,    VBSselection_Tight,
-      VBSselection_Loose_Full,      VBSselection_NoZeppenfeld_Full,
-      VBSselection_Tight_Full,      VBSBackgroundControl,
-      VBSBackgroundControlATLAS,    VBSBackgroundControl_Full,
-      VBSBackgroundControlLoose,    VBSBackgroundControlLoose_Full,
-      Inclusive2Jet,                Inclusive2Jet_Full,
-      TightWithLooseVeto,           FourTopPlots,
-      FourTopCutBasedEl,            FourTopMVAEl,
-    };
+  enum Selection {
+    tightleptons,
+    ZZGenFiducial,
+    ZZselection,
+    Wselection,
+    Zselection,
+    Wselection_Full,
+    FakeRateSelectionLoose,
+    FakeRateSelectionTight,
+    VBSselection_Loose,
+    VBSselection_NoZeppenfeld,
+    VBSselection_Tight,
+    VBSselection_Loose_Full,
+    VBSselection_NoZeppenfeld_Full,
+    VBSselection_Tight_Full,
+    VBSBackgroundControl,
+    VBSBackgroundControlATLAS,
+    VBSBackgroundControl_Full,
+    VBSBackgroundControlLoose,
+    VBSBackgroundControlLoose_Full,
+    Inclusive2Jet,
+    Inclusive2Jet_Full,
+    TightWithLooseVeto,
+    FourTopPlots,
+    FourTopCutBasedEl,
+    FourTopMVAEl,
+  };
 
-    enum Year {
-      yrdefault,      yr2022,      yr2023,      yr2024
-    };
+  enum Year { yrdefault, yr2022, yr2023, yr2024 };
 
-    enum Systematic {
-      Central,
-      jetEnergyScaleUp,          jetEnergyScaleDown,
-      jetEnergyResolutionUp,     jetEnergyResolutionDown,
-      metUnclusteredEnergyUp,    metUnclusteredEnergyDown,
-      muonEfficiencyUp,          muonEfficiencyDown,
-      muonScaleUp,               muonScaleDown,
-      electronRecoEffUp,         electronRecoEffDown,
-      electronEfficiencyUp,      electronEfficiencyDown,
-      electronScaleUp,           electronScaleDown,
-      pileupUp,                  pileupDown,
-      //L1prefiringWeightUp,       L1prefiringWeightDown,
-    };
+  enum Systematic {
+    Central,
+    jetEnergyScaleUp,
+    jetEnergyScaleDown,
+    jetEnergyResolutionUp,
+    jetEnergyResolutionDown,
+    metUnclusteredEnergyUp,
+    metUnclusteredEnergyDown,
+    muonEfficiencyUp,
+    muonEfficiencyDown,
+    muonScaleUp,
+    muonScaleDown,
+    electronRecoEffUp,
+    electronRecoEffDown,
+    electronEfficiencyUp,
+    electronEfficiencyDown,
+    electronScaleUp,
+    electronScaleDown,
+    pileupUp,
+    pileupDown,
+    //L1prefiringWeightUp,       L1prefiringWeightDown,
+  };
 
-    /****************************/
-    /*  __  __                  */
-    /* |  \/  | __ _ _ __  ___  */
-    /* | |\/| |/ _` | '_ \/ __| */
-    /* | |  | | (_| | |_) \__ \ */
-    /* |_|  |_|\__,_| .__/|___/ */
-    /*              |_|         */
-    /****************************/
+  /****************************/
+  /*  __  __                  */
+  /* |  \/  | __ _ _ __  ___  */
+  /* | |\/| |/ _` | '_ \/ __| */
+  /* | |  | | (_| | |_) \__ \ */
+  /* |_|  |_|\__,_| .__/|___/ */
+  /*              |_|         */
+  /****************************/
 
-    std::map<std::string, Selection> selectionMap_ = {
+  std::map<std::string, Selection> selectionMap_ = {
       {"tightleptons", tightleptons},
       {"ZZGenFiducial", ZZGenFiducial},
       {"Wselection", Wselection},
@@ -119,154 +150,153 @@ class SelectorBase : public TSelector {
       {"FourTopPlots", FourTopPlots},
       {"FourTopCutBasedEl", FourTopCutBasedEl},
       {"FourTopMVAEl", FourTopMVAEl},
-    };
+  };
 
-    std::map<std::string, Year> yearMap_ = {
+  std::map<std::string, Year> yearMap_ = {
       {"default", yrdefault},
       {"2022", yr2022},
       {"2023", yr2023},
       {"2024", yr2024},
-    };
+  };
 
-    std::map<std::string, Channel> channelMap_ = {
-      {"e", e},                   {"m", m},
-      {"ee", ee},                 {"em", em},       {"mm", mm},
-      {"eee", eee},               {"eem", eem},     {"emm", emm},     {"mmm", mmm},
-      {"eeee", eeee},             {"eemm", eemm},   {"mmee", mmee},   {"mmmm", mmmm},
-      {"eeeeGen", eeee},          {"eemmGen", eemm},{"mmeeGen", mmee},{"mmmmGen", mmmm},
-      {"Inclusive", Inclusive},   {"lll", lll},
-    };
+  std::map<std::string, Channel> channelMap_ = {
+      {"e", e},          {"m", m},          {"ee", ee},
+      {"em", em},        {"mm", mm},        {"eee", eee},
+      {"eem", eem},      {"emm", emm},      {"mmm", mmm},
+      {"eeee", eeee},    {"eemm", eemm},    {"mmee", mmee},
+      {"mmmm", mmmm},    {"eeeeGen", eeee}, {"eemmGen", eemm},
+      {"mmeeGen", mmee}, {"mmmmGen", mmmm}, {"Inclusive", Inclusive},
+      {"lll", lll},
+  };
 
+  std::vector<std::string> allChannels_ = {};
+  std::map<Systematic, std::string> variations_ = {{Central, ""}};
+  std::map<Systematic, std::string> systematics_ = {};
 
-    std::vector<std::string> allChannels_ = {};
-    std::map<Systematic, std::string> variations_ = {{Central, ""}};
-    std::map<Systematic, std::string> systematics_ = {};
+  TList* currentHistDir_{nullptr};
+  TH1D* sumWeightsHist_;
+  TTree* ftntp_ = nullptr;  //Tree to store selected ntuple events, if choose to write
 
-    TList *currentHistDir_{nullptr};
-    TH1D* sumWeightsHist_;
-    TTree          *ftntp_ = nullptr; //Tree to store selected ntuple events, if choose to write
+  bool doSystematics_;
+  bool isNonPrompt_ = false;
+  bool addSumweights_;
+  bool applyScaleFactors_;
+  bool applyPrefiringCorr_;
+  bool writeNtp_ = false;  //Whether to write selected events into ntuple
+  std::string ftntpName_;  //Tree name containing dataset, channel
 
-    bool doSystematics_;
-    bool isNonPrompt_ = false;
-    bool addSumweights_;
-    bool applyScaleFactors_;
-    bool applyPrefiringCorr_;
-    bool writeNtp_ = false; //Whether to write selected events into ntuple
-    std::string ftntpName_; //Tree name containing dataset, channel
+  // Readers to access the data (delete the ones you do not need).
+  SelectorBase(TTree* /*tree*/ = 0) {}
+  virtual ~SelectorBase() {}
+  virtual void SetScaleFactors();
+  virtual Int_t Version() const { return 2; }
+  virtual void Begin(TTree* tree);
+  virtual void SlaveBegin(TTree* tree);
+  virtual void Init(TTree* tree);
+  virtual Bool_t Notify();
+  virtual Bool_t Process(Long64_t entry);
+  virtual Int_t GetEntry(Long64_t entry, Int_t getall = 0) {
+    return fChain ? fChain->GetTree()->GetEntry(entry, getall) : 0;
+  }
+  virtual void SetOption(const char* option) { fOption = option; }
+  virtual void SetObject(TObject* obj) { fObject = obj; }
+  virtual void SetInputList(TList* input) { fInput = input; }
+  virtual TList* GetOutputList() const { return fOutput; }
+  virtual void SlaveTerminate();
+  virtual void Terminate();
 
-    // Readers to access the data (delete the ones you do not need).
-    SelectorBase(TTree * /*tree*/ =0) { }
-    virtual ~SelectorBase() { }
-    virtual void    SetScaleFactors();
-    virtual Int_t   Version() const { return 2; }
-    virtual void    Begin(TTree *tree);
-    virtual void    SlaveBegin(TTree *tree);
-    virtual void    Init(TTree *tree);
-    virtual Bool_t  Notify();
-    virtual Bool_t  Process(Long64_t entry);
-    virtual Int_t   GetEntry(Long64_t entry, Int_t getall = 0) { return fChain ? fChain->GetTree()->GetEntry(entry, getall) : 0; }
-    virtual void    SetOption(const char *option) { fOption = option; }
-    virtual void    SetObject(TObject *obj) { fObject = obj; }
-    virtual void    SetInputList(TList *input) { fInput = input; }
-    virtual TList  *GetOutputList() const { return fOutput; }
-    virtual void    SlaveTerminate();
-    virtual void    Terminate();
+  // We'll collect pointers to objects from derived classes
+  // as they are registered with AddObject, and update them to
+  // the new object when a dataset is switched
+  std::set<TNamed**> allObjects_;
+  // Derived classes override (and call) this to register new objects
+  // With AddObject<Type>(localPtr, ...);
+  virtual void SetupNewDirectory();
 
-    // We'll collect pointers to objects from derived classes
-    // as they are registered with AddObject, and update them to
-    // the new object when a dataset is switched
-    std::set<TNamed**> allObjects_;
-    // Derived classes override (and call) this to register new objects
-    // With AddObject<Type>(localPtr, ...);
-    virtual void SetupNewDirectory();
+  template <typename T, typename... Args>
+  void AddObject(T*& ptr, Args... args) {
+    static_assert(std::is_base_of<TNamed, T>::value,
+                  "Objects must inheirit from ROOT TNamed to be streamable from PROOF sessions");
+    ptr = new T(args...);
+    ptr->SetDirectory(gROOT);
+    currentHistDir_->Add(ptr);
+    allObjects_.insert((TNamed**)&ptr);
+  };
 
+  void UpdateDirectory();
+  ClassDef(SelectorBase, 0);
 
-    template<typename T, typename... Args>
-    void AddObject(T* &ptr, Args... args) {
-      static_assert(std::is_base_of<TNamed, T>::value, "Objects must inheirit from ROOT TNamed to be streamable from PROOF sessions");
-      ptr = new T(args...);
-      ptr->SetDirectory(gROOT);
-      currentHistDir_->Add(ptr);
-      allObjects_.insert((TNamed**) &ptr);
-    };
+protected:
+  // Maps to the histogram pointers themselves
+  std::map<std::string, TH1D*> histMap1D_ = {};
+  //TODO change the name to map and don't break things
+  std::map<std::string, TH2D*> hists2D_ = {};
+  std::map<std::string, TH2D*> weighthistMap1D_ = {};
+  std::map<std::string, TH2D*> jethistMap1D_ = {};  //jet systematics
+  std::map<std::string, TH2D*> jetTestMap2D_ = {};
+  std::map<std::string, TH3D*> weighthistMap2D_{};
 
-    void UpdateDirectory();
-    ClassDef(SelectorBase,0);
+  std::vector<std::string> hists1D_ = {};
+  std::vector<std::string> weighthists1D_ = {};
+  std::vector<std::string> jethists1D_ = {};
+  std::vector<std::string> jetTest2D_ = {};
+  // The histograms for which you also want systematic variations
+  std::vector<std::string> systHists_ = {};
+  std::vector<std::string> systHists2D_ = {};
 
-  protected:
-    // Maps to the histogram pointers themselves
-    std::map<std::string, TH1D*> histMap1D_ = {};
-    //TODO change the name to map and don't break things
-    std::map<std::string, TH2D*> hists2D_ = {};
-    std::map<std::string, TH2D*> weighthistMap1D_ = {};
-    std::map<std::string, TH2D*> jethistMap1D_ = {}; //jet systematics
-    std::map<std::string, TH2D*> jetTestMap2D_ = {};
-    std::map<std::string, TH3D*> weighthistMap2D_ {};
+  void SetBranches();
+  virtual void SetBranchesUWVV() {}
+  virtual void SetBranchesNanoAOD() {}
+  void LoadBranches(Long64_t entry, std::pair<Systematic, std::string> variation);
+  virtual void LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::string> variation) {}
+  virtual void LoadBranchesNanoAOD(Long64_t entry, std::pair<Systematic, std::string> variation) {}
+  virtual void FillHistograms(Long64_t entry, std::pair<Systematic, std::string> variation) {}
 
-    std::vector<std::string> hists1D_ = {};
-    std::vector<std::string> weighthists1D_ = {};
-    std::vector<std::string> jethists1D_ = {};
-    std::vector<std::string> jetTest2D_ = {};
-    // The histograms for which you also want systematic variations
-    std::vector<std::string> systHists_ = {};
-    std::vector<std::string> systHists2D_ = {};
+  // Variables
+  std::string name_ = "Unnamed";
+  std::string channelName_ = "Unnamed";
+  Channel channel_ = Unknown;
+  NtupleType ntupleType_ = NanoAOD;
+  std::string selectionName_ = "tightleptons";
+  Selection selection_ = tightleptons;
+  Year year_ = yrdefault;
+  bool isMC_;
 
-    void            SetBranches();
-    virtual void    SetBranchesUWVV() { }
-    virtual void    SetBranchesNanoAOD() { }
-    void            LoadBranches(Long64_t entry, std::pair<Systematic, std::string> variation);
-    virtual void    LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::string> variation) { }
-    virtual void    LoadBranchesNanoAOD(Long64_t entry, std::pair<Systematic, std::string> variation) { }
-    virtual void    FillHistograms(Long64_t entry, std::pair<Systematic, std::string> variation) { }
+  float GetPrefiringEfficiencyWeight(std::vector<float>* jetPt, std::vector<float>* jetEta);
+  virtual std::string GetNameFromFile() { return ""; }
+  void InitializeHistogramFromConfig(std::string name, std::string channel, std::vector<std::string> histData);
+  void InitializeHistogramsFromConfig();
+  std::vector<std::string> ReadHistDataFromConfig(std::string histDataString);
+  std::string getHistName(std::string histName, std::string variationName, std::string channel);
+  std::string getHistName(std::string histName, std::string variationName);
+  std::string getBranchName(std::string bName, std::string variationName, std::string channel);
+  std::string getBranchName(std::string bName, std::string variationName);
+  template <typename T>
+  void InitializeHistMap(std::vector<std::string>& labels, std::map<std::string, T*>& histMap);
 
-    // Variables
-    std::string name_ = "Unnamed";
-    std::string channelName_ = "Unnamed";
-    Channel channel_ = Unknown;
-    NtupleType ntupleType_ = NanoAOD;
-    std::string selectionName_ = "tightleptons";
-    Selection selection_ = tightleptons;
-    Year year_ = yrdefault;
-    bool isMC_;
+  // Filling Functions
+  template <typename T, typename... Args>
+  void SafeHistFill(std::map<std::string, T*> container, std::string histname, Args... args) {
+    if (container[histname] != nullptr)
+      container[histname]->Fill(args...);
+  };
 
+  //Set branch for the ntuple, expected to be called in the histogram filling stage
+  //Expect fundamental types like float and int
+  template <typename T>
+  void SafeSetBranch(TTree* tree, std::string bName, T* var) {
+    TBranch* branch = tree->GetBranch(bName.c_str());
+    if (branch == nullptr)
+      tree->Branch(bName.c_str(), var);
+    else
+      tree->SetBranchAddress(bName.c_str(), var);
+  }
 
-    float GetPrefiringEfficiencyWeight(std::vector<float>* jetPt, std::vector<float>* jetEta);
-    virtual std::string GetNameFromFile() { return ""; }
-    void InitializeHistogramFromConfig(std::string name, std::string channel, std::vector<std::string> histData);
-    void InitializeHistogramsFromConfig();
-    std::vector<std::string> ReadHistDataFromConfig(std::string histDataString);
-    std::string getHistName(std::string histName, std::string variationName, std::string channel);
-    std::string getHistName(std::string histName, std::string variationName);
-    std::string getBranchName(std::string bName, std::string variationName, std::string channel);
-    std::string getBranchName(std::string bName, std::string variationName);
-    template<typename T>
-      void InitializeHistMap(std::vector<std::string>& labels, std::map<std::string, T*>& histMap);
-
-    // Filling Functions
-    template<typename T, typename... Args>
-    void SafeHistFill(std::map<std::string, T*> container,
-        std::string histname, Args... args) {
-      if (container[histname] != nullptr)
-        container[histname]->Fill(args...);
-    };
-
-    //Set branch for the ntuple, expected to be called in the histogram filling stage
-    //Expect fundamental types like float and int
-    template<typename T>
-    void SafeSetBranch(TTree* tree, std::string bName, T* var) {
-      TBranch * branch = tree->GetBranch(bName.c_str());
-      if (branch == nullptr)
-        tree->Branch(bName.c_str(),var);
-      else
-        tree->SetBranchAddress(bName.c_str(),var);
-    }
-
-    template<typename T, typename... Args>
-    void HistFullFill(std::map<std::string, T*> container,
-        std::string histname, std::string var, Args... args) {
-      SafeHistFill(container, getHistName(histname, var), args...);
-      SafeHistFill(container, getHistName(histname, var, "all"), args...);
-    }
+  template <typename T, typename... Args>
+  void HistFullFill(std::map<std::string, T*> container, std::string histname, std::string var, Args... args) {
+    SafeHistFill(container, getHistName(histname, var), args...);
+    SafeHistFill(container, getHistName(histname, var, "all"), args...);
+  }
 };
 
 #endif

@@ -1,5 +1,6 @@
 import ROOT
 
+
 def writeOutputListItem(item, directory):
     if item.ClassName() == "TList":
         d = directory.Get(item.GetName())
@@ -8,7 +9,7 @@ def writeOutputListItem(item, directory):
             ROOT.SetOwnership(d, False)
         for subItem in item:
             writeOutputListItem(subItem, d)
-    elif hasattr(item, 'Write'):
+    elif hasattr(item, "Write"):
         directory.cd()
         item.Write()
     else:

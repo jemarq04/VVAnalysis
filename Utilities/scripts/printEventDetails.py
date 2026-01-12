@@ -1,12 +1,14 @@
 import ROOT
 import os
-from python import ConfigureJobs,ApplySelection
+from python import ConfigureJobs, ApplySelection
 import argparse
+
 
 def chunks(thelist, n):
     """Yield successive n-sized chunks from l."""
     for i in range(0, len(thelist), n):
-        yield thelist[i:i + n]
+        yield thelist[i : i + n]
+
 
 def getEventSelectionExpr(path, comparison, channel):
     events = []
@@ -22,25 +24,24 @@ def getEventSelectionExpr(path, comparison, channel):
                 events.append("evt == {0}".format(*event_num))
     return events
 
+
 parser = argparse.ArgumentParser()
-parser.add_argument("-f", "--filelist",
-                    type=lambda x : [i.strip() for i in x.split(',')],
-                    required=True, help="List of input file names "
-                    "to be processed (separated by commas)")
+parser.add_argument(
+    "-f",
+    "--filelist",
+    type=lambda x: [i.strip() for i in x.split(",")],
+    required=True,
+    help="List of input file names to be processed (separated by commas)",
+)
 parser.add_argument("-s", "--selection", required=True)
 parser.add_argument("--output_selection", required=False, default="")
-parser.add_argument("-m", "--cut_string", required=False, type=str,
-                    default="")
-parser.add_argument("-c", "--channels", required=False, type=str,
-                    default="eee,eem,emm,mmm")
-parser.add_argument("-o", "--output_file", required=False, type=str,
-                    default=".")
+parser.add_argument("-m", "--cut_string", required=False, type=str, default="")
+parser.add_argument("-c", "--channels", required=False, type=str, default="eee,eem,emm,mmm")
+parser.add_argument("-o", "--output_file", required=False, type=str, default=".")
 args = parser.parse_args()
 
-isfile = any(os.path.isfile(name) or os.path.exists(name.rstrip("/*"))
-                for name in args.filelist)
-filelist = ConfigureJobs.getListOfFiles(args.filelist, args.selection) if \
-    not isfile else args.filelist
+isfile = any(os.path.isfile(name) or os.path.exists(name.rstrip("/*")) for name in args.filelist)
+filelist = ConfigureJobs.getListOfFiles(args.filelist, args.selection) if not isfile else args.filelist
 print(filelist)
 states = [x.strip() for x in args.channels.split(",")]
 file_paths = []
@@ -49,8 +50,7 @@ for name in filelist:
     if not isfile:
         try:
             label = name
-            file_paths.append((label, ConfigureJobs.getInputFilesPath(name,
-                args.selection, "WZxsec2016")))
+            file_paths.append((label, ConfigureJobs.getInputFilesPath(name, args.selection, "WZxsec2016")))
         except ValueError as e:
             print(e)
             continue
@@ -81,20 +81,23 @@ for state in states:
         all_filters = "Flag_BadChargedCandidateFilterPass:Flag_HBHENoiseFilterPass:Flag_HBHENoiseIsoFilterPass:Flag_BadPFMuonFilterPass:Flag_EcalDeadCellTriggerPrimitiveFilterPass:Flag_goodVerticesPass:Flag_globalTightHalo2016FilterPass:Flag_eeBadScFilterPass:Flag_duplicateMuonsPass:Flag_badMuonsPass"
         filter_expr = all_filters
         filter_expr += ":metFiltersData" if "data_" in file_path[0] else ":metFiltersMC"
-        lepid_expr = "Zlep1IsLoose:Zlep1IsTight:Zlep1_Pt:Zlep1_Eta:Zlep1_Phi:Zlep1_PVDXY:Zlep1_PVDZ:" \
-                            "Zlep2IsLoose:Zlep2IsTight:Zlep2_Pt:Zlep2_Eta:Zlep2_Phi:Zlep2_PVDXY:Zlep2_PVDZ:" \
-                            "WlepIsLoose:WlepIsTight:Wlep_Pt:Wlep_Eta:Wlep_Phi:Wlep_PVDXY:Wlep_PVDZ"
+        lepid_expr = (
+            "Zlep1IsLoose:Zlep1IsTight:Zlep1_Pt:Zlep1_Eta:Zlep1_Phi:Zlep1_PVDXY:Zlep1_PVDZ:"
+            "Zlep2IsLoose:Zlep2IsTight:Zlep2_Pt:Zlep2_Eta:Zlep2_Phi:Zlep2_PVDXY:Zlep2_PVDZ:"
+            "WlepIsLoose:WlepIsTight:Wlep_Pt:Wlep_Eta:Wlep_Phi:Wlep_PVDXY:Wlep_PVDZ"
+        )
         other_kinematics = "Mass:ZMass:type1_pfMETEt:Max$(jetCSVv2)"
         jet_vars = "mjj:dEtajj:jetPt[0]:jetEta[0]:jetPt[1]:jetEta[1]:zep3l"
         veto_expr = "nCBVIDHLTSafeElec:nWZMediumMuon:nCBVIDTightElec:nWZTightMuon"
-        scan_expr = ":".join([run_expr,other_kinematics,lepid_expr,veto_expr,jet_vars,filter_expr,trig_expr])
+        scan_expr = ":".join([run_expr, other_kinematics, lepid_expr, veto_expr, jet_vars, filter_expr, trig_expr])
 
         outfile_name = "/".join([output_dir, file_path[0], args.output_file.split("/")[-1].replace("chan", state)])
-        events = getEventSelectionExpr("/eos/user/k/kelong/WZAnalysisData/SyncWithJakob/Differences_2018Apr/DataLooseControl/",
-                #"KennethNotJakob",
-                "MPnotWisc",
-        #        "WiscnotMP",
-                state
+        events = getEventSelectionExpr(
+            "/eos/user/k/kelong/WZAnalysisData/SyncWithJakob/Differences_2018Apr/DataLooseControl/",
+            # "KennethNotJakob",
+            "MPnotWisc",
+            #        "WiscnotMP",
+            state,
         )
         print(events)
         for i, eventlist in enumerate(chunks(events, 40)):
@@ -105,7 +108,7 @@ for state in states:
             print("Output file", outfile_name)
             chain.GetPlayer().SetScanRedirect(True)
             chain.GetPlayer().SetScanFileName(outfile_name)
-            chain.Scan(scan_expr, evtstring,"colsize=30")
+            chain.Scan(scan_expr, evtstring, "colsize=30")
             with open(args.output_file.replace("chan", state), "w" if first else "a") as allfiles:
                 if not os.path.isfile(outfile_name):
                     continue

@@ -2,6 +2,7 @@ target-version = "py39" # python3.9
 extend-exclude = [
   "Notebooks",
 ]
+line-length = 120
 
 [lint]
 extend-select = [

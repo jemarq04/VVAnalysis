@@ -6,9 +6,9 @@
 #include "Analysis/VVAnalysis/interface/ZZSelector.h"
 
 class ZZBackgroundSelector : public ZZSelector {
-public :
-  ScaleFactor * fakeRate_allE_;
-  ScaleFactor * fakeRate_allMu_;
+public:
+  ScaleFactor* fakeRate_allE_;
+  ScaleFactor* fakeRate_allMu_;
 
   //PPPF represents 3P1F CR and PPFF represents 2P1F CR
   TH1D* Z1MassHistPPPF_;
@@ -30,11 +30,12 @@ public :
   TH1D* WeightsHistmmee_;
   TH1D* WeightsHisteemm_;
 
-  virtual void    Init(TTree *tree) override;
-  virtual void    SetupNewDirectory() override;
-  virtual void    SlaveBegin(TTree *tree) override;
+  virtual void Init(TTree* tree) override;
+  virtual void SetupNewDirectory() override;
+  virtual void SlaveBegin(TTree* tree) override;
 
-  ClassDefOverride(ZZBackgroundSelector,0);
+  ClassDefOverride(ZZBackgroundSelector, 0);
+
 private:
   float getl3FakeRate(Long64_t entry);
   float getl4FakeRate(Long64_t entry);
