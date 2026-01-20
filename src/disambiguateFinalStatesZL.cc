@@ -9,9 +9,9 @@
  */
 #include "Analysis/VVAnalysis/interface/disambiguateFinalStatesZL.h"
 
-void disambiguateFinalStatesZL::Init(TTree *tree)
-{
-  if (!tree) return;
+void disambiguateFinalStatesZL::Init(TTree *tree) {
+  if (!tree)
+    return;
   fChain = tree;
 
   fChain->SetBranchAddress(zCand_name, &Mass, &b_Mass);
@@ -21,24 +21,22 @@ void disambiguateFinalStatesZL::Init(TTree *tree)
   SafeDelete(fCutFormula);
   fCutFormula = new TTreeFormula("CutFormula", fOption, fChain);
   fCutFormula->SetQuickLoad(kTRUE);
-  if (!fCutFormula->GetNdim()) { delete fCutFormula; fCutFormula = 0; }
+  if (!fCutFormula->GetNdim()) {
+    delete fCutFormula;
+    fCutFormula = 0;
+  }
 }
 
-Bool_t disambiguateFinalStatesZL::Notify()
-{
-  return kTRUE;
-}
+Bool_t disambiguateFinalStatesZL::Notify() { return kTRUE; }
 
-void disambiguateFinalStatesZL::Begin(TTree * /*tree*/){}
+void disambiguateFinalStatesZL::Begin(TTree * /*tree*/) {}
 
-void disambiguateFinalStatesZL::SlaveBegin(TTree * /*tree*/)
-{
+void disambiguateFinalStatesZL::SlaveBegin(TTree * /*tree*/) {
   fBestCandidateEntryList = new TEntryList("bestCandidates", "Entry List of disambiguated combinatoric candidates");
   fOutput->Add(fBestCandidateEntryList);
 }
 
-Bool_t disambiguateFinalStatesZL::Process(Long64_t entry)
-{
+Bool_t disambiguateFinalStatesZL::Process(Long64_t entry) {
   b_evt->GetEntry(entry);
   b_run->GetEntry(entry);
 
@@ -49,37 +47,32 @@ Bool_t disambiguateFinalStatesZL::Process(Long64_t entry)
   fCurrentEvt = evt;
   // TODO Understand why this gives segfault for chains
   // with multiple entries
-  if (fCutFormula && fCutFormula->EvalInstance() > 0.)
-  {
+  if (fCutFormula && fCutFormula->EvalInstance() > 0.) {
     b_Mass->GetEntry(entry);
     fEntriesToCompare.push_back(entry);
-    fEntryDiscriminants.push_back(fabs(Mass-91.1876));
+    fEntryDiscriminants.push_back(fabs(Mass - 91.1876));
   }
 
-  if (entry == fChain->GetEntries()-1)
+  if (entry == fChain->GetEntries() - 1)
     findBestEntry();
 
   return kTRUE;
 }
 
-void disambiguateFinalStatesZL::SlaveTerminate()
-{
+void disambiguateFinalStatesZL::SlaveTerminate() {
   fBestCandidateEntryList->OptimizeStorage();
   // Pointer is owned by fOutput, dereference
   fBestCandidateEntryList = nullptr;
 }
 
-void disambiguateFinalStatesZL::Terminate(){}
+void disambiguateFinalStatesZL::Terminate() {}
 
-void disambiguateFinalStatesZL::findBestEntry()
-{
+void disambiguateFinalStatesZL::findBestEntry() {
   Long64_t bestEntry = -1L;
   Float_t lowestDiscriminant = 1e100;
 
-  for (size_t i=0; i<fEntriesToCompare.size(); ++i)
-  {
-    if (fEntryDiscriminants[i] < lowestDiscriminant)
-    {
+  for (size_t i = 0; i < fEntriesToCompare.size(); ++i) {
+    if (fEntryDiscriminants[i] < lowestDiscriminant) {
       lowestDiscriminant = fEntryDiscriminants[i];
       bestEntry = fEntriesToCompare[i];
     }

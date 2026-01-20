@@ -1,6 +1,7 @@
 import ROOT
 from . import ConfigureJobs
 
+
 def writeOutputListItem(item, directory):
     if item.ClassName() == "TList":
         d = directory.Get(item.GetName())
@@ -9,7 +10,7 @@ def writeOutputListItem(item, directory):
             ROOT.SetOwnership(d, False)
         for subItem in item:
             writeOutputListItem(subItem, d)
-    elif hasattr(item, 'Write'):
+    elif hasattr(item, "Write"):
         directory.cd()
         item.Write()
     else:
@@ -17,11 +18,18 @@ def writeOutputListItem(item, directory):
         print(repr(item))
     directory.cd()
 
-def applySelector(filelist, selector_name, selection,
-        rootfile,
-        analysis="WZxsec2016", channels=None,
-        extra_inputs=None,
-        addsumweights=False, proof=False):
+
+def applySelector(
+    filelist,
+    selector_name,
+    selection,
+    rootfile,
+    analysis="WZxsec2016",
+    channels=None,
+    extra_inputs=None,
+    addsumweights=False,
+    proof=False,
+):
     if channels is None:
         channels = ["eee", "eem", "emm", "mmm"]
     if extra_inputs is None:
@@ -42,30 +50,29 @@ def applySelector(filelist, selector_name, selection,
             ROOT.gROOT.cd()
             sumweights_hist = 0
             if proof:
-                proof_path = "_".join([dataset, analysis,
-                    selection+("#/%s/ntuple" % chan)])
+                proof_path = "_".join([dataset, analysis, selection + ("#/%s/ntuple" % chan)])
                 ROOT.gProof.Process(proof_path, select, "")
-                #proof_meta_path = "_".join([dataset, analysis,
+                # proof_meta_path = "_".join([dataset, analysis,
                 #    selection+"#/metaInfo/metaInfo"])
                 ## TODO proof draw command for meta tree
-                #proof.DrawSelect(proof_path, "1>>sumweights", "")
+                # proof.DrawSelect(proof_path, "1>>sumweights", "")
             else:
                 chain = ROOT.TChain("%s/ntuple" % chan)
                 meta_chain = ROOT.TChain("metaInfo/metaInfo")
                 try:
-                    file_path = ConfigureJobs.getInputFilesPath(dataset,
-                        path, selection, analysis)
+                    file_path = ConfigureJobs.getInputFilesPath(dataset, path, selection, analysis)
                     print("File path is", file_path)
                     chain.Add(file_path)
                     chain.Process(select, "")
                     if "data" not in dataset and addsumweights and chan == "eee":
-                        sumweights_hist = ROOT.TH1D("sumweights", "sumweights", 1,0,100)
+                        sumweights_hist = ROOT.TH1D("sumweights", "sumweights", 1, 0, 100)
                         meta_chain.Add(file_path)
                         print(file_path)
                         meta_chain.Draw("1>>sumweights", "summedWeights")
                         if sumweights_hist.Integral() <= 0:
-                            raise ValueError("Sum of weights <= 0 found for file"
-                                    "%s. Probably the file is empty." % dataset)
+                            raise ValueError(
+                                "Sum of weights <= 0 found for file%s. Probably the file is empty." % dataset
+                            )
                         sumweights_hist.SetDirectory(0)
                 except ValueError as e:
                     print(e)
@@ -73,7 +80,7 @@ def applySelector(filelist, selector_name, selection,
                         sumweights_hist.Delete()
                     continue
             output_list = select.GetOutputList()
-            if  sumweights_hist:
+            if sumweights_hist:
                 dataset_list = output_list.FindObject(dataset)
                 dataset_list.Add(sumweights_hist)
             for out in output_list:
