@@ -103,7 +103,8 @@ def farmoutNtupleSkim(
         os.getlogin(),
         "{:%Y-%m-%d}_%sAnalysisJobs".format(datetime.date.today()) % analysis,
     )
-    os.mkdir(submission_dir)
+    if not os.path.exists(submission_dir):
+        os.mkdir(submission_dir)
     farmout_dict["job_dir"] = submission_dir + "/" + job_name
     # This is to make sure the copyTree function does not fail with memory allocation due to big trees especiall in ZZ4l samples!
     if "Run" not in sample_name:
