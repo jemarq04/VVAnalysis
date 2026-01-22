@@ -197,9 +197,7 @@ unsigned int WZSelector::GetLheWeightInfo() {
                                                  "zz4ljj-ewk",
                                                  "zz2l2vjj-ewk"};
   std::vector<std::string> allLheWeights = {
-      "wzjj-aqgcft",
-      "wzjj-aqgcfm",
-      "wzjj-aqgcfs",
+      "wzjj-aqgcft", "wzjj-aqgcfm", "wzjj-aqgcfs",
       //"wz-atgc_pt0-200", "wz-atgc_pt200-300",
       //"wz-atgc_pt300"
   };
