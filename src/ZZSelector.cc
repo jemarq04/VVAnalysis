@@ -1423,9 +1423,8 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
   // Plot with LHE weights
   if (isMC_) {
     for (size_t i = 0; i < lheWeights.size(); i++) {
-      if (80 < Mass &&
-          Mass <
-              110) {  //TODO: counter-intuitive? 'Full' referred to plots before Mass selection above. this is tighter?
+      if (80 < Mass && Mass < 110) {
+        //TODO: counter-intuitive? 'Full' referred to plots before Mass selection above. this is tighter?
         SafeHistFill(weighthistMap1D_,
                      getHistName("LepPt1Full", variation.second),
                      l1PtTmp,
@@ -1482,11 +1481,9 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
           weighthistMap1D_, getHistName("yield", variation.second), 1, i, lheWeights[i] / lheWeights[0] * weight);
       SafeHistFill(
           weighthistMap1D_, getHistName("Mass", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_,
-                   getHistName("MassFull", variation.second),
-                   Mass,
-                   i,
-                   lheWeights[i] / lheWeights[0] * weight);  //TODO: Full?
+      //TODO: Full?
+      SafeHistFill(
+          weighthistMap1D_, getHistName("MassFull", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight);
       SafeHistFill(
           weighthistMap1D_, getHistName("ZZPt", variation.second), Pt, i, lheWeights[i] / lheWeights[0] * weight);
       SafeHistFill(
