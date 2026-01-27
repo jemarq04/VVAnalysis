@@ -181,28 +181,18 @@ def getListOfEWKFilenames(analysis=""):
 
 
 def getListOfDYFilenames(analysis=""):
-    lumi_info = getLumiMap()
-    outlist = [
-        "DYm10to50-2j",
-        "DYm50-2j",
-    ]
-    # TODO: Replace with checks to plotgroups json file. Add symlinks for ZplusL
-    if any(year in analysis for year in ["2024", "2025"]):
-        outlist = [
-            "DY2e-m10to50-2j",
-            "DY2m-m10to50-2j",
-            "DY2t-m10to50-2j",
-            "DY2e-m50-2j",
-            "DY2m-m50-2j",
-            "DY2t-m50-2j",
-        ]
+    outlist = []
+    plotgroup_path = "%s/%s/PlotGroups/%s.json" % (
+        getManagerPath(),
+        getManagerName(),
+        analysis.replace("ZplusL", "ZZ4l"),
+    )
+    if os.path.isfile(plotgroup_path):
+        with open(plotgroup_path) as infile:
+            groups = json.load(infile)
+            if "dy-jets" in groups:
+                outlist = groups["dy-jets"]["Members"]
 
-    for year in lumi_info.keys():
-        if year in analysis:
-            eras = ["_%s" % x for x in getLuminosityEras(year)]
-            if not eras:
-                eras = [""]
-            outlist = ["%s%s" % (name, era) for name in outlist for era in eras]
     return outlist
 
 
@@ -265,8 +255,6 @@ def getListOfHDFSFiles(file_path):
     return files
 
 
-# TODO: Would be good to switch the order of the last two arguments
-# completely deprecate manager_path without breaking things
 def getListOfFiles(filelist, selection, manager_path="", analysis=""):
     if manager_path == "":
         manager_path = getManagerPath()
