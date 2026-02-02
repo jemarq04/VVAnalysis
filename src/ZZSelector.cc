@@ -977,6 +977,13 @@ bool ZZSelector::PassesZZSelectionLoose(bool nonPrompt) {
     return TightZZLeptons();
 }
 
+bool ZZSelector::PassesZZSelectionTight(bool nonPrompt) {
+  if (nonPrompt)
+    return ZZSelectionTight();
+  else
+    return ZZSelectionTight() && TightZZLeptons();
+}
+
 bool ZZSelector::PassesHZZSelection(bool nonPrompt) {
   if (nonPrompt)
     return ZSelection();
@@ -985,6 +992,9 @@ bool ZZSelector::PassesHZZSelection(bool nonPrompt) {
 }
 bool ZZSelector::TightZZLeptons() { return tightZ1Leptons() && tightZ2Leptons(); }
 bool ZZSelector::ZZSelection() { return (Z1Mass > 60.0 && Z1Mass < 120.0) && (Z2Mass > 60.0 && Z2Mass < 120.0); }
+bool ZZSelector::ZZSelectionTight() {
+  return (Z1Mass > 81.1876 && Z1Mass < 101.1876) && (Z2Mass > 81.1876 && Z2Mass < 101.1876);
+}
 
 // We already require 4 < Z1,Z2 < 120  in the "Loose Skim"
 bool ZZSelector::ZSelection() { return Z1Mass > 40.0 && Z2Mass > 12.0; }

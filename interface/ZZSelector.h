@@ -131,6 +131,7 @@ protected:
   void ApplyScaleFactors();
   bool PassesZZSelection(bool nonPrompt);
   bool PassesZZSelectionLoose(bool nonPrompt);
+  bool PassesZZSelectionTight(bool nonPrompt);
   bool Passes4eExtraCut();
   bool Passes2e2mExtraCut(Long64_t entry);
   bool PassesZZjjSelection();
@@ -141,6 +142,7 @@ protected:
   //bool DuplicatedEvent();
   bool TightZZLeptons();
   bool ZZSelection();
+  bool ZZSelectionTight();
   bool Z4lSelection();
   bool ZSelection();
   void ShiftEfficiencies(Systematic variation);
