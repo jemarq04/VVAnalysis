@@ -127,7 +127,7 @@ def makeHistFile(args):
             ]
             sf_inputs = [electronTightIdSF, electronGsfSF, muonIsoSF, muonIdSF, pileupSF, prefireEff]
 
-        sf_inputs.append(ROOT.TParameter(bool)("applyScaleFacs", True))
+        sf_inputs.append(ROOT.TParameter(bool)("applyScaleFacs", args["apply_scalefactors"]))
 
     if args["input_tier"] == "":
         args["input_tier"] = args["selection"]
