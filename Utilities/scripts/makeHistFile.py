@@ -57,14 +57,10 @@ def makeHistFile(args):
 
     today = datetime.date.today().strftime("%d%b%Y")
 
-    if args["test"]:
-        tmpFileName = "Hists%s-%s.root" % (today, args["output_file"])
-    else:
-        tmpFileName = (
-            "Hists%s-%s.root" % (today, args["output_file"])
-            if args["selection"] == "SignalSync"
-            else "Hists%s-%s.root" % (today, args["analysis"])
-        )
+    tmpFileName = "Hists%s-%s.root" % (
+        today,
+        args["output_file"] if args["selection"] == "SignalSync" or args["test"] else args["analysis"],
+    )
     toCombine = args["with_background"] or args["with_Gen"]
     fOut = ROOT.TFile(tmpFileName if not toCombine else tmpFileName.replace(".root", "sel.root"), "recreate")
     combinedNames = [fOut.GetName()]
