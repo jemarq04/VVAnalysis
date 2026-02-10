@@ -84,7 +84,6 @@ def makeHistFile(args):
 
             sf_inputs = [
                 ROOT.TNamed("basename", "%s/src/Analysis/VVAnalysis/data/XPOG" % os.environ["CMSSW_BASE"]),
-                ROOT.TNamed("yearcfg", args["year"]),
                 # ROOT.TNamed("qqZZ_kfac", "data/qqZZ_kfacs.json"),
                 ROOT.TNamed("eIdSF", "data/ElectronSF_HZZ.json"),
                 ROOT.TNamed("mIdSF", "data/MuonSF_HZZ.json"),

@@ -24,7 +24,7 @@ public:
   std::unique_ptr<correction::CorrectionSet> mIdSF_;
   std::unique_ptr<correction::CorrectionSet> jetPUSF_;
   std::unique_ptr<correction::CorrectionSet> qqZZ_kfac_;
-  std::string yearcfg;
+  std::string year;
   //ScaleFactor* mIsoSF_;
 
   //bool isVBS_;

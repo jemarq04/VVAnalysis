@@ -20,39 +20,39 @@ void ZZSelectorBase::SetScaleFactors() {
   if (name.find("data") != std::string::npos)
     return;
   try {
-    for (std::string objname : {"basename", "yearcfg"})
+    for (std::string objname : {"basename", "year"})
       if (GetInputList()->FindObject(objname.c_str()) == nullptr)
         throw std::invalid_argument("Must pass valid year/basename for analysis");
     basename = ((TNamed*)GetInputList()->FindObject("basename"))->GetTitle();
-    yearcfg = ((TNamed*)GetInputList()->FindObject("yearcfg"))->GetTitle();
+    year = ((TNamed*)GetInputList()->FindObject("year"))->GetTitle();
 
-    if (yearcfg == "2022" || (yearcfg == "Run3Combined" && name.find("_2022_") != std::string::npos)) {
+    if (year == "2022" || (year == "Run3Combined" && name.find("_2022_") != std::string::npos)) {
       yearstring = "Run3-22CDSep23-Summer22-NanoAODv12";
       EleRecoSF_Name_ = "2022Re-recoBCD";
-      yearcfg = "2022BCD";  // overwritten to use for HZZ ID SFs
+      year = "2022BCD";  // overwritten to use for HZZ ID SFs
       if (name.find("_postEE") != std::string::npos) {
         yearstring = "Run3-22EFGSep23-Summer22EE-NanoAODv12";
         EleRecoSF_Name_ = "2022Re-recoE+PromptFG";
-        yearcfg = "2022EFG";
+        year = "2022EFG";
       }
-    } else if (yearcfg == "2023" || (yearcfg == "Run3Combined" && name.find("_2023_") != std::string::npos)) {
+    } else if (year == "2023" || (year == "Run3Combined" && name.find("_2023_") != std::string::npos)) {
       yearstring = "Run3-23CSep23-Summer23-NanoAODv12";
       EleRecoSF_Name_ = "2023PromptC";
-      yearcfg = "2023C";
+      year = "2023C";
       if (name.find("_postBPix") != std::string::npos) {
         yearstring = "Run3-23DSep23-Summer23BPix-NanoAODv12";
         EleRecoSF_Name_ = "2023PromptD";
-        yearcfg = "2023D";
+        year = "2023D";
       }
-    } else if (yearcfg == "2024" || (yearcfg == "Run3Combined" && name.find("_2024") != std::string::npos)) {
+    } else if (year == "2024" || (year == "Run3Combined" && name.find("_2024") != std::string::npos)) {
       yearstring = "Run3-24CDEReprocessingFGHIPrompt-Summer24-NanoAODv15";
       EleRecoSF_Name_ = "2024Prompt";
-      yearcfg = "2024";
-    } else if (yearcfg == "2025" || (yearcfg == "Run3Combined" && name.find("_2025") != std::string::npos)) {
+      year = "2024";
+    } else if (year == "2025" || (year == "Run3Combined" && name.find("_2025") != std::string::npos)) {
       //no SFs available for 2025 yet
       yearstring = "Run3-24CDEReprocessingFGHIPrompt-Summer24-NanoAODv15";
       EleRecoSF_Name_ = "2024Prompt";
-      yearcfg = "2024";
+      year = "2024";
     } else
       throw std::invalid_argument("");
   } catch (...) {
@@ -60,7 +60,7 @@ void ZZSelectorBase::SetScaleFactors() {
   }
 
   try {
-    if (yearcfg != "2024")
+    if (year != "2024")
       pileupSF_ = correction::CorrectionSet::from_file(
           TString::Format("%s/LUM/%s/latest/puWeights.json.gz", basename.c_str(), yearstring.c_str()).Data());
     else

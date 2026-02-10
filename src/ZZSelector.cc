@@ -500,28 +500,28 @@ void ZZSelector::ApplyScaleFactors() {
     float pt_e4 = l4Pt < EleSF_MAX_PT_ ? l4Pt : EleSF_MAX_PT_ - 0.01;
     if (eIdSF_ != nullptr) {
       if (pt_e1 > EleSF_MIN_PT_) {
-        if (yearcfg == "2023D" && (l1Eta < 0 && l1Eta > -1.5 && l1Phi < -0.8 && l1Phi > -1.2))
+        if (year == "2023D" && (l1Eta < 0 && l1Eta > -1.5 && l1Phi < -0.8 && l1Phi > -1.2))
           weight *= eIdSF_->at("2023D_Hole")->evaluate({l1Eta, pt_e1, "nominal"});
         else
-          weight *= eIdSF_->at(yearcfg.c_str())->evaluate({l1Eta, pt_e1, "nominal"});
+          weight *= eIdSF_->at(year.c_str())->evaluate({l1Eta, pt_e1, "nominal"});
       }
       if (pt_e2 > EleSF_MIN_PT_) {
-        if (yearcfg == "2023D" && (l2Eta < 0 && l2Eta > -1.5 && l2Phi < -0.8 && l2Phi > -1.2))
+        if (year == "2023D" && (l2Eta < 0 && l2Eta > -1.5 && l2Phi < -0.8 && l2Phi > -1.2))
           weight *= eIdSF_->at("2023D_Hole")->evaluate({l2Eta, pt_e2, "nominal"});
         else
-          weight *= eIdSF_->at(yearcfg.c_str())->evaluate({l2Eta, pt_e2, "nominal"});
+          weight *= eIdSF_->at(year.c_str())->evaluate({l2Eta, pt_e2, "nominal"});
       }
       if (pt_e3 > EleSF_MIN_PT_) {
-        if (yearcfg == "2023D" && (l3Eta < 0 && l3Eta > -1.5 && l3Phi < -0.8 && l3Phi > -1.2))
+        if (year == "2023D" && (l3Eta < 0 && l3Eta > -1.5 && l3Phi < -0.8 && l3Phi > -1.2))
           weight *= eIdSF_->at("2023D_Hole")->evaluate({l3Eta, pt_e3, "nominal"});
         else
-          weight *= eIdSF_->at(yearcfg.c_str())->evaluate({l3Eta, pt_e3, "nominal"});
+          weight *= eIdSF_->at(year.c_str())->evaluate({l3Eta, pt_e3, "nominal"});
       }
       if (pt_e4 > EleSF_MIN_PT_) {
-        if (yearcfg == "2023D" && (l4Eta < 0 && l4Eta > -1.5 && l4Phi < -0.8 && l4Phi > -1.2))
+        if (year == "2023D" && (l4Eta < 0 && l4Eta > -1.5 && l4Phi < -0.8 && l4Phi > -1.2))
           weight *= eIdSF_->at("2023D_Hole")->evaluate({l4Eta, pt_e4, "nominal"});
         else
-          weight *= eIdSF_->at(yearcfg.c_str())->evaluate({l4Eta, pt_e4, "nominal"});
+          weight *= eIdSF_->at(year.c_str())->evaluate({l4Eta, pt_e4, "nominal"});
       }
     }
     if (eRecoSF_ != nullptr) {
@@ -558,16 +558,16 @@ void ZZSelector::ApplyScaleFactors() {
     float pt_m4 = l4Pt < MuSF_MAX_PT_ ? l4Pt : MuSF_MAX_PT_ - 0.01;
     if (eIdSF_ != nullptr) {
       if (pt_e1 > EleSF_MIN_PT_) {
-        if (yearcfg == "2023D" && (l1Eta < 0 && l1Eta > -1.5 && l1Phi < -0.8 && l1Phi > -1.2))
+        if (year == "2023D" && (l1Eta < 0 && l1Eta > -1.5 && l1Phi < -0.8 && l1Phi > -1.2))
           weight *= eIdSF_->at("2023D_Hole")->evaluate({l1Eta, pt_e1, "nominal"});
         else
-          weight *= eIdSF_->at(yearcfg.c_str())->evaluate({l1Eta, pt_e1, "nominal"});
+          weight *= eIdSF_->at(year.c_str())->evaluate({l1Eta, pt_e1, "nominal"});
       }
       if (pt_e2 > EleSF_MIN_PT_) {
-        if (yearcfg == "2023D" && (l2Eta < 0 && l2Eta > -1.5 && l2Phi < -0.8 && l2Phi > -1.2))
+        if (year == "2023D" && (l2Eta < 0 && l2Eta > -1.5 && l2Phi < -0.8 && l2Phi > -1.2))
           weight *= eIdSF_->at("2023D_Hole")->evaluate({l2Eta, pt_e2, "nominal"});
         else
-          weight *= eIdSF_->at(yearcfg.c_str())->evaluate({l2Eta, pt_e2, "nominal"});
+          weight *= eIdSF_->at(year.c_str())->evaluate({l2Eta, pt_e2, "nominal"});
       }
     }
     if (eRecoSF_ != nullptr) {
@@ -587,9 +587,9 @@ void ZZSelector::ApplyScaleFactors() {
     }
     if (mIdSF_ != nullptr) {
       if (pt_m3 > MuSF_MIN_PT_)
-        weight *= mIdSF_->at(yearcfg.c_str())->evaluate({l3Eta, pt_m3, "nominal"});
+        weight *= mIdSF_->at(year.c_str())->evaluate({l3Eta, pt_m3, "nominal"});
       if (pt_m4 > MuSF_MIN_PT_)
-        weight *= mIdSF_->at(yearcfg.c_str())->evaluate({l4Eta, pt_m4, "nominal"});
+        weight *= mIdSF_->at(year.c_str())->evaluate({l4Eta, pt_m4, "nominal"});
     }
   } else if (channel_ == mmee) {
     float pt_m1 = l1Pt < MuSF_MAX_PT_ ? l1Pt : MuSF_MAX_PT_ - 0.01;
@@ -598,22 +598,22 @@ void ZZSelector::ApplyScaleFactors() {
     float pt_e4 = l4Pt < EleSF_MAX_PT_ ? l4Pt : EleSF_MAX_PT_ - 0.01;
     if (mIdSF_ != nullptr) {
       if (pt_m1 > MuSF_MIN_PT_)
-        weight *= mIdSF_->at(yearcfg.c_str())->evaluate({l1Eta, pt_m1, "nominal"});
+        weight *= mIdSF_->at(year.c_str())->evaluate({l1Eta, pt_m1, "nominal"});
       if (pt_m2 > MuSF_MIN_PT_)
-        weight *= mIdSF_->at(yearcfg.c_str())->evaluate({l2Eta, pt_m2, "nominal"});
+        weight *= mIdSF_->at(year.c_str())->evaluate({l2Eta, pt_m2, "nominal"});
     }
     if (eIdSF_ != nullptr) {
       if (pt_e3 > EleSF_MIN_PT_) {
-        if (yearcfg == "2023D" && (l3Eta < 0 && l3Eta > -1.5 && l3Phi < -0.8 && l3Phi > -1.2))
+        if (year == "2023D" && (l3Eta < 0 && l3Eta > -1.5 && l3Phi < -0.8 && l3Phi > -1.2))
           weight *= eIdSF_->at("2023D_Hole")->evaluate({l3Eta, pt_e3, "nominal"});
         else
-          weight *= eIdSF_->at(yearcfg.c_str())->evaluate({l3Eta, pt_e3, "nominal"});
+          weight *= eIdSF_->at(year.c_str())->evaluate({l3Eta, pt_e3, "nominal"});
       }
       if (pt_e4 > EleSF_MIN_PT_) {
-        if (yearcfg == "2023D" && (l4Eta < 0 && l4Eta > -1.5 && l4Phi < -0.8 && l4Phi > -1.2))
+        if (year == "2023D" && (l4Eta < 0 && l4Eta > -1.5 && l4Phi < -0.8 && l4Phi > -1.2))
           weight *= eIdSF_->at("2023D_Hole")->evaluate({l4Eta, pt_e4, "nominal"});
         else
-          weight *= eIdSF_->at(yearcfg.c_str())->evaluate({l4Eta, pt_e4, "nominal"});
+          weight *= eIdSF_->at(year.c_str())->evaluate({l4Eta, pt_e4, "nominal"});
       }
     }
     if (eRecoSF_ != nullptr) {
@@ -638,13 +638,13 @@ void ZZSelector::ApplyScaleFactors() {
     float pt_m4 = l4Pt < MuSF_MAX_PT_ ? l4Pt : MuSF_MAX_PT_ - 0.01;
     if (mIdSF_ != nullptr) {
       if (pt_m1 > MuSF_MIN_PT_)
-        weight *= mIdSF_->at(yearcfg.c_str())->evaluate({l1Eta, pt_m1, "nominal"});
+        weight *= mIdSF_->at(year.c_str())->evaluate({l1Eta, pt_m1, "nominal"});
       if (pt_m2 > MuSF_MIN_PT_)
-        weight *= mIdSF_->at(yearcfg.c_str())->evaluate({l2Eta, pt_m2, "nominal"});
+        weight *= mIdSF_->at(year.c_str())->evaluate({l2Eta, pt_m2, "nominal"});
       if (pt_m3 > MuSF_MIN_PT_)
-        weight *= mIdSF_->at(yearcfg.c_str())->evaluate({l3Eta, pt_m3, "nominal"});
+        weight *= mIdSF_->at(year.c_str())->evaluate({l3Eta, pt_m3, "nominal"});
       if (pt_m4 > MuSF_MIN_PT_)
-        weight *= mIdSF_->at(yearcfg.c_str())->evaluate({l4Eta, pt_m4, "nominal"});
+        weight *= mIdSF_->at(year.c_str())->evaluate({l4Eta, pt_m4, "nominal"});
     }
   }
   if (pileupSF_ != nullptr)
@@ -779,36 +779,36 @@ void ZZSelector::ShiftEfficiencies(Systematic variation) {
     else if (variation == electronEfficiencyUp || variation == electronEfficiencyDown) {
       if (eIdSF_ != nullptr) {
         if (pt_e1 > EleSF_MIN_PT_) {
-          if (yearcfg == "2023D" && (l1Eta < 0 && l1Eta > -1.5 && l1Phi < -0.8 && l1Phi > -1.2))
+          if (year == "2023D" && (l1Eta < 0 && l1Eta > -1.5 && l1Phi < -0.8 && l1Phi > -1.2))
             weight *= eIdSF_->at("2023D_Hole")->evaluate({l1Eta, pt_e1, shift}) /
                       eIdSF_->at("2023D_Hole")->evaluate({l1Eta, pt_e1, "nominal"});
           else
-            weight *= eIdSF_->at(yearcfg.c_str())->evaluate({l1Eta, pt_e1, shift}) /
-                      eIdSF_->at(yearcfg.c_str())->evaluate({l1Eta, pt_e1, "nominal"});
+            weight *= eIdSF_->at(year.c_str())->evaluate({l1Eta, pt_e1, shift}) /
+                      eIdSF_->at(year.c_str())->evaluate({l1Eta, pt_e1, "nominal"});
         }
         if (pt_e2 > EleSF_MIN_PT_) {
-          if (yearcfg == "2023D" && (l2Eta < 0 && l2Eta > -1.5 && l2Phi < -0.8 && l2Phi > -1.2))
+          if (year == "2023D" && (l2Eta < 0 && l2Eta > -1.5 && l2Phi < -0.8 && l2Phi > -1.2))
             weight *= eIdSF_->at("2023D_Hole")->evaluate({l2Eta, pt_e2, shift}) /
                       eIdSF_->at("2023D_Hole")->evaluate({l2Eta, pt_e2, "nominal"});
           else
-            weight *= eIdSF_->at(yearcfg.c_str())->evaluate({l2Eta, pt_e2, shift}) /
-                      eIdSF_->at(yearcfg.c_str())->evaluate({l2Eta, pt_e2, "nominal"});
+            weight *= eIdSF_->at(year.c_str())->evaluate({l2Eta, pt_e2, shift}) /
+                      eIdSF_->at(year.c_str())->evaluate({l2Eta, pt_e2, "nominal"});
         }
         if (pt_e3 > EleSF_MIN_PT_) {
-          if (yearcfg == "2023D" && (l3Eta < 0 && l3Eta > -1.5 && l3Phi < -0.8 && l3Phi > -1.2))
+          if (year == "2023D" && (l3Eta < 0 && l3Eta > -1.5 && l3Phi < -0.8 && l3Phi > -1.2))
             weight *= eIdSF_->at("2023D_Hole")->evaluate({l3Eta, pt_e3, shift}) /
                       eIdSF_->at("2023D_Hole")->evaluate({l3Eta, pt_e3, "nominal"});
           else
-            weight *= eIdSF_->at(yearcfg.c_str())->evaluate({l3Eta, pt_e3, shift}) /
-                      eIdSF_->at(yearcfg.c_str())->evaluate({l3Eta, pt_e3, "nominal"});
+            weight *= eIdSF_->at(year.c_str())->evaluate({l3Eta, pt_e3, shift}) /
+                      eIdSF_->at(year.c_str())->evaluate({l3Eta, pt_e3, "nominal"});
         }
         if (pt_e4 > EleSF_MIN_PT_) {
-          if (yearcfg == "2023D" && (l4Eta < 0 && l4Eta > -1.5 && l4Phi < -0.8 && l4Phi > -1.2))
+          if (year == "2023D" && (l4Eta < 0 && l4Eta > -1.5 && l4Phi < -0.8 && l4Phi > -1.2))
             weight *= eIdSF_->at("2023D_Hole")->evaluate({l4Eta, pt_e4, shift}) /
                       eIdSF_->at("2023D_Hole")->evaluate({l4Eta, pt_e4, "nominal"});
           else
-            weight *= eIdSF_->at(yearcfg.c_str())->evaluate({l4Eta, pt_e4, shift}) /
-                      eIdSF_->at(yearcfg.c_str())->evaluate({l4Eta, pt_e4, "nominal"});
+            weight *= eIdSF_->at(year.c_str())->evaluate({l4Eta, pt_e4, shift}) /
+                      eIdSF_->at(year.c_str())->evaluate({l4Eta, pt_e4, "nominal"});
         }
       }
     }
@@ -863,30 +863,30 @@ void ZZSelector::ShiftEfficiencies(Systematic variation) {
     else if (variation == electronEfficiencyUp || variation == electronEfficiencyDown) {
       if (eIdSF_ != nullptr) {
         if (pt_e1 > EleSF_MIN_PT_) {
-          if (yearcfg == "2023D" && (l1Eta < 0 && l1Eta > -1.5 && l1Phi < -0.8 && l1Phi > -1.2))
+          if (year == "2023D" && (l1Eta < 0 && l1Eta > -1.5 && l1Phi < -0.8 && l1Phi > -1.2))
             weight *= eIdSF_->at("2023D_Hole")->evaluate({l1Eta, pt_e1, shift}) /
                       eIdSF_->at("2023D_Hole")->evaluate({l1Eta, pt_e1, "nominal"});
           else
-            weight *= eIdSF_->at(yearcfg.c_str())->evaluate({l1Eta, pt_e1, shift}) /
-                      eIdSF_->at(yearcfg.c_str())->evaluate({l1Eta, pt_e1, "nominal"});
+            weight *= eIdSF_->at(year.c_str())->evaluate({l1Eta, pt_e1, shift}) /
+                      eIdSF_->at(year.c_str())->evaluate({l1Eta, pt_e1, "nominal"});
         }
         if (pt_e2 > EleSF_MIN_PT_) {
-          if (yearcfg == "2023D" && (l2Eta < 0 && l2Eta > -1.5 && l2Phi < -0.8 && l2Phi > -1.2))
+          if (year == "2023D" && (l2Eta < 0 && l2Eta > -1.5 && l2Phi < -0.8 && l2Phi > -1.2))
             weight *= eIdSF_->at("2023D_Hole")->evaluate({l2Eta, pt_e2, shift}) /
                       eIdSF_->at("2023D_Hole")->evaluate({l2Eta, pt_e2, "nominal"});
           else
-            weight *= eIdSF_->at(yearcfg.c_str())->evaluate({l2Eta, pt_e2, shift}) /
-                      eIdSF_->at(yearcfg.c_str())->evaluate({l2Eta, pt_e2, "nominal"});
+            weight *= eIdSF_->at(year.c_str())->evaluate({l2Eta, pt_e2, shift}) /
+                      eIdSF_->at(year.c_str())->evaluate({l2Eta, pt_e2, "nominal"});
         }
       }
     } else if (variation == muonEfficiencyUp || variation == muonEfficiencyDown) {
       if (mIdSF_ != nullptr) {
         if (pt_m3 > MuSF_MIN_PT_)
-          weight *= mIdSF_->at(yearcfg.c_str())->evaluate({l3Eta, pt_m3, shift}) /
-                    mIdSF_->at(yearcfg.c_str())->evaluate({l3Eta, pt_m3, "nominal"});
+          weight *= mIdSF_->at(year.c_str())->evaluate({l3Eta, pt_m3, shift}) /
+                    mIdSF_->at(year.c_str())->evaluate({l3Eta, pt_m3, "nominal"});
         if (pt_m4 > MuSF_MIN_PT_)
-          weight *= mIdSF_->at(yearcfg.c_str())->evaluate({l4Eta, pt_m4, shift}) /
-                    mIdSF_->at(yearcfg.c_str())->evaluate({l4Eta, pt_m4, "nominal"});
+          weight *= mIdSF_->at(year.c_str())->evaluate({l4Eta, pt_m4, shift}) /
+                    mIdSF_->at(year.c_str())->evaluate({l4Eta, pt_m4, "nominal"});
       }
     }
   } else if (channel_ == mmee) {
@@ -897,11 +897,11 @@ void ZZSelector::ShiftEfficiencies(Systematic variation) {
     if (variation == muonEfficiencyUp || variation == muonEfficiencyDown) {
       if (mIdSF_ != nullptr) {
         if (pt_m1 > MuSF_MIN_PT_)
-          weight *= mIdSF_->at(yearcfg.c_str())->evaluate({l1Eta, pt_m1, shift}) /
-                    mIdSF_->at(yearcfg.c_str())->evaluate({l1Eta, pt_m1, "nominal"});
+          weight *= mIdSF_->at(year.c_str())->evaluate({l1Eta, pt_m1, shift}) /
+                    mIdSF_->at(year.c_str())->evaluate({l1Eta, pt_m1, "nominal"});
         if (pt_m2 > MuSF_MIN_PT_)
-          weight *= mIdSF_->at(yearcfg.c_str())->evaluate({l2Eta, pt_m2, shift}) /
-                    mIdSF_->at(yearcfg.c_str())->evaluate({l2Eta, pt_m2, "nominal"});
+          weight *= mIdSF_->at(year.c_str())->evaluate({l2Eta, pt_m2, shift}) /
+                    mIdSF_->at(year.c_str())->evaluate({l2Eta, pt_m2, "nominal"});
       }
     } else if (variation == electronRecoEffUp || variation == electronRecoEffDown) {
       // Applying Electron Reco SFs Up/Down for ElectronRecoEffSyst
@@ -947,20 +947,20 @@ void ZZSelector::ShiftEfficiencies(Systematic variation) {
     else if (variation == electronEfficiencyUp || variation == electronEfficiencyDown) {
       if (eIdSF_ != nullptr) {
         if (pt_e3 > EleSF_MIN_PT_) {
-          if (yearcfg == "2023D" && (l3Eta < 0 && l3Eta > -1.5 && l3Phi < -0.8 && l3Phi > -1.2))
+          if (year == "2023D" && (l3Eta < 0 && l3Eta > -1.5 && l3Phi < -0.8 && l3Phi > -1.2))
             weight *= eIdSF_->at("2023D_Hole")->evaluate({l3Eta, pt_e3, shift}) /
                       eIdSF_->at("2023D_Hole")->evaluate({l3Eta, pt_e3, "nominal"});
           else
-            weight *= eIdSF_->at(yearcfg.c_str())->evaluate({l3Eta, pt_e3, shift}) /
-                      eIdSF_->at(yearcfg.c_str())->evaluate({l3Eta, pt_e3, "nominal"});
+            weight *= eIdSF_->at(year.c_str())->evaluate({l3Eta, pt_e3, shift}) /
+                      eIdSF_->at(year.c_str())->evaluate({l3Eta, pt_e3, "nominal"});
         }
         if (pt_e4 > EleSF_MIN_PT_) {
-          if (yearcfg == "2023D" && (l4Eta < 0 && l4Eta > -1.5 && l4Phi < -0.8 && l4Phi > -1.2))
+          if (year == "2023D" && (l4Eta < 0 && l4Eta > -1.5 && l4Phi < -0.8 && l4Phi > -1.2))
             weight *= eIdSF_->at("2023D_Hole")->evaluate({l4Eta, pt_e4, shift}) /
                       eIdSF_->at("2023D_Hole")->evaluate({l4Eta, pt_e4, "nominal"});
           else
-            weight *= eIdSF_->at(yearcfg.c_str())->evaluate({l4Eta, pt_e4, shift}) /
-                      eIdSF_->at(yearcfg.c_str())->evaluate({l4Eta, pt_e4, "nominal"});
+            weight *= eIdSF_->at(year.c_str())->evaluate({l4Eta, pt_e4, shift}) /
+                      eIdSF_->at(year.c_str())->evaluate({l4Eta, pt_e4, "nominal"});
         }
       }
     }
@@ -971,17 +971,17 @@ void ZZSelector::ShiftEfficiencies(Systematic variation) {
     float pt_m4 = l4Pt < MuSF_MAX_PT_ ? l4Pt : MuSF_MAX_PT_ - 0.01;
     if (mIdSF_ != nullptr) {
       if (pt_m1 > MuSF_MIN_PT_)
-        weight *= mIdSF_->at(yearcfg.c_str())->evaluate({l1Eta, pt_m1, shift}) /
-                  mIdSF_->at(yearcfg.c_str())->evaluate({l1Eta, pt_m1, "nominal"});
+        weight *= mIdSF_->at(year.c_str())->evaluate({l1Eta, pt_m1, shift}) /
+                  mIdSF_->at(year.c_str())->evaluate({l1Eta, pt_m1, "nominal"});
       if (pt_m2 > MuSF_MIN_PT_)
-        weight *= mIdSF_->at(yearcfg.c_str())->evaluate({l2Eta, pt_m2, shift}) /
-                  mIdSF_->at(yearcfg.c_str())->evaluate({l2Eta, pt_m2, "nominal"});
+        weight *= mIdSF_->at(year.c_str())->evaluate({l2Eta, pt_m2, shift}) /
+                  mIdSF_->at(year.c_str())->evaluate({l2Eta, pt_m2, "nominal"});
       if (pt_m3 > MuSF_MIN_PT_)
-        weight *= mIdSF_->at(yearcfg.c_str())->evaluate({l3Eta, pt_m3, shift}) /
-                  mIdSF_->at(yearcfg.c_str())->evaluate({l3Eta, pt_m3, "nominal"});
+        weight *= mIdSF_->at(year.c_str())->evaluate({l3Eta, pt_m3, shift}) /
+                  mIdSF_->at(year.c_str())->evaluate({l3Eta, pt_m3, "nominal"});
       if (pt_m4 > MuSF_MIN_PT_)
-        weight *= mIdSF_->at(yearcfg.c_str())->evaluate({l4Eta, pt_m4, shift}) /
-                  mIdSF_->at(yearcfg.c_str())->evaluate({l4Eta, pt_m4, "nominal"});
+        weight *= mIdSF_->at(year.c_str())->evaluate({l4Eta, pt_m4, shift}) /
+                  mIdSF_->at(year.c_str())->evaluate({l4Eta, pt_m4, "nominal"});
     }
   }
 }
