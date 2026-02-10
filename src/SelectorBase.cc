@@ -34,6 +34,7 @@ void SelectorBase::Init(TTree* tree) {
     TNamed* ntupleType = (TNamed*)GetInputList()->FindObject("ntupleType");
     TNamed* chan = (TNamed*)GetInputList()->FindObject("channel");
     TNamed* selection = (TNamed*)GetInputList()->FindObject("selection");
+    TParameter<bool>* doSystematics = (TParameter<bool>*)GetInputList()->FindObject("doSystematics");
 
     if (ntupleType != nullptr) {
       std::string ntupleName = ntupleType->GetTitle();
@@ -54,6 +55,10 @@ void SelectorBase::Init(TTree* tree) {
       channelName_ = fChain->GetTree()->GetDirectory()->GetName();
     if (selection != nullptr) {
       selectionName_ = selection->GetTitle();
+    }
+
+    if (doSystematics != nullptr) {
+      doSystematics_ = doSystematics->GetVal();
     }
   }
 

@@ -22,6 +22,7 @@ def getComLineArgs():
     parser.add_argument("--nano", action="store_true", help="Use NanoAOD format ntuples in stead of UWVV")
     parser.add_argument("--with_background", action="store_true", help="Don't run background selector")
     parser.add_argument("--with_Gen", action="store_true", help="Don't run ZZGen selector")
+    parser.add_argument("--doSystematics", action="store_true", help="create and fill systematic variation plots")
     parser.add_argument("--noHistConfig", action="store_true", help="Don't rely on config file to specify hist info")
     parser.add_argument("-j", "--numCores", type=int, default=1, help="Number of cores to use (parallelize by dataset)")
     parser.add_argument("--input_tier", type=str, default="", help="Selection stage of input files")
@@ -138,7 +139,7 @@ def makeHistFile(args):
 
     selector = SelectorTools.SelectorDriver(args["analysis"], args["selection"], args["input_tier"], args["year"])
     selector.setOutputfile(fOut.GetName())
-    selector.setInputs(sf_inputs + hist_inputs)
+    selector.setInputs(sf_inputs + hist_inputs + [ROOT.TParameter(bool)("doSystematics", args["doSystematics"])])
 
     selector.setNtupleType("NanoAOD" if args["nano"] else "UWVV")
     if not args["nano"]:

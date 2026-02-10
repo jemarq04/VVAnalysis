@@ -168,7 +168,7 @@ public:
   TH1D* sumWeightsHist_;
   TTree* ftntp_ = nullptr;  //Tree to store selected ntuple events, if choose to write
 
-  bool doSystematics_;
+  bool doSystematics_ = false;
   bool isNonPrompt_ = false;
   bool addSumweights_;
   bool applyScaleFactors_;
