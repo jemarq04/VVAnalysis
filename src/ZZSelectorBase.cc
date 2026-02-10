@@ -115,11 +115,13 @@ void ZZSelectorBase::SetBranchesUWVV() {
     //fChain->SetBranchAddress("originalXWGTUP", &originalXWGTUP, &b_originalXWGTUP);
     fChain->SetBranchAddress("nTruePU", &nTruePU, &b_nTruePU);
   }
+
+  fChain->SetBranchAddress("run", &run, &b_run);
+  fChain->SetBranchAddress("lumi", &lumi, &b_lumi);
+  fChain->SetBranchAddress("evt", &evt, &b_evt);
+  fChain->SetBranchAddress("type1_pfMETEt", &type1_pfMETEt, &b_type1_pfMETEt);
+
   if (channel_ == eeee) {
-    //std::cout<<"enum channel_: "<<channel_<<std::endl;
-    fChain->SetBranchAddress("run", &run, &b_run);
-    fChain->SetBranchAddress("lumi", &lumi, &b_lumi);
-    fChain->SetBranchAddress("evt", &evt, &b_evt);
     //fChain->SetBranchAddress("duplicated", &duplicated, &b_duplicated);
     fChain->SetBranchAddress("e1ZZTightIDNoVtx", &l1IsTight, &b_l1IsTight);
     fChain->SetBranchAddress("e1ZZIsoPass", &l1IsIso, &b_l1IsIso);
@@ -177,15 +179,10 @@ void ZZSelectorBase::SetBranchesUWVV() {
     fChain->SetBranchAddress("e2IsGap", &l2IsGap, &b_l2IsGap);
     fChain->SetBranchAddress("e3IsGap", &l3IsGap, &b_l3IsGap);
     fChain->SetBranchAddress("e4IsGap", &l4IsGap, &b_l4IsGap);
-  }
-  //Add 2e2mu channel also but it still needs to differentiate which one is Z1Mass and which one is Z2Mass leptons
-  //This is done with a flag at the time of Process for each event on the fly
-  else if (channel_ == eemm) {
-    //channel_ = eemm;
-    //fChain->SetBranchAddress("e1ZZTightIDNoVtx", &l1IsTight, &b_l1IsTight);
-    fChain->SetBranchAddress("run", &run, &b_run);
-    fChain->SetBranchAddress("lumi", &lumi, &b_lumi);
-    fChain->SetBranchAddress("evt", &evt, &b_evt);
+  } else if (channel_ == eemm || channel_ == mmee) {
+    //Add 2e2mu channel also but it still needs to differentiate which one is Z1Mass and which one is Z2Mass leptons
+    //This is done with a flag at the time of Process for each event on the fly
+
     //fChain->SetBranchAddress("duplicated", &duplicated, &b_duplicated);
     fChain->SetBranchAddress("e1ZZTightIDNoVtx", &l1IsTight, &b_l1IsTight);
     fChain->SetBranchAddress("e1ZZIsoPass", &l1IsIso, &b_l1IsIso);
@@ -225,10 +222,10 @@ void ZZSelectorBase::SetBranchesUWVV() {
     fChain->SetBranchAddress("m2Eta", &l4Eta, &b_l4Eta);
     fChain->SetBranchAddress("e1Phi", &l1Phi, &b_l1Phi);
     fChain->SetBranchAddress("e2Phi", &l2Phi, &b_l2Phi);
-    fChain->SetBranchAddress("e1SIP3D", &l1SIP3D, &b_l1SIP3D);
-    fChain->SetBranchAddress("e2SIP3D", &l2SIP3D, &b_l2SIP3D);
     fChain->SetBranchAddress("m1Phi", &l3Phi, &b_l3Phi);
     fChain->SetBranchAddress("m2Phi", &l4Phi, &b_l4Phi);
+    fChain->SetBranchAddress("e1SIP3D", &l1SIP3D, &b_l1SIP3D);
+    fChain->SetBranchAddress("e2SIP3D", &l2SIP3D, &b_l2SIP3D);
     fChain->SetBranchAddress("m1SIP3D", &l3SIP3D, &b_l3SIP3D);
     fChain->SetBranchAddress("m2SIP3D", &l4SIP3D, &b_l4SIP3D);
     fChain->SetBranchAddress("e1PdgId", &l1PdgId, &b_l1PdgId);
@@ -245,73 +242,7 @@ void ZZSelectorBase::SetBranchesUWVV() {
     //in ECAL crystals or not but we need a dummy for the muons? Makes life easier later
     fChain->SetBranchAddress("m1IsLoose", &l3IsGap, &b_l3IsGap);
     fChain->SetBranchAddress("m2IsLoose", &l4IsGap, &b_l4IsGap);
-  } else if (channel_ == mmee) {
-    //channel_ = mmee;
-    fChain->SetBranchAddress("run", &run, &b_run);
-    fChain->SetBranchAddress("lumi", &lumi, &b_lumi);
-    fChain->SetBranchAddress("evt", &evt, &b_evt);
-    //fChain->SetBranchAddress("duplicated", &duplicated, &b_duplicated);
-    fChain->SetBranchAddress("e1ZZTightIDNoVtx", &l1IsTight, &b_l1IsTight);
-    fChain->SetBranchAddress("e1ZZIsoPass", &l1IsIso, &b_l1IsIso);
-    fChain->SetBranchAddress("e1ZZIso", &l1Iso, &b_l1Iso);
-    fChain->SetBranchAddress("e2ZZTightIDNoVtx", &l2IsTight, &b_l2IsTight);
-    fChain->SetBranchAddress("e2ZZIsoPass", &l2IsIso, &b_l2IsIso);
-    fChain->SetBranchAddress("e2ZZIso", &l2Iso, &b_l2Iso);
-    fChain->SetBranchAddress("m1ZZTightIDNoVtx", &l3IsTight, &b_l3IsTight);
-    fChain->SetBranchAddress("m1ZZIsoPass", &l3IsIso, &b_l3IsIso);
-    fChain->SetBranchAddress("m1ZZIso", &l3Iso, &b_l3Iso);
-    fChain->SetBranchAddress("m2ZZTightIDNoVtx", &l4IsTight, &b_l4IsTight);
-    fChain->SetBranchAddress("m2ZZIsoPass", &l4IsIso, &b_l4IsIso);
-    fChain->SetBranchAddress("m2ZZIso", &l4Iso, &b_l4Iso);
-    fChain->SetBranchAddress("e1_e2_Mass", &Z1Mass, &b_Z1Mass);
-    fChain->SetBranchAddress("m1_m2_Mass", &Z2Mass, &b_Z2Mass);
-    fChain->SetBranchAddress("e1_e2_Pt", &Z1Pt, &b_Z1Pt);
-    fChain->SetBranchAddress("m1_m2_Pt", &Z2Pt, &b_Z2Pt);
-    fChain->SetBranchAddress("e1_e2_Phi", &Z1Phi, &b_Z1Phi);
-    fChain->SetBranchAddress("m1_m2_Phi", &Z2Phi, &b_Z2Phi);
-    fChain->SetBranchAddress("e1_e2_Eta", &Z1Eta, &b_Z1Eta);
-    fChain->SetBranchAddress("m1_m2_Eta", &Z2Eta, &b_Z2Eta);
-    fChain->SetBranchAddress("e1Pt", &l1Pt, &b_l1Pt);
-    fChain->SetBranchAddress("e2Pt", &l2Pt, &b_l2Pt);
-    fChain->SetBranchAddress("m1Pt", &l3Pt, &b_l3Pt);
-    fChain->SetBranchAddress("m2Pt", &l4Pt, &b_l4Pt);
-    fChain->SetBranchAddress("e1PVDZ", &l1PVDZ, &b_l1PVDZ);
-    fChain->SetBranchAddress("e2PVDZ", &l2PVDZ, &b_l2PVDZ);
-    fChain->SetBranchAddress("m1PVDZ", &l3PVDZ, &b_l3PVDZ);
-    fChain->SetBranchAddress("m2PVDZ", &l4PVDZ, &b_l4PVDZ);
-    fChain->SetBranchAddress("e1Energy", &l1Energy, &b_l1Energy);
-    fChain->SetBranchAddress("e2Energy", &l2Energy, &b_l2Energy);
-    fChain->SetBranchAddress("m1Energy", &l3Energy, &b_l3Energy);
-    fChain->SetBranchAddress("m2Energy", &l4Energy, &b_l4Energy);
-    fChain->SetBranchAddress("e1Eta", &l1Eta, &b_l1Eta);
-    fChain->SetBranchAddress("e2Eta", &l2Eta, &b_l2Eta);
-    fChain->SetBranchAddress("m1Eta", &l3Eta, &b_l3Eta);
-    fChain->SetBranchAddress("m2Eta", &l4Eta, &b_l4Eta);
-    fChain->SetBranchAddress("e1Phi", &l1Phi, &b_l1Phi);
-    fChain->SetBranchAddress("e2Phi", &l2Phi, &b_l2Phi);
-    fChain->SetBranchAddress("e1SIP3D", &l1SIP3D, &b_l1SIP3D);
-    fChain->SetBranchAddress("e2SIP3D", &l2SIP3D, &b_l2SIP3D);
-    fChain->SetBranchAddress("m1Phi", &l3Phi, &b_l3Phi);
-    fChain->SetBranchAddress("m2Phi", &l4Phi, &b_l4Phi);
-    fChain->SetBranchAddress("m1SIP3D", &l3SIP3D, &b_l3SIP3D);
-    fChain->SetBranchAddress("m2SIP3D", &l4SIP3D, &b_l4SIP3D);
-    fChain->SetBranchAddress("e1PdgId", &l1PdgId, &b_l1PdgId);
-    fChain->SetBranchAddress("e2PdgId", &l2PdgId, &b_l2PdgId);
-    fChain->SetBranchAddress("m1PdgId", &l3PdgId, &b_l3PdgId);
-    fChain->SetBranchAddress("m2PdgId", &l4PdgId, &b_l4PdgId);
-    fChain->SetBranchAddress("e1Mass", &l1Mass, &b_l1Mass);
-    fChain->SetBranchAddress("e2Mass", &l2Mass, &b_l2Mass);
-    fChain->SetBranchAddress("m1Mass", &l3Mass, &b_l3Mass);
-    fChain->SetBranchAddress("m2Mass", &l4Mass, &b_l4Mass);
-    fChain->SetBranchAddress("e1IsGap", &l1IsGap, &b_l1IsGap);
-    fChain->SetBranchAddress("e2IsGap", &l2IsGap, &b_l2IsGap);
-    fChain->SetBranchAddress("m1IsLoose", &l3IsGap, &b_l3IsGap);
-    fChain->SetBranchAddress("m2IsLoose", &l4IsGap, &b_l4IsGap);
   } else if (channel_ == mmmm) {
-    //channel_ = mmmm;
-    fChain->SetBranchAddress("run", &run, &b_run);
-    fChain->SetBranchAddress("lumi", &lumi, &b_lumi);
-    fChain->SetBranchAddress("evt", &evt, &b_evt);
     //fChain->SetBranchAddress("duplicated", &duplicated, &b_duplicated);
     fChain->SetBranchAddress("m1ZZTightIDNoVtx", &l1IsTight, &b_l1IsTight);
     fChain->SetBranchAddress("m2ZZTightIDNoVtx", &l2IsTight, &b_l2IsTight);
@@ -366,10 +297,6 @@ void ZZSelectorBase::SetBranchesUWVV() {
     fChain->SetBranchAddress("m3Mass", &l3Mass, &b_l3Mass);
     fChain->SetBranchAddress("m4Mass", &l4Mass, &b_l4Mass);
   } else if (channel_ == eee) {
-    //channel_ = eee;
-    fChain->SetBranchAddress("run", &run, &b_run);
-    fChain->SetBranchAddress("lumi", &lumi, &b_lumi);
-    fChain->SetBranchAddress("evt", &evt, &b_evt);
     //fChain->SetBranchAddress("duplicated", &duplicated, &b_duplicated);
     fChain->SetBranchAddress("e1ZZTightIDNoVtx", &l1IsTight, &b_l1IsTight);
     fChain->SetBranchAddress("e1ZZIsoPass", &l1IsIso, &b_l1IsIso);
@@ -406,10 +333,6 @@ void ZZSelectorBase::SetBranchesUWVV() {
     fChain->SetBranchAddress("e2PVDZ", &l2PVDZ, &b_l2PVDZ);
     fChain->SetBranchAddress("e3PVDZ", &l3PVDZ, &b_l3PVDZ);
   } else if (channel_ == eem) {
-    //channel_ = eem;
-    fChain->SetBranchAddress("run", &run, &b_run);
-    fChain->SetBranchAddress("lumi", &lumi, &b_lumi);
-    fChain->SetBranchAddress("evt", &evt, &b_evt);
     //fChain->SetBranchAddress("duplicated", &duplicated, &b_duplicated);
     fChain->SetBranchAddress("e1ZZTightIDNoVtx", &l1IsTight, &b_l1IsTight);
     fChain->SetBranchAddress("e1ZZIsoPass", &l1IsIso, &b_l1IsIso);
@@ -447,10 +370,6 @@ void ZZSelectorBase::SetBranchesUWVV() {
     fChain->SetBranchAddress("e2PVDZ", &l2PVDZ, &b_l2PVDZ);
     fChain->SetBranchAddress("mPVDZ", &l3PVDZ, &b_l3PVDZ);
   } else if (channel_ == emm) {
-    //channel_ = emm;
-    fChain->SetBranchAddress("run", &run, &b_run);
-    fChain->SetBranchAddress("lumi", &lumi, &b_lumi);
-    fChain->SetBranchAddress("evt", &evt, &b_evt);
     //fChain->SetBranchAddress("duplicated", &duplicated, &b_duplicated);
     fChain->SetBranchAddress("eZZTightIDNoVtx", &l3IsTight, &b_l3IsTight);
     fChain->SetBranchAddress("eZZIsoPass", &l3IsIso, &b_l3IsIso);
@@ -487,10 +406,6 @@ void ZZSelectorBase::SetBranchesUWVV() {
     fChain->SetBranchAddress("m2PVDZ", &l2PVDZ, &b_l2PVDZ);
     fChain->SetBranchAddress("ePVDZ", &l3PVDZ, &b_l3PVDZ);
   } else if (channel_ == mmm) {
-    //channel_ = mmm;
-    fChain->SetBranchAddress("run", &run, &b_run);
-    fChain->SetBranchAddress("lumi", &lumi, &b_lumi);
-    fChain->SetBranchAddress("evt", &evt, &b_evt);
     //fChain->SetBranchAddress("duplicated", &duplicated, &b_duplicated);
     fChain->SetBranchAddress("m1ZZTightIDNoVtx", &l1IsTight, &b_l1IsTight);
     fChain->SetBranchAddress("m2ZZTightIDNoVtx", &l2IsTight, &b_l2IsTight);
@@ -528,8 +443,6 @@ void ZZSelectorBase::SetBranchesUWVV() {
     fChain->SetBranchAddress("m3PVDZ", &l3PVDZ, &b_l3PVDZ);
   } else
     throw std::invalid_argument("Invalid channel choice in ZZSelectorBase!");
-
-  fChain->SetBranchAddress("type1_pfMETEt", &type1_pfMETEt, &b_type1_pfMETEt);
 }
 
 void ZZSelectorBase::LoadBranchesNanoAOD(Long64_t entry, std::pair<Systematic, std::string> variation) {
