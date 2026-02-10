@@ -107,16 +107,12 @@ public:
   TBranch* b_jetEta_jerUp;
   TBranch* b_jetEta_jerDown;
 
+  TBranch* b_jetPhi;
+
   TBranch* b_nvtx;
   TBranch* b_Mass;
   TBranch* b_Pt;
   TBranch* b_Eta;
-  //TBranch* b_jetPt;
-  //TBranch* b_jetEta;
-  //TBranch* b_mjj;
-  TBranch* b_jetPhi;
-  int cen_count = 0;
-  float count = 0;
 
   // Readers to access the data (delete the ones you do not need).
   virtual void Init(TTree* tree) override;

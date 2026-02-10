@@ -114,14 +114,7 @@ void ZZSelectorBase::SetBranchesUWVV() {
     fChain->SetBranchAddress("genWeight", &genWeight, &b_genWeight);
     //fChain->SetBranchAddress("originalXWGTUP", &originalXWGTUP, &b_originalXWGTUP);
     fChain->SetBranchAddress("nTruePU", &nTruePU, &b_nTruePU);
-  } else {
-    //fChain->SetBranchAddress("Flag_duplicateMuonsPass", Flag_duplicateMuonsPass);
-    //fChain->SetBranchAddress("Flag_badMuonsPass", Flag_badMuonsPass);
   }
-  //std::cout<<"In ZZSelectorBase"<<std::endl;
-  //std::cout<<"channelName: "<<channelName_<<std::endl;
-  //std::cout<<"enum channel_: "<<channel_<<std::endl;
-  //std::cout<<"isMC: "<<isMC_<<std::endl;
   if (channel_ == eeee) {
     //std::cout<<"enum channel_: "<<channel_<<std::endl;
     fChain->SetBranchAddress("run", &run, &b_run);
