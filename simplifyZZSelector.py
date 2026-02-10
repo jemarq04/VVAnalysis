@@ -197,6 +197,8 @@ hists1DList = [
     "LepPt2Full",
     "LepPt3Full",
     "LepPt4Full",
+    "Z1LepPt",
+    "Z2LepPt",
     "e1PtSortedFull",
     "e2PtSortedFull",
     "e1PtSorted",

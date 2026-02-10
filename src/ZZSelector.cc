@@ -25,25 +25,79 @@ void ZZSelector::Init(TTree* tree) {
                 "Mass0jFull", "Mass1jFull", "Mass2jFull",   "Mass3jFull",   "Mass34jFull", "Mass4jFull"};
   // hists1D_ = {
   //      "yield", "backgroundControlYield","nTruePU","nvtx","ZMass","Z1Mass","Z2Mass","ZZPt",
-  //      "Z1Pt","Z2Pt","Z1Phi","Z2Phi","dPhiZ1Z2","ZPt","LepPt","LepEta","Lep12Pt","Lep12Eta",
-  //      "Lep34Pt","Lep34Eta","Z1lep1_Eta","Z1lep1_Phi","Z1lep1_Pt","Z1lep1_PdgId","Z1lep2_Eta",
+  //      "Z1Pt","Z2Pt","Z1Phi","Z2Phi","dPhiZ1Z2","ZPt","LepPt","LepEta",
+  //      "Z1lep1_Eta","Z1lep1_Phi","Z1lep1_Pt","Z1lep1_PdgId","Z1lep2_Eta",
   //      "Z1lep2_Phi","Z1lep2_Pt","Z1lep2_PdgId","Z2lep1_Eta","Z2lep1_Phi","Z2lep1_Pt","Z2lep1_PdgId",
   //      "Z2lep2_Eta","Z2lep2_Phi","Z2lep2_Pt","Z2lep2_PdgId","Mass","nJets",
   // };
 
-  hists1D_ = {"yield",      "Z1Mass",          "Z2Mass",          "ZMass",      "ZZPt",
-              "ZZEta",      "dPhiZ1Z2",        "dRZ1Z2",          "ZPt",        "LepPt",
-              "LepPtFull",  "LepEta",          "PassTriggerFull", "LepPt1",     "LepPt2",
-              "LepPt3",     "LepPt4",          "LepPt1Full",      "LepPt2Full", "LepPt3Full",
-              "LepPt4Full", "e1PtSortedFull",  "e2PtSortedFull",  "e1PtSorted", "e2PtSorted",
-              "Mass",       "nJets",           "nJets_central",   "MassFull",   "SIP3D",
-              "PVDZ",       "deltaPVDZ_sameZ", "deltaPVDZ_diffZ", "Z1PolCos",   "Z2PolCos",
-              "Lep1Energy", "Lep2Energy",      "Lep3Energy",      "Lep4Energy", "LepIso",
-              "Lep1Iso",    "Lep2Iso",         "Lep3Iso",         "Lep4Iso",    "Mass0j",
-              "Mass1j",     "Mass2j",          "Mass3j",          "Mass34j",    "Mass4j",
-              "Mass0jFull", "Mass1jFull",      "Mass2jFull",      "Mass3jFull", "Mass34jFull",
-              "Mass4jFull", "jetEta[0]",       "absjetEta[0]",    "jetEta[1]",  "absjetEta[1]",
-              "jetPt[0]",   "jetPt[1]",        "jetPhi[0]",       "jetPhi[1]",  "mjj",
+  hists1D_ = {"yield",
+              "Z1Mass",
+              "Z2Mass",
+              "ZMass",
+              "ZZPt",
+              "ZZEta",
+              "dPhiZ1Z2",
+              "dRZ1Z2",
+              "ZPt",
+              "LepPt",
+              "LepPtFull",
+              "LepEta",
+              "PassTriggerFull",
+              "LepPt1",
+              "LepPt2",
+              "LepPt3",
+              "LepPt4",
+              "LepPt1Full",
+              "LepPt2Full",
+              "LepPt3Full",
+              "LepPt4Full",
+              "Z1LepPt",
+              "Z2LepPt",
+              "e1PtSortedFull",
+              "e2PtSortedFull",
+              "e1PtSorted",
+              "e2PtSorted",
+              "Mass",
+              "nJets",
+              "nJets_central",
+              "MassFull",
+              "SIP3D",
+              "PVDZ",
+              "deltaPVDZ_sameZ",
+              "deltaPVDZ_diffZ",
+              "Z1PolCos",
+              "Z2PolCos",
+              "Lep1Energy",
+              "Lep2Energy",
+              "Lep3Energy",
+              "Lep4Energy",
+              "LepIso",
+              "Lep1Iso",
+              "Lep2Iso",
+              "Lep3Iso",
+              "Lep4Iso",
+              "Mass0j",
+              "Mass1j",
+              "Mass2j",
+              "Mass3j",
+              "Mass34j",
+              "Mass4j",
+              "Mass0jFull",
+              "Mass1jFull",
+              "Mass2jFull",
+              "Mass3jFull",
+              "Mass34jFull",
+              "Mass4jFull",
+              "jetEta[0]",
+              "absjetEta[0]",
+              "jetEta[1]",
+              "absjetEta[1]",
+              "jetPt[0]",
+              "jetPt[1]",
+              "jetPhi[0]",
+              "jetPhi[1]",
+              "mjj",
               "dEtajj"};
 
   jetTest2D_ = {};  // also defined in hists1D_ to pass checks in InitializeHistogramsFromConfig()
@@ -73,6 +127,8 @@ void ZZSelector::Init(TTree* tree) {
                     "LepPt2Full",
                     "LepPt3Full",
                     "LepPt4Full",
+                    "Z1LepPt",
+                    "Z2LepPt",
                     "e1PtSortedFull",
                     "e2PtSortedFull",
                     "e1PtSorted",
@@ -1554,6 +1610,14 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
           weighthistMap1D_, getHistName("LepPt", variation.second), l3Pt, i, lheWeights[i] / lheWeights[0] * weight);
       SafeHistFill(
           weighthistMap1D_, getHistName("LepPt", variation.second), l4Pt, i, lheWeights[i] / lheWeights[0] * weight);
+      SafeHistFill(
+          weighthistMap1D_, getHistName("Z1LepPt", variation.second), l1Pt, i, lheWeights[i] / lheWeights[0] * weight);
+      SafeHistFill(
+          weighthistMap1D_, getHistName("Z1LepPt", variation.second), l2Pt, i, lheWeights[i] / lheWeights[0] * weight);
+      SafeHistFill(
+          weighthistMap1D_, getHistName("Z2LepPt", variation.second), l3Pt, i, lheWeights[i] / lheWeights[0] * weight);
+      SafeHistFill(
+          weighthistMap1D_, getHistName("Z2LepPt", variation.second), l4Pt, i, lheWeights[i] / lheWeights[0] * weight);
       SafeHistFill(weighthistMap1D_,
                    getHistName("e1PtSorted", variation.second),
                    e1PtTmp,
@@ -1699,6 +1763,10 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
   SafeHistFill(histMap1D_, getHistName("LepPt2", variation.second), l2PtTmp, weight);
   SafeHistFill(histMap1D_, getHistName("LepPt3", variation.second), l3PtTmp, weight);
   SafeHistFill(histMap1D_, getHistName("LepPt4", variation.second), l4PtTmp, weight);
+  SafeHistFill(histMap1D_, getHistName("Z1LepPt", variation.second), l1Pt, weight);
+  SafeHistFill(histMap1D_, getHistName("Z1LepPt", variation.second), l2Pt, weight);
+  SafeHistFill(histMap1D_, getHistName("Z2LepPt", variation.second), l3Pt, weight);
+  SafeHistFill(histMap1D_, getHistName("Z2LepPt", variation.second), l4Pt, weight);
   SafeHistFill(histMap1D_, getHistName("e1PtSorted", variation.second), e1PtTmp, weight);
   SafeHistFill(histMap1D_, getHistName("e2PtSorted", variation.second), e2PtTmp, weight);
   SafeHistFill(histMap1D_, getHistName("Lep1Eta", variation.second), l1Eta, weight);
@@ -1794,14 +1862,6 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
   //SafeHistFill(histMap1D_, getHistName("dEtajj", variation.second), dEtajj, weight);
 
   // Summing 12,34 leptons
-  //SafeHistFill(histMap1D_, getHistName("Lep12Pt", variation.second), l1Pt, weight);
-  //SafeHistFill(histMap1D_, getHistName("Lep12Pt", variation.second), l2Pt, weight);
-  //SafeHistFill(histMap1D_, getHistName("Lep34Pt", variation.second), l3Pt, weight);
-  //SafeHistFill(histMap1D_, getHistName("Lep34Pt", variation.second), l4Pt, weight);
-  //SafeHistFill(histMap1D_, getHistName("Lep12Eta", variation.second), l1Eta, weight);
-  //SafeHistFill(histMap1D_, getHistName("Lep12Eta", variation.second), l2Eta, weight);
-  //SafeHistFill(histMap1D_, getHistName("Le34Eta", variation.second), l3Eta, weight);
-  //SafeHistFill(histMap1D_, getHistName("Lep34Eta", variation.second), l4Eta, weight);
   //SafeHistFill(histMap1D_, getHistName("Z1Mass", variation.second), Z1Mass, weight);
   //SafeHistFill(histMap1D_, getHistName("Z2Mass", variation.second), Z2Mass, weight);
   //SafeHistFill(histMap1D_, getHistName("Z1Pt", variation.second), Z1Pt, weight);
