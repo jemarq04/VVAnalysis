@@ -19,7 +19,7 @@ def getComLineArgs():
     parser.add_argument("--lumi", "-l", type=float, default=None, help="luminosity value (in fb-1)")
     parser.add_argument("--output_file", "-o", type=str, default="test.root", help="Output file name")
     parser.add_argument("--test", action="store_true", help="Run test job (no background estimate)")
-    parser.add_argument("--uwvv", action="store_true", help="Use UWVV format ntuples in stead of NanoAOD")
+    parser.add_argument("--nano", action="store_true", help="Use NanoAOD format ntuples in stead of UWVV")
     parser.add_argument("--with_background", action="store_true", help="Don't run background selector")
     parser.add_argument("--with_Gen", action="store_true", help="Don't run ZZGen selector")
     parser.add_argument("--noHistConfig", action="store_true", help="Don't rely on config file to specify hist info")
@@ -140,8 +140,8 @@ def makeHistFile(args):
     selector.setOutputfile(fOut.GetName())
     selector.setInputs(sf_inputs + hist_inputs)
 
-    selector.setNtupleType("UWVV" if args["uwvv"] else "NanoAOD")
-    if args["uwvv"]:
+    selector.setNtupleType("NanoAOD" if args["nano"] else "UWVV")
+    if not args["nano"]:
         logging.debug("Processing channels " % args["channels"])
         selector.setChannels(args["channels"])
     selector.setNumCores(args["numCores"])

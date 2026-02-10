@@ -33,7 +33,7 @@ class SelectorDriver(object):
             )
         self.selector_name = selector_map[analysis]
         self.addSumweights = True
-        self.ntupleType = "NanoAOD"
+        self.ntupleType = "UWVV"
         self.year = year
         self.numCores = 1
         self.channels = ["Inclusive"]

@@ -38,7 +38,7 @@ void SelectorBase::Init(TTree* tree) {
         throw std::invalid_argument("Unsupported ntuple type!");
     } else {
       std::cerr << "INFO: Assuming NanoAOD ntuples" << std::endl;
-      ntupleType_ = NanoAOD;
+      ntupleType_ = UWVV;
     }
 
     if (name != nullptr) {
