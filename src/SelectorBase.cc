@@ -12,7 +12,14 @@ void SelectorBase::SlaveBegin(TTree* /*tree*/) {
     if (applyScaleFactors != nullptr && applyScaleFactors->GetVal()) {
       SetScaleFactors();
     }
+    TNamed* name = (TNamed*)GetInputList()->FindObject("name");
+    name_ = (name != nullptr) ? name->GetTitle() : GetNameFromFile();
   }
+  if (name_ == "") {
+    std::cerr << "INFO: Using default name \"Unknown\" for file" << std::endl;
+    name_ = "Unknown";
+  }
+  isMC_ = name_.find("data") == std::string::npos;
 }
 
 void SelectorBase::Init(TTree* tree) {
@@ -24,7 +31,6 @@ void SelectorBase::Init(TTree* tree) {
 
   if (GetInputList() != nullptr) {
     TNamed* ntupleType = (TNamed*)GetInputList()->FindObject("ntupleType");
-    TNamed* name = (TNamed*)GetInputList()->FindObject("name");
     TNamed* chan = (TNamed*)GetInputList()->FindObject("channel");
     TNamed* selection = (TNamed*)GetInputList()->FindObject("selection");
 
@@ -41,16 +47,6 @@ void SelectorBase::Init(TTree* tree) {
       ntupleType_ = UWVV;
     }
 
-    if (name != nullptr) {
-      name_ = name->GetTitle();
-    } else {
-      name_ = GetNameFromFile();
-    }
-    if (name_ == "") {
-      std::cerr << "INFO: Using default name \"Unknown\" for file" << std::endl;
-      name_ = "Unknown";
-    }
-
     if (chan != nullptr) {
       channelName_ = chan->GetTitle();
     } else if (ntupleType_ == UWVV)
@@ -65,10 +61,6 @@ void SelectorBase::Init(TTree* tree) {
   } else
     throw std::invalid_argument("Invalid selection!");
 
-  isMC_ = false;
-  if (name_.find("data") == std::string::npos) {
-    isMC_ = true;
-  }
   if (doSystematics_ && isMC_ && !isNonPrompt_)  // isNonpromptEstimate?
     variations_.insert(systematics_.begin(), systematics_.end());
 
