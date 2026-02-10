@@ -85,8 +85,6 @@ public:
     FourTopMVAEl,
   };
 
-  enum Year { yrdefault, yr2022, yr2023, yr2024 };
-
   enum Systematic {
     Central,
     jetEnergyScaleUp,
@@ -150,13 +148,6 @@ public:
       {"FourTopPlots", FourTopPlots},
       {"FourTopCutBasedEl", FourTopCutBasedEl},
       {"FourTopMVAEl", FourTopMVAEl},
-  };
-
-  std::map<std::string, Year> yearMap_ = {
-      {"default", yrdefault},
-      {"2022", yr2022},
-      {"2023", yr2023},
-      {"2024", yr2024},
   };
 
   std::map<std::string, Channel> channelMap_ = {
@@ -259,7 +250,6 @@ protected:
   NtupleType ntupleType_ = NanoAOD;
   std::string selectionName_ = "tightleptons";
   Selection selection_ = tightleptons;
-  Year year_ = yrdefault;
   bool isMC_;
 
   float GetPrefiringEfficiencyWeight(std::vector<float>* jetPt, std::vector<float>* jetEta);

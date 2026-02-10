@@ -27,7 +27,6 @@ void SelectorBase::Init(TTree* tree) {
     TNamed* name = (TNamed*)GetInputList()->FindObject("name");
     TNamed* chan = (TNamed*)GetInputList()->FindObject("channel");
     TNamed* selection = (TNamed*)GetInputList()->FindObject("selection");
-    TNamed* year = (TNamed*)GetInputList()->FindObject("year");
 
     if (ntupleType != nullptr) {
       std::string ntupleName = ntupleType->GetTitle();
@@ -50,9 +49,6 @@ void SelectorBase::Init(TTree* tree) {
     if (name_ == "") {
       std::cerr << "INFO: Using default name \"Unknown\" for file" << std::endl;
       name_ = "Unknown";
-    }
-    if (year != nullptr) {
-      year_ = yearMap_[year->GetTitle()];
     }
 
     if (chan != nullptr) {

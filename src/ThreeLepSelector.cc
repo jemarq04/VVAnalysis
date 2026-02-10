@@ -348,20 +348,12 @@ bool ThreeLepSelector::isGoodElectron(size_t index) {
     else if (abs(Electron_eta[index]) < 2.5)
       caseIndex = 2;
 
-    //if(year_ == yr2016 || year_ == yrdefault) {
-    if (year_ == yrdefault) {
-      if (caseIndex == 0)
-        passId = Electron_MVA[index] > std::max(0.52, 0.77 - 0.025 * (Electron_pt[index] - 15));
-      else if (caseIndex == 1)
-        passId = Electron_MVA[index] > std::max(0.11, 0.56 - 0.045 * (Electron_pt[index] - 15));
-      else if (caseIndex == 2)
-        passId = Electron_MVA[index] > std::max(-0.01, 0.48 - 0.049 * (Electron_pt[index] - 15));
-    }
-    //else if(year_ == yr2017) {
-    // if(caseIndex == 0)        passId = std::max(0.52, 0.77 - 0.025 * (Electron_pt[index] - 15));
-    // else if(caseIndex == 1)   passId = std::max(0.11, 0.56 - 0.045 * (Electron_pt[index] - 15));
-    // else if(caseIndex == 2)   passId = std::max(-0.01, 0.48 - 0.049 * (Electron_pt[index] - 15));
-    //}
+    if (caseIndex == 0)
+      passId = Electron_MVA[index] > std::max(0.52, 0.77 - 0.025 * (Electron_pt[index] - 15));
+    else if (caseIndex == 1)
+      passId = Electron_MVA[index] > std::max(0.11, 0.56 - 0.045 * (Electron_pt[index] - 15));
+    else if (caseIndex == 2)
+      passId = Electron_MVA[index] > std::max(-0.01, 0.48 - 0.049 * (Electron_pt[index] - 15));
   } else
     passId = (Electron_cutBased[index] == CBID_TIGHT);
 
