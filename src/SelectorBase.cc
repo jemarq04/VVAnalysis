@@ -8,18 +8,19 @@ void SelectorBase::Begin(TTree* /*tree*/) { TString option = GetOption(); }
 
 void SelectorBase::SlaveBegin(TTree* /*tree*/) {
   if (GetInputList() != nullptr) {
+    TNamed* name = (TNamed*)GetInputList()->FindObject("name");
+    name_ = (name != nullptr) ? name->GetTitle() : GetNameFromFile();
+    if (name_ == "") {
+      std::cerr << "INFO: Using default name \"Unknown\" for file" << std::endl;
+      name_ = "Unknown";
+    }
+    isMC_ = name_.find("data") == std::string::npos;
+
     TParameter<bool>* applyScaleFactors = (TParameter<bool>*)GetInputList()->FindObject("applyScaleFacs");
     if (applyScaleFactors != nullptr && applyScaleFactors->GetVal()) {
       SetScaleFactors();
     }
-    TNamed* name = (TNamed*)GetInputList()->FindObject("name");
-    name_ = (name != nullptr) ? name->GetTitle() : GetNameFromFile();
   }
-  if (name_ == "") {
-    std::cerr << "INFO: Using default name \"Unknown\" for file" << std::endl;
-    name_ = "Unknown";
-  }
-  isMC_ = name_.find("data") == std::string::npos;
 }
 
 void SelectorBase::Init(TTree* tree) {
