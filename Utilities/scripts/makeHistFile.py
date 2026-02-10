@@ -67,6 +67,7 @@ def makeHistFile(args):
 
     if args["fakerates_file"] and not os.path.isfile(args["fakerates_file"]):
         print("WARNING: file:%s not found -> no fake rates added" % args["fakerates_file"])
+        args["fakerates_file"] = ""
 
     fr_inputs = []
     if args["fakerates_file"] or args["apply_scalefactors"]:
@@ -81,18 +82,15 @@ def makeHistFile(args):
                     eZZTightFakeRate.SetName("fakeRate_allE")
                 fr_inputs = [eZZTightFakeRate, mZZTightFakeRate]
 
-            # basename = ROOT.TNamed("basename", "/cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration/POG")
-            basename = ROOT.TNamed("basename", "%s/src/Analysis/VVAnalysis/data/XPOG" % os.environ["CMSSW_BASE"])
-            yearcfg = ROOT.TNamed("yearcfg", args["year"])
-
-            sf_inputs = [basename, yearcfg]
-
-            # Optional inputs
-            # sf_inputs.append(ROOT.TNamed("qqZZ_kfac", "data/qqZZ_kfacs.json"))
-            sf_inputs.append(ROOT.TNamed("eIdSF", "data/ElectronSF_HZZ.json"))
-            sf_inputs.append(ROOT.TNamed("mIdSF", "data/MuonSF_HZZ.json"))
+            sf_inputs = [
+                ROOT.TNamed("basename", "%s/src/Analysis/VVAnalysis/data/XPOG" % os.environ["CMSSW_BASE"]),
+                ROOT.TNamed("yearcfg", args["year"]),
+                # ROOT.TNamed("qqZZ_kfac", "data/qqZZ_kfacs.json"),
+                ROOT.TNamed("eIdSF", "data/ElectronSF_HZZ.json"),
+                ROOT.TNamed("mIdSF", "data/MuonSF_HZZ.json"),
+            ]
         else:
-            # The lines below use Run 2
+            # This block below has not been updated since Run 2
             fScales = ROOT.TFile("data/scaleFactors.root")
             mCBTightFakeRate = fScales.Get("mCBTightFakeRate")
             eCBTightFakeRate = fScales.Get("eCBTightFakeRate")
@@ -188,14 +186,11 @@ def makeHistFile(args):
         if rval == 0:
             list(map(os.remove, combinedNames))
 
+    fOut.Close()
     if args["test"]:
-        fOut.Close()
         sys.exit(0)
 
-    fOut.Close()
-    # sys.exit()
     fOut = ROOT.TFile.Open(tmpFileName, "update")
-    # pdb.set_trace()
     alldata = HistTools.makeCompositeHists(
         fOut,
         "AllData",
@@ -237,8 +232,7 @@ def makeHistFile(args):
 
 
 def main():
-    args = getComLineArgs()
-    makeHistFile(args)
+    makeHistFile(getComLineArgs())
     exit(0)
 
 
