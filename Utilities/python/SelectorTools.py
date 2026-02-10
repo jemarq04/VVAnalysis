@@ -351,7 +351,7 @@ class SelectorDriver(object):
         logging.debug("Processed with selector %s." % selector.GetName())
         if addSumweights:
             self.fillSumweightsHist(rtfile, filenum)
-        logging.debug("Added sumweights hist.")
+            logging.debug("Added sumweights hist.")
         rtfile.Close()
 
     # You can use filenum to index the files and sum separately, but it's not necessary
