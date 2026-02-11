@@ -220,6 +220,7 @@ protected:
   bool isNonpromptEstimate_;
   bool isNonpromptMC_;
   bool isZgamma_;
+  bool skipEvent_2e2m_ = false;
   const float FR_MAX_PT_ = 80;
   const float FR_MAX_ETA_ = 2.5;
   const float MuSF_MIN_PT_ = 3, MuSF_MAX_PT_ = 200, MuSF_MAX_ETA_ = 2.4;
@@ -230,7 +231,7 @@ protected:
   virtual void SetBranchesUWVV() override;
   void LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::string> variation) override;
   void LoadBranchesNanoAOD(Long64_t entry, std::pair<Systematic, std::string> variation) override;
-  bool e1e2IsZ1(Long64_t entry);
+  bool e1e2IsZ1();
   bool lep1IsTight();
   bool lep2IsTight();
   bool lep3IsTight();

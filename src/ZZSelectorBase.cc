@@ -544,14 +544,15 @@ void ZZSelectorBase::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std:
     weight = genWeight;  //originalXWGTUP; //genWeight;
   }
 
-  if (channel_ == mmee) {
-    if (e1e2IsZ1(entry))
-      weight = 0.0;
-    //Makes weight 0 if Z1 is ee hence should not go in _mmee histos
-  } else if (channel_ == eemm) {
-    if (!(e1e2IsZ1(entry)))
-      weight = 0.0;
-    //Makes weight 0 if Z1 is mm hence should not go in _eemm
+  //Makes weight 0 if Z1 is mm hence should not go in _eemm
+  if (channel_ == eemm){
+    weight = 0.0;
+    skipEvent_2e2m_ = !e1e2IsZ1();
+  }
+  //Makes weight 0 if Z1 is ee hence should not go in _mmee histos
+  else if (channel_ == mmee){
+    weight = 0.0;
+    skipEvent_2e2m_ = e1e2IsZ1();
   }
 }
 
@@ -560,17 +561,13 @@ void ZZSelectorBase::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std:
 //Can I save some kind of flag to identify the order of leptons for each event
 //I think this part might need to be added to the ZZSelector and BackgroundSelector and the condition checked at
 //process time for each event.
-bool ZZSelectorBase::e1e2IsZ1(Long64_t entry) {
+bool ZZSelectorBase::e1e2IsZ1() {
   //4P Signal region logic where I need to differentiate between two tight pairs and assign Z1 depending on which is closer to mZ
   if (tightZ1Leptons() && tightZ2Leptons())
     return fabs(Z1Mass - 91.1876) < fabs(Z2Mass - 91.1876);
   //In CRs it doesn't matter, the tight pair builds the Z and the other pair is X in Z+X.
-  else if (tightZ1Leptons() && !tightZ2Leptons())
-    return true;
-  else if (!tightZ1Leptons() && tightZ2Leptons())
-    return false;
   else
-    return false;
+    return tightZ1Leptons() && !tightZ2Leptons();
 }
 
 // Meant to be a wrapper for the tight ID just in case it changes

@@ -310,6 +310,8 @@ bool ZZSelector::CheckQQZZ() {
 
 void ZZSelector::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::string> variation) {
   ZZSelectorBase::LoadBranchesUWVV(entry, variation);
+  if ((channel_ == eemm || channel_ == mmee) && skipEvent_2e2m_)
+    return;
 
   passCurrentTrig = (fCutFormula && fCutFormula->EvalInstance() > 0.);
 
@@ -652,7 +654,7 @@ void ZZSelector::ApplyScaleFactors() {
 
 void ZZSelector::SetVariables(Long64_t entry) {
   // By default, e1e2 is Z1. if that's not true, swap Z candidate entries
-  if (!(e1e2IsZ1(entry))) {
+  if (!(e1e2IsZ1())) {
     std::swap(Z1Mass, Z2Mass);
     std::swap(Z1Pt, Z2Pt);
     std::swap(Z1Eta, Z2Eta);
@@ -1067,6 +1069,8 @@ std::string ZZSelector::GetEleRecoSFName(Float_t ele_pt) {
 }
 
 void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::string> variation) {
+  if ((channel_ == eemm || channel_ == mmee) && skipEvent_2e2m_)
+    return;
   //weight = 1; //NOTE: unweighted
   //if (entry == 0 && variation.first == Central)
   //  std::cout << fChain->GetTree()->GetDirectory()->GetFile()->GetName() << std::endl;

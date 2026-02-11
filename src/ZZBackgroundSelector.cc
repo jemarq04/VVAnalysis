@@ -67,10 +67,10 @@ void ZZBackgroundSelector::SetupNewDirectory() {
 float ZZBackgroundSelector::getEventWeight(Long64_t entry) {
   float evtwgt = 0;
 
-  if (channel_ == mmee && (e1e2IsZ1(entry)))
+  if (channel_ == mmee && (e1e2IsZ1()))
     WeightsHistmmee_->Fill(1, weight);
 
-  if (channel_ == eemm && !(e1e2IsZ1(entry)))
+  if (channel_ == eemm && !(e1e2IsZ1()))
     WeightsHisteemm_->Fill(1, weight);
 
   //if (channel_ == eeee || channel_ == mmmm){
@@ -140,12 +140,12 @@ void ZZBackgroundSelector::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic
 float ZZBackgroundSelector::getl3FakeRate(Long64_t entry) {
   float pt_fillval = l3Pt < FR_MAX_PT_ ? l3Pt : FR_MAX_PT_ - 0.01;
   float fr = 1;
-  if (channel_ == eeee || (channel_ == mmee && !(e1e2IsZ1(entry)))) {
+  if (channel_ == eeee || (channel_ == mmee && !(e1e2IsZ1()))) {
     fr = fakeRate_allE_->Evaluate2D(pt_fillval, std::abs(l3Eta));
     //fr = 0.03;//avg e fake rate
     //std::cout<<"channel: "<<channel_<<std::endl;
     //std::cout<<"l3 E Fake Rate: "<<fr<<std::endl;
-  } else if (channel_ == mmmm || (channel_ == eemm && (e1e2IsZ1(entry)))) {
+  } else if (channel_ == mmmm || (channel_ == eemm && (e1e2IsZ1()))) {
     fr = fakeRate_allMu_->Evaluate2D(pt_fillval, std::abs(l3Eta));
     //fr = 0.1;//avg mu fake rate
     //std::cout<<"channel: "<<channel_<<std::endl;
@@ -159,12 +159,12 @@ float ZZBackgroundSelector::getl3FakeRate(Long64_t entry) {
 float ZZBackgroundSelector::getl4FakeRate(Long64_t entry) {
   float pt_fillval = l4Pt < FR_MAX_PT_ ? l4Pt : FR_MAX_PT_ - 0.01;
   float fr = 1;
-  if (channel_ == eeee || (channel_ == mmee && !(e1e2IsZ1(entry)))) {
+  if (channel_ == eeee || (channel_ == mmee && !(e1e2IsZ1()))) {
     fr = fakeRate_allE_->Evaluate2D(pt_fillval, std::abs(l4Eta));
     //fr = 0.03;//avg e fake rate
     //std::cout<<"channel: "<<channel_<<std::endl;
     //std::cout<<"l4 E Fake Rate: "<<fr<<std::endl;
-  } else if (channel_ == mmmm || (channel_ == eemm && (e1e2IsZ1(entry)))) {
+  } else if (channel_ == mmmm || (channel_ == eemm && (e1e2IsZ1()))) {
     fr = fakeRate_allMu_->Evaluate2D(pt_fillval, std::abs(l4Eta));
     //fr = 0.1;//avg mu fake rate
     //std::cout<<"channel: "<<channel_<<std::endl;
