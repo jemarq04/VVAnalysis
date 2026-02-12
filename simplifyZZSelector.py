@@ -17,7 +17,7 @@ def listToStr(list):
     return "{%s}" % empty
 
 
-dict = {}
+thedict = {}
 ldict = {}
 mapdict = {}
 odict = {}
@@ -321,11 +321,11 @@ if "scaleWeightIDs" in weighthists1DList:
 # weighthists1DList = baseList
 # weighthists1DList = ["yield", "Mass", "MassFull", "nJets", "jetPt[1]", "jetPt[0]", "jetEta[0]", "jetEta[1]", "absjetEta[0]", "absjetEta[1]", "mjj", "dEtajj", "Mass0j", "Mass1j", "Mass2j", "Mass3j", "Mass34j", "Mass4j", "Mass0jFull", "Mass1jFull", "Mass2jFull", "Mass3jFull", "Mass34jFull", "Mass4jFull"]
 
-dict["systHists"] = listToStr(systHistList)
-dict["hists1D"] = listToStr(hists1DList)
-dict["jetTest2D"] = listToStr(jetTest2DList)
-dict["jethists1D"] = listToStr(jethists1DList)
-dict["weighthists1D"] = listToStr(weighthists1DList)
+thedict["systHists"] = listToStr(systHistList)
+thedict["hists1D"] = listToStr(hists1DList)
+thedict["jetTest2D"] = listToStr(jetTest2DList)
+thedict["jethists1D"] = listToStr(jethists1DList)
+thedict["weighthists1D"] = listToStr(weighthists1DList)
 
 # systHists used in Selector code to check whether need to do syst, so hists1D enough to contain the list for purpose here
 # ldict["systHists"] = systHistList
@@ -348,7 +348,7 @@ mapdict["weighthists1D"] = "weighthistMap1D_"
 
 ft = open("src/ZZSelector.template", "r")
 template = string.Template(ft.read())
-output = template.substitute(dict)
+output = template.substitute(thedict)
 with open("src/ZZSelectorTemplateFilledTmp.cc", "w") as fout:
     fout.write(output)
 
