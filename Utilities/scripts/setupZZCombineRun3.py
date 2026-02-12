@@ -18,7 +18,7 @@ def main():
         default=["eeee", "eemm", "mmee", "mmmm"],
         help="comma-separated list of channels",
     )
-    parser.add_argument("--autoMCStats", action="store_true", help="use Combine's autoMCStats feature")
+    parser.add_argument("--autoMCStats", type=float, help="set threshold for Combine's autoMCStats feature")
     parser.add_argument("year", choices=[2022, 2023], type=int, help="year for analysis (e.g. 2022 for ZZ4l2022")
     args = parser.parse_args()
 

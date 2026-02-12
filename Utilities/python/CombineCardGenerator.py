@@ -49,7 +49,7 @@ class CombineCardGenerator:
         bkg_procs: list,
         channels: list = None,
         lumi: float = None,
-        auto_stats: bool = False,
+        auto_stats: float = None,
         add_overflow: bool = False,
     ):
         if channels is None:
@@ -243,6 +243,7 @@ class CombineCardGenerator:
                 outfile.write(
                     f"shapes {'data_obs':<{self.longest_procname}} * {outdir}/{self.analysis}.root data/{fit_variable_name}\n\n"
                 )
+                outfile.write("------------\n")
                 outfile.write(f"bin         {chan}\n")
                 outfile.write(f"observation {self.data['data'].yields[chan]}\n\n")
                 outfile.write("------------\n\n")
@@ -285,8 +286,8 @@ class CombineCardGenerator:
                         outfile.write(f"{row[i]:<{longest_cells[i]}}    ")
                     outfile.write("\n")
 
-                if self.auto_stats:
-                    outfile.write("\n* autoMCStats 1\n")
+                if self.auto_stats is not None:
+                    outfile.write(f"\n* autoMCStats {self.auto_stats}\n")
 
     def __del__(self):
         if self.hist_infile:
