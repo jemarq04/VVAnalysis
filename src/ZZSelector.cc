@@ -18,10 +18,10 @@ void ZZSelector::Init(TTree* tree) {
   // This would be set true inside ZZBackground Selector
   // isNonPrompt_ = false;
 
-  systHists_ = {"yield",      "Mass",       "MassFull",     "nJets",        "jetPt[1]",    "jetPt[0]",
-                "jetEta[0]",  "jetEta[1]",  "absjetEta[0]", "absjetEta[1]", "mjj",         "dEtajj",
-                "Mass0j",     "Mass1j",     "Mass2j",       "Mass3j",       "Mass34j",     "Mass4j",
-                "Mass0jFull", "Mass1jFull", "Mass2jFull",   "Mass3jFull",   "Mass34jFull", "Mass4jFull"};
+  systHists_ = {"yield",      "Mass",       "MassFull",     "nJets",        "nJets_central", "jetPt[1]",   "jetPt[0]",
+                "jetEta[0]",  "jetEta[1]",  "absjetEta[0]", "absjetEta[1]", "mjj",           "dEtajj",     "Mass0j",
+                "Mass1j",     "Mass2j",     "Mass3j",       "Mass34j",      "Mass4j",        "Mass0jFull", "Mass1jFull",
+                "Mass2jFull", "Mass3jFull", "Mass34jFull",  "Mass4jFull"};
   // hists1D_ = {
   //      "yield", "backgroundControlYield","nTruePU","nvtx","ZMass","Z1Mass","Z2Mass","ZZPt",
   //      "Z1Pt","Z2Pt","Z1Phi","Z2Phi","dPhiZ1Z2","ZPt","LepPt","LepEta",
@@ -134,6 +134,7 @@ void ZZSelector::Init(TTree* tree) {
                     "e2PtSorted",
                     "Mass",
                     "nJets",
+                    "nJets_central",
                     "MassFull",
                     "SIP3D",
                     "PVDZ",
