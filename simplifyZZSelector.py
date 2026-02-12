@@ -5,16 +5,8 @@ import os
 overwrite = False
 
 
-def listToStr(list):
-    # Do something like ['a','b','c'] -> "{\"a\",\"b\",\"c\"}"
-    empty = ""
-    for i, st in enumerate(list):
-        if i < len(list) - 1:
-            empty += '"' + st + '",'
-        else:
-            empty += '"' + st + '"'
-
-    return "{%s}" % empty
+def listToStr(inlist):
+    return "{%s}" % ",".join(f'"{x}"' for x in inlist)
 
 
 thedict = {}
