@@ -19,7 +19,7 @@ def main():
         help="comma-separated list of channels",
     )
     parser.add_argument("--autoMCStats", type=float, help="set threshold for Combine's autoMCStats feature")
-    parser.add_argument("year", choices=[2022, 2023], type=int, help="year for analysis (e.g. 2022 for ZZ4l2022")
+    parser.add_argument("year", type=int, help="year for analysis (e.g. 2022 for ZZ4l2022)")
     args = parser.parse_args()
 
     from python import CombineCardGenerator
@@ -51,6 +51,9 @@ def main():
         parser.error(f"file {args.infile} does not exist")
     elif not args.infile.endswith(".root"):
         parser.error(f"file {args.infile} is not a valid ROOT file")
+
+    if args.year not in fileMap.keys():
+        parser.error(f"year {args.year} is not valid. choose from {','.join(fileMap.keys())}")
 
     if not os.path.isdir(args.outdir):
         try:
