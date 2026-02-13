@@ -243,7 +243,7 @@ class CombineCardGenerator:
                 outfile.write(
                     f"shapes {'data_obs':<{self.longest_procname}} * {outdir}/{self.analysis}.root data/{fit_variable_name}\n\n"
                 )
-                outfile.write("------------\n")
+                outfile.write("------------\n\n")
                 outfile.write(f"bin         {chan}\n")
                 outfile.write(f"observation {self.data['data'].yields[chan]}\n\n")
                 outfile.write("------------\n\n")
