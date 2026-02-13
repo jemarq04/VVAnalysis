@@ -545,7 +545,7 @@ void ZZSelectorBase::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std:
   }
 
   //Makes weight 0 if Z1 is mm hence should not go in _eemm
-  if (channel_ == eemm && !e2e2IsZ1()){
+  if (channel_ == eemm && !e1e2IsZ1()){
     weight = 0.0;
     skipEvent_2e2m_ = true;
   }
