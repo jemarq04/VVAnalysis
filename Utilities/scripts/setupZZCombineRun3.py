@@ -32,7 +32,7 @@ def main():
         2024: "HistFiles/Hists-ZZ4l2024.root",
     }
     lumi_info = ConfigureJobs.getLumiMap()
-    years = lumi_info[args.analysis]["years"]
+    years = lumi_info["Run3Combined"]["years"]
     lumiMap = {int(year): float("%.3f" % ConfigureJobs.getLuminosity(year)) for year in years}
     lumiUncMap = {  # TODO: 2024 still set to 0.0
         int(year): lumi_info[year]["unc"] for year in years
