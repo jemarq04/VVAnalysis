@@ -545,15 +545,17 @@ void ZZSelectorBase::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std:
   }
 
   //Makes weight 0 if Z1 is mm hence should not go in _eemm
-  if (channel_ == eemm){
+  if (channel_ == eemm && !e2e2IsZ1()){
     weight = 0.0;
-    skipEvent_2e2m_ = !e1e2IsZ1();
+    skipEvent_2e2m_ = true;
   }
   //Makes weight 0 if Z1 is ee hence should not go in _mmee histos
-  else if (channel_ == mmee){
+  else if (channel_ == mmee && e1e2IsZ1()){
     weight = 0.0;
-    skipEvent_2e2m_ = e1e2IsZ1();
+    skipEvent_2e2m_ = true;
   }
+  else
+    skipEvent_2e2m_ = false;
 }
 
 //This condition identifies the Z1 candidate
