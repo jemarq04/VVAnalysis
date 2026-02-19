@@ -9,6 +9,7 @@ def main():
     parser.add_argument("-i", "--infile", help="name of input histogram file")
     parser.add_argument("-o", "--outdir", default="combine", help="name of output directory for the datacard(s)")
     parser.add_argument("-f", "--fit-var", default="Mass", help="fit variable (default: Mass)")
+    parser.add_argument("--rebin", type=lambda x: [float(i) for i in x.split(",")], help="list of comma-separated floats for hist rebinning")
     parser.add_argument("-l", "--lumi", help="luminosity")
     parser.add_argument("-a", "--analysis", default="Run3Combined", help="name of analysis")
     parser.add_argument(
@@ -109,7 +110,7 @@ def main():
 
     # Finally, you can create the cards by specifying the
     # output directory for them.
-    generator.GenerateCards(args.outdir)
+    generator.GenerateCards(args.outdir, rebin=args.rebin)
 
 
 if __name__ == "__main__":

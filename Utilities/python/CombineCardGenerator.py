@@ -1,6 +1,7 @@
 import os
 import json
-from typing import Union
+import array
+from typing import Union, Optional
 
 import ROOT
 from . import ConfigureJobs
@@ -128,7 +129,7 @@ class CombineCardGenerator:
                         procs[procname].AddVariations(name)
             self.has_shape_type = True
 
-    def _LoadHistInfo(self):
+    def _LoadHistInfo(self, rebin: Optional[list]):
         # Access plot groups
         manager_path = ConfigureJobs.getManagerPath()
         manager_name = ConfigureJobs.getManagerName()
@@ -166,6 +167,7 @@ class CombineCardGenerator:
                     self.lumi,
                     hists=plotnames,
                     overflow=self.add_overflow,
+                    rebin=array.array("d", rebin) if rebin is not None else None,
                 )
                 self.hist_data[procname] = group
 
@@ -202,11 +204,11 @@ class CombineCardGenerator:
                     OutputTools.writeOutputListItem(hists, hist_outfile)
                     hists.Delete()
 
-    def GenerateCards(self, outdir: str):
+    def GenerateCards(self, outdir: str, rebin: Optional[list]):
         if not os.path.isdir(outdir):
             raise ValueError("invalid directory: %s" % outdir)
 
-        self._LoadHistInfo()
+        self._LoadHistInfo(rebin)
         self._WriteHists(outdir)
 
         # Print card for each requested channel
