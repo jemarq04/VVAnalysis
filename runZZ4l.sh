@@ -15,8 +15,12 @@ year=$1
 [[ $year = all ]] && year="2022 2023 2024"
 
 for yr in $year; do
-  frfile=data/fakeScaleFactorsRun3-ZZ4lRun3Combined.root
+  frfile=data/fakeScaleFactorsRun3-ZZ4l$yr.root
   [[ ! -z $2 ]] && frfile=$2
+  if [[ ! -f $frfile ]]; then
+    echo invalid file: $frfile
+    exit 1
+  fi
 
   # Without nonprompt contribution
   #./Utilities/scripts/makeHistFile.py -f ZZ4l$yr -a ZZ4l$yr -s LooseLeptons --year $yr -c eeee,eemm,mmee,mmmm -j 12 -sf #--with_Gen
