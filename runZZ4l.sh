@@ -21,6 +21,7 @@ for yr in $year; do
     echo invalid file: $frfile
     exit 1
   fi
+  echo Using FR file $frfile
 
   # Without nonprompt contribution
   #./Utilities/scripts/makeHistFile.py -f ZZ4l$yr -a ZZ4l$yr -s LooseLeptons --year $yr -c eeee,eemm,mmee,mmmm -j 12 -sf #--with_Gen
