@@ -553,7 +553,7 @@ void ZZSelector::ApplyScaleFactors() {
           weight *= recoref->evaluate({EleRecoSF_Name_.c_str(), "sf", GetEleRecoSFName(pt_e4), l4Eta, pt_e4});
       }
     }
-  } else if (channel_ == eemm) {
+  } else if (channel_ == eemm || channel_ == mmee) {
     float pt_e1 = l1Pt < EleSF_MAX_PT_ ? l1Pt : EleSF_MAX_PT_ - 0.01;
     float pt_e2 = l2Pt < EleSF_MAX_PT_ ? l2Pt : EleSF_MAX_PT_ - 0.01;
     float pt_m3 = l3Pt < MuSF_MAX_PT_ ? l3Pt : MuSF_MAX_PT_ - 0.01;
@@ -592,46 +592,6 @@ void ZZSelector::ApplyScaleFactors() {
         weight *= mIdSF_->at(year.c_str())->evaluate({l3Eta, pt_m3, "nominal"});
       if (pt_m4 > MuSF_MIN_PT_)
         weight *= mIdSF_->at(year.c_str())->evaluate({l4Eta, pt_m4, "nominal"});
-    }
-  } else if (channel_ == mmee) {
-    float pt_m1 = l1Pt < MuSF_MAX_PT_ ? l1Pt : MuSF_MAX_PT_ - 0.01;
-    float pt_m2 = l2Pt < MuSF_MAX_PT_ ? l2Pt : MuSF_MAX_PT_ - 0.01;
-    float pt_e3 = l3Pt < EleSF_MAX_PT_ ? l3Pt : EleSF_MAX_PT_ - 0.01;
-    float pt_e4 = l4Pt < EleSF_MAX_PT_ ? l4Pt : EleSF_MAX_PT_ - 0.01;
-    if (mIdSF_ != nullptr) {
-      if (pt_m1 > MuSF_MIN_PT_)
-        weight *= mIdSF_->at(year.c_str())->evaluate({l1Eta, pt_m1, "nominal"});
-      if (pt_m2 > MuSF_MIN_PT_)
-        weight *= mIdSF_->at(year.c_str())->evaluate({l2Eta, pt_m2, "nominal"});
-    }
-    if (eIdSF_ != nullptr) {
-      if (pt_e3 > EleSF_MIN_PT_) {
-        if (year == "2023D" && (l3Eta < 0 && l3Eta > -1.5 && l3Phi < -0.8 && l3Phi > -1.2))
-          weight *= eIdSF_->at("2023D_Hole")->evaluate({l3Eta, pt_e3, "nominal"});
-        else
-          weight *= eIdSF_->at(year.c_str())->evaluate({l3Eta, pt_e3, "nominal"});
-      }
-      if (pt_e4 > EleSF_MIN_PT_) {
-        if (year == "2023D" && (l4Eta < 0 && l4Eta > -1.5 && l4Phi < -0.8 && l4Phi > -1.2))
-          weight *= eIdSF_->at("2023D_Hole")->evaluate({l4Eta, pt_e4, "nominal"});
-        else
-          weight *= eIdSF_->at(year.c_str())->evaluate({l4Eta, pt_e4, "nominal"});
-      }
-    }
-    if (eRecoSF_ != nullptr) {
-      const auto recoref = (*eRecoSF_->begin()).second;
-      if (pt_e3 > EleRecoSF_MIN_PT_) {
-        if (EleRecoSF_Name_.rfind("2023", 0) != std::string::npos)
-          weight *= recoref->evaluate({EleRecoSF_Name_.c_str(), "sf", GetEleRecoSFName(pt_e3), l3Eta, pt_e3, l3Phi});
-        else
-          weight *= recoref->evaluate({EleRecoSF_Name_.c_str(), "sf", GetEleRecoSFName(pt_e3), l3Eta, pt_e3});
-      }
-      if (pt_e4 > EleRecoSF_MIN_PT_) {
-        if (EleRecoSF_Name_.rfind("2023", 0) != std::string::npos)
-          weight *= recoref->evaluate({EleRecoSF_Name_.c_str(), "sf", GetEleRecoSFName(pt_e4), l4Eta, pt_e4, l4Phi});
-        else
-          weight *= recoref->evaluate({EleRecoSF_Name_.c_str(), "sf", GetEleRecoSFName(pt_e4), l4Eta, pt_e4});
-      }
     }
   } else {
     float pt_m1 = l1Pt < MuSF_MAX_PT_ ? l1Pt : MuSF_MAX_PT_ - 0.01;
@@ -814,8 +774,7 @@ void ZZSelector::ShiftEfficiencies(Systematic variation) {
         }
       }
     }
-  }  // channel eeee
-  else if (channel_ == eemm) {
+  } else if (channel_ == eemm || channel_ == mmee) {
     // In order to get around the Overflow issue, set the Pt, not ideal.
     float pt_e1 = l1Pt < EleSF_MAX_PT_ ? l1Pt : EleSF_MAX_PT_ - 0.01;
     float pt_e2 = l2Pt < EleSF_MAX_PT_ ? l2Pt : EleSF_MAX_PT_ - 0.01;
@@ -889,81 +848,6 @@ void ZZSelector::ShiftEfficiencies(Systematic variation) {
         if (pt_m4 > MuSF_MIN_PT_)
           weight *= mIdSF_->at(year.c_str())->evaluate({l4Eta, pt_m4, shift}) /
                     mIdSF_->at(year.c_str())->evaluate({l4Eta, pt_m4, "nominal"});
-      }
-    }
-  } else if (channel_ == mmee) {
-    float pt_m1 = l1Pt < MuSF_MAX_PT_ ? l1Pt : MuSF_MAX_PT_ - 0.01;
-    float pt_m2 = l2Pt < MuSF_MAX_PT_ ? l2Pt : MuSF_MAX_PT_ - 0.01;
-    float pt_e3 = l3Pt < EleSF_MAX_PT_ ? l3Pt : EleSF_MAX_PT_ - 0.01;
-    float pt_e4 = l4Pt < EleSF_MAX_PT_ ? l4Pt : EleSF_MAX_PT_ - 0.01;
-    if (variation == muonEfficiencyUp || variation == muonEfficiencyDown) {
-      if (mIdSF_ != nullptr) {
-        if (pt_m1 > MuSF_MIN_PT_)
-          weight *= mIdSF_->at(year.c_str())->evaluate({l1Eta, pt_m1, shift}) /
-                    mIdSF_->at(year.c_str())->evaluate({l1Eta, pt_m1, "nominal"});
-        if (pt_m2 > MuSF_MIN_PT_)
-          weight *= mIdSF_->at(year.c_str())->evaluate({l2Eta, pt_m2, shift}) /
-                    mIdSF_->at(year.c_str())->evaluate({l2Eta, pt_m2, "nominal"});
-      }
-    } else if (variation == electronRecoEffUp || variation == electronRecoEffDown) {
-      // Applying Electron Reco SFs Up/Down for ElectronRecoEffSyst
-      if (eRecoSF_ != nullptr) {
-        const auto recoref = (*eRecoSF_->begin()).second;
-        if (pt_e3 > EleRecoSF_MIN_PT_) {
-          if (EleRecoSF_Name_.rfind("2023", 0) != std::string::npos)
-            weight *= recoref->evaluate({EleRecoSF_Name_.c_str(),
-                                         (shift == "up") ? "sfup" : "sfdown",
-                                         GetEleRecoSFName(pt_e3),
-                                         l3Eta,
-                                         pt_e3,
-                                         l3Phi}) /
-                      recoref->evaluate({EleRecoSF_Name_.c_str(), "sf", GetEleRecoSFName(pt_e3), l3Eta, pt_e3, l3Phi});
-          else
-            weight *= recoref->evaluate({EleRecoSF_Name_.c_str(),
-                                         (shift == "up") ? "sfup" : "sfdown",
-                                         GetEleRecoSFName(pt_e3),
-                                         l3Eta,
-                                         pt_e3}) /
-                      recoref->evaluate({EleRecoSF_Name_.c_str(), "sf", GetEleRecoSFName(pt_e3), l3Eta, pt_e3});
-        }
-        if (pt_e4 > EleRecoSF_MIN_PT_) {
-          if (EleRecoSF_Name_.rfind("2023", 0) != std::string::npos)
-            weight *= recoref->evaluate({EleRecoSF_Name_.c_str(),
-                                         (shift == "up") ? "sfup" : "sfdown",
-                                         GetEleRecoSFName(pt_e4),
-                                         l4Eta,
-                                         pt_e4,
-                                         l4Phi}) /
-                      recoref->evaluate({EleRecoSF_Name_.c_str(), "sf", GetEleRecoSFName(pt_e4), l4Eta, pt_e4, l4Phi});
-          else
-            weight *= recoref->evaluate({EleRecoSF_Name_.c_str(),
-                                         (shift == "up") ? "sfup" : "sfdown",
-                                         GetEleRecoSFName(pt_e4),
-                                         l4Eta,
-                                         pt_e4}) /
-                      recoref->evaluate({EleRecoSF_Name_.c_str(), "sf", GetEleRecoSFName(pt_e4), l4Eta, pt_e4});
-        }
-      }
-    }
-    // Applying Electron ID SFs Up/Down for ElectronIDEffSyst
-    else if (variation == electronEfficiencyUp || variation == electronEfficiencyDown) {
-      if (eIdSF_ != nullptr) {
-        if (pt_e3 > EleSF_MIN_PT_) {
-          if (year == "2023D" && (l3Eta < 0 && l3Eta > -1.5 && l3Phi < -0.8 && l3Phi > -1.2))
-            weight *= eIdSF_->at("2023D_Hole")->evaluate({l3Eta, pt_e3, shift}) /
-                      eIdSF_->at("2023D_Hole")->evaluate({l3Eta, pt_e3, "nominal"});
-          else
-            weight *= eIdSF_->at(year.c_str())->evaluate({l3Eta, pt_e3, shift}) /
-                      eIdSF_->at(year.c_str())->evaluate({l3Eta, pt_e3, "nominal"});
-        }
-        if (pt_e4 > EleSF_MIN_PT_) {
-          if (year == "2023D" && (l4Eta < 0 && l4Eta > -1.5 && l4Phi < -0.8 && l4Phi > -1.2))
-            weight *= eIdSF_->at("2023D_Hole")->evaluate({l4Eta, pt_e4, shift}) /
-                      eIdSF_->at("2023D_Hole")->evaluate({l4Eta, pt_e4, "nominal"});
-          else
-            weight *= eIdSF_->at(year.c_str())->evaluate({l4Eta, pt_e4, shift}) /
-                      eIdSF_->at(year.c_str())->evaluate({l4Eta, pt_e4, "nominal"});
-        }
       }
     }
   } else if (channel_ == mmmm && (variation == muonEfficiencyUp || variation == muonEfficiencyDown)) {
