@@ -177,7 +177,7 @@ class CombineCardGenerator:
                     # if "data" not in procname.lower():
                     #    HistTools.removeZeros(hist)
 
-                    procs[procname].yields[chan] += round(hist.Integral(), 4) if hist.Integral() > 0 else 0.0001
+                    procs[procname].yields[chan] += round(hist.Integral(), 4)  # if hist.Integral() > 0 else 0.0001
                     procs[procname].yields["all"] += procs[procname].yields[chan]
 
     def _WriteHists(self, outdir: str):
