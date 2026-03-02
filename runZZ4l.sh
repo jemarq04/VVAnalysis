@@ -26,6 +26,9 @@ for yr in $year; do
   # Without nonprompt contribution
   #./Utilities/scripts/makeHistFile.py -f ZZ4l$yr -a ZZ4l$yr -s LooseLeptons --year $yr -c eeee,eemm,mmee,mmmm -j 12 -sf #--with_Gen
 
+  # For systematics
+  #./Utilities/scripts/makeHistFile.py -f ZZ4l$yr -a ZZ4l$yr -s LooseLeptons --year $yr -c eeee,eemm,mmee,mmmm -j 12 -sf --doSystematics
+
   ./Utilities/scripts/makeHistFile.py -f ZZ4l$yr -a ZZ4l$yr -s LooseLeptons --year $yr -c eeee,eemm,mmee,mmmm -j 12 -sf --with_background -F $frfile
 
   echo "$yr done!!==================================="
