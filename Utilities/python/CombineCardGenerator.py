@@ -182,7 +182,8 @@ class CombineCardGenerator:
 
     def _WriteHists(self, outdir: str):
         with ROOT.TFile.Open(f"{outdir}/{self.analysis}.root", "RECREATE") as hist_outfile:
-            summed_hists = {}
+            summed_hists = {"AllMC": ROOT.TList()}
+            summed_hists["AllMC"].SetName("AllMC")
             for procs in [self.sig_procs, self.bkg_procs, self.data]:
                 for procname in procs:
                     hists = self.hist_data[procname]
@@ -190,19 +191,32 @@ class CombineCardGenerator:
                         summed_hists[procname] = ROOT.TList()
                         summed_hists[procname].SetName(procname)
                     for h in hists:
+                        if procname != "data":
+                            sumhist = summed_hists["AllMC"].FindObject(h.GetName())
+                            if sumhist:
+                                sumhist.Add(h)
+                            else:
+                                summed_hists["AllMC"].Add(h.Clone())
+
                         histname = "_".join(h.GetName().split("_")[:-1])
                         sumhist = summed_hists[procname].FindObject(histname)
                         if sumhist:
                             sumhist.Add(h)
                         else:
                             summed_hists[procname].Add(h.Clone(histname))
+
                     OutputTools.writeOutputListItem(hists, hist_outfile)
                     hists.Delete()
+
             for procs in [self.sig_procs, self.bkg_procs, self.data]:
                 for procname in procs:
                     hists = summed_hists[procname]
                     OutputTools.writeOutputListItem(hists, hist_outfile)
                     hists.Delete()
+
+            hists = summed_hists["AllMC"]
+            OutputTools.writeOutputListItem(hists, hist_outfile)
+            hists.Delete()
 
     def GenerateCards(self, outdir: str, rebin: Optional[list]):
         if not os.path.isdir(outdir):
