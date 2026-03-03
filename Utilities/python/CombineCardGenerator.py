@@ -174,8 +174,8 @@ class CombineCardGenerator:
                 for chan in self.all_channels:
                     histname = "_".join([self.fit_variable, chan])
                     hist = group.FindObject(histname)
-                    # if "data" not in procname.lower():
-                    #    HistTools.removeZeros(hist)
+                    if "data" not in procname.lower():
+                        HistTools.removeZeros(hist)
 
                     procs[procname].yields[chan] += round(hist.Integral(), 4)  # if hist.Integral() > 0 else 0.0001
                     procs[procname].yields["all"] += procs[procname].yields[chan]
