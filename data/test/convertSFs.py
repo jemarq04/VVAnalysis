@@ -115,7 +115,7 @@ def main():
 
     parser = argparse.ArgumentParser()
     parser.add_argument("-s", "--redo-systs", action="store_true", help="re-calculate up/down systematic histograms")
-    parser.add_argument("-o", "--outfile", default="", help="output JSON file or directory (default: out/{name}.json)")
+    parser.add_argument("-o", "--outfile", default="", help="output JSON file or directory (default: {name}.json)")
     parser.add_argument(
         "--flatten", action="store_true", help="store systematic up/down variations as separate corrections"
     )
