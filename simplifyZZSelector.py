@@ -178,9 +178,6 @@ hist1D_Ori = [
     "Z1PolCos",
     "Z2PolCos",
     "ZZPolCosStar",
-    "Z1PolCos_new",
-    "Z2PolCos_new",
-    "ZZPolCosStar_new",
     "dRapidityZZ",
     "dPhiEMu"
 ]
@@ -227,11 +224,8 @@ hists1DList = [
     "Z1PolCos",
     "Z2PolCos",
     "ZZPolCosStar",
-    "Z1PolCos_new",
-    "Z2PolCos_new",
-    "ZZPolCosStar_new",
     "dRapidityZZ",
-    "dPhiEMu"
+    "dPhiEMu",
     "Lep1Energy",
     "Lep2Energy",
     "Lep3Energy",

@@ -68,9 +68,6 @@ void ZZSelector::Init(TTree* tree) {
               "Z1PolCos",
               "Z2PolCos",
               "ZZPolCosStar",
-              "Z1PolCos_new",
-              "Z2PolCos_new",
-              "ZZPolCosStar_new",
               "dRapidityZZ",
               "dPhiEMu",
               "Lep1Energy",
@@ -149,9 +146,6 @@ void ZZSelector::Init(TTree* tree) {
                     "Z1PolCos",
                     "Z2PolCos",
                     "ZZPolCosStar",
-                    "Z1PolCos_new",
-                    "Z2PolCos_new",
-                    "ZZPolCosStar_new",
                     "dRapidityZZ",
                     "dPhiEMu",
                     "Lep1Energy",
@@ -473,18 +467,18 @@ void ZZSelector::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::str
 
         return lp4.Vect().Dot(z1p4.Vect()) / (lp4.Vect().Mag() * z1p4.Vect().Mag());
       };
-  auto polCosThetaStar =
-      [](const TLorentzVector& z1p4_input, const TLorentzVector& z2p4_input) {
-        TLorentzVector z1p4 = z1p4_input;
-        TLorentzVector z2p4 = z2p4_input;
+  auto polCosThetaStar = [](const TLorentzVector& z1p4_input, const TLorentzVector& z2p4_input) {
+    TLorentzVector z1p4 = z1p4_input;
+    TLorentzVector z2p4 = z2p4_input;
 
-        TLorentzVector zzp4 = z1p4 + z2p4;
+    TLorentzVector zzp4 = z1p4 + z2p4;
 
-        z1p4.Boost(-zzp4.BoostVector());
+    z1p4.Boost(-zzp4.BoostVector());
 
-        return z1p4.Vect().Dot(zzp4.Vect()) / (z1p4.Vect().Mag() * zzp4.Vect().Mag());
-      }
+    return z1p4.Vect().Dot(zzp4.Vect()) / (z1p4.Vect().Mag() * zzp4.Vect().Mag());
+  };
 
+  /*
   using FourVec = ROOT::Math::PtEtaPhiEVector;
   auto polCosTheta_new = [](const FourVec& zzp4_input, const FourVec& zp4_input, const FourVec& lp4_input) {
     FourVec zp4 = zp4_input;
@@ -502,27 +496,36 @@ void ZZSelector::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::str
 
     return zp4.Vect().Dot(zzp4_input.Vect()) / std::sqrt(zp4.Vect().Mag2() * zzp4_input.Vect().Mag2());
   };
+  */
 
-  FourVec lp1p4, lp2p4;
-  if (l1PdgId > 0)
-    lp1p4 = FourVec(l1Pt, l1Eta, l1Phi, l1Energy);
-  else
-    lp1p4 = FourVec(l2Pt, l2Eta, l2Phi, l2Energy);
-  if (l3PdgId > 0)
-    lp2p4 = FourVec(l3Pt, l3Eta, l3Phi, l3Energy);
-  else
-    lp2p4 = FourVec(l4Pt, l4Eta, l4Phi, l4Energy);
-  FourVec z1p4(Z1Pt, Z1Eta, Z1Phi, Z1Mass);
-  FourVec z2p4(Z2Pt, Z2Eta, Z2Phi, Z2Mass);
-  FourVec zzp4 = z1p4 + z2p4;
+  TLorentzVector lp1p4, lp2p4;
+  //FourVec lp1p4_new, lp2p4_new;
+  if (l1PdgId > 0) {
+    lp1p4.SetPtEtaPhiE(l1Pt, l1Eta, l1Phi, l1Energy);
+    //lp1p4_new = FourVec(l1Pt, l1Eta, l1Phi, l1Energy);
+  } else {
+    lp1p4.SetPtEtaPhiE(l1Pt, l1Eta, l1Phi, l1Energy);
+    //lp1p4_new = FourVec(l2Pt, l2Eta, l2Phi, l2Energy);
+  }
+  if (l3PdgId > 0) {
+    lp2p4.SetPtEtaPhiE(l3Pt, l3Eta, l3Phi, l3Energy);
+    //lp2p4_new = FourVec(l3Pt, l3Eta, l3Phi, l3Energy);
+  } else {
+    lp2p4.SetPtEtaPhiE(l4Pt, l4Eta, l4Phi, l4Energy);
+    //lp2p4_new = FourVec(l4Pt, l4Eta, l4Phi, l4Energy);
+  }
+  TLorentzVector z1p4, z2p4;
+  z1p4.SetPtEtaPhiM(Z1Pt, Z1Eta, Z1Phi, Z1Mass);
+  z2p4.SetPtEtaPhiM(Z2Pt, Z2Eta, Z2Phi, Z2Mass);
+  //FourVec z1p4_new(Z1Pt, Z1Eta, Z1Phi, Z1Mass);
+  //FourVec z2p4_new(Z2Pt, Z2Eta, Z2Phi, Z2Mass);
+  //FourVec zzp4_new = z1p4_new + z2p4_new;
 
-  Z1PolCos = polCosTheta(zzp4, z1p4, lp1p4);
-  Z1PolCos_new = polCosTheta_new(zzp4, z1p4, lp1p4);
-  Z2PolCos = polCosTheta(zzp4, z2p4, lp2p4);
-  Z2PolCos_new = polCosTheta_new(zzp4, z2p4, lp2p4);
-  ZZPolCosStar = polCosThetaStar(zzp4, z1p4);
-  ZZPolCosStar_new = polCosThetaStar_new(zzp4, z1p4);
-  dRapidityZZ = abs(z1p4.Rapidity() - z1p4.Rapidity());
+  Z1PolCos = polCosTheta(z1p4, z2p4, lp1p4);
+  Z2PolCos = polCosTheta(z2p4, z1p4, lp2p4);
+  ZZPolCosStar = polCosThetaStar(z1p4, z2p4);
+
+  dRapidityZZ = abs(z1p4.Rapidity() - z2p4.Rapidity());
 
   // delta phi between positron and muon
   if (channel_ == eemm) {
@@ -1701,18 +1704,8 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
                    i,
                    lheWeights[i] / lheWeights[0] * weight);
       SafeHistFill(weighthistMap1D_,
-                   getHistName("Z1PolCos_new", variation.second),
-                   Z1PolCos_new,
-                   i,
-                   lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_,
                    getHistName("Z2PolCos", variation.second),
                    Z2PolCos,
-                   i,
-                   lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_,
-                   getHistName("Z2PolCos_new", variation.second),
-                   Z2PolCos_new,
                    i,
                    lheWeights[i] / lheWeights[0] * weight);
       SafeHistFill(weighthistMap1D_,
@@ -1721,21 +1714,17 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
                    i,
                    lheWeights[i] / lheWeights[0] * weight);
       SafeHistFill(weighthistMap1D_,
-                   getHistName("ZZPolCosStar_new", variation.second),
-                   ZZPolCosStar_new,
-                   i,
-                   lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_,
                    getHistName("dRapidityZZ", variation.second),
                    dRapidityZZ,
                    i,
                    lheWeights[i] / lheWeights[0] * weight);
-      if (channel_ == eemm || channel_ == mmee)
+      if (channel_ == eemm || channel_ == mmee) {
         SafeHistFill(weighthistMap1D_,
                      getHistName("dPhiEMu", variation.second),
                      dPhiEMu,
                      i,
                      lheWeights[i] / lheWeights[0] * weight);
+      }
     }
   }
 
@@ -1765,12 +1754,10 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
   SafeHistFill(histMap1D_, getHistName("Z1PolCos", variation.second), Z1PolCos, weight);
   SafeHistFill(histMap1D_, getHistName("Z2PolCos", variation.second), Z2PolCos, weight);
   SafeHistFill(histMap1D_, getHistName("ZZPolCosStar", variation.second), ZZPolCosStar, weight);
-  SafeHistFill(histMap1D_, getHistName("Z1PolCos_new", variation.second), Z1PolCos_new, weight);
-  SafeHistFill(histMap1D_, getHistName("Z2PolCos_new", variation.second), Z2PolCos_new, weight);
-  SafeHistFill(histMap1D_, getHistName("ZZPolCosStar_new", variation.second), ZZPolCosStar_new, weight);
   SafeHistFill(histMap1D_, getHistName("dRapidityZZ", variation.second), dRapidityZZ, weight);
-  if (channel_ == eemm || channel_ == mmee)
+  if (channel_ == eemm || channel_ == mmee) {
     SafeHistFill(histMap1D_, getHistName("dPhiEMu", variation.second), dPhiEMu, weight);
+  }
   SafeHistFill(histMap1D_, getHistName("Lep1Iso", variation.second), l1Iso, weight);
   SafeHistFill(histMap1D_, getHistName("Lep2Iso", variation.second), l2Iso, weight);
   SafeHistFill(histMap1D_, getHistName("Lep3Iso", variation.second), l3Iso, weight);
