@@ -177,6 +177,12 @@ hist1D_Ori = [
     "scaleWeightIDs",
     "Z1PolCos",
     "Z2PolCos",
+    "ZZPolCosStar",
+    "Z1PolCos_new",
+    "Z2PolCos_new",
+    "ZZPolCosStar_new",
+    "dRapidityZZ",
+    "dPhiEMu"
 ]
 
 # hists1DList = baseList
@@ -220,6 +226,12 @@ hists1DList = [
     "scaleWeightIDs",
     "Z1PolCos",
     "Z2PolCos",
+    "ZZPolCosStar",
+    "Z1PolCos_new",
+    "Z2PolCos_new",
+    "ZZPolCosStar_new",
+    "dRapidityZZ",
+    "dPhiEMu"
     "Lep1Energy",
     "Lep2Energy",
     "Lep3Energy",
