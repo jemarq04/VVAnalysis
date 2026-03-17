@@ -67,6 +67,12 @@ void ZZSelector::Init(TTree* tree) {
               "deltaPVDZ_diffZ",
               "Z1PolCos",
               "Z2PolCos",
+              "ZZPolCosStar",
+              "Z1PolCos_new",
+              "Z2PolCos_new",
+              "ZZPolCosStar_new",
+              "dRapidityZZ",
+              "dPhiEMu",
               "Lep1Energy",
               "Lep2Energy",
               "Lep3Energy",
@@ -142,6 +148,12 @@ void ZZSelector::Init(TTree* tree) {
                     "deltaPVDZ_diffZ",
                     "Z1PolCos",
                     "Z2PolCos",
+                    "ZZPolCosStar",
+                    "Z1PolCos_new",
+                    "Z2PolCos_new",
+                    "ZZPolCosStar_new",
+                    "dRapidityZZ",
+                    "dPhiEMu",
                     "Lep1Energy",
                     "Lep2Energy",
                     "Lep3Energy",
@@ -448,16 +460,96 @@ void ZZSelector::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::str
   dPhiZZ = deltaPhiZZ(Z1Phi, Z2Phi);
   dRZZ = deltaRZZ(Z1Eta, Z2Eta, dPhiZZ);
 
-  ROOT::Math::PtEtaPhiEVector lp1, ln1, lp2, ln2;
-  auto PolCosTheta = [&](const ROOT::Math::PtEtaPhiEVector& lp, const ROOT::Math::PtEtaPhiEVector& ln) {
-    ROOT::Math::PtEtaPhiEVector z = lp + ln;
-    ROOT::Math::Boost boost(z.BoostToCM());
-    ROOT::Math::PtEtaPhiEVector lep_boost = boost(ln);
-    return lep_boost.Vect().Dot(z.Vect()) / std::sqrt(lep_boost.Vect().Mag2() * z.Vect().Mag2());
+  auto polCosTheta = [](const TLorentzVector& z1p4_input, const TLorentzVector& z2p4_input, const TLorentzVector& lp4_input) {
+    TLorentzVector z1p4 = z1p4_input;
+    TLorentzVector z2p4 = z2p4_input;
+    TLorentzVector lp4 = lp4_input;
+
+    TLorentzVector zzp4 = z1p4 + z2p4;
+
+    lp4.Boost(-z1p4.BoostVector());
+    z1p4.Boost(-zzp4.BoostVector());
+
+    return lp4.Vect().Dot(z1p4.Vect()) / (lp4.Vect().Mag() * z1p4.Vect().Mag());
+  };
+  auto polCosThetaStar = [](const TLorentzVector& z1p4_input, const TLorentzVector& z2p4_input) {
+    TLorentzVector z1p4 = z1p4_input;
+    TLorentzVector z2p4 = z2p4_input;
+
+    TLorentzVector zzp4 = z1p4 + z2p4;
+
+    z1p4.Boost(-zzp4.BoostVector());
+
+    return z1p4.Vect().Dot(zzp4.Vect()) / (z1p4.Vect().Mag() * zzp4.Vect().Mag());
+  }
+
+  using FourVec = ROOT::Math::PtEtaPhiEVector;
+  auto polCosTheta_new = [](const FourVec& zzp4_input, const FourVec& zp4_input, const FourVec& lp4_input) {
+    FourVec zp4 = zp4_input;
+    FourVec lp4 = lp4_input;
+
+    ROOT::Math::VectorUtil::boost(lp4, -zp4_input.BoostToCM());   // Boost lepton to Z rest frame
+    ROOT::Math::VectorUtil::boost(zp4, -zzp4_input.BoostToCM());  // Boost Z to ZZ rest frame
+
+    return lp4.Vect().Dot(zp4.Vect()) / std::sqrt(lp4.Vect().Mag2() * zp4.Vect().Mag2());
+  };
+  auto polCosThetaStar_new = [](const FourVec& zzp4_input, const FourVec& zp4_input) {
+    FourVec zp4 = zp4_input;
+
+    ROOT::Math::VectorUtil::boost(zp4, -zzp4_input.BoostToCM());  // Boost Z to ZZ rest frame
+
+    return zp4.Vect().Dot(zzp4_input.Vect()) / std::sqrt(zp4.Vect().Mag2() * zzp4_input.Vect().Mag2());
   };
 
-  Z1PolCos = PolCosTheta(lp1, ln1);
-  Z2PolCos = PolCosTheta(lp2, ln2);
+  FourVec lp1p4, lp2p4;
+  if (l1PdgId > 0)
+    lp1p4 = FourVec(l1Pt, l1Eta, l1Phi, l1Energy);
+  else
+    lp1p4 = FourVec(l2Pt, l2Eta, l2Phi, l2Energy);
+  if (l3PdgId > 0)
+    lp2p4 = FourVec(l3Pt, l3Eta, l3Phi, l3Energy);
+  else
+    lp2p4 = FourVec(l4Pt, l4Eta, l4Phi, l4Energy);
+  FourVec z1p4(Z1Pt, Z1Eta, Z1Phi, Z1Mass);
+  FourVec z2p4(Z2Pt, Z2Eta, Z2Phi, Z2Mass);
+  FourVec zzp4 = z1p4 + z2p4;
+
+  Z1PolCos = polCosTheta(zzp4, z1p4, lp1p4);
+  Z1PolCos_new = polCosTheta_new(zzp4, z1p4, lp1p4);
+  Z2PolCos = polCosTheta(zzp4, z2p4, lp2p4);
+  Z2PolCos_new = polCosTheta_new(zzp4, z2p4, lp2p4);
+  ZZPolCosStar = polCosThetaStar(zzp4, z1p4);
+  ZZPolCosStar_new = polCosThetaStar_new(zzp4, z1p4);
+  dRapidityZZ = abs(z1p4.Rapidity() - z1p4.Rapidity());
+
+  // delta phi between positron and muon
+  if (channel_ == eemm) {
+    if (l1PdgId > 0) {  //l1 is positron
+      if (l3PdgId < 0)
+        dPhiEMu = deltaPhiZZ(l1Phi, l3Phi);
+      else
+        dPhiEMu = deltaPhiZZ(l1Phi, l4Phi);
+    } else {  //l2 is positron
+      if (l3PdgId < 0)
+        dPhiEMu = deltaPhiZZ(l2Phi, l3Phi);
+      else
+        dPhiEMu = deltaPhiZZ(l2Phi, l4Phi);
+    }
+  } else if (channel_ == mmee) {
+    if (l3PdgId > 0) {  //l3 is positron
+      if (l1PdgId < 0)
+        dPhiEMu = deltaPhiZZ(l3Phi, l1Phi);
+      else
+        dPhiEMu = deltaPhiZZ(l3Phi, l2Phi);
+    } else {  //l4 is positron
+      if (l1PdgId < 0)
+        dPhiEMu = deltaPhiZZ(l4Phi, l1Phi);
+      else
+        dPhiEMu = deltaPhiZZ(l4Phi, l2Phi);
+    }
+  } else {
+    dPhiEMu = -99;
+  }
 }
 
 void ZZSelector::ApplyScaleFactors() {
@@ -1607,10 +1699,41 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
                    i,
                    lheWeights[i] / lheWeights[0] * weight);
       SafeHistFill(weighthistMap1D_,
+                   getHistName("Z1PolCos_new", variation.second),
+                   Z1PolCos_new,
+                   i,
+                   lheWeights[i] / lheWeights[0] * weight);
+      SafeHistFill(weighthistMap1D_,
                    getHistName("Z2PolCos", variation.second),
                    Z2PolCos,
                    i,
                    lheWeights[i] / lheWeights[0] * weight);
+      SafeHistFill(weighthistMap1D_,
+                   getHistName("Z2PolCos_new", variation.second),
+                   Z2PolCos_new,
+                   i,
+                   lheWeights[i] / lheWeights[0] * weight);
+      SafeHistFill(weighthistMap1D_,
+                   getHistName("ZZPolCosStar", variation.second),
+                   ZZPolCosStar,
+                   i,
+                   lheWeights[i] / lheWeights[0] * weight);
+      SafeHistFill(weighthistMap1D_,
+                   getHistName("ZZPolCosStar_new", variation.second),
+                   ZZPolCosStar_new,
+                   i,
+                   lheWeights[i] / lheWeights[0] * weight);
+      SafeHistFill(weighthistMap1D_,
+                   getHistName("dRapidityZZ", variation.second),
+                   dRapidityZZ,
+                   i,
+                   lheWeights[i] / lheWeights[0] * weight);
+      if (channel_ == eemm || channel_ == mmee)
+        SafeHistFill(weighthistMap1D_,
+                     getHistName("dPhiEMu", variation.second),
+                     dPhiEMu,
+                     i,
+                     lheWeights[i] / lheWeights[0] * weight);
     }
   }
 
@@ -1639,6 +1762,13 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
   SafeHistFill(histMap1D_, getHistName("ZZEta", variation.second), Eta, weight);
   SafeHistFill(histMap1D_, getHistName("Z1PolCos", variation.second), Z1PolCos, weight);
   SafeHistFill(histMap1D_, getHistName("Z2PolCos", variation.second), Z2PolCos, weight);
+  SafeHistFill(histMap1D_, getHistName("ZZPolCosStar", variation.second), ZZPolCosStar, weight);
+  SafeHistFill(histMap1D_, getHistName("Z1PolCos_new", variation.second), Z1PolCos_new, weight);
+  SafeHistFill(histMap1D_, getHistName("Z2PolCos_new", variation.second), Z2PolCos_new, weight);
+  SafeHistFill(histMap1D_, getHistName("ZZPolCosStar_new", variation.second), ZZPolCosStar_new, weight);
+  SafeHistFill(histMap1D_, getHistName("dRapidityZZ", variation.second), dRapidityZZ, weight);
+  if (channel_ == eemm || channel_ == mmee)
+    SafeHistFill(histMap1D_, getHistName("dPhiEMu", variation.second), dPhiEMu, weight);
   SafeHistFill(histMap1D_, getHistName("Lep1Iso", variation.second), l1Iso, weight);
   SafeHistFill(histMap1D_, getHistName("Lep2Iso", variation.second), l2Iso, weight);
   SafeHistFill(histMap1D_, getHistName("Lep3Iso", variation.second), l3Iso, weight);

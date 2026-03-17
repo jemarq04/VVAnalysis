@@ -6,8 +6,7 @@
 #include <TH3.h>
 #include <TTreeFormula.h>
 #include <Math/Vector4D.h>
-#include <Math/Boost.h>
-#include <Math/GenVector/GenVector_exception.h>
+#include <Math/VectorUtil.h>
 
 class ZZSelector : public ZZSelectorBase {
 public:
@@ -24,8 +23,11 @@ public:
   unsigned int weight_info_;
   TTreeFormula* fCutFormula;
   bool passCurrentTrig;
-  Float_t Z1PolCos;
-  Float_t Z2PolCos;
+  Float_t Z1PolCos, Z1PolCos_new;
+  Float_t Z2PolCos, Z2PolCos_new;
+  Float_t ZZPolCosStar, ZZPolCosStar_new;
+  Float_t dRapidityZZ;
+  Float_t dPhiEMu;
   float dEtajj;
   float dEtajj_jesUp;
   float dEtajj_jesDown;
