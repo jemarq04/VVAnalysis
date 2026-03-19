@@ -23,9 +23,9 @@ public:
   unsigned int weight_info_;
   TTreeFormula* fCutFormula;
   bool passCurrentTrig;
-  Float_t Z1PolCos, Z1PolCos_new;
-  Float_t Z2PolCos, Z2PolCos_new;
-  Float_t ZZPolCosStar, ZZPolCosStar_new;
+  Float_t Z1PolCos;
+  Float_t Z2PolCos;
+  Float_t ZZPolCosStar;
   Float_t dRapidityZZ;
   Float_t dPhiEMu;
   float dEtajj;
