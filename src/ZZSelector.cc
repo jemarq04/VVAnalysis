@@ -18,10 +18,11 @@ void ZZSelector::Init(TTree* tree) {
   // This would be set true inside ZZBackground Selector
   // isNonPrompt_ = false;
 
-  systHists_ = {"yield",      "Mass",       "MassFull",     "nJets",        "nJets_central", "jetPt[1]",   "jetPt[0]",
-                "jetEta[0]",  "jetEta[1]",  "absjetEta[0]", "absjetEta[1]", "mjj",           "dEtajj",     "Mass0j",
-                "Mass1j",     "Mass2j",     "Mass3j",       "Mass34j",      "Mass4j",        "Mass0jFull", "Mass1jFull",
-                "Mass2jFull", "Mass3jFull", "Mass34jFull",  "Mass4jFull"};
+  systHists_ = {"yield",      "Mass",       "MassFull",   "nJets",        "nJets_central", "jetPt[1]",
+                "jetPt[0]",   "jetEta[0]",  "jetEta[1]",  "absjetEta[0]", "absjetEta[1]",  "mjj",
+                "dEtajj",     "Mass0j",     "Mass1j",     "Mass2j",       "Mass3j",        "Mass34j",
+                "Mass4j",     "Mass0jFull", "Mass1jFull", "Mass2jFull",   "Mass3jFull",    "Mass34jFull",
+                "Mass4jFull", "CosTheta1",  "CosTheta2",  "CosThetaStar", "RapidityDiff",  "dPhiOSll"};
   // hists1D_ = {
   //      "yield", "backgroundControlYield","nTruePU","nvtx","ZMass","Z1Mass","Z2Mass","ZZPt",
   //      "Z1Pt","Z2Pt","Z1Phi","Z2Phi","dPhiZ1Z2","ZPt","LepPt","LepEta",
@@ -65,11 +66,11 @@ void ZZSelector::Init(TTree* tree) {
               "PVDZ",
               "deltaPVDZ_sameZ",
               "deltaPVDZ_diffZ",
-              "Z1PolCos",
-              "Z2PolCos",
-              "ZZPolCosStar",
-              "dRapidityZZ",
-              "dPhiEMu",
+              "CosTheta1",
+              "CosTheta2",
+              "CosThetaStar",
+              "RapidityDiff",
+              "dPhiOSll",
               "Lep1Energy",
               "Lep2Energy",
               "Lep3Energy",
@@ -143,11 +144,11 @@ void ZZSelector::Init(TTree* tree) {
                     "PVDZ",
                     "deltaPVDZ_sameZ",
                     "deltaPVDZ_diffZ",
-                    "Z1PolCos",
-                    "Z2PolCos",
-                    "ZZPolCosStar",
-                    "dRapidityZZ",
-                    "dPhiEMu",
+                    "CosTheta1",
+                    "CosTheta2",
+                    "CosThetaStar",
+                    "RapidityDiff",
+                    "dPhiOSll",
                     "Lep1Energy",
                     "Lep2Energy",
                     "Lep3Energy",
@@ -515,39 +516,39 @@ void ZZSelector::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::str
   //FourVec z2p4_new(Z2Pt, Z2Eta, Z2Phi, Z2Mass);
   //FourVec zzp4_new = z1p4_new + z2p4_new;
 
-  Z1PolCos = polCosTheta(zzp4, z1p4, lp1p4);
-  Z2PolCos = polCosTheta(zzp4, z2p4, lp2p4);
-  ZZPolCosStar = polCosThetaStar(zzp4, z1p4);
+  CosTheta1 = polCosTheta(zzp4, z1p4, lp1p4);
+  CosTheta2 = polCosTheta(zzp4, z2p4, lp2p4);
+  CosThetaStar = polCosThetaStar(zzp4, z1p4);
 
-  dRapidityZZ = std::abs(z1p4.Rapidity() - z2p4.Rapidity());
+  RapidityDiff = std::abs(z1p4.Rapidity() - z2p4.Rapidity());
 
   // delta phi between positron and muon
   if (channel_ == eemm) {
     if (l1PdgId > 0) {  //l1 is positron
       if (l3PdgId < 0)
-        dPhiEMu = deltaPhiZZ(l1Phi, l3Phi);
+        dPhiOSll = deltaPhiZZ(l1Phi, l3Phi);
       else
-        dPhiEMu = deltaPhiZZ(l1Phi, l4Phi);
+        dPhiOSll = deltaPhiZZ(l1Phi, l4Phi);
     } else {  //l2 is positron
       if (l3PdgId < 0)
-        dPhiEMu = deltaPhiZZ(l2Phi, l3Phi);
+        dPhiOSll = deltaPhiZZ(l2Phi, l3Phi);
       else
-        dPhiEMu = deltaPhiZZ(l2Phi, l4Phi);
+        dPhiOSll = deltaPhiZZ(l2Phi, l4Phi);
     }
   } else if (channel_ == mmee) {
     if (l3PdgId > 0) {  //l3 is positron
       if (l1PdgId < 0)
-        dPhiEMu = deltaPhiZZ(l3Phi, l1Phi);
+        dPhiOSll = deltaPhiZZ(l3Phi, l1Phi);
       else
-        dPhiEMu = deltaPhiZZ(l3Phi, l2Phi);
+        dPhiOSll = deltaPhiZZ(l3Phi, l2Phi);
     } else {  //l4 is positron
       if (l1PdgId < 0)
-        dPhiEMu = deltaPhiZZ(l4Phi, l1Phi);
+        dPhiOSll = deltaPhiZZ(l4Phi, l1Phi);
       else
-        dPhiEMu = deltaPhiZZ(l4Phi, l2Phi);
+        dPhiOSll = deltaPhiZZ(l4Phi, l2Phi);
     }
   } else {
-    dPhiEMu = -99;
+    dPhiOSll = -99;
   }
 }
 
@@ -1693,29 +1694,29 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
           weighthistMap1D_, getHistName("LepIso", variation.second), l4Iso, i, lheWeights[i] / lheWeights[0] * weight);
 
       SafeHistFill(weighthistMap1D_,
-                   getHistName("Z1PolCos", variation.second),
-                   Z1PolCos,
+                   getHistName("CosTheta1", variation.second),
+                   CosTheta1,
                    i,
                    lheWeights[i] / lheWeights[0] * weight);
       SafeHistFill(weighthistMap1D_,
-                   getHistName("Z2PolCos", variation.second),
-                   Z2PolCos,
+                   getHistName("CosTheta2", variation.second),
+                   CosTheta2,
                    i,
                    lheWeights[i] / lheWeights[0] * weight);
       SafeHistFill(weighthistMap1D_,
-                   getHistName("ZZPolCosStar", variation.second),
-                   ZZPolCosStar,
+                   getHistName("CosThetaStar", variation.second),
+                   CosThetaStar,
                    i,
                    lheWeights[i] / lheWeights[0] * weight);
       SafeHistFill(weighthistMap1D_,
-                   getHistName("dRapidityZZ", variation.second),
-                   dRapidityZZ,
+                   getHistName("RapidityDiff", variation.second),
+                   RapidityDiff,
                    i,
                    lheWeights[i] / lheWeights[0] * weight);
       if (channel_ == eemm || channel_ == mmee) {
         SafeHistFill(weighthistMap1D_,
-                     getHistName("dPhiEMu", variation.second),
-                     dPhiEMu,
+                     getHistName("dPhiOSll", variation.second),
+                     dPhiOSll,
                      i,
                      lheWeights[i] / lheWeights[0] * weight);
       }
@@ -1745,12 +1746,12 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
   SafeHistFill(histMap1D_, getHistName("dRZ1Z2", variation.second), dRZZ, weight);
   SafeHistFill(histMap1D_, getHistName("ZZPt", variation.second), Pt, weight);
   SafeHistFill(histMap1D_, getHistName("ZZEta", variation.second), Eta, weight);
-  SafeHistFill(histMap1D_, getHistName("Z1PolCos", variation.second), Z1PolCos, weight);
-  SafeHistFill(histMap1D_, getHistName("Z2PolCos", variation.second), Z2PolCos, weight);
-  SafeHistFill(histMap1D_, getHistName("ZZPolCosStar", variation.second), ZZPolCosStar, weight);
-  SafeHistFill(histMap1D_, getHistName("dRapidityZZ", variation.second), dRapidityZZ, weight);
+  SafeHistFill(histMap1D_, getHistName("CosTheta1", variation.second), CosTheta1, weight);
+  SafeHistFill(histMap1D_, getHistName("CosTheta2", variation.second), CosTheta2, weight);
+  SafeHistFill(histMap1D_, getHistName("CosThetaStar", variation.second), CosThetaStar, weight);
+  SafeHistFill(histMap1D_, getHistName("RapidityDiff", variation.second), RapidityDiff, weight);
   if (channel_ == eemm || channel_ == mmee) {
-    SafeHistFill(histMap1D_, getHistName("dPhiEMu", variation.second), dPhiEMu, weight);
+    SafeHistFill(histMap1D_, getHistName("dPhiOSll", variation.second), dPhiOSll, weight);
   }
   SafeHistFill(histMap1D_, getHistName("Lep1Iso", variation.second), l1Iso, weight);
   SafeHistFill(histMap1D_, getHistName("Lep2Iso", variation.second), l2Iso, weight);

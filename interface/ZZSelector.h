@@ -23,11 +23,11 @@ public:
   unsigned int weight_info_;
   TTreeFormula* fCutFormula;
   bool passCurrentTrig;
-  Float_t Z1PolCos;
-  Float_t Z2PolCos;
-  Float_t ZZPolCosStar;
-  Float_t dRapidityZZ;
-  Float_t dPhiEMu;
+  Float_t CosTheta1;
+  Float_t CosTheta2;
+  Float_t CosThetaStar;
+  Float_t RapidityDiff;
+  Float_t dPhiOSll;
   float dEtajj;
   float dEtajj_jesUp;
   float dEtajj_jesDown;
