@@ -455,27 +455,21 @@ void ZZSelector::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::str
   dRZZ = deltaRZZ(Z1Eta, Z2Eta, dPhiZZ);
 
   auto polCosTheta =
-      [](const TLorentzVector& z1p4_input, const TLorentzVector& z2p4_input, const TLorentzVector& lp4_input) {
-        TLorentzVector z1p4 = z1p4_input;
-        TLorentzVector z2p4 = z2p4_input;
+      [](const TLorentzVector& zzp4, const TLorentzVector& zp4_input, const TLorentzVector& lp4_input) {
+        TLorentzVector zp4 = zp4_input;
         TLorentzVector lp4 = lp4_input;
 
-        TLorentzVector zzp4 = z1p4 + z2p4;
+        lp4.Boost(-zp4.BoostVector());
+        zp4.Boost(-zzp4.BoostVector());
 
-        lp4.Boost(-z1p4.BoostVector());
-        z1p4.Boost(-zzp4.BoostVector());
-
-        return lp4.Vect().Dot(z1p4.Vect()) / (lp4.Vect().Mag() * z1p4.Vect().Mag());
+        return lp4.Vect().Dot(zp4.Vect()) / (lp4.Vect().Mag() * zp4.Vect().Mag());
       };
-  auto polCosThetaStar = [](const TLorentzVector& z1p4_input, const TLorentzVector& z2p4_input) {
-    TLorentzVector z1p4 = z1p4_input;
-    TLorentzVector z2p4 = z2p4_input;
+  auto polCosThetaStar = [](const TLorentzVector& zzp4, const TLorentzVector& zp4_input) {
+    TLorentzVector zp4 = zp4_input;
 
-    TLorentzVector zzp4 = z1p4 + z2p4;
+    zp4.Boost(-zzp4.BoostVector());
 
-    z1p4.Boost(-zzp4.BoostVector());
-
-    return z1p4.Vect().Dot(zzp4.Vect()) / (z1p4.Vect().Mag() * zzp4.Vect().Mag());
+    return zp4.Vect().Dot(zzp4.Vect()) / (zp4.Vect().Mag() * zzp4.Vect().Mag());
   };
 
   /*
@@ -514,18 +508,19 @@ void ZZSelector::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::str
     lp2p4.SetPtEtaPhiE(l4Pt, l4Eta, l4Phi, l4Energy);
     //lp2p4_new = FourVec(l4Pt, l4Eta, l4Phi, l4Energy);
   }
-  TLorentzVector z1p4, z2p4;
+  TLorentzVector z1p4, z2p4, zzp4;
   z1p4.SetPtEtaPhiM(Z1Pt, Z1Eta, Z1Phi, Z1Mass);
   z2p4.SetPtEtaPhiM(Z2Pt, Z2Eta, Z2Phi, Z2Mass);
+  zzp4 = z1p4 + z2p4;
   //FourVec z1p4_new(Z1Pt, Z1Eta, Z1Phi, Z1Mass);
   //FourVec z2p4_new(Z2Pt, Z2Eta, Z2Phi, Z2Mass);
   //FourVec zzp4_new = z1p4_new + z2p4_new;
 
-  Z1PolCos = polCosTheta(z1p4, z2p4, lp1p4);
-  Z2PolCos = polCosTheta(z2p4, z1p4, lp2p4);
-  ZZPolCosStar = polCosThetaStar(z1p4, z2p4);
+  Z1PolCos = polCosTheta(zzp4, z1p4, lp1p4);
+  Z2PolCos = polCosTheta(zzp4, z2p4, lp2p4);
+  ZZPolCosStar = polCosThetaStar(zzp4, z1p4);
 
-  dRapidityZZ = abs(z1p4.Rapidity() - z2p4.Rapidity());
+  dRapidityZZ = std::abs(z1p4.Rapidity() - z2p4.Rapidity());
 
   // delta phi between positron and muon
   if (channel_ == eemm) {
