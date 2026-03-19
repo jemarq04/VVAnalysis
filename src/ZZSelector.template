@@ -308,16 +308,15 @@ void ZZSelector::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::str
   dPhiZZ = deltaPhiZZ(Z1Phi, Z2Phi);
   dRZZ = deltaRZZ(Z1Eta, Z2Eta, dPhiZZ);
 
-  auto polCosTheta =
-      [](const TLorentzVector& zzp4, const TLorentzVector& zp4_input, const TLorentzVector& lp4_input) {
-        TLorentzVector zp4 = zp4_input;
-        TLorentzVector lp4 = lp4_input;
+  auto polCosTheta = [](const TLorentzVector& zzp4, const TLorentzVector& zp4_input, const TLorentzVector& lp4_input) {
+    TLorentzVector zp4 = zp4_input;
+    TLorentzVector lp4 = lp4_input;
 
-        lp4.Boost(-zp4.BoostVector());
-        zp4.Boost(-zzp4.BoostVector());
+    lp4.Boost(-zp4.BoostVector());
+    zp4.Boost(-zzp4.BoostVector());
 
-        return lp4.Vect().Dot(zp4.Vect()) / (lp4.Vect().Mag() * zp4.Vect().Mag());
-      };
+    return lp4.Vect().Dot(zp4.Vect()) / (lp4.Vect().Mag() * zp4.Vect().Mag());
+  };
   auto polCosThetaStar = [](const TLorentzVector& zzp4, const TLorentzVector& zp4_input) {
     TLorentzVector zp4 = zp4_input;
 
