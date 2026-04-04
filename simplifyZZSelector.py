@@ -274,6 +274,7 @@ hists1DList = [
     "mjj",
     "dEtajj",
 ]
+systHistList = [name for name in systHistList if name in hists1DList] # reduce list down
 # hists1DList = [ "yield", "Mass", "Mass0j", "Mass1j", "Mass2j", "Mass3j", "Mass34j", "Mass4j", "nJets", "MassFull", "Mass0jFull", "Mass1jFull", "Mass2jFull", "Mass3jFull", "Mass34jFull", "Mass4jFull", "jetPt[0]", "jetPt[1]","jetEta[0]", "jetEta[1]", "absjetEta[0]", "absjetEta[1]", "mjj", "dEtajj" ]
 
 jetTest2D_Ori = ["jetPtN1", "jetPtN2", "jetPtN3"]
