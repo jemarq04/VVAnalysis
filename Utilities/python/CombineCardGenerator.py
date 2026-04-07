@@ -48,9 +48,9 @@ class CombineCardGenerator:
         hist_infile: Union[str, ROOT.TFile],
         sig_procs: list,
         bkg_procs: list,
-        channels: list = None,
-        lumi: float = None,
-        auto_stats: float = None,
+        channels: Optional[list] = None,
+        lumi: Optional[float] = None,
+        auto_stats: Optional[float] = None,
         add_overflow: bool = False,
     ):
         if channels is None:
