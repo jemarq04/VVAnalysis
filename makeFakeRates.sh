@@ -11,6 +11,6 @@ years=$1
 [[ $years = all ]] && years="2022 2023 2024"
 
 for year in $years; do
-  ./Utilities/scripts/makeFakeRates.py -a ZZ4l$year -f ZZ4l$year --year $year -s ZplusLSkim --uwvv --noHistConfig --output_file fakeRates-ZZ4l$year.root
+  ./Utilities/scripts/makeFakeRates.py -a ZZ4l$year -f ZZ4l$year --year $year -s ZplusLSkim -j 12 --uwvv --noHistConfig --output_file fakeRates-ZZ4l$year.root
   echo "$year done!!==================================="
 done
