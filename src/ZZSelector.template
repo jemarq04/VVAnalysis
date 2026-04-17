@@ -963,6 +963,19 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
     ftntp_->Fill();
   }
 
+  SafeHistFill(histMap1D_, getHistName("ZMassFull", variation.second), Z1Mass, weight);
+  SafeHistFill(histMap1D_, getHistName("ZMassFull", variation.second), Z2Mass, weight);
+  SafeHistFill(histMap1D_, getHistName("Z1MassFull", variation.second), Z1Mass, weight);
+  SafeHistFill(histMap1D_, getHistName("Z2MassFull", variation.second), Z2Mass, weight);
+  if (isMC_){
+    for (size_t i = 0; i < lheWeights.size(); i++) {
+      SafeHistFill(weighthistMap1D_, getHistName("ZMassFull", variation.second), Z1Mass, i, lheWeights[i] / lheWeights[0] * weight);
+      SafeHistFill(weighthistMap1D_, getHistName("ZMassFull", variation.second), Z2Mass, i, lheWeights[i] / lheWeights[0] * weight);
+      SafeHistFill(weighthistMap1D_, getHistName("Z1MassFull", variation.second), Z1Mass, i, lheWeights[i] / lheWeights[0] * weight);
+      SafeHistFill(weighthistMap1D_, getHistName("Z2MassFull", variation.second), Z2Mass, i, lheWeights[i] / lheWeights[0] * weight);
+    }
+  }
+
   std::vector<std::vector<float>*> vjetEta = {jetEta_jesUp, jetEta_jesDown, jetEta_jerUp, jetEta_jerDown};
   std::vector<std::vector<float>*> vjetPt = {jetPt_jesUp, jetPt_jesDown, jetPt_jerUp, jetPt_jerDown};
   std::vector<unsigned int> vnJets = {nJets_jesUp, nJets_jesDown, nJets_jerUp, nJets_jerDown};

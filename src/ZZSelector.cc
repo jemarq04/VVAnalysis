@@ -31,15 +31,15 @@ void ZZSelector::Init(TTree* tree) {
   //      "Z2lep2_Eta","Z2lep2_Phi","Z2lep2_Pt","Z2lep2_PdgId","Mass","nJets",
   // };
 
-  hists1D_ = {"yield",        "Z1Mass",        "Z2Mass",      "ZMass",      "LepPt",      "LepPtFull",
-              "LepEta",       "LepPt1",        "LepPt2",      "LepPt3",     "LepPt4",     "LepPt1Full",
-              "LepPt2Full",   "LepPt3Full",    "LepPt4Full",  "Z1LepPt",    "Z2LepPt",    "Mass",
-              "nJets",        "nJets_central", "MassFull",    "SIP3D",      "CosTheta1",  "CosTheta2",
-              "CosThetaStar", "RapidityDiff",  "dPhiOSll",    "LepIso",     "Mass0j",     "Mass1j",
-              "Mass2j",       "Mass3j",        "Mass34j",     "Mass4j",     "Mass0jFull", "Mass1jFull",
-              "Mass2jFull",   "Mass3jFull",    "Mass34jFull", "Mass4jFull", "jetEta[0]",  "absjetEta[0]",
-              "jetEta[1]",    "absjetEta[1]",  "jetPt[0]",    "jetPt[1]",   "jetPhi[0]",  "jetPhi[1]",
-              "mjj",          "dEtajj"};
+  hists1D_ = {"yield",      "Z1Mass",     "Z2Mass",       "ZMass",        "Z1MassFull",    "Z2MassFull",
+              "ZMassFull",  "LepPt",      "LepPtFull",    "LepEta",       "LepPt1",        "LepPt2",
+              "LepPt3",     "LepPt4",     "LepPt1Full",   "LepPt2Full",   "LepPt3Full",    "LepPt4Full",
+              "Z1LepPt",    "Z2LepPt",    "Mass",         "nJets",        "nJets_central", "MassFull",
+              "SIP3D",      "CosTheta1",  "CosTheta2",    "CosThetaStar", "RapidityDiff",  "dPhiOSll",
+              "LepIso",     "Mass0j",     "Mass1j",       "Mass2j",       "Mass3j",        "Mass34j",
+              "Mass4j",     "Mass0jFull", "Mass1jFull",   "Mass2jFull",   "Mass3jFull",    "Mass34jFull",
+              "Mass4jFull", "jetEta[0]",  "absjetEta[0]", "jetEta[1]",    "absjetEta[1]",  "jetPt[0]",
+              "jetPt[1]",   "jetPhi[0]",  "jetPhi[1]",    "mjj",          "dEtajj"};
 
   jetTest2D_ = {};  // also defined in hists1D_ to pass checks in InitializeHistogramsFromConfig()
   jethists1D_ = {"Mass",       "MassFull",   "nJets",        "nJets_central", "jetPt[1]",    "jetPt[0]",
@@ -47,15 +47,15 @@ void ZZSelector::Init(TTree* tree) {
                  "Mass0j",     "Mass1j",     "Mass2j",       "Mass3j",        "Mass34j",     "Mass4j",
                  "Mass0jFull", "Mass1jFull", "Mass2jFull",   "Mass3jFull",    "Mass34jFull", "Mass4jFull"};
 
-  weighthists1D_ = {"yield",        "Z1Mass",        "Z2Mass",      "ZMass",      "LepPt",      "LepPtFull",
-                    "LepEta",       "LepPt1",        "LepPt2",      "LepPt3",     "LepPt4",     "LepPt1Full",
-                    "LepPt2Full",   "LepPt3Full",    "LepPt4Full",  "Z1LepPt",    "Z2LepPt",    "Mass",
-                    "nJets",        "nJets_central", "MassFull",    "SIP3D",      "CosTheta1",  "CosTheta2",
-                    "CosThetaStar", "RapidityDiff",  "dPhiOSll",    "LepIso",     "Mass0j",     "Mass1j",
-                    "Mass2j",       "Mass3j",        "Mass34j",     "Mass4j",     "Mass0jFull", "Mass1jFull",
-                    "Mass2jFull",   "Mass3jFull",    "Mass34jFull", "Mass4jFull", "jetEta[0]",  "absjetEta[0]",
-                    "jetEta[1]",    "absjetEta[1]",  "jetPt[0]",    "jetPt[1]",   "jetPhi[0]",  "jetPhi[1]",
-                    "mjj",          "dEtajj"};
+  weighthists1D_ = {"yield",      "Z1Mass",     "Z2Mass",       "ZMass",        "Z1MassFull",    "Z2MassFull",
+                    "ZMassFull",  "LepPt",      "LepPtFull",    "LepEta",       "LepPt1",        "LepPt2",
+                    "LepPt3",     "LepPt4",     "LepPt1Full",   "LepPt2Full",   "LepPt3Full",    "LepPt4Full",
+                    "Z1LepPt",    "Z2LepPt",    "Mass",         "nJets",        "nJets_central", "MassFull",
+                    "SIP3D",      "CosTheta1",  "CosTheta2",    "CosThetaStar", "RapidityDiff",  "dPhiOSll",
+                    "LepIso",     "Mass0j",     "Mass1j",       "Mass2j",       "Mass3j",        "Mass34j",
+                    "Mass4j",     "Mass0jFull", "Mass1jFull",   "Mass2jFull",   "Mass3jFull",    "Mass34jFull",
+                    "Mass4jFull", "jetEta[0]",  "absjetEta[0]", "jetEta[1]",    "absjetEta[1]",  "jetPt[0]",
+                    "jetPt[1]",   "jetPhi[0]",  "jetPhi[1]",    "mjj",          "dEtajj"};
   ZZSelectorBase::Init(tree);
   // fCutFormula = new TTreeFormula("CutFormula", fOption, fChain);
   // fCutFormula->SetQuickLoad(kTRUE);
@@ -984,6 +984,35 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
       SafeSetBranch(ftntp_, getBranchName("L1prefiringWeightDn", variation.second), &L1prefiringWeightDn);
     }
     ftntp_->Fill();
+  }
+
+  SafeHistFill(histMap1D_, getHistName("ZMassFull", variation.second), Z1Mass, weight);
+  SafeHistFill(histMap1D_, getHistName("ZMassFull", variation.second), Z2Mass, weight);
+  SafeHistFill(histMap1D_, getHistName("Z1MassFull", variation.second), Z1Mass, weight);
+  SafeHistFill(histMap1D_, getHistName("Z2MassFull", variation.second), Z2Mass, weight);
+  if (isMC_) {
+    for (size_t i = 0; i < lheWeights.size(); i++) {
+      SafeHistFill(weighthistMap1D_,
+                   getHistName("ZMassFull", variation.second),
+                   Z1Mass,
+                   i,
+                   lheWeights[i] / lheWeights[0] * weight);
+      SafeHistFill(weighthistMap1D_,
+                   getHistName("ZMassFull", variation.second),
+                   Z2Mass,
+                   i,
+                   lheWeights[i] / lheWeights[0] * weight);
+      SafeHistFill(weighthistMap1D_,
+                   getHistName("Z1MassFull", variation.second),
+                   Z1Mass,
+                   i,
+                   lheWeights[i] / lheWeights[0] * weight);
+      SafeHistFill(weighthistMap1D_,
+                   getHistName("Z2MassFull", variation.second),
+                   Z2Mass,
+                   i,
+                   lheWeights[i] / lheWeights[0] * weight);
+    }
   }
 
   std::vector<std::vector<float>*> vjetEta = {jetEta_jesUp, jetEta_jesDown, jetEta_jerUp, jetEta_jerDown};
