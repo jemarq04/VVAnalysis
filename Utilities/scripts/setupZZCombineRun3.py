@@ -39,7 +39,7 @@ def main():
     lumi_info = ConfigureJobs.getLumiMap()
     years = lumi_info["Run3Combined"]["years"]
     lumiMap = {int(year): float("%.3f" % ConfigureJobs.getLuminosity(year)) for year in years}
-    lumiUncMap = {  # TODO: 2024 still set to 0.0
+    lumiUncMap = {
         int(year): lumi_info[year]["unc"] for year in years
     }
     sig_procs = ["qqZZ-powheg"]
