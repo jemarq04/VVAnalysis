@@ -431,7 +431,7 @@ def makeFakeRateCompositeHists(hist_file, name, members, addRatios=True, overflo
                 sumhist = composite.FindObject(hist.GetName())
                 if "data" not in directory and hist.GetEntries() > 0:
                     sumweights_hist = hist_file.Get("/".join([directory, "sumweights"]))
-                    sumweights = sumweights_hist.Integral(1, sumweights_hist.GetNbinsX()+2)
+                    sumweights = sumweights_hist.Integral(1, sumweights_hist.GetNbinsX() + 2)
                     hist.Scale(members[directory] * 1000 * lumi / sumweights)
                 if overflow and isinstance(hist, ROOT.TH1):
                     xbins = hist.GetNbinsX()
