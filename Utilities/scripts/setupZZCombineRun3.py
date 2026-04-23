@@ -40,8 +40,8 @@ def main():
     years = lumi_info["Run3Combined"]["years"]
     lumiMap = {int(year): float("%.3f" % ConfigureJobs.getLuminosity(year)) for year in years}
     lumiUncMap = {int(year): lumi_info[year]["unc"] for year in years}
-    sig_procs = ["qqZZ-powheg"]
-    bkg_procs = ["ggZZ", "VVV", "nonprompt"]
+    sig_procs = ["qqZZ-powheg", "ggZZ", "qqZZjj-ewk", "HZZ-signal"]
+    bkg_procs = ["VVV", "nonprompt"]
     all_procs = sig_procs + bkg_procs[:-1]
 
     if args.infile is None:
