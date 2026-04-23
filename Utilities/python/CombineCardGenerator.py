@@ -269,7 +269,11 @@ class CombineCardGenerator:
                 headers = []
                 headers.append(["bin", ""] + [chan] * (numcols - 2))
                 headers.append(["process", ""] + list(self.sig_procs.keys()) + list(self.bkg_procs.keys()))
-                headers.append(["process", ""] + [str(num - 1) for num in range(numcols - 2)])
+                headers.append(
+                    ["process", ""]
+                    + [str(num) for num in range(1 - len(self.sig_procs), 1)]
+                    + [str(num + 1) for num in range(len(self.bkg_procs))]
+                )
                 headers.append(
                     ["rate", ""]
                     + ["%.4f" % proc.yields[chan] for proc in self.sig_procs.values()]
