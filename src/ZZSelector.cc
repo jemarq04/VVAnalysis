@@ -31,15 +31,15 @@ void ZZSelector::Init(TTree* tree) {
   //      "Z2lep2_Eta","Z2lep2_Phi","Z2lep2_Pt","Z2lep2_PdgId","Mass","nJets",
   // };
 
-  hists1D_ = {"yield",      "Z1Mass",     "Z2Mass",       "ZMass",        "Z1MassFull",    "Z2MassFull",
-              "ZMassFull",  "LepPt",      "LepPtFull",    "LepEta",       "LepPt1",        "LepPt2",
-              "LepPt3",     "LepPt4",     "LepPt1Full",   "LepPt2Full",   "LepPt3Full",    "LepPt4Full",
-              "Z1LepPt",    "Z2LepPt",    "Mass",         "nJets",        "nJets_central", "MassFull",
-              "SIP3D",      "CosTheta1",  "CosTheta2",    "CosThetaStar", "RapidityDiff",  "dPhiOSll",
-              "LepIso",     "Mass0j",     "Mass1j",       "Mass2j",       "Mass3j",        "Mass34j",
-              "Mass4j",     "Mass0jFull", "Mass1jFull",   "Mass2jFull",   "Mass3jFull",    "Mass34jFull",
-              "Mass4jFull", "jetEta[0]",  "absjetEta[0]", "jetEta[1]",    "absjetEta[1]",  "jetPt[0]",
-              "jetPt[1]",   "jetPhi[0]",  "jetPhi[1]",    "mjj",          "dEtajj"};
+  hists1D_ = {"yield",         "Z1Mass",     "Z2Mass",       "ZMass",      "Z1MassFull",   "Z2MassFull",
+              "ZMassFull",     "LepPt",      "LepPtFull",    "LepEta",     "LepPt1",       "LepPt2",
+              "LepPt3",        "LepPt4",     "LepPt1Full",   "LepPt2Full", "LepPt3Full",   "LepPt4Full",
+              "Z1LepPt",       "Z2LepPt",    "Mass",         "ZZPt",       "ZPt",          "nJets",
+              "nJets_central", "MassFull",   "CosTheta1",    "CosTheta2",  "CosThetaStar", "RapidityDiff",
+              "dPhiOSll",      "Mass0j",     "Mass1j",       "Mass2j",     "Mass3j",       "Mass34j",
+              "Mass4j",        "Mass0jFull", "Mass1jFull",   "Mass2jFull", "Mass3jFull",   "Mass34jFull",
+              "Mass4jFull",    "jetEta[0]",  "absjetEta[0]", "jetEta[1]",  "absjetEta[1]", "jetPt[0]",
+              "jetPt[1]",      "jetPhi[0]",  "jetPhi[1]",    "mjj",        "dEtajj"};
 
   jetTest2D_ = {};  // also defined in hists1D_ to pass checks in InitializeHistogramsFromConfig()
   jethists1D_ = {"Mass",       "MassFull",   "nJets",        "nJets_central", "jetPt[1]",    "jetPt[0]",
@@ -47,15 +47,15 @@ void ZZSelector::Init(TTree* tree) {
                  "Mass0j",     "Mass1j",     "Mass2j",       "Mass3j",        "Mass34j",     "Mass4j",
                  "Mass0jFull", "Mass1jFull", "Mass2jFull",   "Mass3jFull",    "Mass34jFull", "Mass4jFull"};
 
-  weighthists1D_ = {"yield",      "Z1Mass",     "Z2Mass",       "ZMass",        "Z1MassFull",    "Z2MassFull",
-                    "ZMassFull",  "LepPt",      "LepPtFull",    "LepEta",       "LepPt1",        "LepPt2",
-                    "LepPt3",     "LepPt4",     "LepPt1Full",   "LepPt2Full",   "LepPt3Full",    "LepPt4Full",
-                    "Z1LepPt",    "Z2LepPt",    "Mass",         "nJets",        "nJets_central", "MassFull",
-                    "SIP3D",      "CosTheta1",  "CosTheta2",    "CosThetaStar", "RapidityDiff",  "dPhiOSll",
-                    "LepIso",     "Mass0j",     "Mass1j",       "Mass2j",       "Mass3j",        "Mass34j",
-                    "Mass4j",     "Mass0jFull", "Mass1jFull",   "Mass2jFull",   "Mass3jFull",    "Mass34jFull",
-                    "Mass4jFull", "jetEta[0]",  "absjetEta[0]", "jetEta[1]",    "absjetEta[1]",  "jetPt[0]",
-                    "jetPt[1]",   "jetPhi[0]",  "jetPhi[1]",    "mjj",          "dEtajj"};
+  weighthists1D_ = {"yield",         "Z1Mass",     "Z2Mass",       "ZMass",      "Z1MassFull",   "Z2MassFull",
+                    "ZMassFull",     "LepPt",      "LepPtFull",    "LepEta",     "LepPt1",       "LepPt2",
+                    "LepPt3",        "LepPt4",     "LepPt1Full",   "LepPt2Full", "LepPt3Full",   "LepPt4Full",
+                    "Z1LepPt",       "Z2LepPt",    "Mass",         "ZZPt",       "ZPt",          "nJets",
+                    "nJets_central", "MassFull",   "CosTheta1",    "CosTheta2",  "CosThetaStar", "RapidityDiff",
+                    "dPhiOSll",      "Mass0j",     "Mass1j",       "Mass2j",     "Mass3j",       "Mass34j",
+                    "Mass4j",        "Mass0jFull", "Mass1jFull",   "Mass2jFull", "Mass3jFull",   "Mass34jFull",
+                    "Mass4jFull",    "jetEta[0]",  "absjetEta[0]", "jetEta[1]",  "absjetEta[1]", "jetPt[0]",
+                    "jetPt[1]",      "jetPhi[0]",  "jetPhi[1]",    "mjj",        "dEtajj"};
   ZZSelectorBase::Init(tree);
   // fCutFormula = new TTreeFormula("CutFormula", fOption, fChain);
   // fCutFormula->SetQuickLoad(kTRUE);
@@ -1442,10 +1442,13 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
       //TODO: Full?
       SafeHistFill(
           weighthistMap1D_, getHistName("MassFull", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight);
-      //SafeHistFill(weighthistMap1D_, getHistName("ZZPt", variation.second), Pt, i, lheWeights[i] / lheWeights[0] * weight);
+      SafeHistFill(
+          weighthistMap1D_, getHistName("ZZPt", variation.second), Pt, i, lheWeights[i] / lheWeights[0] * weight);
       //SafeHistFill(weighthistMap1D_, getHistName("ZZEta", variation.second), Eta, i, lheWeights[i] / lheWeights[0] * weight);
-      //SafeHistFill(weighthistMap1D_, getHistName("ZPt", variation.second), Z1Pt, i, lheWeights[i] / lheWeights[0] * weight);
-      //SafeHistFill(weighthistMap1D_, getHistName("ZPt", variation.second), Z2Pt, i, lheWeights[i] / lheWeights[0] * weight);
+      SafeHistFill(
+          weighthistMap1D_, getHistName("ZPt", variation.second), Z1Pt, i, lheWeights[i] / lheWeights[0] * weight);
+      SafeHistFill(
+          weighthistMap1D_, getHistName("ZPt", variation.second), Z2Pt, i, lheWeights[i] / lheWeights[0] * weight);
       SafeHistFill(
           weighthistMap1D_, getHistName("Z1Mass", variation.second), Z1Mass, i, lheWeights[i] / lheWeights[0] * weight);
       SafeHistFill(
@@ -1494,14 +1497,10 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
       //SafeHistFill(weighthistMap1D_, getHistName("e2PtSorted", variation.second), e2PtTmp, i, lheWeights[i] / lheWeights[0] * weight);
       //SafeHistFill(weighthistMap1D_, getHistName("dPhiZ1Z2", variation.second), dPhiZZ, i, lheWeights[i] / lheWeights[0] * weight);
       //SafeHistFill(weighthistMap1D_, getHistName("dRZ1Z2", variation.second), dRZZ, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(
-          weighthistMap1D_, getHistName("SIP3D", variation.second), l1SIP3D, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(
-          weighthistMap1D_, getHistName("SIP3D", variation.second), l2SIP3D, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(
-          weighthistMap1D_, getHistName("SIP3D", variation.second), l3SIP3D, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(
-          weighthistMap1D_, getHistName("SIP3D", variation.second), l4SIP3D, i, lheWeights[i] / lheWeights[0] * weight);
+      //SafeHistFill(weighthistMap1D_, getHistName("SIP3D", variation.second), l1SIP3D, i, lheWeights[i] / lheWeights[0] * weight);
+      //SafeHistFill(weighthistMap1D_, getHistName("SIP3D", variation.second), l2SIP3D, i, lheWeights[i] / lheWeights[0] * weight);
+      //SafeHistFill(weighthistMap1D_, getHistName("SIP3D", variation.second), l3SIP3D, i, lheWeights[i] / lheWeights[0] * weight);
+      //SafeHistFill(weighthistMap1D_, getHistName("SIP3D", variation.second), l4SIP3D, i, lheWeights[i] / lheWeights[0] * weight);
       //SafeHistFill(weighthistMap1D_, getHistName("PVDZ", variation.second), l1PVDZ, i, lheWeights[i] / lheWeights[0] * weight);
       //SafeHistFill(weighthistMap1D_, getHistName("PVDZ", variation.second), l2PVDZ, i, lheWeights[i] / lheWeights[0] * weight);
       //SafeHistFill(weighthistMap1D_, getHistName("PVDZ", variation.second), l3PVDZ, i, lheWeights[i] / lheWeights[0] * weight);
@@ -1516,14 +1515,10 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
       //SafeHistFill(weighthistMap1D_, getHistName("Lep2Iso", variation.second), l2Iso, i, lheWeights[i] / lheWeights[0] * weight);
       //SafeHistFill(weighthistMap1D_, getHistName("Lep3Iso", variation.second), l3Iso, i, lheWeights[i] / lheWeights[0] * weight);
       //SafeHistFill(weighthistMap1D_, getHistName("Lep4Iso", variation.second), l4Iso, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(
-          weighthistMap1D_, getHistName("LepIso", variation.second), l1Iso, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(
-          weighthistMap1D_, getHistName("LepIso", variation.second), l2Iso, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(
-          weighthistMap1D_, getHistName("LepIso", variation.second), l3Iso, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(
-          weighthistMap1D_, getHistName("LepIso", variation.second), l4Iso, i, lheWeights[i] / lheWeights[0] * weight);
+      //SafeHistFill(weighthistMap1D_, getHistName("LepIso", variation.second), l1Iso, i, lheWeights[i] / lheWeights[0] * weight);
+      //SafeHistFill(weighthistMap1D_, getHistName("LepIso", variation.second), l2Iso, i, lheWeights[i] / lheWeights[0] * weight);
+      //SafeHistFill(weighthistMap1D_, getHistName("LepIso", variation.second), l3Iso, i, lheWeights[i] / lheWeights[0] * weight);
+      //SafeHistFill(weighthistMap1D_, getHistName("LepIso", variation.second), l4Iso, i, lheWeights[i] / lheWeights[0] * weight);
 
       SafeHistFill(weighthistMap1D_,
                    getHistName("CosTheta1", variation.second),
@@ -1572,11 +1567,11 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
   SafeHistFill(histMap1D_, getHistName("Z2Mass", variation.second), Z2Mass, weight);
   SafeHistFill(histMap1D_, getHistName("ZMass", variation.second), Z1Mass, weight);
   SafeHistFill(histMap1D_, getHistName("ZMass", variation.second), Z2Mass, weight);
-  //SafeHistFill(histMap1D_, getHistName("ZPt", variation.second), Z1Pt, weight);
-  //SafeHistFill(histMap1D_, getHistName("ZPt", variation.second), Z2Pt, weight);
+  SafeHistFill(histMap1D_, getHistName("ZPt", variation.second), Z1Pt, weight);
+  SafeHistFill(histMap1D_, getHistName("ZPt", variation.second), Z2Pt, weight);
   //SafeHistFill(histMap1D_, getHistName("dPhiZ1Z2", variation.second), dPhiZZ, weight);
   //SafeHistFill(histMap1D_, getHistName("dRZ1Z2", variation.second), dRZZ, weight);
-  //SafeHistFill(histMap1D_, getHistName("ZZPt", variation.second), Pt, weight);
+  SafeHistFill(histMap1D_, getHistName("ZZPt", variation.second), Pt, weight);
   //SafeHistFill(histMap1D_, getHistName("ZZEta", variation.second), Eta, weight);
   SafeHistFill(histMap1D_, getHistName("CosTheta1", variation.second), CosTheta1, weight);
   SafeHistFill(histMap1D_, getHistName("CosTheta2", variation.second), CosTheta2, weight);
@@ -1589,15 +1584,15 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
   //SafeHistFill(histMap1D_, getHistName("Lep2Iso", variation.second), l2Iso, weight);
   //SafeHistFill(histMap1D_, getHistName("Lep3Iso", variation.second), l3Iso, weight);
   //SafeHistFill(histMap1D_, getHistName("Lep4Iso", variation.second), l4Iso, weight);
-  SafeHistFill(histMap1D_, getHistName("LepIso", variation.second), l1Iso, weight);
-  SafeHistFill(histMap1D_, getHistName("LepIso", variation.second), l2Iso, weight);
-  SafeHistFill(histMap1D_, getHistName("LepIso", variation.second), l3Iso, weight);
-  SafeHistFill(histMap1D_, getHistName("LepIso", variation.second), l4Iso, weight);
+  //SafeHistFill(histMap1D_, getHistName("LepIso", variation.second), l1Iso, weight);
+  //SafeHistFill(histMap1D_, getHistName("LepIso", variation.second), l2Iso, weight);
+  //SafeHistFill(histMap1D_, getHistName("LepIso", variation.second), l3Iso, weight);
+  //SafeHistFill(histMap1D_, getHistName("LepIso", variation.second), l4Iso, weight);
 
-  SafeHistFill(histMap1D_, getHistName("SIP3D", variation.second), l1SIP3D, weight);
-  SafeHistFill(histMap1D_, getHistName("SIP3D", variation.second), l2SIP3D, weight);
-  SafeHistFill(histMap1D_, getHistName("SIP3D", variation.second), l3SIP3D, weight);
-  SafeHistFill(histMap1D_, getHistName("SIP3D", variation.second), l4SIP3D, weight);
+  //SafeHistFill(histMap1D_, getHistName("SIP3D", variation.second), l1SIP3D, weight);
+  //SafeHistFill(histMap1D_, getHistName("SIP3D", variation.second), l2SIP3D, weight);
+  //SafeHistFill(histMap1D_, getHistName("SIP3D", variation.second), l3SIP3D, weight);
+  //SafeHistFill(histMap1D_, getHistName("SIP3D", variation.second), l4SIP3D, weight);
 
   // Making LeptonPt and Eta plots
   //SafeHistFill(histMap1D_, getHistName("Lep1Energy", variation.second), l1Energy, weight);
