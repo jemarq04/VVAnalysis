@@ -86,7 +86,7 @@ def main():
 
     systematics_lnN = {
         "bkgStat": {"nonprompt": "1.4"},
-        #"trigger": dict.fromkeys(all_procs, "1.020"),
+        # "trigger": dict.fromkeys(all_procs, "1.020"),
         f"lumi_13p6TeV_{args.year}": {proc: str(lumiUncMap[args.year]) for proc in all_procs},
     }
     systematics_shape = {
@@ -107,14 +107,22 @@ def main():
         if "e" in channel:
             for syst in ["CMS_eff_e", "CMS_RecoEff_e"]:
                 generator.AddSystematics(syst, dict.fromkeys(all_procs, "1"), channel=channel, shape=True)
-            generator.AddSystematics(f"trigger_ee_{args.year}", dict.fromkeys(all_procs, "1.010"), channel=channel, shape=False)
+            generator.AddSystematics(
+                f"trigger_ee_{args.year}", dict.fromkeys(all_procs, "1.010"), channel=channel, shape=False
+            )
             if "m" not in channel:
-                generator.AddSystematics(f"trigger_eeee_{args.year}", dict.fromkeys(all_procs, "1.010"), channel=channel, shape=False)
+                generator.AddSystematics(
+                    f"trigger_eeee_{args.year}", dict.fromkeys(all_procs, "1.010"), channel=channel, shape=False
+                )
         if "m" in channel:
             generator.AddSystematics("CMS_eff_m", dict.fromkeys(all_procs, "1"), channel=channel, shape=True)
-            generator.AddSystematics(f"trigger_mm_{args.year}", dict.fromkeys(all_procs, "1.010"), channel=channel, shape=False)
+            generator.AddSystematics(
+                f"trigger_mm_{args.year}", dict.fromkeys(all_procs, "1.010"), channel=channel, shape=False
+            )
             if "e" not in channel:
-                generator.AddSystematics(f"trigger_mmmm_{args.year}", dict.fromkeys(all_procs, "1.010"), channel=channel, shape=False)
+                generator.AddSystematics(
+                    f"trigger_mmmm_{args.year}", dict.fromkeys(all_procs, "1.010"), channel=channel, shape=False
+                )
 
     # Finally, you can create the cards by specifying the
     # output directory for them.
