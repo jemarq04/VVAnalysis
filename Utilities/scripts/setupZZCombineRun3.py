@@ -87,6 +87,7 @@ def main():
     systematics_lnN = {
         "bkgStat": {"nonprompt": "1.4"},
         # "trigger": dict.fromkeys(all_procs, "1.020"),
+        "lumi_13p6TeV": dict.fromkeys(all_procs, "1.010"),
         f"lumi_13p6TeV_{args.year}": {proc: str(lumiUncMap[args.year]) for proc in all_procs},
     }
     systematics_shape = {
