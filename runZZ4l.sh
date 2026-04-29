@@ -11,25 +11,26 @@ elif [[ $# -eq 2 && ! -f $2 ]]; then
   exit 1
 fi
 
-year=$1
-[[ $year = all ]] && year="2022 2023 2024"
+years=$1
+[[ $years = all ]] && years="2022 2023 2024"
 
-for yr in $year; do
-  frfile=data/fakeScaleFactorsRun3-ZZ4l$yr.root
+for year in $years; do
+  frfile=data/fakeScaleFactorsRun3-ZZ4l$year.root
   [[ ! -z $2 ]] && frfile=$2
   if [[ ! -f $frfile ]]; then
     echo invalid file: $frfile
     exit 1
   fi
+  echo Running ZZ4l$year
   echo Using FR file $frfile
 
   # Without nonprompt contribution
-  #./Utilities/scripts/makeHistFile.py -f ZZ4l$yr -a ZZ4l$yr -s LooseLeptons --year $yr -c eeee,eemm,mmee,mmmm -j 12 -sf #--with_Gen
+  #./Utilities/scripts/makeHistFile.py -f ZZ4l$year -a ZZ4l$year -s LooseLeptons --year $year -c eeee,eemm,mmee,mmmm -j 12 -sf #--with_Gen
 
   # For systematics
-  #./Utilities/scripts/makeHistFile.py -f ZZ4l$yr -a ZZ4l$yr -s LooseLeptons --year $yr -c eeee,eemm,mmee,mmmm -j 12 -sf --doSystematics
+  #./Utilities/scripts/makeHistFile.py -f ZZ4l$year -a ZZ4l$year -s LooseLeptons --year $year -c eeee,eemm,mmee,mmmm -j 12 -sf --doSystematics
 
-  ./Utilities/scripts/makeHistFile.py -f ZZ4l$yr -a ZZ4l$yr -s LooseLeptons --year $yr -c eeee,eemm,mmee,mmmm -j 12 -sf --with_background -F $frfile
+  ./Utilities/scripts/makeHistFile.py -f ZZ4l$year -a ZZ4l$year -s LooseLeptons --year $year -c eeee,eemm,mmee,mmmm -j 12 -sf --with_background -F $frfile
 
-  echo "$yr done!!==================================="
+  echo "$year done!!==================================="
 done
