@@ -85,7 +85,7 @@ def main():
     )
 
     systematics_lnN = {
-        "bkgStat": {"nonprompt": "1.4"},
+        # "bkgStat": {"nonprompt": "1.4"},
         # "trigger": dict.fromkeys(all_procs, "1.020"),
         "lumi_13p6TeV": dict.fromkeys(all_procs, "1.010"),
         f"lumi_13p6TeV_{args.year}": {proc: str(lumiUncMap[args.year]) for proc in all_procs},
@@ -108,22 +108,38 @@ def main():
         if "e" in channel:
             for syst in ["CMS_eff_e", "CMS_RecoEff_e"]:
                 generator.AddSystematics(syst, dict.fromkeys(all_procs, "1"), channel=channel, shape=True)
+
             generator.AddSystematics(
                 f"trigger_ee_{args.year}", dict.fromkeys(all_procs, "1.010"), channel=channel, shape=False
             )
             if "m" not in channel:
+                # 4e channel
                 generator.AddSystematics(
                     f"trigger_eeee_{args.year}", dict.fromkeys(all_procs, "1.010"), channel=channel, shape=False
                 )
+
+                generator.AddSystematics("bkgStat_ee", {"nonprompt": "1.4"}, channel=channel, shape=False)
+                generator.AddSystematics("bkgStat_eeee", {"nonprompt": "1.4"}, channel=channel, shape=False)
+            else:
+                # 2e2m channel
+                generator.AddSystematics("bkgStat_ee", {"nonprompt": "1.2"}, channel=channel, shape=False)
+
         if "m" in channel:
             generator.AddSystematics("CMS_eff_m", dict.fromkeys(all_procs, "1"), channel=channel, shape=True)
             generator.AddSystematics(
                 f"trigger_mm_{args.year}", dict.fromkeys(all_procs, "1.010"), channel=channel, shape=False
             )
             if "e" not in channel:
+                # 4m channel
                 generator.AddSystematics(
                     f"trigger_mmmm_{args.year}", dict.fromkeys(all_procs, "1.010"), channel=channel, shape=False
                 )
+
+                generator.AddSystematics("bkgStat_mm", {"nonprompt": "1.4"}, channel=channel, shape=False)
+                generator.AddSystematics("bkgStat_mmmm", {"nonprompt": "1.4"}, channel=channel, shape=False)
+            else:
+                # 2e2m channel
+                generator.AddSystematics("bkgStat_mm", {"nonprompt": "1.2"}, channel=channel, shape=False)
 
     # Finally, you can create the cards by specifying the
     # output directory for them.
