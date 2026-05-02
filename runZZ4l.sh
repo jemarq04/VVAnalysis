@@ -28,7 +28,7 @@ for year in $years; do
   #./Utilities/scripts/makeHistFile.py -f ZZ4l$year -a ZZ4l$year -s LooseLeptons --year $year -c eeee,eemm,mmee,mmmm -j 12 -sf #--with_Gen
 
   # For systematics
-  #./Utilities/scripts/makeHistFile.py -f ZZ4l$year -a ZZ4l$year -s LooseLeptons --year $year -c eeee,eemm,mmee,mmmm -j 12 -sf --doSystematics
+  #./Utilities/scripts/makeHistFile.py -f ZZ4l$year -a ZZ4l$year -s LooseLeptons --year $year -c eeee,eemm,mmee,mmmm -j 12 -sf --doSystematics --with_background -F $frfile
 
   ./Utilities/scripts/makeHistFile.py -f ZZ4l$year -a ZZ4l$year -s LooseLeptons --year $year -c eeee,eemm,mmee,mmmm -j 12 -sf --with_background -F $frfile
 
