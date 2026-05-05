@@ -50,7 +50,7 @@ def main():
     elif not args.infile.endswith(".root"):
         parser.error(f"file {args.infile} is not a valid ROOT file")
 
-    if args.year not in years:
+    if str(args.year) not in years:
         parser.error(f"year {args.year} is not valid. choose from {','.join(years)}")
 
     if not os.path.isdir(args.outdir):
