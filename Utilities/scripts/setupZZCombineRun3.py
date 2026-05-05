@@ -31,11 +31,6 @@ def main():
 
     # Configuration of analysis
     analysis = f"ZZ4l{args.year}"
-    fileMap = {
-        2022: "HistFiles/Hists-ZZ4l2022.root",
-        2023: "HistFiles/Hists-ZZ4l2023.root",
-        2024: "HistFiles/Hists-ZZ4l2024.root",
-    }
     lumi_info = ConfigureJobs.getLumiMap()
     years = lumi_info["Run3Combined"]["years"]
     lumiMap = {int(year): float("%.3f" % ConfigureJobs.getLuminosity(year)) for year in years}
@@ -45,7 +40,7 @@ def main():
     all_procs = sig_procs + bkg_procs[:-1]
 
     if args.infile is None:
-        args.infile = fileMap[args.year]
+        args.infile = f"HistFiles/SystHists-ZZ4l{args.year}.root"
     if args.lumi is None:
         args.lumi = lumiMap[args.year]
 
@@ -55,8 +50,8 @@ def main():
     elif not args.infile.endswith(".root"):
         parser.error(f"file {args.infile} is not a valid ROOT file")
 
-    if args.year not in fileMap.keys():
-        parser.error(f"year {args.year} is not valid. choose from {','.join(fileMap.keys())}")
+    if args.year not in years:
+        parser.error(f"year {args.year} is not valid. choose from {','.join(years)}")
 
     if not os.path.isdir(args.outdir):
         try:
