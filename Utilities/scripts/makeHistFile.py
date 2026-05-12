@@ -143,7 +143,7 @@ def makeHistFile(args):
 
     selector.setNtupleType("NanoAOD" if args["nano"] else "UWVV")
     if not args["nano"]:
-        logging.debug("Processing channels " % args["channels"])
+        logging.debug("Processing channels %s" % args["channels"])
         selector.setChannels(args["channels"])
     selector.setNumCores(args["numCores"])
 
