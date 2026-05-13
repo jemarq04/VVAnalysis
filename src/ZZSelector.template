@@ -885,11 +885,13 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
   SafeHistFill(histMap1D_, getHistName("Z1MassFull", variation.second), Z1Mass, weight);
   SafeHistFill(histMap1D_, getHistName("Z2MassFull", variation.second), Z2Mass, weight);
   if (isMC_) {
+    float lheweight;
     for (size_t i = 0; i < lheWeights.size(); i++) {
-      SafeHistFill(weighthistMap1D_, getHistName("ZMassFull", variation.second), Z1Mass, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("ZMassFull", variation.second), Z2Mass, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("Z1MassFull", variation.second), Z1Mass, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("Z2MassFull", variation.second), Z2Mass, i, lheWeights[i] / lheWeights[0] * weight);
+      lheweight = lheWeights[i] / lheWeights[0] * weight;
+      SafeHistFill(weighthistMap1D_, getHistName("ZMassFull", variation.second), Z1Mass, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("ZMassFull", variation.second), Z2Mass, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("Z1MassFull", variation.second), Z1Mass, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("Z2MassFull", variation.second), Z2Mass, i, lheweight);
     }
   }
 
@@ -901,6 +903,7 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
   if ((variation.first == Central || (doaTGC_ && isaTGC_)) && isMC_) {
     // Do jet systematics JES and JER
     if (isMC_) {
+      float lheweight;
       for (size_t i = 0; i < vjetEta.size(); i++) {  // No actual syst for full m4l but just for consistency
         SafeHistFill(jethistMap1D_, getHistName("MassFull", variation.second), Mass, i, weight);
 
@@ -927,23 +930,24 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
       for (size_t i = 0; i < lheWeights.size(); i++) {
         if (jetPt->size() != jetEta->size())
           break;
-        SafeHistFill(weighthistMap1D_, getHistName("MassFull", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight);
+        lheweight = lheWeights[i] / lheWeights[0] * weight;
+        SafeHistFill(weighthistMap1D_, getHistName("MassFull", variation.second), Mass, i, lheweight);
 
         if (jetPt->size() == 0) {
-          SafeHistFill(weighthistMap1D_, getHistName("Mass0jFull", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight);
+          SafeHistFill(weighthistMap1D_, getHistName("Mass0jFull", variation.second), Mass, i, lheweight);
         } else if (jetPt->size() == 1) {
-          SafeHistFill(weighthistMap1D_, getHistName("Mass1jFull", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight);
+          SafeHistFill(weighthistMap1D_, getHistName("Mass1jFull", variation.second), Mass, i, lheweight);
         } else if (jetPt->size() == 2) {
-          SafeHistFill(weighthistMap1D_, getHistName("Mass2jFull", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight);
+          SafeHistFill(weighthistMap1D_, getHistName("Mass2jFull", variation.second), Mass, i, lheweight);
         } else {
           if (jetPt->size() == 3) {
-            SafeHistFill(weighthistMap1D_, getHistName("Mass3jFull", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight);
+            SafeHistFill(weighthistMap1D_, getHistName("Mass3jFull", variation.second), Mass, i, lheweight);
           }
           if (jetPt->size() >= 3) {
-            SafeHistFill(weighthistMap1D_, getHistName("Mass34jFull", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight);
+            SafeHistFill(weighthistMap1D_, getHistName("Mass34jFull", variation.second), Mass, i, lheweight);
           }
           if (jetPt->size() >= 4) {
-            SafeHistFill(weighthistMap1D_, getHistName("Mass4jFull", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight);
+            SafeHistFill(weighthistMap1D_, getHistName("Mass4jFull", variation.second), Mass, i, lheweight);
           }
         }
       }
@@ -1058,6 +1062,7 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
   if ((variation.first == Central || (doaTGC_ && isaTGC_)) && isMC_) {
     // Do jet systematics JES and JER
     if (isMC_) {
+      float lheweight;
       for (size_t i = 0; i < vjetEta.size(); i++) {
         SafeHistFill(jethistMap1D_, getHistName("nJets", variation.second), vnJets[i], i, weight);
 
@@ -1103,37 +1108,38 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
       {
         if (jetPt->size() != jetEta->size())
           break;
-        SafeHistFill(weighthistMap1D_, getHistName("nJets", variation.second), jetPt->size(), i, lheWeights[i] / lheWeights[0] * weight);
+        lheweight = lheWeights[i] / lheWeights[0] * weight;
+        SafeHistFill(weighthistMap1D_, getHistName("nJets", variation.second), jetPt->size(), i, lheweight);
 
         if (jetPt->size() > 0) {
-          SafeHistFill(weighthistMap1D_, getHistName("jetPt[0]", variation.second), jetPt->at(0), i, lheWeights[i] / lheWeights[0] * weight);
-          SafeHistFill(weighthistMap1D_, getHistName("jetEta[0]", variation.second), jetEta->at(0), i, lheWeights[i] / lheWeights[0] * weight);
-          SafeHistFill(weighthistMap1D_, getHistName("absjetEta[0]", variation.second), std::abs(jetEta->at(0)), i, lheWeights[i] / lheWeights[0] * weight);
+          SafeHistFill(weighthistMap1D_, getHistName("jetPt[0]", variation.second), jetPt->at(0), i, lheweight);
+          SafeHistFill(weighthistMap1D_, getHistName("jetEta[0]", variation.second), jetEta->at(0), i, lheweight);
+          SafeHistFill(weighthistMap1D_, getHistName("absjetEta[0]", variation.second), std::abs(jetEta->at(0)), i, lheweight);
           if (jetPt->size() > 1) {
-            SafeHistFill(weighthistMap1D_, getHistName("jetPt[1]", variation.second), jetPt->at(1), i, lheWeights[i] / lheWeights[0] * weight);
-            SafeHistFill(weighthistMap1D_, getHistName("jetEta[1]", variation.second), jetEta->at(1), i, lheWeights[i] / lheWeights[0] * weight);
-            SafeHistFill(weighthistMap1D_, getHistName("absjetEta[1]", variation.second), std::abs(jetEta->at(1)), i, lheWeights[i] / lheWeights[0] * weight);
+            SafeHistFill(weighthistMap1D_, getHistName("jetPt[1]", variation.second), jetPt->at(1), i, lheweight);
+            SafeHistFill(weighthistMap1D_, getHistName("jetEta[1]", variation.second), jetEta->at(1), i, lheweight);
+            SafeHistFill(weighthistMap1D_, getHistName("absjetEta[1]", variation.second), std::abs(jetEta->at(1)), i, lheweight);
 
-            SafeHistFill(weighthistMap1D_, getHistName("dEtajj", variation.second), dEtajj, i, lheWeights[i] / lheWeights[0] * weight);
-            SafeHistFill(weighthistMap1D_, getHistName("mjj", variation.second), mjj, i, lheWeights[i] / lheWeights[0] * weight);
+            SafeHistFill(weighthistMap1D_, getHistName("dEtajj", variation.second), dEtajj, i, lheweight);
+            SafeHistFill(weighthistMap1D_, getHistName("mjj", variation.second), mjj, i, lheweight);
           }
         }
 
         if (jetPt->size() == 0) {
-          SafeHistFill(weighthistMap1D_, getHistName("Mass0j", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight);
+          SafeHistFill(weighthistMap1D_, getHistName("Mass0j", variation.second), Mass, i, lheweight);
         } else if (jetPt->size() == 1) {
-          SafeHistFill(weighthistMap1D_, getHistName("Mass1j", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight);
+          SafeHistFill(weighthistMap1D_, getHistName("Mass1j", variation.second), Mass, i, lheweight);
         } else if (jetPt->size() == 2) {
-          SafeHistFill(weighthistMap1D_, getHistName("Mass2j", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight);
+          SafeHistFill(weighthistMap1D_, getHistName("Mass2j", variation.second), Mass, i, lheweight);
         } else {
           if (jetPt->size() == 3) {
-            SafeHistFill(weighthistMap1D_, getHistName("Mass3j", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight);
+            SafeHistFill(weighthistMap1D_, getHistName("Mass3j", variation.second), Mass, i, lheweight);
           }
           if (jetPt->size() >= 3) {
-            SafeHistFill(weighthistMap1D_, getHistName("Mass34j", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight);
+            SafeHistFill(weighthistMap1D_, getHistName("Mass34j", variation.second), Mass, i, lheweight);
           }
           if (jetPt->size() >= 4) {
-            SafeHistFill(weighthistMap1D_, getHistName("Mass4j", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight);
+            SafeHistFill(weighthistMap1D_, getHistName("Mass4j", variation.second), Mass, i, lheweight);
           }
         }
       }
@@ -1175,131 +1181,133 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
 
   // Plot with LHE weights
   if (isMC_) {
+    float lheweight;
     for (size_t i = 0; i < lheWeights.size(); i++) {
+      lheweight = lheWeights[i] / lheWeights[0] * weight;
       if (80 < Mass && Mass < 110) {
         //TODO: counter-intuitive? 'Full' referred to plots before Mass selection above. this is tighter?
-        SafeHistFill(weighthistMap1D_, getHistName("LepPt1Full", variation.second), l1PtTmp, i, lheWeights[i] / lheWeights[0] * weight);
-        SafeHistFill(weighthistMap1D_, getHistName("LepPt2Full", variation.second), l2PtTmp, i, lheWeights[i] / lheWeights[0] * weight);
-        SafeHistFill(weighthistMap1D_, getHistName("LepPt3Full", variation.second), l3PtTmp, i, lheWeights[i] / lheWeights[0] * weight);
-        SafeHistFill(weighthistMap1D_, getHistName("LepPt4Full", variation.second), l4PtTmp, i, lheWeights[i] / lheWeights[0] * weight);
-        SafeHistFill(weighthistMap1D_, getHistName("LepPtFull", variation.second), l1Pt, i, lheWeights[i] / lheWeights[0] * weight);
-        SafeHistFill(weighthistMap1D_, getHistName("LepPtFull", variation.second), l2Pt, i, lheWeights[i] / lheWeights[0] * weight);
-        SafeHistFill(weighthistMap1D_, getHistName("LepPtFull", variation.second), l3Pt, i, lheWeights[i] / lheWeights[0] * weight);
-        SafeHistFill(weighthistMap1D_, getHistName("LepPtFull", variation.second), l4Pt, i, lheWeights[i] / lheWeights[0] * weight);
-        SafeHistFill(weighthistMap1D_, getHistName("e1PtSortedFull", variation.second), e1PtTmp, i, lheWeights[i] / lheWeights[0] * weight);
-        SafeHistFill(weighthistMap1D_, getHistName("e2PtSortedFull", variation.second), e2PtTmp, i, lheWeights[i] / lheWeights[0] * weight);
+        SafeHistFill(weighthistMap1D_, getHistName("LepPt1Full", variation.second), l1PtTmp, i, lheweight);
+        SafeHistFill(weighthistMap1D_, getHistName("LepPt2Full", variation.second), l2PtTmp, i, lheweight);
+        SafeHistFill(weighthistMap1D_, getHistName("LepPt3Full", variation.second), l3PtTmp, i, lheweight);
+        SafeHistFill(weighthistMap1D_, getHistName("LepPt4Full", variation.second), l4PtTmp, i, lheweight);
+        SafeHistFill(weighthistMap1D_, getHistName("LepPtFull", variation.second), l1Pt, i, lheweight);
+        SafeHistFill(weighthistMap1D_, getHistName("LepPtFull", variation.second), l2Pt, i, lheweight);
+        SafeHistFill(weighthistMap1D_, getHistName("LepPtFull", variation.second), l3Pt, i, lheweight);
+        SafeHistFill(weighthistMap1D_, getHistName("LepPtFull", variation.second), l4Pt, i, lheweight);
+        SafeHistFill(weighthistMap1D_, getHistName("e1PtSortedFull", variation.second), e1PtTmp, i, lheweight);
+        SafeHistFill(weighthistMap1D_, getHistName("e2PtSortedFull", variation.second), e2PtTmp, i, lheweight);
       }
       if (channel_ == eeee) {
-        SafeHistFill(weighthistMap1D_, getHistName("ElePt", variation.second), l1Pt, i, lheWeights[i] / lheWeights[0] * weight);
-        SafeHistFill(weighthistMap1D_, getHistName("ElePt", variation.second), l2Pt, i, lheWeights[i] / lheWeights[0] * weight);
-        SafeHistFill(weighthistMap1D_, getHistName("ElePt", variation.second), l3Pt, i, lheWeights[i] / lheWeights[0] * weight);
-        SafeHistFill(weighthistMap1D_, getHistName("ElePt", variation.second), l4Pt, i, lheWeights[i] / lheWeights[0] * weight);
-        SafeHistFill(weighthistMap1D_, getHistName("EleEta", variation.second), l1Eta, i, lheWeights[i] / lheWeights[0] * weight);
-        SafeHistFill(weighthistMap1D_, getHistName("EleEta", variation.second), l2Eta, i, lheWeights[i] / lheWeights[0] * weight);
-        SafeHistFill(weighthistMap1D_, getHistName("EleEta", variation.second), l3Eta, i, lheWeights[i] / lheWeights[0] * weight);
-        SafeHistFill(weighthistMap1D_, getHistName("EleEta", variation.second), l4Eta, i, lheWeights[i] / lheWeights[0] * weight);
-        SafeHistFill(weighthistMap1D_, getHistName("EleZMass", variation.second), Z1Mass, i, lheWeights[i] / lheWeights[0] * weight);
-        SafeHistFill(weighthistMap1D_, getHistName("EleZMass", variation.second), Z2Mass, i, lheWeights[i] / lheWeights[0] * weight);
+        SafeHistFill(weighthistMap1D_, getHistName("ElePt", variation.second), l1Pt, i, lheweight);
+        SafeHistFill(weighthistMap1D_, getHistName("ElePt", variation.second), l2Pt, i, lheweight);
+        SafeHistFill(weighthistMap1D_, getHistName("ElePt", variation.second), l3Pt, i, lheweight);
+        SafeHistFill(weighthistMap1D_, getHistName("ElePt", variation.second), l4Pt, i, lheweight);
+        SafeHistFill(weighthistMap1D_, getHistName("EleEta", variation.second), l1Eta, i, lheweight);
+        SafeHistFill(weighthistMap1D_, getHistName("EleEta", variation.second), l2Eta, i, lheweight);
+        SafeHistFill(weighthistMap1D_, getHistName("EleEta", variation.second), l3Eta, i, lheweight);
+        SafeHistFill(weighthistMap1D_, getHistName("EleEta", variation.second), l4Eta, i, lheweight);
+        SafeHistFill(weighthistMap1D_, getHistName("EleZMass", variation.second), Z1Mass, i, lheweight);
+        SafeHistFill(weighthistMap1D_, getHistName("EleZMass", variation.second), Z2Mass, i, lheweight);
       } else if (channel_ == eemm) {
-        SafeHistFill(weighthistMap1D_, getHistName("ElePt", variation.second), l1Pt, i, lheWeights[i] / lheWeights[0] * weight);
-        SafeHistFill(weighthistMap1D_, getHistName("ElePt", variation.second), l2Pt, i, lheWeights[i] / lheWeights[0] * weight);
-        SafeHistFill(weighthistMap1D_, getHistName("MuPt", variation.second), l3Pt, i, lheWeights[i] / lheWeights[0] * weight);
-        SafeHistFill(weighthistMap1D_, getHistName("MuPt", variation.second), l4Pt, i, lheWeights[i] / lheWeights[0] * weight);
-        SafeHistFill(weighthistMap1D_, getHistName("EleEta", variation.second), l1Eta, i, lheWeights[i] / lheWeights[0] * weight);
-        SafeHistFill(weighthistMap1D_, getHistName("EleEta", variation.second), l2Eta, i, lheWeights[i] / lheWeights[0] * weight);
-        SafeHistFill(weighthistMap1D_, getHistName("MuEta", variation.second), l3Eta, i, lheWeights[i] / lheWeights[0] * weight);
-        SafeHistFill(weighthistMap1D_, getHistName("MuEta", variation.second), l4Eta, i, lheWeights[i] / lheWeights[0] * weight);
-        SafeHistFill(weighthistMap1D_, getHistName("EleZMass", variation.second), Z1Mass, i, lheWeights[i] / lheWeights[0] * weight);
-        SafeHistFill(weighthistMap1D_, getHistName("MuZMass", variation.second), Z2Mass, i, lheWeights[i] / lheWeights[0] * weight);
+        SafeHistFill(weighthistMap1D_, getHistName("ElePt", variation.second), l1Pt, i, lheweight);
+        SafeHistFill(weighthistMap1D_, getHistName("ElePt", variation.second), l2Pt, i, lheweight);
+        SafeHistFill(weighthistMap1D_, getHistName("MuPt", variation.second), l3Pt, i, lheweight);
+        SafeHistFill(weighthistMap1D_, getHistName("MuPt", variation.second), l4Pt, i, lheweight);
+        SafeHistFill(weighthistMap1D_, getHistName("EleEta", variation.second), l1Eta, i, lheweight);
+        SafeHistFill(weighthistMap1D_, getHistName("EleEta", variation.second), l2Eta, i, lheweight);
+        SafeHistFill(weighthistMap1D_, getHistName("MuEta", variation.second), l3Eta, i, lheweight);
+        SafeHistFill(weighthistMap1D_, getHistName("MuEta", variation.second), l4Eta, i, lheweight);
+        SafeHistFill(weighthistMap1D_, getHistName("EleZMass", variation.second), Z1Mass, i, lheweight);
+        SafeHistFill(weighthistMap1D_, getHistName("MuZMass", variation.second), Z2Mass, i, lheweight);
       } else if (channel_ == mmee) {
-        SafeHistFill(weighthistMap1D_, getHistName("MuPt", variation.second), l1Pt, i, lheWeights[i] / lheWeights[0] * weight);
-        SafeHistFill(weighthistMap1D_, getHistName("MuPt", variation.second), l2Pt, i, lheWeights[i] / lheWeights[0] * weight);
-        SafeHistFill(weighthistMap1D_, getHistName("ElePt", variation.second), l3Pt, i, lheWeights[i] / lheWeights[0] * weight);
-        SafeHistFill(weighthistMap1D_, getHistName("ElePt", variation.second), l4Pt, i, lheWeights[i] / lheWeights[0] * weight);
-        SafeHistFill(weighthistMap1D_, getHistName("MuEta", variation.second), l1Eta, i, lheWeights[i] / lheWeights[0] * weight);
-        SafeHistFill(weighthistMap1D_, getHistName("MuEta", variation.second), l2Eta, i, lheWeights[i] / lheWeights[0] * weight);
-        SafeHistFill(weighthistMap1D_, getHistName("EleEta", variation.second), l3Eta, i, lheWeights[i] / lheWeights[0] * weight);
-        SafeHistFill(weighthistMap1D_, getHistName("EleEta", variation.second), l4Eta, i, lheWeights[i] / lheWeights[0] * weight);
-        SafeHistFill(weighthistMap1D_, getHistName("MuZMass", variation.second), Z1Mass, i, lheWeights[i] / lheWeights[0] * weight);
-        SafeHistFill(weighthistMap1D_, getHistName("EleZMass", variation.second), Z2Mass, i, lheWeights[i] / lheWeights[0] * weight);
+        SafeHistFill(weighthistMap1D_, getHistName("MuPt", variation.second), l1Pt, i, lheweight);
+        SafeHistFill(weighthistMap1D_, getHistName("MuPt", variation.second), l2Pt, i, lheweight);
+        SafeHistFill(weighthistMap1D_, getHistName("ElePt", variation.second), l3Pt, i, lheweight);
+        SafeHistFill(weighthistMap1D_, getHistName("ElePt", variation.second), l4Pt, i, lheweight);
+        SafeHistFill(weighthistMap1D_, getHistName("MuEta", variation.second), l1Eta, i, lheweight);
+        SafeHistFill(weighthistMap1D_, getHistName("MuEta", variation.second), l2Eta, i, lheweight);
+        SafeHistFill(weighthistMap1D_, getHistName("EleEta", variation.second), l3Eta, i, lheweight);
+        SafeHistFill(weighthistMap1D_, getHistName("EleEta", variation.second), l4Eta, i, lheweight);
+        SafeHistFill(weighthistMap1D_, getHistName("MuZMass", variation.second), Z1Mass, i, lheweight);
+        SafeHistFill(weighthistMap1D_, getHistName("EleZMass", variation.second), Z2Mass, i, lheweight);
       } else {
-        SafeHistFill(weighthistMap1D_, getHistName("MuPt", variation.second), l1Pt, i, lheWeights[i] / lheWeights[0] * weight);
-        SafeHistFill(weighthistMap1D_, getHistName("MuPt", variation.second), l2Pt, i, lheWeights[i] / lheWeights[0] * weight);
-        SafeHistFill(weighthistMap1D_, getHistName("MuPt", variation.second), l3Pt, i, lheWeights[i] / lheWeights[0] * weight);
-        SafeHistFill(weighthistMap1D_, getHistName("MuPt", variation.second), l4Pt, i, lheWeights[i] / lheWeights[0] * weight);
-        SafeHistFill(weighthistMap1D_, getHistName("MuEta", variation.second), l1Eta, i, lheWeights[i] / lheWeights[0] * weight);
-        SafeHistFill(weighthistMap1D_, getHistName("MuEta", variation.second), l2Eta, i, lheWeights[i] / lheWeights[0] * weight);
-        SafeHistFill(weighthistMap1D_, getHistName("MuEta", variation.second), l3Eta, i, lheWeights[i] / lheWeights[0] * weight);
-        SafeHistFill(weighthistMap1D_, getHistName("MuEta", variation.second), l4Eta, i, lheWeights[i] / lheWeights[0] * weight);
-        SafeHistFill(weighthistMap1D_, getHistName("MuZMass", variation.second), Z1Mass, i, lheWeights[i] / lheWeights[0] * weight);
-        SafeHistFill(weighthistMap1D_, getHistName("MuZMass", variation.second), Z2Mass, i, lheWeights[i] / lheWeights[0] * weight);
+        SafeHistFill(weighthistMap1D_, getHistName("MuPt", variation.second), l1Pt, i, lheweight);
+        SafeHistFill(weighthistMap1D_, getHistName("MuPt", variation.second), l2Pt, i, lheweight);
+        SafeHistFill(weighthistMap1D_, getHistName("MuPt", variation.second), l3Pt, i, lheweight);
+        SafeHistFill(weighthistMap1D_, getHistName("MuPt", variation.second), l4Pt, i, lheweight);
+        SafeHistFill(weighthistMap1D_, getHistName("MuEta", variation.second), l1Eta, i, lheweight);
+        SafeHistFill(weighthistMap1D_, getHistName("MuEta", variation.second), l2Eta, i, lheweight);
+        SafeHistFill(weighthistMap1D_, getHistName("MuEta", variation.second), l3Eta, i, lheweight);
+        SafeHistFill(weighthistMap1D_, getHistName("MuEta", variation.second), l4Eta, i, lheweight);
+        SafeHistFill(weighthistMap1D_, getHistName("MuZMass", variation.second), Z1Mass, i, lheweight);
+        SafeHistFill(weighthistMap1D_, getHistName("MuZMass", variation.second), Z2Mass, i, lheweight);
       }
 
-      SafeHistFill(weighthistMap1D_, getHistName("yield", variation.second), 1, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("Mass", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight);
+      SafeHistFill(weighthistMap1D_, getHistName("yield", variation.second), 1, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("Mass", variation.second), Mass, i, lheweight);
       //TODO: Full?
-      SafeHistFill(weighthistMap1D_, getHistName("MassFull", variation.second), Mass, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("ZZPt", variation.second), Pt, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("ZZEta", variation.second), Eta, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("ZPt", variation.second), Z1Pt, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("ZPt", variation.second), Z2Pt, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("Z1Mass", variation.second), Z1Mass, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("Z2Mass", variation.second), Z2Mass, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("ZMass", variation.second), Z1Mass, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("ZMass", variation.second), Z2Mass, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("Lep1Eta", variation.second), l1Eta, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("Lep2Eta", variation.second), l2Eta, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("Lep3Eta", variation.second), l3Eta, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("Lep4Eta", variation.second), l4Eta, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("LepEta", variation.second), l1Eta, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("LepEta", variation.second), l2Eta, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("LepEta", variation.second), l3Eta, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("LepEta", variation.second), l4Eta, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("Lep1Energy", variation.second), l1Energy, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("Lep2Energy", variation.second), l2Energy, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("Lep3Energy", variation.second), l3Energy, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("Lep4Energy", variation.second), l4Energy, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("LepPt", variation.second), l1Pt, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("LepPt", variation.second), l2Pt, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("LepPt", variation.second), l3Pt, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("LepPt", variation.second), l4Pt, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("Z1LepPt", variation.second), l1Pt, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("Z1LepPt", variation.second), l2Pt, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("Z2LepPt", variation.second), l3Pt, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("Z2LepPt", variation.second), l4Pt, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("e1PtSorted", variation.second), e1PtTmp, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("e2PtSorted", variation.second), e2PtTmp, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("dPhiZ1Z2", variation.second), dPhiZZ, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("dRZ1Z2", variation.second), dRZZ, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("SIP3D", variation.second), l1SIP3D, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("SIP3D", variation.second), l2SIP3D, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("SIP3D", variation.second), l3SIP3D, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("SIP3D", variation.second), l4SIP3D, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("PVDZ", variation.second), l1PVDZ, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("PVDZ", variation.second), l2PVDZ, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("PVDZ", variation.second), l3PVDZ, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("PVDZ", variation.second), l4PVDZ, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("deltaPVDZ_sameZ", variation.second), std::abs(l1PVDZ - l2PVDZ), i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("deltaPVDZ_sameZ", variation.second), std::abs(l3PVDZ - l4PVDZ), i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("deltaPVDZ_diffZ", variation.second), std::abs(l1PVDZ - l3PVDZ), i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("deltaPVDZ_diffZ", variation.second), std::abs(l2PVDZ - l4PVDZ), i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("deltaPVDZ_diffZ", variation.second), std::abs(l1PVDZ - l4PVDZ), i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("deltaPVDZ_diffZ", variation.second), std::abs(l2PVDZ - l3PVDZ), i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("Lep1Iso", variation.second), l1Iso, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("Lep2Iso", variation.second), l2Iso, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("Lep3Iso", variation.second), l3Iso, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("Lep4Iso", variation.second), l4Iso, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("LepIso", variation.second), l1Iso, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("LepIso", variation.second), l2Iso, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("LepIso", variation.second), l3Iso, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("LepIso", variation.second), l4Iso, i, lheWeights[i] / lheWeights[0] * weight);
+      SafeHistFill(weighthistMap1D_, getHistName("MassFull", variation.second), Mass, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("ZZPt", variation.second), Pt, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("ZZEta", variation.second), Eta, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("ZPt", variation.second), Z1Pt, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("ZPt", variation.second), Z2Pt, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("Z1Mass", variation.second), Z1Mass, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("Z2Mass", variation.second), Z2Mass, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("ZMass", variation.second), Z1Mass, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("ZMass", variation.second), Z2Mass, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("Lep1Eta", variation.second), l1Eta, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("Lep2Eta", variation.second), l2Eta, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("Lep3Eta", variation.second), l3Eta, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("Lep4Eta", variation.second), l4Eta, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("LepEta", variation.second), l1Eta, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("LepEta", variation.second), l2Eta, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("LepEta", variation.second), l3Eta, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("LepEta", variation.second), l4Eta, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("Lep1Energy", variation.second), l1Energy, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("Lep2Energy", variation.second), l2Energy, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("Lep3Energy", variation.second), l3Energy, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("Lep4Energy", variation.second), l4Energy, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("LepPt", variation.second), l1Pt, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("LepPt", variation.second), l2Pt, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("LepPt", variation.second), l3Pt, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("LepPt", variation.second), l4Pt, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("Z1LepPt", variation.second), l1Pt, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("Z1LepPt", variation.second), l2Pt, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("Z2LepPt", variation.second), l3Pt, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("Z2LepPt", variation.second), l4Pt, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("e1PtSorted", variation.second), e1PtTmp, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("e2PtSorted", variation.second), e2PtTmp, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("dPhiZ1Z2", variation.second), dPhiZZ, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("dRZ1Z2", variation.second), dRZZ, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("SIP3D", variation.second), l1SIP3D, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("SIP3D", variation.second), l2SIP3D, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("SIP3D", variation.second), l3SIP3D, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("SIP3D", variation.second), l4SIP3D, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("PVDZ", variation.second), l1PVDZ, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("PVDZ", variation.second), l2PVDZ, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("PVDZ", variation.second), l3PVDZ, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("PVDZ", variation.second), l4PVDZ, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("deltaPVDZ_sameZ", variation.second), std::abs(l1PVDZ - l2PVDZ), i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("deltaPVDZ_sameZ", variation.second), std::abs(l3PVDZ - l4PVDZ), i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("deltaPVDZ_diffZ", variation.second), std::abs(l1PVDZ - l3PVDZ), i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("deltaPVDZ_diffZ", variation.second), std::abs(l2PVDZ - l4PVDZ), i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("deltaPVDZ_diffZ", variation.second), std::abs(l1PVDZ - l4PVDZ), i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("deltaPVDZ_diffZ", variation.second), std::abs(l2PVDZ - l3PVDZ), i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("Lep1Iso", variation.second), l1Iso, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("Lep2Iso", variation.second), l2Iso, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("Lep3Iso", variation.second), l3Iso, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("Lep4Iso", variation.second), l4Iso, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("LepIso", variation.second), l1Iso, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("LepIso", variation.second), l2Iso, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("LepIso", variation.second), l3Iso, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("LepIso", variation.second), l4Iso, i, lheweight);
 
-      SafeHistFill(weighthistMap1D_, getHistName("CosTheta1", variation.second), CosTheta1, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("CosTheta2", variation.second), CosTheta2, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("CosThetaStar", variation.second), CosThetaStar, i, lheWeights[i] / lheWeights[0] * weight);
-      SafeHistFill(weighthistMap1D_, getHistName("RapidityDiff", variation.second), RapidityDiff, i, lheWeights[i] / lheWeights[0] * weight);
+      SafeHistFill(weighthistMap1D_, getHistName("CosTheta1", variation.second), CosTheta1, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("CosTheta2", variation.second), CosTheta2, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("CosThetaStar", variation.second), CosThetaStar, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("RapidityDiff", variation.second), RapidityDiff, i, lheweight);
       if (channel_ == eemm || channel_ == mmee) {
-        SafeHistFill(weighthistMap1D_, getHistName("dPhiOSll", variation.second), dPhiOSll, i, lheWeights[i] / lheWeights[0] * weight);
+        SafeHistFill(weighthistMap1D_, getHistName("dPhiOSll", variation.second), dPhiOSll, i, lheweight);
       }
     }
   }
