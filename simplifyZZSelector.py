@@ -122,7 +122,7 @@ systHistList = [
 # "Mass0j", "Mass1j", "Mass2j", "Mass3j", "Mass34j", "Mass4j", "Mass0jFull", "Mass1jFull", "Mass2jFull", "Mass3jFull", "Mass34jFull", "Mass4jFull"]
 
 
-hist1D_Ori = [
+hists1D_Ori = [
     "yield",
     "Z1Mass",
     "Z2Mass",
@@ -365,7 +365,7 @@ thedict["weighthists1D"] = listToStr(weighthists1DList)
 # systHists used in Selector code to check whether need to do syst, so hists1D enough to contain the list for purpose here
 # ldict["systHists"] = systHistList
 
-odict["hists1D"] = hist1D_Ori
+odict["hists1D"] = hists1D_Ori
 odict["jetTest2D"] = jetTest2D_Ori
 odict["jethists1D"] = jethists1D_Ori
 odict["weighthists1D"] = weighthists1D_Ori
