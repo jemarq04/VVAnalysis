@@ -50,8 +50,7 @@ public:
   TTreeFormula* fCutFormula;
 
   //disambiguateFinalStatesZZ(TTree * /*tree*/ =0) : fChain(0), fBestCandidateEntryList(0), /*fCutFormula(0),*/ fCurrentRun(-1), fCurrentEvt(-1) { }
-  disambiguateFinalStatesZZ(TTree* /*tree*/ = 0)
-      : fChain(0), fBestCandidateEntryList(0), fCutFormula(0), fCurrentRun(-1), fCurrentEvt(-1) {}
+  disambiguateFinalStatesZZ(TTree* /*tree*/ = 0) : fChain(0), fBestCandidateEntryList(0), fCutFormula(0), fCurrentRun(-1), fCurrentEvt(-1) {}
   //virtual ~disambiguateFinalStatesZZ() { SafeDelete(fBestCandidateEntryList); /*SafeDelete(fCutFormula)*/; }
   virtual ~disambiguateFinalStatesZZ() {
     SafeDelete(fBestCandidateEntryList);
@@ -63,21 +62,14 @@ public:
   virtual void Init(TTree* tree);
   virtual Bool_t Notify();
   virtual Bool_t Process(Long64_t entry);
-  virtual Int_t GetEntry(Long64_t entry, Int_t getall = 0) {
-    return fChain ? fChain->GetTree()->GetEntry(entry, getall) : 0;
-  }
+  virtual Int_t GetEntry(Long64_t entry, Int_t getall = 0) { return fChain ? fChain->GetTree()->GetEntry(entry, getall) : 0; }
   virtual void SetOption(const char* option) { fOption = option; }
   virtual void SetObject(TObject* obj) { fObject = obj; }
   virtual void SetInputList(TList* input) { fInput = input; }
   virtual TList* GetOutputList() const { return fOutput; }
   virtual void SlaveTerminate();
   virtual void Terminate();
-  void setZCandidateBranchName(const char* name1,
-                               const char* name2,
-                               const char* name3,
-                               const char* name4,
-                               const char* name5,
-                               const char* name6) {
+  void setZCandidateBranchName(const char* name1, const char* name2, const char* name3, const char* name4, const char* name5, const char* name6) {
     l1_l2_Cand_mass = const_cast<char*>(name1);
     l1_Cand_pt = const_cast<char*>(name2);
     l2_Cand_pt = const_cast<char*>(name3);

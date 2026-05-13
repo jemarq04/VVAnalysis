@@ -37,32 +37,20 @@ void ZZBackgroundSelector::SetupNewDirectory() {
   }
   AddObject<TH1D>(MassHistPPPF_, ("Mass_PPPF_" + channelName_).c_str(), "Mass; m_{4l} [GeV]; Events;", 40, 70, 870);
   AddObject<TH1D>(MassHistPPFF_, ("Mass_PPFF_" + channelName_).c_str(), "Mass; m_{4l} [GeV]; Events;", 40, 70, 870);
-  AddObject<TH1D>(
-      Z1MassHistPPPF_, ("Z1Mass_PPPF_" + channelName_).c_str(), "Z1Mass; m_{Z_{1}} [GeV]; Events;", 60, 0, 120);
-  AddObject<TH1D>(
-      Z1MassHistPPFF_, ("Z1Mass_PPFF_" + channelName_).c_str(), "Z1Mass; m_{Z_{1}} [GeV]; Events;", 60, 0, 120);
-  AddObject<TH1D>(
-      Z2MassHistPPPF_, ("Z2Mass_PPPF_" + channelName_).c_str(), "Z2Mass; m_{Z_{2}} [GeV]; Events;", 60, 0, 120);
-  AddObject<TH1D>(
-      Z2MassHistPPFF_, ("Z2Mass_PPFF_" + channelName_).c_str(), "Z2Mass; m_{Z_{2}} [GeV]; Events;", 60, 0, 120);
+  AddObject<TH1D>(Z1MassHistPPPF_, ("Z1Mass_PPPF_" + channelName_).c_str(), "Z1Mass; m_{Z_{1}} [GeV]; Events;", 60, 0, 120);
+  AddObject<TH1D>(Z1MassHistPPFF_, ("Z1Mass_PPFF_" + channelName_).c_str(), "Z1Mass; m_{Z_{1}} [GeV]; Events;", 60, 0, 120);
+  AddObject<TH1D>(Z2MassHistPPPF_, ("Z2Mass_PPPF_" + channelName_).c_str(), "Z2Mass; m_{Z_{2}} [GeV]; Events;", 60, 0, 120);
+  AddObject<TH1D>(Z2MassHistPPFF_, ("Z2Mass_PPFF_" + channelName_).c_str(), "Z2Mass; m_{Z_{2}} [GeV]; Events;", 60, 0, 120);
 
-  AddObject<TH1D>(
-      MassFullHistPPPF_, ("MassFull_PPPF_" + channelName_).c_str(), "Mass; m_{4l} [GeV]; Events;", 40, 70, 870);
-  AddObject<TH1D>(
-      MassFullHistPPFF_, ("MassFull_PPFF_" + channelName_).c_str(), "Mass; m_{4l} [GeV]; Events;", 40, 70, 870);
-  AddObject<TH1D>(
-      Z1MassFullHistPPPF_, ("Z1MassFull_PPPF_" + channelName_).c_str(), "Z1Mass; m_{Z_{1}} [GeV]; Events;", 60, 0, 120);
-  AddObject<TH1D>(
-      Z1MassFullHistPPFF_, ("Z1MassFull_PPFF_" + channelName_).c_str(), "Z1Mass; m_{Z_{1}} [GeV]; Events;", 60, 0, 120);
-  AddObject<TH1D>(
-      Z2MassFullHistPPPF_, ("Z2MassFull_PPPF_" + channelName_).c_str(), "Z2Mass; m_{Z_{2}} [GeV]; Events;", 60, 0, 120);
-  AddObject<TH1D>(
-      Z2MassFullHistPPFF_, ("Z2MassFull_PPFF_" + channelName_).c_str(), "Z2Mass; m_{Z_{2}} [GeV]; Events;", 60, 0, 120);
+  AddObject<TH1D>(MassFullHistPPPF_, ("MassFull_PPPF_" + channelName_).c_str(), "Mass; m_{4l} [GeV]; Events;", 40, 70, 870);
+  AddObject<TH1D>(MassFullHistPPFF_, ("MassFull_PPFF_" + channelName_).c_str(), "Mass; m_{4l} [GeV]; Events;", 40, 70, 870);
+  AddObject<TH1D>(Z1MassFullHistPPPF_, ("Z1MassFull_PPPF_" + channelName_).c_str(), "Z1Mass; m_{Z_{1}} [GeV]; Events;", 60, 0, 120);
+  AddObject<TH1D>(Z1MassFullHistPPFF_, ("Z1MassFull_PPFF_" + channelName_).c_str(), "Z1Mass; m_{Z_{1}} [GeV]; Events;", 60, 0, 120);
+  AddObject<TH1D>(Z2MassFullHistPPPF_, ("Z2MassFull_PPPF_" + channelName_).c_str(), "Z2Mass; m_{Z_{2}} [GeV]; Events;", 60, 0, 120);
+  AddObject<TH1D>(Z2MassFullHistPPFF_, ("Z2MassFull_PPFF_" + channelName_).c_str(), "Z2Mass; m_{Z_{2}} [GeV]; Events;", 60, 0, 120);
 
-  AddObject<TH1D>(
-      WeightsHistmmee_, ("Weights_mmee_" + channelName_).c_str(), "Weight; Event Weight; Events;", 10, -5, 5);
-  AddObject<TH1D>(
-      WeightsHisteemm_, ("Weights_eemm_" + channelName_).c_str(), "Weight; Event Weight; Events;", 100, -5, 5);
+  AddObject<TH1D>(WeightsHistmmee_, ("Weights_mmee_" + channelName_).c_str(), "Weight; Event Weight; Events;", 10, -5, 5);
+  AddObject<TH1D>(WeightsHisteemm_, ("Weights_eemm_" + channelName_).c_str(), "Weight; Event Weight; Events;", 100, -5, 5);
 }
 float ZZBackgroundSelector::getEventWeight(Long64_t entry) {
   float evtwgt = 0;
@@ -175,14 +163,12 @@ float ZZBackgroundSelector::getl4FakeRate(Long64_t entry) {
   return fr / (1 - fr);
 }
 //Remember that we only build Z1 (Real Z) out of OS-SF tight leptons
-bool ZZBackgroundSelector::IsPPPFRegion() {
-  return ((tightZ1Leptons() && (Z2PF() || Z2FP())) || (tightZ2Leptons() && (Z1PF() || Z1FP())));
-}
+bool ZZBackgroundSelector::IsPPPFRegion() { return ((tightZ1Leptons() && (Z2PF() || Z2FP())) || (tightZ2Leptons() && (Z1PF() || Z1FP()))); }
 //Remember that we only build Z1 (Real Z) out of OS-SF tight leptons
 bool ZZBackgroundSelector::IsPPFFRegion() {
   if (channel_ == eeee || channel_ == mmmm)
-    return ((tightZ1Leptons() && Z2FF()) || (tightZ2Leptons() && Z1FF()) || (Z1FP() && Z2PF()) || (Z1PF() && Z2FP()) ||
-            (Z1PF() && Z2PF()) || (Z1FP() && Z2FP()));
+    return ((tightZ1Leptons() && Z2FF()) || (tightZ2Leptons() && Z1FF()) || (Z1FP() && Z2PF()) || (Z1PF() && Z2FP()) || (Z1PF() && Z2PF()) ||
+            (Z1FP() && Z2FP()));
   else
     return ((tightZ1Leptons() && Z2FF()) || (tightZ2Leptons() && Z1FF()));
 }

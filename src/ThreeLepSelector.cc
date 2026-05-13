@@ -295,8 +295,7 @@ void ThreeLepSelector::setupChannel() {
 
 bool ThreeLepSelector::doesPassZVeto(GoodPart& lep, std::vector<GoodPart>& looseList) {
   for (auto lLep : looseList) {
-    if ((lep.Charge() * lLep.Charge() < 0) &&
-        ((abs((lLep.v + lep.v).M() - 91.188) < 15) || ((lLep.v + lep.v).M() < 12))) {
+    if ((lep.Charge() * lLep.Charge() < 0) && ((abs((lLep.v + lep.v).M() - 91.188) < 15) || ((lLep.v + lep.v).M() < 12))) {
       return false;
     }
   }
@@ -331,9 +330,8 @@ void ThreeLepSelector::ApplyScaleFactors() {
 }
 
 bool ThreeLepSelector::isGoodMuon(size_t index) {
-  return ((Muon_pt[index] > 20) && (Muon_tightCharge[index] == 2) && (abs(Muon_eta[index]) < 2.4) &&
-          (Muon_mediumId[index]) && (Muon_miniPFRelIso_all[index] < 0.16) && (Muon_dz[index] < 0.1) &&
-          (Muon_dxy[index] < 0.05) && (Muon_sip3d[index] < 4));
+  return ((Muon_pt[index] > 20) && (Muon_tightCharge[index] == 2) && (abs(Muon_eta[index]) < 2.4) && (Muon_mediumId[index]) &&
+          (Muon_miniPFRelIso_all[index] < 0.16) && (Muon_dz[index] < 0.1) && (Muon_dxy[index] < 0.05) && (Muon_sip3d[index] < 4));
 }
 
 bool ThreeLepSelector::isGoodElectron(size_t index) {
@@ -357,14 +355,12 @@ bool ThreeLepSelector::isGoodElectron(size_t index) {
   } else
     passId = (Electron_cutBased[index] == CBID_TIGHT);
 
-  return ((Electron_pt[index] > 20) && (Electron_miniPFRelIso_all[index] < 0.12) && (passId) &&
-          (Electron_convVeto[index]) && (Electron_lostHits[index] == 0) && (Electron_dz[index] < 0.1) &&
-          (Electron_dxy[index] < 0.05) && (Electron_sip3d[index] < 4));
+  return ((Electron_pt[index] > 20) && (Electron_miniPFRelIso_all[index] < 0.12) && (passId) && (Electron_convVeto[index]) && (Electron_lostHits[index] == 0) &&
+          (Electron_dz[index] < 0.1) && (Electron_dxy[index] < 0.05) && (Electron_sip3d[index] < 4));
 }
 
 bool ThreeLepSelector::isLooseMuon(size_t index) {
-  return ((Muon_isGlobal[index]) && (Muon_isPFcand[index]) && (Muon_miniPFRelIso_all[index] < 0.4) &&
-          (Muon_dz[index] < 0.1) && (Muon_dxy[index] < 0.05));
+  return ((Muon_isGlobal[index]) && (Muon_isPFcand[index]) && (Muon_miniPFRelIso_all[index] < 0.4) && (Muon_dz[index] < 0.1) && (Muon_dxy[index] < 0.05));
 }
 
 bool ThreeLepSelector::isLooseElectron(size_t index) {
@@ -418,8 +414,8 @@ bool ThreeLepSelector::isLooseElectron(size_t index) {
   } else {
     passId = (Electron_cutBased[index] >= CBID_LOOSE);
   }
-  return ((passId) && (Electron_convVeto[index]) && (Electron_lostHits[index] <= 1) &&
-          (Electron_miniPFRelIso_all[index] < 0.4) && (Electron_dz[index] < 0.1) && (Electron_dxy[index] < 0.05));
+  return ((passId) && (Electron_convVeto[index]) && (Electron_lostHits[index] <= 1) && (Electron_miniPFRelIso_all[index] < 0.4) && (Electron_dz[index] < 0.1) &&
+          (Electron_dxy[index] < 0.05));
 }
 
 bool ThreeLepSelector::isGoodJet(size_t index) {

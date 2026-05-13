@@ -37,12 +37,10 @@ void WZSelectorBase::SetScaleFactors() {
 }
 
 void WZSelectorBase::Init(TTree* tree) {
-  isVBS_ = (selection_ == VBSselection_Loose || selection_ == VBSselection_Loose_Full ||
-            selection_ == VBSselection_NoZeppenfeld || selection_ == VBSselection_NoZeppenfeld_Full ||
-            selection_ == VBSselection_Tight || selection_ == VBSselection_Tight_Full ||
-            selection_ == VBSBackgroundControl || selection_ == VBSBackgroundControl_Full ||
-            selection_ == VBSBackgroundControlATLAS || selection_ == VBSBackgroundControlLoose ||
-            selection_ == VBSBackgroundControlLoose_Full);
+  isVBS_ = (selection_ == VBSselection_Loose || selection_ == VBSselection_Loose_Full || selection_ == VBSselection_NoZeppenfeld ||
+            selection_ == VBSselection_NoZeppenfeld_Full || selection_ == VBSselection_Tight || selection_ == VBSselection_Tight_Full ||
+            selection_ == VBSBackgroundControl || selection_ == VBSBackgroundControl_Full || selection_ == VBSBackgroundControlATLAS ||
+            selection_ == VBSBackgroundControlLoose || selection_ == VBSBackgroundControlLoose_Full);
 
   allChannels_ = {"eee", "eem", "emm", "mmm"};
 
@@ -329,9 +327,8 @@ void WZSelectorBase::SetGoodLeptonsFromNano() {
     if (wIndices.size() != 1)
       throw std::length_error("Invalid W lepton indices");
     size_t wi = wIndices.at(0);
-    auto wlep = (channel_ == eem)
-                    ? LorentzVector(Muon_pt[wi], Muon_eta[wi], Muon_phi[wi], Muon_mass[wi])
-                    : LorentzVector(Electron_pt[wi], Electron_eta[wi], Electron_phi[wi], Electron_mass[wi]);
+    auto wlep = (channel_ == eem) ? LorentzVector(Muon_pt[wi], Muon_eta[wi], Muon_phi[wi], Muon_mass[wi])
+                                  : LorentzVector(Electron_pt[wi], Electron_eta[wi], Electron_phi[wi], Electron_mass[wi]);
     leptons.push_back(wlep);
   }
 }
@@ -483,6 +480,5 @@ bool WZSelectorBase::lepton3IsTight() { return l3IsTight; }
 
 bool WZSelectorBase::IsGenMatched3l() {
   //return true;
-  return (!isMC_ || isNonpromptMC_ || (isZgamma_ && l1GenPt > 0 && l2GenPt > 0) ||
-          (l1GenPt > 0 && l2GenPt > 0 && l3GenPt > 0));
+  return (!isMC_ || isNonpromptMC_ || (isZgamma_ && l1GenPt > 0 && l2GenPt > 0) || (l1GenPt > 0 && l2GenPt > 0 && l3GenPt > 0));
 }

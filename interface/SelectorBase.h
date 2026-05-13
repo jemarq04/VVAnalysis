@@ -151,12 +151,9 @@ public:
   };
 
   std::map<std::string, Channel> channelMap_ = {
-      {"e", e},          {"m", m},          {"ee", ee},
-      {"em", em},        {"mm", mm},        {"eee", eee},
-      {"eem", eem},      {"emm", emm},      {"mmm", mmm},
-      {"eeee", eeee},    {"eemm", eemm},    {"mmee", mmee},
-      {"mmmm", mmmm},    {"eeeeGen", eeee}, {"eemmGen", eemm},
-      {"mmeeGen", mmee}, {"mmmmGen", mmmm}, {"Inclusive", Inclusive},
+      {"e", e},       {"m", m},          {"ee", ee},        {"em", em},        {"mm", mm},        {"eee", eee},
+      {"eem", eem},   {"emm", emm},      {"mmm", mmm},      {"eeee", eeee},    {"eemm", eemm},    {"mmee", mmee},
+      {"mmmm", mmmm}, {"eeeeGen", eeee}, {"eemmGen", eemm}, {"mmeeGen", mmee}, {"mmmmGen", mmmm}, {"Inclusive", Inclusive},
       {"lll", lll},
   };
 
@@ -186,9 +183,7 @@ public:
   virtual void Init(TTree* tree);
   virtual Bool_t Notify();
   virtual Bool_t Process(Long64_t entry);
-  virtual Int_t GetEntry(Long64_t entry, Int_t getall = 0) {
-    return fChain ? fChain->GetTree()->GetEntry(entry, getall) : 0;
-  }
+  virtual Int_t GetEntry(Long64_t entry, Int_t getall = 0) { return fChain ? fChain->GetTree()->GetEntry(entry, getall) : 0; }
   virtual void SetOption(const char* option) { fOption = option; }
   virtual void SetObject(TObject* obj) { fObject = obj; }
   virtual void SetInputList(TList* input) { fInput = input; }
@@ -206,8 +201,7 @@ public:
 
   template <typename T, typename... Args>
   void AddObject(T*& ptr, Args... args) {
-    static_assert(std::is_base_of<TNamed, T>::value,
-                  "Objects must inheirit from ROOT TNamed to be streamable from PROOF sessions");
+    static_assert(std::is_base_of<TNamed, T>::value, "Objects must inheirit from ROOT TNamed to be streamable from PROOF sessions");
     ptr = new T(args...);
     ptr->SetDirectory(gROOT);
     currentHistDir_->Add(ptr);

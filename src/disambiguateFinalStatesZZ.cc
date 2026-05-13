@@ -103,8 +103,7 @@ void disambiguateFinalStatesZZ::findBestEntry() {
   float lowestDiscriminant = 1e100;
   float MaxPtSum = 0.0;
   for (size_t i = 0; i < fEntriesToCompare.size(); ++i) {
-    if ((fEntryDiscriminants[i] < lowestDiscriminant) ||
-        ((fEntryDiscriminants[i] == lowestDiscriminant) && (fEntryZ2PtSum[i] > MaxPtSum))) {
+    if ((fEntryDiscriminants[i] < lowestDiscriminant) || ((fEntryDiscriminants[i] == lowestDiscriminant) && (fEntryZ2PtSum[i] > MaxPtSum))) {
       MaxPtSum = fEntryZ2PtSum[i];
       lowestDiscriminant = fEntryDiscriminants[i];
       bestEntry = fEntriesToCompare[i];

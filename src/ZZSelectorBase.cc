@@ -60,11 +60,10 @@ void ZZSelectorBase::SetScaleFactors() {
   try {
     if (yearstring != "Run3-25Prompt-Summer24-NanoAODv15") {
       if (year != "2024")
-        pileupSF_ = correction::CorrectionSet::from_file(
-            TString::Format("%s/LUM/%s/latest/puWeights.json.gz", basename.c_str(), yearstring.c_str()).Data());
+        pileupSF_ = correction::CorrectionSet::from_file(TString::Format("%s/LUM/%s/latest/puWeights.json.gz", basename.c_str(), yearstring.c_str()).Data());
       else
-        pileupSF_ = correction::CorrectionSet::from_file(
-            TString::Format("%s/LUM/%s/latest/puWeights_BCDEFGHI.json.gz", basename.c_str(), yearstring.c_str()).Data());
+        pileupSF_ =
+            correction::CorrectionSet::from_file(TString::Format("%s/LUM/%s/latest/puWeights_BCDEFGHI.json.gz", basename.c_str(), yearstring.c_str()).Data());
     }
   } catch (...) {
     throw std::invalid_argument("Must pass valid pileup weights SF");
@@ -77,8 +76,7 @@ void ZZSelectorBase::SetScaleFactors() {
     throw std::invalid_argument("Must pass valid electron Run SF");
   }
   try {
-    eRecoSF_ = correction::CorrectionSet::from_file(
-        TString::Format("%s/EGM/%s/latest/electron.json.gz", basename.c_str(), yearstring.c_str()).Data());
+    eRecoSF_ = correction::CorrectionSet::from_file(TString::Format("%s/EGM/%s/latest/electron.json.gz", basename.c_str(), yearstring.c_str()).Data());
   } catch (...) {
     throw std::invalid_argument("Must pass valid electron Reco SF");
   }

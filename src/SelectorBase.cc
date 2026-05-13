@@ -98,8 +98,7 @@ void SelectorBase::Init(TTree* tree) {
     size_t existingObjectPtrsSize = allObjects_.size();
     SetupNewDirectory();
     if (existingObjectPtrsSize > 0 && allObjects_.size() != existingObjectPtrsSize) {
-      std::invalid_argument(Form(
-          "SelectorBase: Size of allObjects has changed!: %lu to %lu", existingObjectPtrsSize, allObjects_.size()));
+      std::invalid_argument(Form("SelectorBase: Size of allObjects has changed!: %lu to %lu", existingObjectPtrsSize, allObjects_.size()));
     }
   }
   UpdateDirectory();
@@ -206,12 +205,9 @@ void SelectorBase::InitializeHistogramsFromConfig() {
   }
 }
 
-void SelectorBase::InitializeHistogramFromConfig(std::string name,
-                                                 std::string channel,
-                                                 std::vector<std::string> histData) {
+void SelectorBase::InitializeHistogramFromConfig(std::string name, std::string channel, std::vector<std::string> histData) {
   if (histData.size() != 4 && histData.size() != 7) {
-    std::cerr << "Malformed data string for histogram '" << name
-              << ".' Must have form: 'Title; (optional info) $ nbins, xmin, xmax'"
+    std::cerr << "Malformed data string for histogram '" << name << ".' Must have form: 'Title; (optional info) $ nbins, xmin, xmax'"
               << "\n   OR form: 'Title; (optional info) $ nbins, xmin, xmax nbinsy ymin ymax'" << std::endl;
     exit(1);
   }
@@ -246,15 +242,7 @@ void SelectorBase::InitializeHistogramFromConfig(std::string name,
     // std::cout<<"size of weighthistMap1D_: "<<weighthistMap1D_.size()<<std::endl;
     if (isMC_ && !isNonPrompt_ && (weighthistMap1D_.find(histName) != weighthistMap1D_.end())) {
       // std::cout<<"Is weightHists getting filled?"<<std::endl;
-      AddObject<TH2D>(weighthistMap1D_[histName],
-                      (name + "_lheWeights_" + channel).c_str(),
-                      histData[0].c_str(),
-                      nbins,
-                      xmin,
-                      xmax,
-                      1000,
-                      0,
-                      1000);
+      AddObject<TH2D>(weighthistMap1D_[histName], (name + "_lheWeights_" + channel).c_str(), histData[0].c_str(), nbins, xmin, xmax, 1000, 0, 1000);
     }
 
     if (isMC_ && !isNonPrompt_ && (jethistMap1D_.find(histName) != jethistMap1D_.end())) {
@@ -281,40 +269,16 @@ void SelectorBase::InitializeHistogramFromConfig(std::string name,
     if (jetTestMap2D_.find(histName) != jetTestMap2D_.end()) {
       if (histName.find("HEM") != std::string::npos) {
         if (histName.find("HEM2") != std::string::npos) {
-          AddObject<TH2D>(jetTestMap2D_[histName],
-                          (name + "_JetEtaVsPhiFillPt_" + channel).c_str(),
-                          histData[0].c_str(),
-                          8,
-                          jPhi_binning,
-                          8,
-                          jEta_binning3);
+          AddObject<TH2D>(jetTestMap2D_[histName], (name + "_JetEtaVsPhiFillPt_" + channel).c_str(), histData[0].c_str(), 8, jPhi_binning, 8, jEta_binning3);
         } else {
-          AddObject<TH2D>(jetTestMap2D_[histName],
-                          (name + "_JetEtaVsPhi_" + channel).c_str(),
-                          histData[0].c_str(),
-                          8,
-                          jPhi_binning,
-                          8,
-                          jEta_binning3);
+          AddObject<TH2D>(jetTestMap2D_[histName], (name + "_JetEtaVsPhi_" + channel).c_str(), histData[0].c_str(), 8, jPhi_binning, 8, jEta_binning3);
         }
       }
 
       else if (histName.find("N1") != std::string::npos) {
-        AddObject<TH2D>(jetTestMap2D_[histName],
-                        (name + "_vsJetEta_" + channel).c_str(),
-                        histData[0].c_str(),
-                        5,
-                        jPt_binning,
-                        4,
-                        jEta_binning);
+        AddObject<TH2D>(jetTestMap2D_[histName], (name + "_vsJetEta_" + channel).c_str(), histData[0].c_str(), 5, jPt_binning, 4, jEta_binning);
       } else {
-        AddObject<TH2D>(jetTestMap2D_[histName],
-                        (name + "_vsJetEta_" + channel).c_str(),
-                        histData[0].c_str(),
-                        4,
-                        jPt_binning2,
-                        3,
-                        jEta_binning2);
+        AddObject<TH2D>(jetTestMap2D_[histName], (name + "_vsJetEta_" + channel).c_str(), histData[0].c_str(), 4, jPt_binning2, 3, jEta_binning2);
       }
       // std::cout<<"Is weightHists getting filled?"<<std::endl;
       // AddObject<TH2D>(jetTestMap2D_[histName],
@@ -326,36 +290,17 @@ void SelectorBase::InitializeHistogramFromConfig(std::string name,
     float ymin = std::stof(histData[5]);
     float ymax = std::stof(histData[6]);
     AddObject<TH2D>(hists2D_[histName], histName.c_str(), histData[0].c_str(), nbins, xmin, xmax, nbinsy, ymin, ymax);
-    if (doSystematics_ && !isNonPrompt_ &&
-        std::find(systHists2D_.begin(), systHists2D_.end(), histName) != systHists2D_.end()) {
+    if (doSystematics_ && !isNonPrompt_ && std::find(systHists2D_.begin(), systHists2D_.end(), histName) != systHists2D_.end()) {
       for (auto& syst : systematics_) {
         std::string syst_hist_name = name + "_" + syst.second + "_" + channel;
         hists2D_[syst_hist_name] = {};
-        AddObject<TH2D>(hists2D_[syst_hist_name],
-                        syst_hist_name.c_str(),
-                        histData[0].c_str(),
-                        nbins,
-                        xmin,
-                        xmax,
-                        nbinsy,
-                        ymin,
-                        ymax);
+        AddObject<TH2D>(hists2D_[syst_hist_name], syst_hist_name.c_str(), histData[0].c_str(), nbins, xmin, xmax, nbinsy, ymin, ymax);
       }
     }
     // 3D weight hists must be subset of 2D hists!
     if (isMC_ && !isNonPrompt_ && (weighthistMap2D_.find(histName) != weighthistMap2D_.end())) {
-      AddObject<TH3D>(weighthistMap2D_[histName],
-                      (name + "_lheWeights_" + channel).c_str(),
-                      histData[0].c_str(),
-                      nbins,
-                      xmin,
-                      xmax,
-                      nbinsy,
-                      ymin,
-                      ymax,
-                      1000,
-                      0,
-                      1000);
+      AddObject<TH3D>(
+          weighthistMap2D_[histName], (name + "_lheWeights_" + channel).c_str(), histData[0].c_str(), nbins, xmin, xmax, nbinsy, ymin, ymax, 1000, 0, 1000);
     }
   }
 }
@@ -382,9 +327,7 @@ void SelectorBase::SetupNewDirectory() {
     AddObject<TH1D>(sumWeightsHist_, "sumweights", "sumweights", 1, 0, 10);
 }
 
-std::string SelectorBase::getHistName(std::string histName, std::string variationName) {
-  return getHistName(histName, variationName, "");
-}
+std::string SelectorBase::getHistName(std::string histName, std::string variationName) { return getHistName(histName, variationName, ""); }
 
 std::string SelectorBase::getHistName(std::string histName, std::string variationName, std::string channel) {
   if (channel == "")
@@ -395,9 +338,7 @@ std::string SelectorBase::getHistName(std::string histName, std::string variatio
 }
 
 //Copy of getHistName, used for naming ntuple TTree branch
-std::string SelectorBase::getBranchName(std::string bName, std::string variationName) {
-  return getBranchName(bName, variationName, "");
-}
+std::string SelectorBase::getBranchName(std::string bName, std::string variationName) { return getBranchName(bName, variationName, ""); }
 
 std::string SelectorBase::getBranchName(std::string bName, std::string variationName, std::string channel) {
   //if (channel == "")

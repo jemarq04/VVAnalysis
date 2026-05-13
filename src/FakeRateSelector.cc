@@ -90,93 +90,21 @@ void FakeRateSelector::SetupNewDirectory() {
   const int nMuEtabins = 2;
   double Mu_eta_bins[nMuEtabins + 1] = {0., 1.2, 2.4};
 
-  AddObject<TH2D>(passingTightE2D_,
-                  ("passingTightE2D_" + channelName_).c_str(),
-                  "|#eta|; p_{T} [GeV]",
-                  ElePtbins,
-                  Ele_Pt_bins,
-                  nEleEtabins,
-                  Ele_eta_bins);
-  AddObject<TH1D>(passingTightE1DEta_,
-                  ("passingTightE1DEta_" + channelName_).c_str(),
-                  "Tight leptons; |#eta|",
-                  nEleEtabins,
-                  Ele_eta_bins);
-  AddObject<TH2D>(passingLooseE2D_,
-                  ("passingLooseE2D_" + channelName_).c_str(),
-                  "|#eta|; p_{T} [GeV]",
-                  ElePtbins,
-                  Ele_Pt_bins,
-                  nEleEtabins,
-                  Ele_eta_bins);
-  AddObject<TH1D>(passingLooseE1DEta_,
-                  ("passingLooseE1DEta_" + channelName_).c_str(),
-                  "Loose leptons; |#eta|",
-                  nEleEtabins,
-                  Ele_eta_bins);
-  AddObject<TH1D>(passingTightE1DPt_barrel_,
-                  ("passingTightE1DPt_barrel_" + channelName_).c_str(),
-                  "Tight leptons; p_{T} [GeV]",
-                  ElePtbins,
-                  Ele_Pt_bins);
-  AddObject<TH1D>(passingTightE1DPt_endcap_,
-                  ("passingTightE1DPt_endcap_" + channelName_).c_str(),
-                  "Tight leptons; p_{T} [GeV]",
-                  ElePtbins,
-                  Ele_Pt_bins);
-  AddObject<TH1D>(passingLooseE1DPt_barrel_,
-                  ("passingLooseE1DPt_barrel_" + channelName_).c_str(),
-                  "Loose leptons; p_{T} [GeV]",
-                  ElePtbins,
-                  Ele_Pt_bins);
-  AddObject<TH1D>(passingLooseE1DPt_endcap_,
-                  ("passingLooseE1DPt_endcap_" + channelName_).c_str(),
-                  "Loose leptons; p_{T} [GeV]",
-                  ElePtbins,
-                  Ele_Pt_bins);
+  AddObject<TH2D>(passingTightE2D_, ("passingTightE2D_" + channelName_).c_str(), "|#eta|; p_{T} [GeV]", ElePtbins, Ele_Pt_bins, nEleEtabins, Ele_eta_bins);
+  AddObject<TH1D>(passingTightE1DEta_, ("passingTightE1DEta_" + channelName_).c_str(), "Tight leptons; |#eta|", nEleEtabins, Ele_eta_bins);
+  AddObject<TH2D>(passingLooseE2D_, ("passingLooseE2D_" + channelName_).c_str(), "|#eta|; p_{T} [GeV]", ElePtbins, Ele_Pt_bins, nEleEtabins, Ele_eta_bins);
+  AddObject<TH1D>(passingLooseE1DEta_, ("passingLooseE1DEta_" + channelName_).c_str(), "Loose leptons; |#eta|", nEleEtabins, Ele_eta_bins);
+  AddObject<TH1D>(passingTightE1DPt_barrel_, ("passingTightE1DPt_barrel_" + channelName_).c_str(), "Tight leptons; p_{T} [GeV]", ElePtbins, Ele_Pt_bins);
+  AddObject<TH1D>(passingTightE1DPt_endcap_, ("passingTightE1DPt_endcap_" + channelName_).c_str(), "Tight leptons; p_{T} [GeV]", ElePtbins, Ele_Pt_bins);
+  AddObject<TH1D>(passingLooseE1DPt_barrel_, ("passingLooseE1DPt_barrel_" + channelName_).c_str(), "Loose leptons; p_{T} [GeV]", ElePtbins, Ele_Pt_bins);
+  AddObject<TH1D>(passingLooseE1DPt_endcap_, ("passingLooseE1DPt_endcap_" + channelName_).c_str(), "Loose leptons; p_{T} [GeV]", ElePtbins, Ele_Pt_bins);
 
-  AddObject<TH2D>(passingTightMu2D_,
-                  ("passingTightMu2D_" + channelName_).c_str(),
-                  "|#eta|; p_{T} [GeV]",
-                  MuPtbins,
-                  Mu_Pt_bins,
-                  nMuEtabins,
-                  Mu_eta_bins);
-  AddObject<TH1D>(passingTightMu1DEta_,
-                  ("passingTightMu1DEta_" + channelName_).c_str(),
-                  "Tight leptons; |#eta|",
-                  nMuEtabins,
-                  Mu_eta_bins);
-  AddObject<TH2D>(passingLooseMu2D_,
-                  ("passingLooseMu2D_" + channelName_).c_str(),
-                  "|#eta|; p_{T} [GeV]",
-                  MuPtbins,
-                  Mu_Pt_bins,
-                  nMuEtabins,
-                  Mu_eta_bins);
-  AddObject<TH1D>(passingLooseMu1DEta_,
-                  ("passingLooseMu1DEta_" + channelName_).c_str(),
-                  "Loose leptons; |#eta|",
-                  nMuEtabins,
-                  Mu_eta_bins);
-  AddObject<TH1D>(passingTightMu1DPt_barrel_,
-                  ("passingTightMu1DPt_barrel_" + channelName_).c_str(),
-                  "Tight leptons; p_{T} [GeV]",
-                  MuPtbins,
-                  Mu_Pt_bins);
-  AddObject<TH1D>(passingTightMu1DPt_endcap_,
-                  ("passingTightMu1DPt_endcap_" + channelName_).c_str(),
-                  "Tight leptons; p_{T} [GeV]",
-                  MuPtbins,
-                  Mu_Pt_bins);
-  AddObject<TH1D>(passingLooseMu1DPt_barrel_,
-                  ("passingLooseMu1DPt_barrel_" + channelName_).c_str(),
-                  "Loose leptons; p_{T} [GeV]",
-                  MuPtbins,
-                  Mu_Pt_bins);
-  AddObject<TH1D>(passingLooseMu1DPt_endcap_,
-                  ("passingLooseMu1DPt_endcap_" + channelName_).c_str(),
-                  "Loose leptons; p_{T} [GeV]",
-                  MuPtbins,
-                  Mu_Pt_bins);
+  AddObject<TH2D>(passingTightMu2D_, ("passingTightMu2D_" + channelName_).c_str(), "|#eta|; p_{T} [GeV]", MuPtbins, Mu_Pt_bins, nMuEtabins, Mu_eta_bins);
+  AddObject<TH1D>(passingTightMu1DEta_, ("passingTightMu1DEta_" + channelName_).c_str(), "Tight leptons; |#eta|", nMuEtabins, Mu_eta_bins);
+  AddObject<TH2D>(passingLooseMu2D_, ("passingLooseMu2D_" + channelName_).c_str(), "|#eta|; p_{T} [GeV]", MuPtbins, Mu_Pt_bins, nMuEtabins, Mu_eta_bins);
+  AddObject<TH1D>(passingLooseMu1DEta_, ("passingLooseMu1DEta_" + channelName_).c_str(), "Loose leptons; |#eta|", nMuEtabins, Mu_eta_bins);
+  AddObject<TH1D>(passingTightMu1DPt_barrel_, ("passingTightMu1DPt_barrel_" + channelName_).c_str(), "Tight leptons; p_{T} [GeV]", MuPtbins, Mu_Pt_bins);
+  AddObject<TH1D>(passingTightMu1DPt_endcap_, ("passingTightMu1DPt_endcap_" + channelName_).c_str(), "Tight leptons; p_{T} [GeV]", MuPtbins, Mu_Pt_bins);
+  AddObject<TH1D>(passingLooseMu1DPt_barrel_, ("passingLooseMu1DPt_barrel_" + channelName_).c_str(), "Loose leptons; p_{T} [GeV]", MuPtbins, Mu_Pt_bins);
+  AddObject<TH1D>(passingLooseMu1DPt_endcap_, ("passingLooseMu1DPt_endcap_" + channelName_).c_str(), "Loose leptons; p_{T} [GeV]", MuPtbins, Mu_Pt_bins);
 }

@@ -18,7 +18,7 @@ void ZZSelector::Init(TTree* tree) {
   // This would be set true inside ZZBackground Selector
   // isNonPrompt_ = false;
 
-  systHists_ = $systHists ;
+  systHists_ = $systHists;
   // hists1D_ = {
   //      "yield", "backgroundControlYield","nTruePU","nvtx","ZMass","Z1Mass","Z2Mass","ZZPt",
   //      "Z1Pt","Z2Pt","Z1Phi","Z2Phi","dPhiZ1Z2","ZPt","LepPt","LepEta",
@@ -29,7 +29,7 @@ void ZZSelector::Init(TTree* tree) {
 
   hists1D_ = $hists1D;
 
-  jetTest2D_ = $jetTest2D; // also defined in hists1D_ to pass checks in InitializeHistogramsFromConfig()
+  jetTest2D_ = $jetTest2D;  // also defined in hists1D_ to pass checks in InitializeHistogramsFromConfig()
   jethists1D_ = $jethists1D;
 
   weighthists1D_ = $weighthists1D;
@@ -134,8 +134,7 @@ unsigned int ZZSelector::GetLheWeightInfo() {
                                                  "pp_eemm-cll_massless",
                                                  "pp_eemmj-cHG_massless",
                                                  "gg_eemm-cHG_massless"};
-  std::vector<std::string> scaleAndPdfWeights = {
-      "wz3lnu-powheg", "wz3lnu-mg5amcnlo", "ZZZ", "WZZ", "WWZ", "zz4l-powheg", "zz4l-amcatnlo", "ZZJJTo4L-EWK"};
+  std::vector<std::string> scaleAndPdfWeights = {"wz3lnu-powheg", "wz3lnu-mg5amcnlo", "ZZZ", "WZZ", "WWZ", "zz4l-powheg", "zz4l-amcatnlo", "ZZJJTo4L-EWK"};
   std::vector<std::string> allLheWeights = {
       //"wzjj-aqgcft", "wzjj-aqgcfm", "wzjj-aqgcfs",
       //"wz-atgc_pt0-200", "wz-atgc_pt200-300",
@@ -164,8 +163,7 @@ unsigned int ZZSelector::GetLheWeightInfo() {
 }
 
 bool ZZSelector::CheckQQZZ() {
-  std::vector<std::string> samples = {
-      "zz4l-powheg", "zz4l-amcatnlo", "qqZZSpec", "zz4l-powheg_postEE", "zz4l-amcatnlo_postEE", "qqZZSpec_postEE"};
+  std::vector<std::string> samples = {"zz4l-powheg", "zz4l-amcatnlo", "qqZZSpec", "zz4l-powheg_postEE", "zz4l-amcatnlo_postEE", "qqZZSpec_postEE"};
   return std::find(samples.begin(), samples.end(), name_) != samples.end();
 }
 
@@ -227,8 +225,7 @@ void ZZSelector::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::str
     bool applyjetMatch = false;
     if (applyjetMatch) {
       // apply gen jet matching for remaining processing if MC. For data, should apply PU id at ntuplization step but can also apply here
-      if (jetPt->size() == jetEta->size() && jetPt->size() == jetPUID->size() &&
-          jetPUID->size() == isGenJetMatched->size()) {
+      if (jetPt->size() == jetEta->size() && jetPt->size() == jetPUID->size() && jetPUID->size() == isGenJetMatched->size()) {
         auto jetit = jetPt->begin();
         auto jetait = jetEta->begin();
         auto jPUIDit = jetPUID->begin();
@@ -249,8 +246,7 @@ void ZZSelector::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::str
           }
         }
       } else {
-        std::cout << "Something Wrong jetPt vs jetEta, jetPUID, isGenJetMatched size" << jetPt->size() << " "
-                  << jetEta->size();
+        std::cout << "Something Wrong jetPt vs jetEta, jetPUID, isGenJetMatched size" << jetPt->size() << " " << jetEta->size();
         std::cout << " " << jetPUID->size() << std::endl;  //<< " " << isGenJetMatched->size() << std::endl;
       }
     }
@@ -267,9 +263,7 @@ void ZZSelector::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::str
         if (weight_info_ == 2) {
           b_pdfWeights->GetEntry(entry);
           // Only keep NNPDF weights
-          lheWeights.insert(lheWeights.end(),
-                            pdfWeights->begin(),
-                            pdfWeights->begin() + std::min(static_cast<size_t>(103), pdfWeights->size()));
+          lheWeights.insert(lheWeights.end(), pdfWeights->begin(), pdfWeights->begin() + std::min(static_cast<size_t>(103), pdfWeights->size()));
         } else if (weight_info_ == 3) {
           b_pdfWeights->GetEntry(entry);
           lheWeights.insert(lheWeights.end(), pdfWeights->begin(), pdfWeights->end());
@@ -595,14 +589,11 @@ void ZZSelector::SetVariables(Long64_t entry) {
 }
 
 void ZZSelector::ShiftEfficiencies(Systematic variation) {
-  std::string shift = (variation == electronEfficiencyDown || variation == electronRecoEffDown ||
-                       variation == muonEfficiencyDown || variation == pileupDown)
-                          ? "down"
-                          : "up";
+  std::string shift =
+      (variation == electronEfficiencyDown || variation == electronRecoEffDown || variation == muonEfficiencyDown || variation == pileupDown) ? "down" : "up";
 
   if (pileupSF_ != nullptr && (variation == pileupUp || variation == pileupDown))
-    weight *= (*pileupSF_->begin()).second->evaluate({nTruePU, shift}) /
-              (*pileupSF_->begin()).second->evaluate({nTruePU, "nominal"});
+    weight *= (*pileupSF_->begin()).second->evaluate({nTruePU, shift}) / (*pileupSF_->begin()).second->evaluate({nTruePU, "nominal"});
   else if (channel_ == eeee) {
     float pt_e1 = l1Pt < EleSF_MAX_PT_ ? l1Pt : EleSF_MAX_PT_ - 0.01;
     float pt_e2 = l2Pt < EleSF_MAX_PT_ ? l2Pt : EleSF_MAX_PT_ - 0.01;
@@ -614,70 +605,34 @@ void ZZSelector::ShiftEfficiencies(Systematic variation) {
         const auto recoref = (*eRecoSF_->begin()).second;
         if (pt_e1 > EleRecoSF_MIN_PT_) {
           if (EleRecoSF_Name_.rfind("2023", 0) != std::string::npos)
-            weight *= recoref->evaluate({EleRecoSF_Name_.c_str(),
-                                         (shift == "up") ? "sfup" : "sfdown",
-                                         GetEleRecoSFName(pt_e1),
-                                         l1Eta,
-                                         pt_e1,
-                                         l1Phi}) /
+            weight *= recoref->evaluate({EleRecoSF_Name_.c_str(), (shift == "up") ? "sfup" : "sfdown", GetEleRecoSFName(pt_e1), l1Eta, pt_e1, l1Phi}) /
                       recoref->evaluate({EleRecoSF_Name_.c_str(), "sf", GetEleRecoSFName(pt_e1), l1Eta, pt_e1, l1Phi});
           else if (EleRecoSF_Name_ != "2025Prompt" || GetEleRecoSFName(pt_e1) != "RecoBelow20")
-            weight *= recoref->evaluate({EleRecoSF_Name_.c_str(),
-                                         (shift == "up") ? "sfup" : "sfdown",
-                                         GetEleRecoSFName(pt_e1),
-                                         l1Eta,
-                                         pt_e1}) /
+            weight *= recoref->evaluate({EleRecoSF_Name_.c_str(), (shift == "up") ? "sfup" : "sfdown", GetEleRecoSFName(pt_e1), l1Eta, pt_e1}) /
                       recoref->evaluate({EleRecoSF_Name_.c_str(), "sf", GetEleRecoSFName(pt_e1), l1Eta, pt_e1});
         }
         if (pt_e2 > EleRecoSF_MIN_PT_) {
           if (EleRecoSF_Name_.rfind("2023", 0) != std::string::npos)
-            weight *= recoref->evaluate({EleRecoSF_Name_.c_str(),
-                                         (shift == "up") ? "sfup" : "sfdown",
-                                         GetEleRecoSFName(pt_e2),
-                                         l2Eta,
-                                         pt_e2,
-                                         l2Phi}) /
+            weight *= recoref->evaluate({EleRecoSF_Name_.c_str(), (shift == "up") ? "sfup" : "sfdown", GetEleRecoSFName(pt_e2), l2Eta, pt_e2, l2Phi}) /
                       recoref->evaluate({EleRecoSF_Name_.c_str(), "sf", GetEleRecoSFName(pt_e2), l2Eta, pt_e2, l2Phi});
           else if (EleRecoSF_Name_ != "2025Prompt" || GetEleRecoSFName(pt_e2) != "RecoBelow20")
-            weight *= recoref->evaluate({EleRecoSF_Name_.c_str(),
-                                         (shift == "up") ? "sfup" : "sfdown",
-                                         GetEleRecoSFName(pt_e2),
-                                         l2Eta,
-                                         pt_e2}) /
+            weight *= recoref->evaluate({EleRecoSF_Name_.c_str(), (shift == "up") ? "sfup" : "sfdown", GetEleRecoSFName(pt_e2), l2Eta, pt_e2}) /
                       recoref->evaluate({EleRecoSF_Name_.c_str(), "sf", GetEleRecoSFName(pt_e2), l2Eta, pt_e2});
         }
         if (pt_e3 > EleRecoSF_MIN_PT_) {
           if (EleRecoSF_Name_.rfind("2023", 0) != std::string::npos)
-            weight *= recoref->evaluate({EleRecoSF_Name_.c_str(),
-                                         (shift == "up") ? "sfup" : "sfdown",
-                                         GetEleRecoSFName(pt_e3),
-                                         l3Eta,
-                                         pt_e3,
-                                         l3Phi}) /
+            weight *= recoref->evaluate({EleRecoSF_Name_.c_str(), (shift == "up") ? "sfup" : "sfdown", GetEleRecoSFName(pt_e3), l3Eta, pt_e3, l3Phi}) /
                       recoref->evaluate({EleRecoSF_Name_.c_str(), "sf", GetEleRecoSFName(pt_e3), l3Eta, pt_e3, l3Phi});
           else if (EleRecoSF_Name_ != "2025Prompt" || GetEleRecoSFName(pt_e3) != "RecoBelow20")
-            weight *= recoref->evaluate({EleRecoSF_Name_.c_str(),
-                                         (shift == "up") ? "sfup" : "sfdown",
-                                         GetEleRecoSFName(pt_e3),
-                                         l3Eta,
-                                         pt_e3}) /
+            weight *= recoref->evaluate({EleRecoSF_Name_.c_str(), (shift == "up") ? "sfup" : "sfdown", GetEleRecoSFName(pt_e3), l3Eta, pt_e3}) /
                       recoref->evaluate({EleRecoSF_Name_.c_str(), "sf", GetEleRecoSFName(pt_e3), l3Eta, pt_e3});
         }
         if (pt_e4 > EleRecoSF_MIN_PT_) {
           if (EleRecoSF_Name_.rfind("2023", 0) != std::string::npos)
-            weight *= recoref->evaluate({EleRecoSF_Name_.c_str(),
-                                         (shift == "up") ? "sfup" : "sfdown",
-                                         GetEleRecoSFName(pt_e4),
-                                         l4Eta,
-                                         pt_e4,
-                                         l4Phi}) /
+            weight *= recoref->evaluate({EleRecoSF_Name_.c_str(), (shift == "up") ? "sfup" : "sfdown", GetEleRecoSFName(pt_e4), l4Eta, pt_e4, l4Phi}) /
                       recoref->evaluate({EleRecoSF_Name_.c_str(), "sf", GetEleRecoSFName(pt_e4), l4Eta, pt_e4, l4Phi});
           else if (EleRecoSF_Name_ != "2025Prompt" || GetEleRecoSFName(pt_e4) != "RecoBelow20")
-            weight *= recoref->evaluate({EleRecoSF_Name_.c_str(),
-                                         (shift == "up") ? "sfup" : "sfdown",
-                                         GetEleRecoSFName(pt_e4),
-                                         l4Eta,
-                                         pt_e4}) /
+            weight *= recoref->evaluate({EleRecoSF_Name_.c_str(), (shift == "up") ? "sfup" : "sfdown", GetEleRecoSFName(pt_e4), l4Eta, pt_e4}) /
                       recoref->evaluate({EleRecoSF_Name_.c_str(), "sf", GetEleRecoSFName(pt_e4), l4Eta, pt_e4});
         }
       }
@@ -687,35 +642,27 @@ void ZZSelector::ShiftEfficiencies(Systematic variation) {
       if (eIdSF_ != nullptr) {
         if (pt_e1 > EleSF_MIN_PT_) {
           if (year == "2023D" && (l1Eta < 0 && l1Eta > -1.5 && l1Phi < -0.8 && l1Phi > -1.2))
-            weight *= eIdSF_->at("2023D_Hole")->evaluate({l1Eta, pt_e1, shift}) /
-                      eIdSF_->at("2023D_Hole")->evaluate({l1Eta, pt_e1, "nominal"});
+            weight *= eIdSF_->at("2023D_Hole")->evaluate({l1Eta, pt_e1, shift}) / eIdSF_->at("2023D_Hole")->evaluate({l1Eta, pt_e1, "nominal"});
           else
-            weight *= eIdSF_->at(year.c_str())->evaluate({l1Eta, pt_e1, shift}) /
-                      eIdSF_->at(year.c_str())->evaluate({l1Eta, pt_e1, "nominal"});
+            weight *= eIdSF_->at(year.c_str())->evaluate({l1Eta, pt_e1, shift}) / eIdSF_->at(year.c_str())->evaluate({l1Eta, pt_e1, "nominal"});
         }
         if (pt_e2 > EleSF_MIN_PT_) {
           if (year == "2023D" && (l2Eta < 0 && l2Eta > -1.5 && l2Phi < -0.8 && l2Phi > -1.2))
-            weight *= eIdSF_->at("2023D_Hole")->evaluate({l2Eta, pt_e2, shift}) /
-                      eIdSF_->at("2023D_Hole")->evaluate({l2Eta, pt_e2, "nominal"});
+            weight *= eIdSF_->at("2023D_Hole")->evaluate({l2Eta, pt_e2, shift}) / eIdSF_->at("2023D_Hole")->evaluate({l2Eta, pt_e2, "nominal"});
           else
-            weight *= eIdSF_->at(year.c_str())->evaluate({l2Eta, pt_e2, shift}) /
-                      eIdSF_->at(year.c_str())->evaluate({l2Eta, pt_e2, "nominal"});
+            weight *= eIdSF_->at(year.c_str())->evaluate({l2Eta, pt_e2, shift}) / eIdSF_->at(year.c_str())->evaluate({l2Eta, pt_e2, "nominal"});
         }
         if (pt_e3 > EleSF_MIN_PT_) {
           if (year == "2023D" && (l3Eta < 0 && l3Eta > -1.5 && l3Phi < -0.8 && l3Phi > -1.2))
-            weight *= eIdSF_->at("2023D_Hole")->evaluate({l3Eta, pt_e3, shift}) /
-                      eIdSF_->at("2023D_Hole")->evaluate({l3Eta, pt_e3, "nominal"});
+            weight *= eIdSF_->at("2023D_Hole")->evaluate({l3Eta, pt_e3, shift}) / eIdSF_->at("2023D_Hole")->evaluate({l3Eta, pt_e3, "nominal"});
           else
-            weight *= eIdSF_->at(year.c_str())->evaluate({l3Eta, pt_e3, shift}) /
-                      eIdSF_->at(year.c_str())->evaluate({l3Eta, pt_e3, "nominal"});
+            weight *= eIdSF_->at(year.c_str())->evaluate({l3Eta, pt_e3, shift}) / eIdSF_->at(year.c_str())->evaluate({l3Eta, pt_e3, "nominal"});
         }
         if (pt_e4 > EleSF_MIN_PT_) {
           if (year == "2023D" && (l4Eta < 0 && l4Eta > -1.5 && l4Phi < -0.8 && l4Phi > -1.2))
-            weight *= eIdSF_->at("2023D_Hole")->evaluate({l4Eta, pt_e4, shift}) /
-                      eIdSF_->at("2023D_Hole")->evaluate({l4Eta, pt_e4, "nominal"});
+            weight *= eIdSF_->at("2023D_Hole")->evaluate({l4Eta, pt_e4, shift}) / eIdSF_->at("2023D_Hole")->evaluate({l4Eta, pt_e4, "nominal"});
           else
-            weight *= eIdSF_->at(year.c_str())->evaluate({l4Eta, pt_e4, shift}) /
-                      eIdSF_->at(year.c_str())->evaluate({l4Eta, pt_e4, "nominal"});
+            weight *= eIdSF_->at(year.c_str())->evaluate({l4Eta, pt_e4, shift}) / eIdSF_->at(year.c_str())->evaluate({l4Eta, pt_e4, "nominal"});
         }
       }
     }
@@ -731,36 +678,18 @@ void ZZSelector::ShiftEfficiencies(Systematic variation) {
         const auto recoref = (*eRecoSF_->begin()).second;
         if (pt_e1 > EleRecoSF_MIN_PT_) {
           if (EleRecoSF_Name_.rfind("2023", 0) != std::string::npos)
-            weight *= recoref->evaluate({EleRecoSF_Name_.c_str(),
-                                         (shift == "up") ? "sfup" : "sfdown",
-                                         GetEleRecoSFName(pt_e1),
-                                         l1Eta,
-                                         pt_e1,
-                                         l1Phi}) /
+            weight *= recoref->evaluate({EleRecoSF_Name_.c_str(), (shift == "up") ? "sfup" : "sfdown", GetEleRecoSFName(pt_e1), l1Eta, pt_e1, l1Phi}) /
                       recoref->evaluate({EleRecoSF_Name_.c_str(), "sf", GetEleRecoSFName(pt_e1), l1Eta, pt_e1, l1Phi});
           else if (EleRecoSF_Name_ != "2025Prompt" || GetEleRecoSFName(pt_e1) != "RecoBelow20")
-            weight *= recoref->evaluate({EleRecoSF_Name_.c_str(),
-                                         (shift == "up") ? "sfup" : "sfdown",
-                                         GetEleRecoSFName(pt_e1),
-                                         l1Eta,
-                                         pt_e1}) /
+            weight *= recoref->evaluate({EleRecoSF_Name_.c_str(), (shift == "up") ? "sfup" : "sfdown", GetEleRecoSFName(pt_e1), l1Eta, pt_e1}) /
                       recoref->evaluate({EleRecoSF_Name_.c_str(), "sf", GetEleRecoSFName(pt_e1), l1Eta, pt_e1});
         }
         if (pt_e2 > EleRecoSF_MIN_PT_) {
           if (EleRecoSF_Name_.rfind("2023", 0) != std::string::npos)
-            weight *= recoref->evaluate({EleRecoSF_Name_.c_str(),
-                                         (shift == "up") ? "sfup" : "sfdown",
-                                         GetEleRecoSFName(pt_e2),
-                                         l2Eta,
-                                         pt_e2,
-                                         l2Phi}) /
+            weight *= recoref->evaluate({EleRecoSF_Name_.c_str(), (shift == "up") ? "sfup" : "sfdown", GetEleRecoSFName(pt_e2), l2Eta, pt_e2, l2Phi}) /
                       recoref->evaluate({EleRecoSF_Name_.c_str(), "sf", GetEleRecoSFName(pt_e2), l2Eta, pt_e2, l2Phi});
           else if (EleRecoSF_Name_ != "2025Prompt" || GetEleRecoSFName(pt_e2) != "RecoBelow20")
-            weight *= recoref->evaluate({EleRecoSF_Name_.c_str(),
-                                         (shift == "up") ? "sfup" : "sfdown",
-                                         GetEleRecoSFName(pt_e2),
-                                         l2Eta,
-                                         pt_e2}) /
+            weight *= recoref->evaluate({EleRecoSF_Name_.c_str(), (shift == "up") ? "sfup" : "sfdown", GetEleRecoSFName(pt_e2), l2Eta, pt_e2}) /
                       recoref->evaluate({EleRecoSF_Name_.c_str(), "sf", GetEleRecoSFName(pt_e2), l2Eta, pt_e2});
         }
       }
@@ -770,29 +699,23 @@ void ZZSelector::ShiftEfficiencies(Systematic variation) {
       if (eIdSF_ != nullptr) {
         if (pt_e1 > EleSF_MIN_PT_) {
           if (year == "2023D" && (l1Eta < 0 && l1Eta > -1.5 && l1Phi < -0.8 && l1Phi > -1.2))
-            weight *= eIdSF_->at("2023D_Hole")->evaluate({l1Eta, pt_e1, shift}) /
-                      eIdSF_->at("2023D_Hole")->evaluate({l1Eta, pt_e1, "nominal"});
+            weight *= eIdSF_->at("2023D_Hole")->evaluate({l1Eta, pt_e1, shift}) / eIdSF_->at("2023D_Hole")->evaluate({l1Eta, pt_e1, "nominal"});
           else
-            weight *= eIdSF_->at(year.c_str())->evaluate({l1Eta, pt_e1, shift}) /
-                      eIdSF_->at(year.c_str())->evaluate({l1Eta, pt_e1, "nominal"});
+            weight *= eIdSF_->at(year.c_str())->evaluate({l1Eta, pt_e1, shift}) / eIdSF_->at(year.c_str())->evaluate({l1Eta, pt_e1, "nominal"});
         }
         if (pt_e2 > EleSF_MIN_PT_) {
           if (year == "2023D" && (l2Eta < 0 && l2Eta > -1.5 && l2Phi < -0.8 && l2Phi > -1.2))
-            weight *= eIdSF_->at("2023D_Hole")->evaluate({l2Eta, pt_e2, shift}) /
-                      eIdSF_->at("2023D_Hole")->evaluate({l2Eta, pt_e2, "nominal"});
+            weight *= eIdSF_->at("2023D_Hole")->evaluate({l2Eta, pt_e2, shift}) / eIdSF_->at("2023D_Hole")->evaluate({l2Eta, pt_e2, "nominal"});
           else
-            weight *= eIdSF_->at(year.c_str())->evaluate({l2Eta, pt_e2, shift}) /
-                      eIdSF_->at(year.c_str())->evaluate({l2Eta, pt_e2, "nominal"});
+            weight *= eIdSF_->at(year.c_str())->evaluate({l2Eta, pt_e2, shift}) / eIdSF_->at(year.c_str())->evaluate({l2Eta, pt_e2, "nominal"});
         }
       }
     } else if (variation == muonEfficiencyUp || variation == muonEfficiencyDown) {
       if (mIdSF_ != nullptr) {
         if (pt_m3 > MuSF_MIN_PT_)
-          weight *= mIdSF_->at(year.c_str())->evaluate({l3Eta, pt_m3, shift}) /
-                    mIdSF_->at(year.c_str())->evaluate({l3Eta, pt_m3, "nominal"});
+          weight *= mIdSF_->at(year.c_str())->evaluate({l3Eta, pt_m3, shift}) / mIdSF_->at(year.c_str())->evaluate({l3Eta, pt_m3, "nominal"});
         if (pt_m4 > MuSF_MIN_PT_)
-          weight *= mIdSF_->at(year.c_str())->evaluate({l4Eta, pt_m4, shift}) /
-                    mIdSF_->at(year.c_str())->evaluate({l4Eta, pt_m4, "nominal"});
+          weight *= mIdSF_->at(year.c_str())->evaluate({l4Eta, pt_m4, shift}) / mIdSF_->at(year.c_str())->evaluate({l4Eta, pt_m4, "nominal"});
       }
     }
   } else if (channel_ == mmmm && (variation == muonEfficiencyUp || variation == muonEfficiencyDown)) {
@@ -802,17 +725,13 @@ void ZZSelector::ShiftEfficiencies(Systematic variation) {
     float pt_m4 = l4Pt < MuSF_MAX_PT_ ? l4Pt : MuSF_MAX_PT_ - 0.01;
     if (mIdSF_ != nullptr) {
       if (pt_m1 > MuSF_MIN_PT_)
-        weight *= mIdSF_->at(year.c_str())->evaluate({l1Eta, pt_m1, shift}) /
-                  mIdSF_->at(year.c_str())->evaluate({l1Eta, pt_m1, "nominal"});
+        weight *= mIdSF_->at(year.c_str())->evaluate({l1Eta, pt_m1, shift}) / mIdSF_->at(year.c_str())->evaluate({l1Eta, pt_m1, "nominal"});
       if (pt_m2 > MuSF_MIN_PT_)
-        weight *= mIdSF_->at(year.c_str())->evaluate({l2Eta, pt_m2, shift}) /
-                  mIdSF_->at(year.c_str())->evaluate({l2Eta, pt_m2, "nominal"});
+        weight *= mIdSF_->at(year.c_str())->evaluate({l2Eta, pt_m2, shift}) / mIdSF_->at(year.c_str())->evaluate({l2Eta, pt_m2, "nominal"});
       if (pt_m3 > MuSF_MIN_PT_)
-        weight *= mIdSF_->at(year.c_str())->evaluate({l3Eta, pt_m3, shift}) /
-                  mIdSF_->at(year.c_str())->evaluate({l3Eta, pt_m3, "nominal"});
+        weight *= mIdSF_->at(year.c_str())->evaluate({l3Eta, pt_m3, shift}) / mIdSF_->at(year.c_str())->evaluate({l3Eta, pt_m3, "nominal"});
       if (pt_m4 > MuSF_MIN_PT_)
-        weight *= mIdSF_->at(year.c_str())->evaluate({l4Eta, pt_m4, shift}) /
-                  mIdSF_->at(year.c_str())->evaluate({l4Eta, pt_m4, "nominal"});
+        weight *= mIdSF_->at(year.c_str())->evaluate({l4Eta, pt_m4, shift}) / mIdSF_->at(year.c_str())->evaluate({l4Eta, pt_m4, "nominal"});
     }
   }
 }
@@ -879,9 +798,7 @@ bool ZZSelector::PassesHZZSelection(bool nonPrompt) {
 }
 bool ZZSelector::TightZZLeptons() { return tightZ1Leptons() && tightZ2Leptons(); }
 bool ZZSelector::ZZSelection() { return (Z1Mass > 60.0 && Z1Mass < 120.0) && (Z2Mass > 60.0 && Z2Mass < 120.0); }
-bool ZZSelector::ZZSelectionTight() {
-  return (Z1Mass > 81.1876 && Z1Mass < 101.1876) && (Z2Mass > 81.1876 && Z2Mass < 101.1876);
-}
+bool ZZSelector::ZZSelectionTight() { return (Z1Mass > 81.1876 && Z1Mass < 101.1876) && (Z2Mass > 81.1876 && Z2Mass < 101.1876); }
 
 // We already require 4 < Z1,Z2 < 120  in the "Loose Skim"
 bool ZZSelector::ZSelection() { return Z1Mass > 40.0 && Z2Mass > 12.0; }

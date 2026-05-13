@@ -76,10 +76,7 @@ protected:
   virtual void FillHistograms(Long64_t entry, std::pair<Systematic, std::string> variation) override {}
   void LoadBranchesNanoAOD(Long64_t entry, std::pair<Systematic, std::string> variation) override;
   virtual void SetComposite() {}
-  bool overlapsCollection(const LorentzVector& cand,
-                          reco::GenParticleCollection& collection,
-                          const float deltaRCut,
-                          size_t maxCompare);
+  bool overlapsCollection(const LorentzVector& cand, reco::GenParticleCollection& collection, const float deltaRCut, size_t maxCompare);
 };
 
 #endif
