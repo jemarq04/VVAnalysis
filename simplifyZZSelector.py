@@ -241,17 +241,12 @@ hists1DList = [
     "EleZMass",
     "MuZMass",
     "LepPt",
-    "LepPtFull",
     "ElePt",
     "MuPt",
     "LepPt1",
     "LepPt2",
     "LepPt3",
     "LepPt4",
-    "LepPt1Full",
-    "LepPt2Full",
-    "LepPt3Full",
-    "LepPt4Full",
     "Z1LepPt",
     "Z2LepPt",
     "LepEta",
@@ -287,10 +282,6 @@ hists1DList = [
     "absjetEta[1]",
     "jetPt[0]",
     "jetPt[1]",
-    "jetPhi[0]",
-    "jetPhi[1]",
-    "mjj",
-    "dEtajj",
 ]
 systHistList = [name for name in systHistList if name in hists1DList]  # reduce list down
 # hists1DList = [ "yield", "Mass", "Mass0j", "Mass1j", "Mass2j", "Mass3j", "Mass34j", "Mass4j", "nJets", "MassFull", "Mass0jFull", "Mass1jFull", "Mass2jFull", "Mass3jFull", "Mass34jFull", "Mass4jFull", "jetPt[0]", "jetPt[1]","jetEta[0]", "jetEta[1]", "absjetEta[0]", "absjetEta[1]", "mjj", "dEtajj" ]
@@ -409,7 +400,7 @@ with open("src/ZZSelectorTemplateFilledTmp.cc", "r") as fout2:
                 elif "//End filling ntuple" in line:
                     line = line + "*/\n"
 
-            if "LepPtFull" not in hists1DList:
+            if not any(f"LepPt{i}" in hists1DList or f"LepPt{i}Full" in hists1DList for i in range(1,5)):
                 if "// sort lepton pt" in line:
                     line = "/*" + line
 
