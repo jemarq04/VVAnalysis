@@ -400,7 +400,7 @@ with open("src/ZZSelectorTemplateFilledTmp.cc", "r") as fout2:
                 elif "//End filling ntuple" in line:
                     line = line + "*/\n"
 
-            if not any(f"LepPt{i}" in hists1DList or f"LepPt{i}Full" in hists1DList for i in range(1,5)):
+            if not any(f"LepPt{i}" in hists1DList or f"LepPt{i}Full" in hists1DList for i in range(1, 5)):
                 if "// sort lepton pt" in line:
                     line = "/*" + line
 
