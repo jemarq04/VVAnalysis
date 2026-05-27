@@ -82,6 +82,7 @@ def main():
     systematics_lnN = {
         # "bkgStat": {"nonprompt": "1.4"},
         # "trigger": dict.fromkeys(all_procs, "1.020"),
+        "bkg_VVV": {"VVV": "1.10"},
         "lumi_13p6TeV": dict.fromkeys(all_procs, "1.010"),
         f"lumi_13p6TeV_{args.year}": {proc: str(lumiUncMap[args.year]) for proc in all_procs},
     }
