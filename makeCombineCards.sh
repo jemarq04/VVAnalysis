@@ -9,4 +9,5 @@ for year in $years; do
   infile="HistFiles/SystHists-ZZ4l$year.root"
 
   python3 Utilities/scripts/setupZZCombineRun3.py -i $infile -o $outdir --rebin 100,200,250,300,350,400,500,600,800,1000 -c eeee,eemm,mmee,mmmm -a ZZ4l$year $year
+  #python3 Utilities/scripts/setupZZCombineRun3.py -i $infile -o $outdir --lumiMatrix --rebin 100,200,250,300,350,400,500,600,800,1000 -c eeee,eemm,mmee,mmmm -a ZZ4l$year $year
 done

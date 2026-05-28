@@ -15,6 +15,7 @@ def main():
         help="list of comma-separated floats for hist rebinning",
     )
     parser.add_argument("-l", "--lumi", help="luminosity")
+    parser.add_argument("--lumiMatrix", action="store_true", help="use luminosity correlation matrix instead of Run 2 prescription")
     parser.add_argument("-a", "--analysis", default="Run3Combined", help="name of analysis")
     parser.add_argument(
         "-c",
@@ -38,6 +39,24 @@ def main():
     sig_procs = ["qqZZ-powheg", "ggZZ", "qqZZjj-ewk", "HZZ-signal"]
     bkg_procs = ["VVV", "nonprompt"]
     all_procs = sig_procs + bkg_procs[:-1]
+
+    lumiMatrix = {
+        "lumi_1": {
+            2022: "1.0138",
+            2023: "1.0017",
+            2024: "1.0020",
+        },
+        "lumi_2": {
+            2022: "-",
+            2023: "1.0127",
+            2024: "1.0068",
+        },
+        "lumi_3": {
+            2022: "-",
+            2023: "-",
+            2024: "1.0144",
+        },
+    }
 
     if args.infile is None:
         args.infile = f"HistFiles/SystHists-ZZ4l{args.year}.root"
@@ -83,12 +102,17 @@ def main():
         # "bkgStat": {"nonprompt": "1.4"},
         # "trigger": dict.fromkeys(all_procs, "1.020"),
         "bkg_VVV": {"VVV": "1.10"},
-        "lumi_13p6TeV": dict.fromkeys(all_procs, "1.010"),
-        f"lumi_13p6TeV_{args.year}": {proc: str(lumiUncMap[args.year]) for proc in all_procs},
     }
     systematics_shape = {
         "CMS_pileup": dict.fromkeys(all_procs, "1"),
     }
+
+    if args.lumiMatrix:
+        for key,vals in lumiMatrix.items():
+            systematics_lnN[key] = dict.fromkeys(all_procs, vals[args.year])
+    else:
+        systematics_lnN["lumi_13p6TeV"] = dict.fromkeys(all_procs, "1.010")
+        systematics_lnN[f"lumi_13p6TeV_{args.year}"] = dict.fromkeys(all_procs, lumiUncMap[args.year])
 
     # Add systematics by supplying
     #  - the name of the systematic (e.g. CMS_eff_e)
