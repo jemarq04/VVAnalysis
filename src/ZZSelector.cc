@@ -516,13 +516,13 @@ void ZZSelector::ApplyScaleFactors() {
       if (pt_e1 > EleSF_MIN_PT_) {
         if (year == "2023D" && (l1Eta < 0 && l1Eta > -1.5 && l1Phi < -0.8 && l1Phi > -1.2))
           weight *= eIdSF_->at("2023D_Hole")->evaluate({l1Eta, pt_e1, "nominal"});
-        else if (EleRecoSF_Name_ != "2025Prompt" || GetEleRecoSFName(pt_e1) != "RecoBelow20")
+        else
           weight *= eIdSF_->at(year.c_str())->evaluate({l1Eta, pt_e1, "nominal"});
       }
       if (pt_e2 > EleSF_MIN_PT_) {
         if (year == "2023D" && (l2Eta < 0 && l2Eta > -1.5 && l2Phi < -0.8 && l2Phi > -1.2))
           weight *= eIdSF_->at("2023D_Hole")->evaluate({l2Eta, pt_e2, "nominal"});
-        else if (EleRecoSF_Name_ != "2025Prompt" || GetEleRecoSFName(pt_e2) != "RecoBelow20")
+        else
           weight *= eIdSF_->at(year.c_str())->evaluate({l2Eta, pt_e2, "nominal"});
       }
     }
