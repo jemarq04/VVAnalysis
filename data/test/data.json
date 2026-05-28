@@ -70,7 +70,7 @@
         "desc": "2023D (postBPix) HZZ muon ID SFs"
       },
       "2024": {
-        "file": "inputs/2024/prelimiary_HZZ_SF_2024_RMS_mupogsystsC.root",
+        "file": "inputs/2024/HZZ_HZZ_SF_2024_RMS_mupogsystsC.root",
         "desc": "2024 HZZ muon ID SFs (preliminary)"
       }
     }
