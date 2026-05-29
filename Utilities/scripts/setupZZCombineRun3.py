@@ -15,7 +15,9 @@ def main():
         help="list of comma-separated floats for hist rebinning",
     )
     parser.add_argument("-l", "--lumi", help="luminosity")
-    parser.add_argument("--lumiMatrix", action="store_true", help="use luminosity correlation matrix instead of Run 2 prescription")
+    parser.add_argument(
+        "--lumiMatrix", action="store_true", help="use luminosity correlation matrix instead of Run 2 prescription"
+    )
     parser.add_argument("-a", "--analysis", default="Run3Combined", help="name of analysis")
     parser.add_argument(
         "-c",
@@ -108,7 +110,7 @@ def main():
     }
 
     if args.lumiMatrix:
-        for key,vals in lumiMatrix.items():
+        for key, vals in lumiMatrix.items():
             systematics_lnN[key] = dict.fromkeys(all_procs, vals[args.year])
     else:
         systematics_lnN["lumi_13p6TeV"] = dict.fromkeys(all_procs, "1.010")
