@@ -11,6 +11,8 @@ VARIATIONS = {
     "down": -1,
 }
 
+FLOW = "clamp"
+
 
 def writeSFs(info, fname, redo_systs=False, flatten=False):
     DESC = info["desc"]
@@ -60,12 +62,12 @@ def writeSFs(info, fname, redo_systs=False, flatten=False):
         # Load correction objects
         corr_items = {
             "nominal": correctionlib.convert.from_uproot_THx(
-                f"{CORRS[name]['file']}:{HIST_NAME}", list(INPUTS.keys()), "clamp"
+                f"{CORRS[name]['file']}:{HIST_NAME}", list(INPUTS.keys()), FLOW
             ),
         }
         for syst in VARIATIONS:
             corr_items[syst] = correctionlib.convert.from_uproot_THx(
-                f"{CORRS[name]['file']}:{HIST_NAME}_{syst}", list(INPUTS.keys()), "clamp"
+                f"{CORRS[name]['file']}:{HIST_NAME}_{syst}", list(INPUTS.keys()), FLOW
             )
 
         if flatten:
