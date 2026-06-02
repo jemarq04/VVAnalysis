@@ -74,24 +74,5 @@
         "desc": "2024 HZZ muon ID SFs"
       }
     }
-  },
-  "pileup": {
-    "name": "PileupSF",
-    "desc": "",
-    "sfname": "pileup",
-    "uncname": "pileup_unc",
-    "inputs": {
-      "NumTrueInteractions": "Number of true interactions"
-    },
-    "output": {
-      "name": "weight",
-      "desc": "Event weight for pileup reweighting"
-    },
-    "corrections": {
-      "2024": {
-        "file": "inputs/2024/pileup.root",
-        "desc": "Custom 2024 pileup reweight SFs"
-      }
-    }
   }
 }
