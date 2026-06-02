@@ -35,7 +35,7 @@
       },
       "2024": {
         "file": "inputs/2024/SF2024eleID.root",
-        "desc": "2024 HZZ electron ID SFs (preliminary)"
+        "desc": "2024 HZZ electron ID SFs (-1.5 < eta < 0 and -1.2 < phi < -0.8)"
       }
     }
   },
@@ -71,7 +71,7 @@
       },
       "2024": {
         "file": "inputs/2024/HZZ_HZZ_SF_2024_RMS_mupogsystsC.root",
-        "desc": "2024 HZZ muon ID SFs (preliminary)"
+        "desc": "2024 HZZ muon ID SFs"
       }
     }
   },
