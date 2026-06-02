@@ -33,20 +33,21 @@ def writeSFs(info, fname, redo_systs=False, flatten=False):
 
             with ROOT.TFile.Open(CORRS[name]["file"], "update") as infile:
                 hist = infile.Get(HIST_NAME)
+                error_scale = CORRS[name]["err_mult"] if "err_mult" in CORRS[name] else 1.0
                 if HUNC_NAME not in infile.GetListOfKeys():
                     hunc = hist.Clone(HUNC_NAME)
                     if hist.InheritsFrom("TH3"):
                         for i in range(1, hist.GetNbinsX() + 1):
                             for j in range(1, hist.GetNbinsY() + 1):
                                 for k in range(1, hist.GetNbinsZ() + 1):
-                                    hunc.SetBinContent(i, j, k, hist.GetBinError(i, j, k))
+                                    hunc.SetBinContent(i, j, k, error_scale * hist.GetBinError(i, j, k))
                     elif hist.InheritsFrom("TH2"):
                         for i in range(1, hist.GetNbinsX() + 1):
                             for j in range(1, hist.GetNbinsY() + 1):
-                                hunc.SetBinContent(i, j, hist.GetBinError(i, j))
+                                hunc.SetBinContent(i, j, error_scale * hist.GetBinError(i, j))
                     else:
                         for i in range(1, hist.GetNbinsX() + 1):
-                            hunc.SetBinContent(i, hist.GetBinError(i))
+                            hunc.SetBinContent(i, error_scale * hist.GetBinError(i))
                 else:
                     hunc = infile.Get(HUNC_NAME)
 

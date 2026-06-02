@@ -25,9 +25,18 @@
         "file": "inputs/2023/SF2023eleID_preBPix.root",
         "desc": "2023C (preBPix) HZZ electron ID SFs"
       },
+      "2023C_Gap": {
+        "file": "inputs/2023/SF2023eleID_Gap_preBPix.root",
+        "desc": "2023C (preBPix) HZZ electron ID SFs (1.444 < |eta| < 1.556)"
+      },
       "2023D": {
         "file": "inputs/2023/SF2023eleID_postBPix.root",
         "desc": "2023D (postBPix) HZZ electron ID SFs"
+      },
+      "2023D_Gap": {
+        "file": "inputs/2023/SF2023eleID_Gap_preBPix.root",
+        "desc": "2023D (postBPix) HZZ electron ID SFs (1.444 < |eta| < 1.556)",
+        "err_mult": 2
       },
       "2023D_Hole": {
         "file": "inputs/2023/SF2023eleID_postBPix_Hole.root",
@@ -36,6 +45,10 @@
       "2024": {
         "file": "inputs/2024/SF2024eleID.root",
         "desc": "2024 HZZ electron ID SFs (-1.5 < eta < 0 and -1.2 < phi < -0.8)"
+      },
+      "2024_Gap": {
+        "file": "inputs/2024/SF2024eleID_Gap.root",
+        "desc": "2024 HZZ electron ID SFs (1.444 < |eta| < 1.556)"
       }
     }
   },
