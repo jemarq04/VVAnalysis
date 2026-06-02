@@ -458,24 +458,32 @@ void ZZSelector::ApplyScaleFactors() {
       if (pt_e1 > EleSF_MIN_PT_) {
         if (year == "2023D" && (l1Eta < 0 && l1Eta > -1.5 && l1Phi < -0.8 && l1Phi > -1.2))
           weight *= eIdSF_->at("2023D_Hole")->evaluate({l1Eta, pt_e1, "nominal"});
+        else if ((year == "2023C" || year == "2023D" || year == "2024") && std::abs(l1Eta) > 1.444 && std::abs(l1Eta) < 1.556)
+          weight *= eIdSF_->at((year + "_Gap").c_str())->evaluate({l1Eta, pt_e1, "nominal"});
         else
           weight *= eIdSF_->at(year.c_str())->evaluate({l1Eta, pt_e1, "nominal"});
       }
       if (pt_e2 > EleSF_MIN_PT_) {
         if (year == "2023D" && (l2Eta < 0 && l2Eta > -1.5 && l2Phi < -0.8 && l2Phi > -1.2))
           weight *= eIdSF_->at("2023D_Hole")->evaluate({l2Eta, pt_e2, "nominal"});
+        else if ((year == "2023C" || year == "2023D" || year == "2024") && std::abs(l2Eta) > 1.444 && std::abs(l2Eta) < 1.556)
+          weight *= eIdSF_->at((year + "_Gap").c_str())->evaluate({l2Eta, pt_e2, "nominal"});
         else
           weight *= eIdSF_->at(year.c_str())->evaluate({l2Eta, pt_e2, "nominal"});
       }
       if (pt_e3 > EleSF_MIN_PT_) {
         if (year == "2023D" && (l3Eta < 0 && l3Eta > -1.5 && l3Phi < -0.8 && l3Phi > -1.2))
           weight *= eIdSF_->at("2023D_Hole")->evaluate({l3Eta, pt_e3, "nominal"});
+        else if ((year == "2023C" || year == "2023D" || year == "2024") && std::abs(l3Eta) > 1.444 && std::abs(l3Eta) < 1.556)
+          weight *= eIdSF_->at((year + "_Gap").c_str())->evaluate({l3Eta, pt_e3, "nominal"});
         else
           weight *= eIdSF_->at(year.c_str())->evaluate({l3Eta, pt_e3, "nominal"});
       }
       if (pt_e4 > EleSF_MIN_PT_) {
         if (year == "2023D" && (l4Eta < 0 && l4Eta > -1.5 && l4Phi < -0.8 && l4Phi > -1.2))
           weight *= eIdSF_->at("2023D_Hole")->evaluate({l4Eta, pt_e4, "nominal"});
+        else if ((year == "2023C" || year == "2023D" || year == "2024") && std::abs(l4Eta) > 1.444 && std::abs(l4Eta) < 1.556)
+          weight *= eIdSF_->at((year + "_Gap").c_str())->evaluate({l4Eta, pt_e4, "nominal"});
         else
           weight *= eIdSF_->at(year.c_str())->evaluate({l4Eta, pt_e4, "nominal"});
       }
@@ -516,12 +524,16 @@ void ZZSelector::ApplyScaleFactors() {
       if (pt_e1 > EleSF_MIN_PT_) {
         if (year == "2023D" && (l1Eta < 0 && l1Eta > -1.5 && l1Phi < -0.8 && l1Phi > -1.2))
           weight *= eIdSF_->at("2023D_Hole")->evaluate({l1Eta, pt_e1, "nominal"});
+        else if ((year == "2023C" || year == "2023D" || year == "2024") && std::abs(l1Eta) > 1.444 && std::abs(l1Eta) < 1.556)
+          weight *= eIdSF_->at((year + "_Gap").c_str())->evaluate({l1Eta, pt_e1, "nominal"});
         else
           weight *= eIdSF_->at(year.c_str())->evaluate({l1Eta, pt_e1, "nominal"});
       }
       if (pt_e2 > EleSF_MIN_PT_) {
         if (year == "2023D" && (l2Eta < 0 && l2Eta > -1.5 && l2Phi < -0.8 && l2Phi > -1.2))
           weight *= eIdSF_->at("2023D_Hole")->evaluate({l2Eta, pt_e2, "nominal"});
+        else if ((year == "2023C" || year == "2023D" || year == "2024") && std::abs(l2Eta) > 1.444 && std::abs(l2Eta) < 1.556)
+          weight *= eIdSF_->at((year + "_Gap").c_str())->evaluate({l2Eta, pt_e2, "nominal"});
         else
           weight *= eIdSF_->at(year.c_str())->evaluate({l2Eta, pt_e2, "nominal"});
       }
@@ -658,24 +670,36 @@ void ZZSelector::ShiftEfficiencies(Systematic variation) {
         if (pt_e1 > EleSF_MIN_PT_) {
           if (year == "2023D" && (l1Eta < 0 && l1Eta > -1.5 && l1Phi < -0.8 && l1Phi > -1.2))
             weight *= eIdSF_->at("2023D_Hole")->evaluate({l1Eta, pt_e1, shift}) / eIdSF_->at("2023D_Hole")->evaluate({l1Eta, pt_e1, "nominal"});
+          else if ((year == "2023C" || year == "2023D" || year == "2024") && std::abs(l1Eta) > 1.444 && std::abs(l1Eta) < 1.556)
+            weight *=
+                eIdSF_->at((year + "_Gap").c_str())->evaluate({l1Eta, pt_e1, shift}) / eIdSF_->at((year + "_Gap").c_str())->evaluate({l1Eta, pt_e1, "nominal"});
           else
             weight *= eIdSF_->at(year.c_str())->evaluate({l1Eta, pt_e1, shift}) / eIdSF_->at(year.c_str())->evaluate({l1Eta, pt_e1, "nominal"});
         }
         if (pt_e2 > EleSF_MIN_PT_) {
           if (year == "2023D" && (l2Eta < 0 && l2Eta > -1.5 && l2Phi < -0.8 && l2Phi > -1.2))
             weight *= eIdSF_->at("2023D_Hole")->evaluate({l2Eta, pt_e2, shift}) / eIdSF_->at("2023D_Hole")->evaluate({l2Eta, pt_e2, "nominal"});
+          else if ((year == "2023C" || year == "2023D" || year == "2024") && std::abs(l2Eta) > 1.444 && std::abs(l2Eta) < 1.556)
+            weight *=
+                eIdSF_->at((year + "_Gap").c_str())->evaluate({l2Eta, pt_e2, shift}) / eIdSF_->at((year + "_Gap").c_str())->evaluate({l2Eta, pt_e2, "nominal"});
           else
             weight *= eIdSF_->at(year.c_str())->evaluate({l2Eta, pt_e2, shift}) / eIdSF_->at(year.c_str())->evaluate({l2Eta, pt_e2, "nominal"});
         }
         if (pt_e3 > EleSF_MIN_PT_) {
           if (year == "2023D" && (l3Eta < 0 && l3Eta > -1.5 && l3Phi < -0.8 && l3Phi > -1.2))
             weight *= eIdSF_->at("2023D_Hole")->evaluate({l3Eta, pt_e3, shift}) / eIdSF_->at("2023D_Hole")->evaluate({l3Eta, pt_e3, "nominal"});
+          else if ((year == "2023C" || year == "2023D" || year == "2024") && std::abs(l3Eta) > 1.444 && std::abs(l3Eta) < 1.556)
+            weight *=
+                eIdSF_->at((year + "_Gap").c_str())->evaluate({l3Eta, pt_e3, shift}) / eIdSF_->at((year + "_Gap").c_str())->evaluate({l3Eta, pt_e3, "nominal"});
           else
             weight *= eIdSF_->at(year.c_str())->evaluate({l3Eta, pt_e3, shift}) / eIdSF_->at(year.c_str())->evaluate({l3Eta, pt_e3, "nominal"});
         }
         if (pt_e4 > EleSF_MIN_PT_) {
           if (year == "2023D" && (l4Eta < 0 && l4Eta > -1.5 && l4Phi < -0.8 && l4Phi > -1.2))
             weight *= eIdSF_->at("2023D_Hole")->evaluate({l4Eta, pt_e4, shift}) / eIdSF_->at("2023D_Hole")->evaluate({l4Eta, pt_e4, "nominal"});
+          else if ((year == "2023C" || year == "2023D" || year == "2024") && std::abs(l4Eta) > 1.444 && std::abs(l4Eta) < 1.556)
+            weight *=
+                eIdSF_->at((year + "_Gap").c_str())->evaluate({l4Eta, pt_e4, shift}) / eIdSF_->at((year + "_Gap").c_str())->evaluate({l4Eta, pt_e4, "nominal"});
           else
             weight *= eIdSF_->at(year.c_str())->evaluate({l4Eta, pt_e4, shift}) / eIdSF_->at(year.c_str())->evaluate({l4Eta, pt_e4, "nominal"});
         }
@@ -715,12 +739,18 @@ void ZZSelector::ShiftEfficiencies(Systematic variation) {
         if (pt_e1 > EleSF_MIN_PT_) {
           if (year == "2023D" && (l1Eta < 0 && l1Eta > -1.5 && l1Phi < -0.8 && l1Phi > -1.2))
             weight *= eIdSF_->at("2023D_Hole")->evaluate({l1Eta, pt_e1, shift}) / eIdSF_->at("2023D_Hole")->evaluate({l1Eta, pt_e1, "nominal"});
+          else if ((year == "2023C" || year == "2023D" || year == "2024") && std::abs(l1Eta) > 1.444 && std::abs(l1Eta) < 1.556)
+            weight *=
+                eIdSF_->at((year + "_Gap").c_str())->evaluate({l1Eta, pt_e1, shift}) / eIdSF_->at((year + "_Gap").c_str())->evaluate({l1Eta, pt_e1, "nominal"});
           else
             weight *= eIdSF_->at(year.c_str())->evaluate({l1Eta, pt_e1, shift}) / eIdSF_->at(year.c_str())->evaluate({l1Eta, pt_e1, "nominal"});
         }
         if (pt_e2 > EleSF_MIN_PT_) {
           if (year == "2023D" && (l2Eta < 0 && l2Eta > -1.5 && l2Phi < -0.8 && l2Phi > -1.2))
             weight *= eIdSF_->at("2023D_Hole")->evaluate({l2Eta, pt_e2, shift}) / eIdSF_->at("2023D_Hole")->evaluate({l2Eta, pt_e2, "nominal"});
+          else if ((year == "2023C" || year == "2023D" || year == "2024") && std::abs(l2Eta) > 1.444 && std::abs(l2Eta) < 1.556)
+            weight *=
+                eIdSF_->at((year + "_Gap").c_str())->evaluate({l2Eta, pt_e2, shift}) / eIdSF_->at((year + "_Gap").c_str())->evaluate({l2Eta, pt_e2, "nominal"});
           else
             weight *= eIdSF_->at(year.c_str())->evaluate({l2Eta, pt_e2, shift}) / eIdSF_->at(year.c_str())->evaluate({l2Eta, pt_e2, "nominal"});
         }
