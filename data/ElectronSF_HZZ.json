@@ -975,6 +975,123 @@
       }
     },
     {
+      "name": "2023C_Gap",
+      "description": "2023C (preBPix) HZZ electron ID SFs (1.444 < |eta| < 1.556)",
+      "version": 1,
+      "inputs": [
+        {
+          "name": "eta",
+          "type": "real",
+          "description": "Electron eta"
+        },
+        {
+          "name": "pt",
+          "type": "real",
+          "description": "Electron pT [GeV]"
+        },
+        {
+          "name": "systematic",
+          "type": "string",
+          "description": "nominal/up/down"
+        }
+      ],
+      "output": {
+        "name": "weight",
+        "type": "real",
+        "description": "HZZ ID scale factor"
+      },
+      "data": {
+        "nodetype": "category",
+        "input": "systematic",
+        "content": [
+          {
+            "key": "nominal",
+            "value": {
+              "nodetype": "multibinning",
+              "inputs": [
+                "eta",
+                "pt"
+              ],
+              "edges": [
+                [
+                  -1.566,
+                  -1.444,
+                  1.444,
+                  1.566
+                ],
+                [
+                  7.0,
+                  20.0
+                ]
+              ],
+              "content": [
+                0.9429531693458557,
+                1.2239902019500732,
+                1.003448247909546
+              ],
+              "flow": "clamp"
+            }
+          },
+          {
+            "key": "up",
+            "value": {
+              "nodetype": "multibinning",
+              "inputs": [
+                "eta",
+                "pt"
+              ],
+              "edges": [
+                [
+                  -1.566,
+                  -1.444,
+                  1.444,
+                  1.566
+                ],
+                [
+                  7.0,
+                  20.0
+                ]
+              ],
+              "content": [
+                0.9937832355499268,
+                2.4479804039001465,
+                1.075155258178711
+              ],
+              "flow": "clamp"
+            }
+          },
+          {
+            "key": "down",
+            "value": {
+              "nodetype": "multibinning",
+              "inputs": [
+                "eta",
+                "pt"
+              ],
+              "edges": [
+                [
+                  -1.566,
+                  -1.444,
+                  1.444,
+                  1.566
+                ],
+                [
+                  7.0,
+                  20.0
+                ]
+              ],
+              "content": [
+                0.8921231031417847,
+                0.0,
+                0.9317411780357361
+              ],
+              "flow": "clamp"
+            }
+          }
+        ]
+      }
+    },
+    {
       "name": "2023D",
       "description": "2023D (postBPix) HZZ electron ID SFs",
       "version": 1,
@@ -1291,6 +1408,123 @@
                 0.9873400926589966,
                 0.9963102340698242,
                 0.9837815761566162
+              ],
+              "flow": "clamp"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "2023D_Gap",
+      "description": "2023D (postBPix) HZZ electron ID SFs (1.444 < |eta| < 1.556)",
+      "version": 1,
+      "inputs": [
+        {
+          "name": "eta",
+          "type": "real",
+          "description": "Electron eta"
+        },
+        {
+          "name": "pt",
+          "type": "real",
+          "description": "Electron pT [GeV]"
+        },
+        {
+          "name": "systematic",
+          "type": "string",
+          "description": "nominal/up/down"
+        }
+      ],
+      "output": {
+        "name": "weight",
+        "type": "real",
+        "description": "HZZ ID scale factor"
+      },
+      "data": {
+        "nodetype": "category",
+        "input": "systematic",
+        "content": [
+          {
+            "key": "nominal",
+            "value": {
+              "nodetype": "multibinning",
+              "inputs": [
+                "eta",
+                "pt"
+              ],
+              "edges": [
+                [
+                  -1.566,
+                  -1.444,
+                  1.444,
+                  1.566
+                ],
+                [
+                  7.0,
+                  20.0
+                ]
+              ],
+              "content": [
+                0.9429531693458557,
+                1.2239902019500732,
+                1.003448247909546
+              ],
+              "flow": "clamp"
+            }
+          },
+          {
+            "key": "up",
+            "value": {
+              "nodetype": "multibinning",
+              "inputs": [
+                "eta",
+                "pt"
+              ],
+              "edges": [
+                [
+                  -1.566,
+                  -1.444,
+                  1.444,
+                  1.566
+                ],
+                [
+                  7.0,
+                  20.0
+                ]
+              ],
+              "content": [
+                1.0446133613586426,
+                3.6719706058502197,
+                1.1468623876571655
+              ],
+              "flow": "clamp"
+            }
+          },
+          {
+            "key": "down",
+            "value": {
+              "nodetype": "multibinning",
+              "inputs": [
+                "eta",
+                "pt"
+              ],
+              "edges": [
+                [
+                  -1.566,
+                  -1.444,
+                  1.444,
+                  1.566
+                ],
+                [
+                  7.0,
+                  20.0
+                ]
+              ],
+              "content": [
+                0.8412929773330688,
+                -1.2239902019500732,
+                0.860034167766571
               ],
               "flow": "clamp"
             }
@@ -1624,7 +1858,7 @@
     },
     {
       "name": "2024",
-      "description": "2024 HZZ electron ID SFs (preliminary)",
+      "description": "2024 HZZ electron ID SFs (-1.5 < eta < 0 and -1.2 < phi < -0.8)",
       "version": 1,
       "inputs": [
         {
@@ -1939,6 +2173,123 @@
                 0.9221376776695251,
                 0.927598774433136,
                 0.9488508105278015
+              ],
+              "flow": "clamp"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "2024_Gap",
+      "description": "2024 HZZ electron ID SFs (1.444 < |eta| < 1.556)",
+      "version": 1,
+      "inputs": [
+        {
+          "name": "eta",
+          "type": "real",
+          "description": "Electron eta"
+        },
+        {
+          "name": "pt",
+          "type": "real",
+          "description": "Electron pT [GeV]"
+        },
+        {
+          "name": "systematic",
+          "type": "string",
+          "description": "nominal/up/down"
+        }
+      ],
+      "output": {
+        "name": "weight",
+        "type": "real",
+        "description": "HZZ ID scale factor"
+      },
+      "data": {
+        "nodetype": "category",
+        "input": "systematic",
+        "content": [
+          {
+            "key": "nominal",
+            "value": {
+              "nodetype": "multibinning",
+              "inputs": [
+                "eta",
+                "pt"
+              ],
+              "edges": [
+                [
+                  -1.566,
+                  -1.444,
+                  1.444,
+                  1.566
+                ],
+                [
+                  7.0,
+                  20.0
+                ]
+              ],
+              "content": [
+                0.9901242256164551,
+                1.197862982749939,
+                0.977652907371521
+              ],
+              "flow": "clamp"
+            }
+          },
+          {
+            "key": "up",
+            "value": {
+              "nodetype": "multibinning",
+              "inputs": [
+                "eta",
+                "pt"
+              ],
+              "edges": [
+                [
+                  -1.566,
+                  -1.444,
+                  1.444,
+                  1.566
+                ],
+                [
+                  7.0,
+                  20.0
+                ]
+              ],
+              "content": [
+                1.0193660259246826,
+                2.395725965499878,
+                1.00115966796875
+              ],
+              "flow": "clamp"
+            }
+          },
+          {
+            "key": "down",
+            "value": {
+              "nodetype": "multibinning",
+              "inputs": [
+                "eta",
+                "pt"
+              ],
+              "edges": [
+                [
+                  -1.566,
+                  -1.444,
+                  1.444,
+                  1.566
+                ],
+                [
+                  7.0,
+                  20.0
+                ]
+              ],
+              "content": [
+                0.9608824849128723,
+                0.0,
+                0.954146146774292
               ],
               "flow": "clamp"
             }
