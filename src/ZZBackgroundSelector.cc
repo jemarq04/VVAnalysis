@@ -42,6 +42,19 @@ void ZZBackgroundSelector::SetupNewDirectory() {
   AddObject<TH1D>(Z2MassHistPPPF_, ("Z2Mass_PPPF_" + channelName_).c_str(), "Z2Mass; m_{Z_{2}} [GeV]; Events;", 60, 0, 120);
   AddObject<TH1D>(Z2MassHistPPFF_, ("Z2Mass_PPFF_" + channelName_).c_str(), "Z2Mass; m_{Z_{2}} [GeV]; Events;", 60, 0, 120);
 
+  //AddObject<TH1D>(LepEtaPPPF_, ("LepEta_PPPF_" + channelName_).c_str(), "LepEta;Lepton #eta;Events", 15, -2.5, 2.5);
+  //AddObject<TH1D>(LepEtaPPFF_, ("LepEta_PPFF_" + channelName_).c_str(), "LepEta;Lepton #eta;Events", 15, -2.5, 2.5);
+  //AddObject<TH1D>(LepPhiPPPF_, ("LepPhi_PPPF_" + channelName_).c_str(), "LepPhi;Lepton #phi;Events", 20, -3.2, 3.2);
+  //AddObject<TH1D>(LepPhiPPFF_, ("LepPhi_PPFF_" + channelName_).c_str(), "LepPhi;Lepton #phi;Events", 20, -3.2, 3.2);
+  //AddObject<TH1D>(Z1LepEtaPPPF_, ("Z1LepEta_PPPF_" + channelName_).c_str(), "Z1LepEta;Lepton #eta;Events", 15, -2.5, 2.5);
+  //AddObject<TH1D>(Z1LepEtaPPFF_, ("Z1LepEta_PPFF_" + channelName_).c_str(), "Z1LepEta;Lepton #eta;Events", 15, -2.5, 2.5);
+  //AddObject<TH1D>(Z1LepPhiPPPF_, ("Z1LepPhi_PPPF_" + channelName_).c_str(), "Z1LepPhi;Lepton #phi;Events", 20, -3.2, 3.2);
+  //AddObject<TH1D>(Z1LepPhiPPFF_, ("Z1LepPhi_PPFF_" + channelName_).c_str(), "Z1LepPhi;Lepton #phi;Events", 20, -3.2, 3.2);
+  //AddObject<TH1D>(Z2LepEtaPPPF_, ("Z2LepEta_PPPF_" + channelName_).c_str(), "Z2LepEta;Lepton #eta;Events", 15, -2.5, 2.5);
+  //AddObject<TH1D>(Z2LepEtaPPFF_, ("Z2LepEta_PPFF_" + channelName_).c_str(), "Z2LepEta;Lepton #eta;Events", 15, -2.5, 2.5);
+  //AddObject<TH1D>(Z2LepPhiPPPF_, ("Z2LepPhi_PPPF_" + channelName_).c_str(), "Z2LepPhi;Lepton #phi;Events", 20, -3.2, 3.2);
+  //AddObject<TH1D>(Z2LepPhiPPFF_, ("Z2LepPhi_PPFF_" + channelName_).c_str(), "Z2LepPhi;Lepton #phi;Events", 20, -3.2, 3.2);
+
   AddObject<TH1D>(MassFullHistPPPF_, ("MassFull_PPPF_" + channelName_).c_str(), "Mass; m_{4l} [GeV]; Events;", 40, 70, 870);
   AddObject<TH1D>(MassFullHistPPFF_, ("MassFull_PPFF_" + channelName_).c_str(), "Mass; m_{4l} [GeV]; Events;", 40, 70, 870);
   AddObject<TH1D>(Z1MassFullHistPPPF_, ("Z1MassFull_PPPF_" + channelName_).c_str(), "Z1Mass; m_{Z_{1}} [GeV]; Events;", 60, 0, 120);
@@ -82,6 +95,23 @@ float ZZBackgroundSelector::getEventWeight(Long64_t entry) {
       Z1MassHistPPPF_->Fill(Z1Mass, weight);
       Z2MassHistPPPF_->Fill(Z2Mass, weight);
       MassHistPPPF_->Fill(Mass, weight);
+
+      //LepEtaPPPF_->Fill(l1Eta, weight);
+      //LepEtaPPPF_->Fill(l2Eta, weight);
+      //LepEtaPPPF_->Fill(l3Eta, weight);
+      //LepEtaPPPF_->Fill(l4Eta, weight);
+      //LepPhiPPPF_->Fill(l1Phi, weight);
+      //LepPhiPPPF_->Fill(l2Phi, weight);
+      //LepPhiPPPF_->Fill(l3Phi, weight);
+      //LepPhiPPPF_->Fill(l4Phi, weight);
+      //Z1LepEtaPPPF_->Fill(l1Eta, weight);
+      //Z1LepEtaPPPF_->Fill(l2Eta, weight);
+      //Z2LepEtaPPPF_->Fill(l3Eta, weight);
+      //Z2LepEtaPPPF_->Fill(l4Eta, weight);
+      //Z1LepPhiPPPF_->Fill(l1Phi, weight);
+      //Z1LepPhiPPPF_->Fill(l2Phi, weight);
+      //Z2LepPhiPPPF_->Fill(l3Phi, weight);
+      //Z2LepPhiPPPF_->Fill(l4Phi, weight);
     }
     Z1MassFullHistPPPF_->Fill(Z1Mass, weight);
     Z2MassFullHistPPPF_->Fill(Z2Mass, weight);
@@ -96,6 +126,23 @@ float ZZBackgroundSelector::getEventWeight(Long64_t entry) {
       Z1MassHistPPFF_->Fill(Z1Mass, weight);
       Z2MassHistPPFF_->Fill(Z2Mass, weight);
       MassHistPPFF_->Fill(Mass, weight);
+
+      //LepEtaPPFF_->Fill(l1Eta, weight);
+      //LepEtaPPFF_->Fill(l2Eta, weight);
+      //LepEtaPPFF_->Fill(l3Eta, weight);
+      //LepEtaPPFF_->Fill(l4Eta, weight);
+      //LepPhiPPFF_->Fill(l1Phi, weight);
+      //LepPhiPPFF_->Fill(l2Phi, weight);
+      //LepPhiPPFF_->Fill(l3Phi, weight);
+      //LepPhiPPFF_->Fill(l4Phi, weight);
+      //Z1LepEtaPPFF_->Fill(l1Eta, weight);
+      //Z1LepEtaPPFF_->Fill(l2Eta, weight);
+      //Z2LepEtaPPFF_->Fill(l3Eta, weight);
+      //Z2LepEtaPPFF_->Fill(l4Eta, weight);
+      //Z1LepPhiPPFF_->Fill(l1Phi, weight);
+      //Z1LepPhiPPFF_->Fill(l2Phi, weight);
+      //Z2LepPhiPPFF_->Fill(l3Phi, weight);
+      //Z2LepPhiPPFF_->Fill(l4Phi, weight);
     }
     Z1MassFullHistPPFF_->Fill(Z1Mass, weight);
     Z2MassFullHistPPFF_->Fill(Z2Mass, weight);

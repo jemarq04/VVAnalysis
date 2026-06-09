@@ -18,6 +18,19 @@ public:
   //4lMass Histogram
   TH1D* MassHistPPPF_;
   TH1D* MassHistPPFF_;
+  //Lepton kinematics
+  //TH1D* LepEtaPPPF_;
+  //TH1D* LepEtaPPFF_;
+  //TH1D* LepPhiPPPF_;
+  //TH1D* LepPhiPPFF_;
+  //TH1D* Z1LepEtaPPPF_;
+  //TH1D* Z1LepEtaPPFF_;
+  //TH1D* Z1LepPhiPPPF_;
+  //TH1D* Z1LepPhiPPFF_;
+  //TH1D* Z2LepEtaPPPF_;
+  //TH1D* Z2LepEtaPPFF_;
+  //TH1D* Z2LepPhiPPPF_;
+  //TH1D* Z2LepPhiPPFF_;
   //Full Mass
   TH1D* Z1MassFullHistPPPF_;
   TH1D* Z1MassFullHistPPFF_;
