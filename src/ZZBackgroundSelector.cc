@@ -68,6 +68,9 @@ void ZZBackgroundSelector::SetupNewDirectory() {
 float ZZBackgroundSelector::getEventWeight(Long64_t entry) {
   float evtwgt = 0;
 
+  if (l1PdgId * l2PdgId > 0 || l3PdgId * l4PdgId > 0)
+    return evtwgt;
+
   if (channel_ == mmee && (e1e2IsZ1()))
     WeightsHistmmee_->Fill(1, weight);
 
@@ -233,6 +236,7 @@ void ZZBackgroundSelector::SetZ1Z2Masses() {
   TLorentzVector lepton4;
   lepton4.SetPtEtaPhiM(l4Pt, l4Eta, l4Phi, l4Mass);
   if (tightZ1Leptons() && !tightZ2Leptons()) {
+    //PPPF or PPFP
     Z1Mass = (lepton1 + lepton2).M();
     Z2Mass = (lepton3 + lepton4).M();
     Z1Pt = (lepton1 + lepton2).Pt();
@@ -245,8 +249,12 @@ void ZZBackgroundSelector::SetZ1Z2Masses() {
       float templ3Eta = l3Eta;
       l3Eta = l4Eta;
       l4Eta = templ3Eta;
+      float templ3PdgId = l3PdgId;
+      l3PdgId = l4PdgId;
+      l4PdgId = templ3PdgId;
     }
   } else if (tightZ2Leptons() && !tightZ1Leptons()) {
+    //FPPP or PFPP
     Z1Mass = (lepton3 + lepton4).M();
     Z2Mass = (lepton1 + lepton2).M();
     Z1Pt = (lepton3 + lepton4).Pt();
@@ -264,6 +272,12 @@ void ZZBackgroundSelector::SetZ1Z2Masses() {
     float templ2Eta = l2Eta;
     l2Eta = l4Eta;
     l4Eta = templ2Eta;
+    float templ1PdgId = l1PdgId;
+    l1PdgId = l3PdgId;
+    l3PdgId = templ1PdgId;
+    float templ2PdgId = l2PdgId;
+    l2PdgId = l4PdgId;
+    l4PdgId = templ2PdgId;
     //Now we have two fakes identified by l3Pt, l4Pt and l3Eta, l4Eta
     //Further special condition between l3,l4 which one to use for l4fake rate in PPPF region, their IDs still are labeled l1IsTight,l2IsTight
     if (Z1FP()) {
@@ -273,12 +287,15 @@ void ZZBackgroundSelector::SetZ1Z2Masses() {
       float templ3Eta = l3Eta;
       l3Eta = l4Eta;
       l4Eta = templ3Eta;
+      float templ3PdgId = l3PdgId;
+      l3PdgId = l4PdgId;
+      l4PdgId = templ3PdgId;
     }
   }
   //The last two conditions only matter for TTJets fakes (very small amount)
   else if (Z1FP() && Z2PF()) {
     //Make sure I am not making a Z in eemm with an e and mu!
-    if ((channel_ == eeee || channel_ == mmmm) && l1PdgId * l4PdgId < 0) {
+    if ((channel_ == eeee || channel_ == mmmm)) {
       Z1Mass = (lepton2 + lepton3).M();
       Z2Mass = (lepton1 + lepton4).M();
       Z1Pt = (lepton2 + lepton3).Pt();
@@ -290,10 +307,13 @@ void ZZBackgroundSelector::SetZ1Z2Masses() {
       float templ1Eta = l1Eta;
       l1Eta = l3Eta;
       l3Eta = templ1Eta;
+      float templ1PdgId = l1PdgId;
+      l1PdgId = l3PdgId;
+      l3PdgId = templ1PdgId;
     }
   } else if (Z1PF() && Z2FP()) {
     //Make sure I am not making a Z in eemm with an e and mu!
-    if ((channel_ == eeee || channel_ == mmmm) && l1PdgId * l4PdgId < 0) {
+    if ((channel_ == eeee || channel_ == mmmm)) {
       Z1Mass = (lepton1 + lepton4).M();
       Z2Mass = (lepton2 + lepton3).M();
       Z1Pt = (lepton1 + lepton4).Pt();
@@ -305,9 +325,12 @@ void ZZBackgroundSelector::SetZ1Z2Masses() {
       float templ2Eta = l2Eta;
       l2Eta = l4Eta;
       l4Eta = templ2Eta;
+      float templ2PdgId = l2PdgId;
+      l2PdgId = l4PdgId;
+      l4PdgId = templ2PdgId;
     }
   } else if (Z1PF() && Z2PF()) {
-    if ((channel_ == eeee || channel_ == mmmm) && l1PdgId * l3PdgId < 0) {
+    if ((channel_ == eeee || channel_ == mmmm)) {
       //std::cout<<"Z1PF() && Z2PF()) loop enter "<<std::endl;
       Z1Mass = (lepton1 + lepton3).M();
       Z2Mass = (lepton2 + lepton4).M();
@@ -320,9 +343,12 @@ void ZZBackgroundSelector::SetZ1Z2Masses() {
       float templ2Eta = l2Eta;
       l2Eta = l3Eta;
       l3Eta = templ2Eta;
+      float templ2PdgId = l2PdgId;
+      l2PdgId = l3PdgId;
+      l3PdgId = templ2PdgId;
     }
   } else if (Z1FP() && Z2FP()) {
-    if ((channel_ == eeee || channel_ == mmmm) && l1PdgId * l3PdgId < 0) {
+    if ((channel_ == eeee || channel_ == mmmm)) {
       //std::cout<<"Z1FP() && Z2FP()) loop enter "<<std::endl;
       Z1Mass = (lepton2 + lepton4).M();
       Z2Mass = (lepton1 + lepton3).M();
@@ -335,6 +361,9 @@ void ZZBackgroundSelector::SetZ1Z2Masses() {
       float templ1Eta = l1Eta;
       l1Eta = l4Eta;
       l4Eta = templ1Eta;
+      float templ1PdgId = l1PdgId;
+      l1PdgId = l4PdgId;
+      l4PdgId = templ1PdgId;
     }
   }
 }
