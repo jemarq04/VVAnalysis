@@ -1294,6 +1294,10 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
       //SafeHistFill(weighthistMap1D_, getHistName("Lep2Energy", variation.second), l2Energy, i, lheweight);
       //SafeHistFill(weighthistMap1D_, getHistName("Lep3Energy", variation.second), l3Energy, i, lheweight);
       //SafeHistFill(weighthistMap1D_, getHistName("Lep4Energy", variation.second), l4Energy, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("LepPt1", variation.second), l1Pt, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("LepPt2", variation.second), l2Pt, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("LepPt3", variation.second), l3Pt, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("LepPt4", variation.second), l4Pt, i, lheweight);
       SafeHistFill(weighthistMap1D_, getHistName("LepPt", variation.second), l1Pt, i, lheweight);
       SafeHistFill(weighthistMap1D_, getHistName("LepPt", variation.second), l2Pt, i, lheweight);
       SafeHistFill(weighthistMap1D_, getHistName("LepPt", variation.second), l3Pt, i, lheweight);
