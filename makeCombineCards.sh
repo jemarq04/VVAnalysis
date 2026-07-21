@@ -2,7 +2,7 @@
 
 [[ -z $1 ]] && outdir=CombineCards || outdir=$1
 
-years="2022 2023 2024"
+years="2022 2023 2024 2025"
 for year in $years; do
   echo Making datacard for $year
 

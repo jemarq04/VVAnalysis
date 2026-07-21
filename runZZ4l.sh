@@ -12,7 +12,7 @@ elif [[ $# -eq 2 && ! -f $2 ]]; then
 fi
 
 years=$1
-[[ $years = all ]] && years="2022 2023 2024"
+[[ $years = all ]] && years="2022 2023 2024 2025"
 
 for year in $years; do
   frfile=data/fakeScaleFactorsRun3-ZZ4l$year.root

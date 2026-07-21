@@ -8,7 +8,7 @@ if [[ $# -ne 1 ]]; then
 fi
 
 years=$1
-[[ $years = all ]] && years="2022 2023 2024"
+[[ $years = all ]] && years="2022 2023 2024 2025"
 
 for year in $years; do
   echo "Making fake rate for $year"
