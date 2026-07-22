@@ -114,7 +114,7 @@ def main():
             systematics_lnN[key] = dict.fromkeys(all_procs, vals[args.year])
     else:
         systematics_lnN["lumi_13p6TeV"] = dict.fromkeys(all_procs, "1.010")
-        systematics_lnN[f"lumi_13p6TeV_{args.year}"] = dict.fromkeys(all_procs, lumiUncMap[args.year])
+        systematics_lnN[f"lumi_13p6TeV_{args.year}"] = dict.fromkeys(all_procs, f"{lumiUncMap[args.year]:.3f}")
 
     # Add systematics by supplying
     #  - the name of the systematic (e.g. CMS_eff_e)
