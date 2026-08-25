@@ -47,16 +47,19 @@ def main():
             2022: "1.0138",
             2023: "1.0017",
             2024: "1.0020",
+            2025: "-",
         },
         "lumi_2": {
             2022: "-",
             2023: "1.0127",
             2024: "1.0068",
+            2025: "-",
         },
         "lumi_3": {
             2022: "-",
             2023: "-",
             2024: "1.0144",
+            2025: "-",
         },
     }
 
@@ -112,6 +115,8 @@ def main():
     if args.lumiMatrix:
         for key, vals in lumiMatrix.items():
             systematics_lnN[key] = dict.fromkeys(all_procs, vals[args.year])
+        if args.year == 2025:
+            systematics_lnN[f"lumi_13p6TeV_{args.year}"] = dict.fromkeys(all_procs, f"{lumiUncMap[args.year]:.3f}")
     else:
         systematics_lnN["lumi_13p6TeV"] = dict.fromkeys(all_procs, "1.010")
         systematics_lnN[f"lumi_13p6TeV_{args.year}"] = dict.fromkeys(all_procs, f"{lumiUncMap[args.year]:.3f}")
