@@ -600,7 +600,7 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
         line.Draw("same")
 
         Altyaxis = ROOT.TGaxis(hUnf.GetXaxis().GetXmin(),ratioErrorBand.GetMinimum(),hUnf.GetXaxis().GetXmin(),ratioErrorBand.GetMaximum(),ratioErrorBand.GetMinimum(),ratioErrorBand.GetMaximum())
-        Altyaxis.SetNdivisions(003)
+        Altyaxis.SetNdivisions(3)
         Altyaxis.SetTitle("Data/Theo")
         Altyaxis.SetLabelFont(42)
         Altyaxis.SetLabelOffset(0.01)
@@ -647,7 +647,7 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
         xaxis.Draw("SAME")
 
         yaxis = ROOT.TGaxis(hUnf.GetXaxis().GetXmin(),ratioErrorBand.GetMinimum(),hUnf.GetXaxis().GetXmin(),ratioErrorBand.GetMaximum(),ratioErrorBand.GetMinimum(),ratioErrorBand.GetMaximum())
-        yaxis.SetNdivisions(003)
+        yaxis.SetNdivisions(3)
         yaxis.SetTitle("Data/Theo")
         yaxis.SetLabelFont(42)
         yaxis.SetLabelOffset(0.01)
