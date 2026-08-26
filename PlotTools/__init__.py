@@ -1,8 +1,8 @@
 from math import sqrt
 from numbers import Number
 
-from pdfViaTex import pdfViaTex
-from PlotStyle import PlotStyle
+from .pdfViaTex import pdfViaTex
+from .PlotStyle import PlotStyle
 from rootpy.plotting import Graph as _Graph
 from rootpy.plotting import HistStack as _HistStack
 from rootpy.plotting import Legend as _Legend

@@ -65,14 +65,14 @@ class RooUnfoldResponse:
         # Truth distribution as a TVectorD
         if not self._vTru:
             self._vTru = RooUnfoldResponse.H2V(self._tru, self._nt, self._overflow)
-            self._cached = True if self._vTru else False
+            self._cached = self._vTru
         return self._vTru
 
     def Vfakes(self):
         # Fakes distribution as a TVectorD
         if not self._vFak:
             self._vFak = RooUnfoldResponse.H2V(self._fak, self._nm, self._overflow)
-            self._cached = True if self._vFak else False
+            self._cached = self._vFak
         return self._vFak
 
     def GetNbinsMeasured(self):
@@ -148,7 +148,7 @@ class RooUnfoldResponse:
                 " X ",
                 self._res.GetNbinsY(),
             )
-            raise Exception("Something wrong in dimension")
+            raise ValueError("Something wrong in dimension")
 
         first = 1
         nm = self._nm
@@ -161,7 +161,7 @@ class RooUnfoldResponse:
             nt += 2
 
         if not measured or self._mes.GetEntries() == 0.0:
-            raise Exception("No measured hist content")
+            raise ValueError("No measured hist content")
         else:
             # Fill fakes from the difference of self._mes - self._res.ProjectionX()
             # Always include under/overflows in sum of truth.
@@ -191,7 +191,7 @@ class RooUnfoldResponse:
             self._fak.SetEntries(self._fak.GetEffectiveEntries())  # 0 entries if 0 fakes
 
         if not truth or self._tru.GetEntries() == 0.0:
-            raise Exception("No truth hist content")
+            raise ValueError("No truth hist content")
 
 
 class RooUnfold:
@@ -280,7 +280,7 @@ class RooUnfold:
                 print("waiting for implemeation:_variances")
                 # reco.SetBinError (j, math.sqrt (abs(self._variances(i))))
             elif withError == "kCovariance" or withError == "kCovToy":
-                raise Exception("Error type not implemented")
+                raise ValueError("Error type not implemented")
                 # reco.SetBinError (j, math.sqrt (abs (_err_mat(i,i))));
         return reco
 
@@ -297,7 +297,7 @@ class RooUnfold:
                 or self._meas.GetNbinsY() != rmeas.GetNbinsY()
                 or self._meas.GetNbinsZ() != rmeas.GetNbinsZ()
             ):
-                raise Exception("data dimension different from response matrix reco dimension")
+                raise ValueError("data dimension different from response matrix reco dimension")
             self.Unfold()
             if not self._unfolded:
                 self._fail = True
@@ -307,7 +307,7 @@ class RooUnfold:
         self._withError = withError
 
         if getWeights and (withError == "kErrors" or withError == "kCovariance"):
-            raise Exception("GetWeight not implemented")  # shouldn't enter this case by current settings
+            raise ValueError("GetWeight not implemented")  # shouldn't enter this case by current settings
             # if (not self._haveWgt):
             #    GetWgt()
             # ok= self._haveWgt
@@ -322,7 +322,7 @@ class RooUnfold:
                 ok = True
                 # ok= self._haveErrors
             else:
-                raise Exception("Other error type not implemented")
+                raise ValueError("Other error type not implemented")
 
         if not ok:
             self._fail = True
@@ -487,7 +487,7 @@ class RooUnfoldBayes(RooUnfold):
 
         for kiter in range(self._niter):
             if self._verbose >= 1:
-                print("Iteration : %s" % kiter)
+                print("Iteration :", kiter)
 
             # pdate prior from previous iteration
             if kiter > 0:
@@ -551,6 +551,6 @@ class RooUnfoldBayes(RooUnfold):
             # Chi2 based on Poisson errors
             chi2 = self.getChi2(PbarCi, self._P0C, self._nbartrue)
             if self._verbose >= 1:
-                print("Chi^2 of change %s" % chi2)
+                print("Chi^2 of change", chi2)
 
             # and repeat

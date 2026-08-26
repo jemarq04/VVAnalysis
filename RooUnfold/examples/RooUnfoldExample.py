@@ -15,10 +15,7 @@ if len(sys.argv) > 1:
 import ROOT
 from ROOT import TH1D, gRandom
 
-try:
-    cout = ROOT.std.cout  # This seems to work better in ROOT 6.22
-except:
-    cout = ROOT.cout
+cout = ROOT.std.cout  # This seems to work better in ROOT 6.22
 
 # ==============================================================================
 #  Gaussian smearing, systematic translation, and variable inefficiency
@@ -42,10 +39,10 @@ ROOT.gROOT.SetBatch(True)
 
 response = ROOT.RooUnfoldResponse(40, -10.0, 10.0)
 #  Train with a Breit-Wigner, mean 0.3 and width 2.5.
-for i in range(100000):
+for _ in range(100000):
     xt = gRandom.BreitWigner(0.3, 2.5)
     x = smear(xt)
-    if x != None:
+    if x is not None:
         response.Fill(x, xt)
     else:
         response.Miss(xt)
@@ -53,11 +50,11 @@ for i in range(100000):
 hTrue = TH1D("true", "Test Truth", 40, -10.0, 10.0)
 hMeas = TH1D("meas", "Test Measured", 40, -10.0, 10.0)
 #  Test with a Gaussian, mean 0 and width 2.
-for i in range(10000):
+for _ in range(10000):
     xt = gRandom.Gaus(0.0, 2.0)
     x = smear(xt)
     hTrue.Fill(xt)
-    if x != None:
+    if x is not None:
         hMeas.Fill(x)
 
 if method == "bayes":

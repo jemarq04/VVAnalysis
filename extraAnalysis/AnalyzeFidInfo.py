@@ -172,7 +172,7 @@ varstr = "nJets mjj dEtajj jetPt[0] jetPt[1] absjetEta[0] absjetEta[1] MassAllj 
 vars = varstr.split(" ")
 # vars = ["jetPt[0]"]
 
-outdir = "%sFidPlots" % year
+outdir = f"{year}FidPlots"
 pdfcommand = ["convert"]
 pdfcommand2 = ["convert"]
 
@@ -183,7 +183,7 @@ with open("varsFile.json") as var_json_file:
     myvar_dict = json.load(var_json_file)
 units = {}
 prettyVars = {}
-for key in myvar_dict.keys():  # key is the variable
+for key in myvar_dict:  # key is the variable
     units[key] = myvar_dict[key]["units"]
     prettyVars[key] = myvar_dict[key]["prettyVars"]
 
@@ -193,14 +193,14 @@ dict = {}
 for var in vars:
     dict[var] = {}
     for chan in channels:
-        hR = fin.Get("FidInfoRECO_%s_%s" % (var, chan))
-        hRsp = fin.Get("FidInfoResp_%s_%s" % (var, chan))
-        hT = fin.Get("FidInfoTruth_%s_%s" % (var, chan))
+        hR = fin.Get(f"FidInfoRECO_{var}_{chan}")
+        hRsp = fin.Get(f"FidInfoResp_{var}_{chan}")
+        hT = fin.Get(f"FidInfoTruth_{var}_{chan}")
         if chan == channels[0]:
             dict[var]["Total"] = [
-                hR.Clone("tot_RECO_%s" % var),
-                hT.Clone("tot_Truth_%s" % var),
-                hRsp.Clone("tot_Resp_%s" % var),
+                hR.Clone(f"tot_RECO_{var}"),
+                hT.Clone(f"tot_Truth_{var}"),
+                hRsp.Clone(f"tot_Resp_{var}"),
             ]
         else:
             dict[var]["Total"][0].Add(hR)
@@ -253,9 +253,7 @@ for var in vars:
 
         portionR, legend1 = plotHist(hR, hdx, "Total signal", "Out of fiducial")
         t1, t2, t3 = getLumiTextBox()
-        tex1, ratio1 = titleAndRatio(
-            "RECO Events %s" % chanp, "Out of fiducial portion %s" % (round(portionR, 3)), 0.58
-        )
+        tex1, ratio1 = titleAndRatio(f"RECO Events {chanp}", f"Out of fiducial portion {round(portionR, 3)}", 0.58)
         xa1 = redrawXaxis(hdx, var)
 
         if "Full" in var:
@@ -278,9 +276,7 @@ for var in vars:
 
         portionT, legend2 = plotHist(hT, hdy, "Total signal", "Not reconstructed")
         t4, t5, t6 = getLumiTextBox()
-        tex2, ratio2 = titleAndRatio(
-            "Truth Events %s" % chanp, "Non-reconstructed portion %s" % (round(portionT, 3)), 0.52
-        )
+        tex2, ratio2 = titleAndRatio(f"Truth Events {chanp}", f"Non-reconstructed portion {round(portionT, 3)}", 0.52)
         xa2 = redrawXaxis(hdy, var)
 
         if "Full" in var:
@@ -293,12 +289,12 @@ for var in vars:
         if "[1]" in var:
             texf2 = extraTex(0.65, 0.7, "Events with #geq 2 jets")
 
-        c1.SaveAs(os.path.join(outdir, "%s_%s.png" % (var, chan)))
+        c1.SaveAs(os.path.join(outdir, f"{var}_{chan}.png"))
 
         # if chan == "Total":
-        pdfcommand.append(os.path.join(outdir, "%s_%s.png" % (var, chan)))
+        pdfcommand.append(os.path.join(outdir, f"{var}_{chan}.png"))
         # else:
-        #    pdfcommand2.append(os.path.join(outdir,"%s_%s.png"%(var,chan)))
+        #    pdfcommand2.append(os.path.join(outdir,f"{var}_{chan}.png")
 
         c1.Clear()
 
@@ -307,7 +303,7 @@ if year != "tot":
     yearp = "20" + year
 else:
     yearp = "Run2"
-pdfcommand.append(os.path.join("./", "%s.pdf" % yearp))
+pdfcommand.append(os.path.join("./", f"{yearp}.pdf"))
 # pdfcommand2.append(os.path.join(outdir,"channels.pdf"))
 subprocess.call(pdfcommand)
 # subprocess.call(pdfcommand2)

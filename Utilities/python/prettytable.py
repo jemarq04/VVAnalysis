@@ -31,7 +31,7 @@ import cgi
 import copy
 import sys
 
-import cPickle
+import pickle
 
 FRAME = 0
 ALL = 1
@@ -104,8 +104,8 @@ class PrettyTable:
             self.widths = [len(field) for field in fields]
             for row in self.rows:
                 for i in range(len(row)):
-                    if len(unicode(row[i])) > self.widths[i]:
-                        self.widths[i] = len(unicode(row[i]))
+                    if len(str(row[i])) > self.widths[i]:
+                        self.widths[i] = len(str(row[i]))
         else:
             self.widths = [len(field) for field in fields]
         self.fields = fields
@@ -138,8 +138,8 @@ class PrettyTable:
 
         try:
             assert int(padding_width) >= 0
-        except AssertionError:
-            raise Exception("Invalid value for padding_width: %s!" % unicode(padding_width))
+        except AssertionError as err:
+            raise Exception("Invalid value for padding_width: %s!" % str(padding_width)) from err
 
         self.padding_width = padding_width
         self.cache = {}
@@ -153,9 +153,9 @@ class PrettyTable:
         left_padding - number of spaces, must be a positive integer"""
 
         try:
-            assert left_padding == None or int(left_padding) >= 0
-        except AssertionError:
-            raise Exception("Invalid value for left_padding: %s!" % unicode(left_padding))
+            assert left_padding is None or int(left_padding) >= 0
+        except AssertionError as err:
+            raise Exception("Invalid value for left_padding: %s!" % str(left_padding)) from err
 
         self.left_padding = left_padding
         self.cache = {}
@@ -169,9 +169,9 @@ class PrettyTable:
         right_padding - number of spaces, must be a positive integer"""
 
         try:
-            assert right_padding == None or int(right_padding) >= 0
-        except AssertionError:
-            raise Exception("Invalid value for right_padding: %s!" % unicode(right_padding))
+            assert right_padding is None or int(right_padding) >= 0
+        except AssertionError as err:
+            raise Exception("Invalid value for right_padding: %s!" % str(right_padding)) from err
 
         self.right_padding = right_padding
         self.cache = {}
@@ -211,8 +211,8 @@ class PrettyTable:
             )
         self.rows.append(row)
         for i in range(len(row)):
-            if len(unicode(row[i])) > self.widths[i]:
-                self.widths[i] = len(unicode(row[i]))
+            if len(str(row[i])) > self.widths[i]:
+                self.widths[i] = len(str(row[i]))
         self.html_cache = {}
 
     def add_column(self, fieldname, column, align="c"):
@@ -235,8 +235,8 @@ class PrettyTable:
                 if len(self.rows) < i + 1:
                     self.rows.append([])
                 self.rows[i].append(column[i])
-                if len(unicode(column[i])) > self.widths[-1]:
-                    self.widths[-1] = len(unicode(column[i]))
+                if len(str(column[i])) > self.widths[-1]:
+                    self.widths[-1] = len(str(column[i]))
         else:
             raise Exception("Column length %d does not match number of rows %d!" % (len(column), len(self.rows)))
 
@@ -305,7 +305,7 @@ class PrettyTable:
         hrules - controls printing of horizontal rules after each row.  Allowed values: FRAME, ALL, NONE"""
 
         if self.caching:
-            key = cPickle.dumps((start, end, fields, header, border, hrules, sortby, reversesort))
+            key = pickle.dumps((start, end, fields, header, border, hrules, sortby, reversesort))
             if key in self.cache:
                 return self.cache[key]
 
@@ -319,8 +319,8 @@ class PrettyTable:
             self.widths = [0] * len(self.fields)
             for row in self.rows:
                 for i in range(len(row)):
-                    if len(unicode(row[i])) > self.widths[i]:
-                        self.widths[i] = len(unicode(row[i]))
+                    if len(str(row[i])) > self.widths[i]:
+                        self.widths[i] = len(str(row[i]))
         if header:
             bits.append(self._stringify_header(fields, border, hrules))
         elif border and hrules != NONE:
@@ -343,8 +343,8 @@ class PrettyTable:
             self.widths = old_widths
             for row in self.rows:
                 for i in range(len(row)):
-                    if len(unicode(row[i])) > self.widths[i]:
-                        self.widths[i] = len(unicode(row[i]))
+                    if len(str(row[i])) > self.widths[i]:
+                        self.widths[i] = len(str(row[i]))
 
         return string
 
@@ -403,11 +403,11 @@ class PrettyTable:
             if fields and field not in fields:
                 continue
             if align == "l":
-                bits.append(" " * lpad + unicode(value).ljust(width) + " " * rpad)
+                bits.append(" " * lpad + str(value).ljust(width) + " " * rpad)
             elif align == "r":
-                bits.append(" " * lpad + unicode(value).rjust(width) + " " * rpad)
+                bits.append(" " * lpad + str(value).rjust(width) + " " * rpad)
             else:
-                bits.append(" " * lpad + unicode(value).center(width) + " " * rpad)
+                bits.append(" " * lpad + str(value).center(width) + " " * rpad)
             if border:
                 bits.append(self.vertical_char)
         if border and hrule == ALL:
@@ -477,7 +477,7 @@ class PrettyTable:
         attributes - dictionary of name/value pairs to include as HTML attributes in the <table> tag"""
 
         if self.caching:
-            key = cPickle.dumps((start, end, fields, format, header, border, hrules, sortby, reversesort, attributes))
+            key = pickle.dumps((start, end, fields, format, header, border, hrules, sortby, reversesort, attributes))
             if key in self.html_cache:
                 return self.html_cache[key]
 
@@ -492,7 +492,7 @@ class PrettyTable:
 
         return string
 
-    def _get_simple_html_string(self, start, end, fields, sortby, reversesort, header, border, hrules, attributes):
+    def _get_simple_html_string(self, start, end, fields, sortby, reversesort, _header, border, _hrules, attributes):
 
         bits = []
         # Slow but works
@@ -509,19 +509,19 @@ class PrettyTable:
         for field in self.fields:
             if fields and field not in fields:
                 continue
-            bits.append("        <th>%s</th>" % cgi.escape(unicode(field)))
+            bits.append("        <th>%s</th>" % cgi.escape(str(field)))
         bits.append("    </tr>")
         # Data
         if sortby:
-            rows = self._get_sorted_rows(stard, end, sortby, reversesort)
+            rows = self._get_sorted_rows(start, end, sortby, reversesort)
         else:
             rows = self.rows
-        for row in self.rows:
+        for row in rows:
             bits.append("    <tr>")
             for field, datum in zip(self.fields, row):
                 if fields and field not in fields:
                     continue
-                bits.append("        <td>%s</td>" % cgi.escape(unicode(datum)))
+                bits.append("        <td>%s</td>" % cgi.escape(str(datum)))
         bits.append("    </tr>")
         bits.append("</table>")
         string = "\n".join(bits)
@@ -551,7 +551,7 @@ class PrettyTable:
                     continue
                 bits.append(
                     '        <th style="padding-left: %dem; padding-right: %dem; text-align: center">%s</th>'
-                    % (lpad, rpad, cgi.escape(unicode(field)))
+                    % (lpad, rpad, cgi.escape(str(field)))
                 )
             bits.append("    </tr>")
         # Data
@@ -559,7 +559,7 @@ class PrettyTable:
             rows = self._get_sorted_rows(start, end, sortby, reversesort)
         else:
             rows = self.rows
-        for row in self.rows:
+        for row in rows:
             bits.append("    <tr>")
             for field, align, datum in zip(self.fields, self.aligns, row):
                 if fields and field not in fields:
@@ -567,17 +567,17 @@ class PrettyTable:
                 if align == "l":
                     bits.append(
                         '        <td style="padding-left: %dem; padding-right: %dem; text-align: left">%s</td>'
-                        % (lpad, rpad, cgi.escape(unicode(datum)))
+                        % (lpad, rpad, cgi.escape(str(datum)))
                     )
                 elif align == "r":
                     bits.append(
                         '        <td style="padding-left: %dem; padding-right: %dem; text-align: right">%s</td>'
-                        % (lpad, rpad, cgi.escape(unicode(datum)))
+                        % (lpad, rpad, cgi.escape(str(datum)))
                     )
                 else:
                     bits.append(
                         '        <td style="padding-left: %dem; padding-right: %dem; text-align: center">%s</td>'
-                        % (lpad, rpad, cgi.escape(unicode(datum)))
+                        % (lpad, rpad, cgi.escape(str(datum)))
                     )
         bits.append("    </tr>")
         bits.append("</table>")

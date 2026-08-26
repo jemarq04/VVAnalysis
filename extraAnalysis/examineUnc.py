@@ -12,58 +12,57 @@ def combineYears(l16, l17, l18, w16, w17, w18):
     return lcorr, luncorr
 
 
-def sumListAbs(l):
-    al = [abs(x) for x in l]
+def sumListAbs(vals):
+    al = [abs(x) for x in vals]
     return sum(al)
 
 
 def sqrt_sum(l1, l2):
-    l = [(x**2 + y**2) ** 0.5 for (x, y) in zip(l1, l2)]
-    return l
+    return [(x**2 + y**2) ** 0.5 for (x, y) in zip(l1, l2)]
 
 
 def analyzeYear(var, foldername, froot=None):
     dict = {}
     area = 0.0
-    fname = foldername + "/ErrorInfo_%s.log" % var
+    fname = foldername + f"/ErrorInfo_{var}.log"
 
-    hvar = froot.Get("tot_%s_unf" % var)
+    hvar = froot.Get(f"tot_{var}_unf")
     area1 = hvar.Integral(1, hvar.GetNbinsX())
     # print("area from hist:%s"%area1)
 
-    fin = open(fname)
-    for line in fin:
-        if "Area" in line:
-            area = float(line.strip().split("Area: ")[1])
-            # print("area from text:%s"%area)
-        if "Source Up" in line:
-            ln = line.strip().replace("Source Up ", "")
-            sys = ln.split(":")[0]
-            contstr = (ln.split(":")[1][1:-1]).split(",")
-            cont = [float(x) for x in contstr]
-            dict[sys] = {}  # Up occurs before Dn, so initialize here
-            dict[sys]["Up"] = cont
+    with open(fname) as fin:
+        for line in fin:
+            if "Area" in line:
+                area = float(line.strip().split("Area: ")[1])
+                # print("area from text:%s"%area)
+            if "Source Up" in line:
+                ln = line.strip().replace("Source Up ", "")
+                sys = ln.split(":")[0]
+                contstr = (ln.split(":")[1][1:-1]).split(",")
+                cont = [float(x) for x in contstr]
+                dict[sys] = {}  # Up occurs before Dn, so initialize here
+                dict[sys]["Up"] = cont
 
-        if "Source Dn" in line:
-            ln = line.strip().replace("Source Dn ", "")
-            sys = ln.split(":")[0]
-            contstr = (ln.split(":")[1][1:-1]).split(",")
-            cont = [float(x) for x in contstr]
-            dict[sys]["Dn"] = cont
+            if "Source Dn" in line:
+                ln = line.strip().replace("Source Dn ", "")
+                sys = ln.split(":")[0]
+                contstr = (ln.split(":")[1][1:-1]).split(",")
+                cont = [float(x) for x in contstr]
+                dict[sys]["Dn"] = cont
 
-        if "Source Stat unc" in line:
-            ln = line.strip()
-            sys = "stat"
-            contstr = (ln.split(":")[1][1:-1]).split(",")
-            cont = [float(x) for x in contstr]
-            dict["stat"] = cont
+            if "Source Stat unc" in line:
+                ln = line.strip()
+                sys = "stat"
+                contstr = (ln.split(":")[1][1:-1]).split(",")
+                cont = [float(x) for x in contstr]
+                dict["stat"] = cont
 
-        if "Source pdf unc" in line:
-            ln = line.strip()
-            sys = "pdf"
-            contstr = (ln.split(":")[1][1:-1]).split(",")
-            cont = [float(x) for x in contstr]
-            dict["pdf"] = cont
+            if "Source pdf unc" in line:
+                ln = line.strip()
+                sys = "pdf"
+                contstr = (ln.split(":")[1][1:-1]).split(",")
+                cont = [float(x) for x in contstr]
+                dict["pdf"] = cont
 
     if area == 0.0:
         area = area1
@@ -77,11 +76,10 @@ for var in vars:
     areas[var] = []
     for fd in folders:
         year = fd[0:2]
-        froot = ROOT.TFile("%s/%s.root" % (fd, year))
-        areay, dicty = analyzeYear(var, fd, froot)
-        areas[var].append(areay)
-        totDic[var][year] = dicty
-        froot.Close()
+        with ROOT.TFile(f"{fd}/{year}.root") as froot:
+            areay, dicty = analyzeYear(var, fd, froot)
+            areas[var].append(areay)
+            totDic[var][year] = dicty
 
 dicComb = {}
 jes_list = []
@@ -98,7 +96,7 @@ for var in vars:
     var_jes = 0.0
     tot_corrUp, tot_uncorrUp = [], []
     tot_corrDn, tot_uncorrDn = [], []
-    for sys in totDic[var]["18"].keys():
+    for sys in totDic[var]["18"]:
         if sys == "stat" or sys == "pdf":
             up16 = totDic[var]["16"][sys]
             up17 = totDic[var]["17"][sys]
@@ -184,13 +182,12 @@ vars_sort = vars
 vars_sort = np.take(vars_sort, indjes)
 
 for var in vars_sort:
-    print("====%s===" % var)
-    print("%-10s %-6s uncorr" % (" ", "corr"))
+    print(f"===={var}===")
+    print("{:10} {:6}".format(" ", "corr"))
     fn_sys, fn_corr, fn_uncorr, final_corr, final_uncorr = dicComb[var]
     for i in range(len(fn_sys)):
-        print("%-10s %.4f %.4f" % (fn_sys[i], fn_corr[i], fn_uncorr[i]))
+        print(f"{fn_sys[i]:10} {fn_corr[i]:.4f} {fn_uncorr[i]:.4f}")
 
     print(
-        "Total uncertainty with jes correlated:%.4f uncorrelated:%.4f, relative diff %.4f"
-        % (final_corr, final_uncorr, abs(final_corr - final_uncorr) / final_corr)
+        f"Total uncertainty with jes correlated:{final_corr:.4f} uncorrelated:{final_uncorr:.4f}, relative diff {abs(final_corr - final_uncorr) / final_corr:.4f}"
     )

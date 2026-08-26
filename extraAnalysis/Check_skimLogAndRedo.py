@@ -10,7 +10,7 @@ common_err = (
 # Dir must be the root /nfs_scratch/<user>/<farmout_job_folder> for correct identification of folders
 dir = sys.argv[1]
 redolist = []
-for root, dirs, files in os.walk(dir):
+for root, _, files in os.walk(dir):
     for name in files:
         if "skim-" in name and ".err" in name:
             path = os.path.join(root, name)
@@ -18,8 +18,8 @@ for root, dirs, files in os.walk(dir):
             with open(path) as ferr:
                 for line in ferr:
                     text.append(line.rstrip())
-            if (not text[0] in common_err) or len(text) > 1:
-                print("\nsomething happening with %s" % path)
+            if (text[0] not in common_err) or len(text) > 1:
+                print("\nsomething happening with", path)
                 redolist.append(path.split("/")[1])
                 print("Error Log:")
                 print()
@@ -36,19 +36,19 @@ year = sys.argv[2]
 json_name = sys.argv[3]
 rm_name = "cleanFailed_" + json_name.replace(".json", ".sh")
 
-with open("/hdfs/store/user/hhe62/%s" % rm_name, "w") as frm:
+with open(f"/hdfs/store/user/hhe62/{rm_name}", "w") as frm:
     for item in redolist:
-        frm.write("rm -r %s\n" % item)
+        frm.write(f"rm -r {item}\n")
 
-os.system("chmod u+x /hdfs/store/user/hhe62/%s" % rm_name)
-print("/hdfs/store/user/hhe62/%s created" % rm_name)
+os.system(f"chmod u+x /hdfs/store/user/hhe62/{rm_name}")
+print(f"/hdfs/store/user/hhe62/{rm_name} created")
 
-with open("/hdfs/store/user/hehe/%s" % json_name) as json_file:
+with open(f"/hdfs/store/user/hehe/{json_name}") as json_file:
     obj = json.load(json_file)
 
 # remove dataset that doesn't need resubmit from josn file
 match = False
-for key in obj.keys():
+for key in obj:
     match = False
     for item in redolist:
         if key in item:
@@ -57,14 +57,12 @@ for key in obj.keys():
     if not match:
         del obj[key]
 
-with open("/hdfs/store/user/hehe/Resubmit_%s" % json_name, "w") as output_file:
+with open(f"/hdfs/store/user/hehe/Resubmit_{json_name}", "w") as output_file:
     json.dump(obj, output_file, indent=4)
 
 os.system(
-    "mv /hdfs/store/user/hehe/Resubmit_%s ~/vvanalysis_skim/CMSSW_10_3_1/src/Data_manager/ZZ4lRun2DatasetManager/FileInfo/ZZ4l%s/ntuples.json"
-    % (json_name, year)
+    f"mv /hdfs/store/user/hehe/Resubmit_{json_name} ~/vvanalysis_skim/CMSSW_10_3_1/src/Data_manager/ZZ4lRun2DatasetManager/FileInfo/ZZ4l{year}/ntuples.json"
 )
 print(
-    "New json moved to ~/vvanalysis_skim/CMSSW_10_3_1/src/Data_manager/ZZ4lRun2DatasetManager/FileInfo/ZZ4l%s/ntuples.json"
-    % year
+    "New json moved to ~/vvanalysis_skim/CMSSW_10_3_1/src/Data_manager/ZZ4lRun2DatasetManager/FileInfo/ZZ4l{year}/ntuples.json"
 )

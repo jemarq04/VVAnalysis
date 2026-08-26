@@ -46,7 +46,7 @@ for var in varlist:
     fnames = ["2016Full_MassFull_fixReplicas.root", "2017Full_MassFull.root", "2018Full_MassFull.root"]
     labels = ["2016", "2017", "2018"]
     hists = []
-    histname = "tot_%s_unf" % var
+    histname = f"tot_{var}_unf"
     # pdb.set_trace()
     for fn in fnames:
         f = r.TFile(fn)
@@ -115,12 +115,9 @@ for var in varlist:
     if not os.path.isdir("OverlayPlots"):
         os.mkdir("OverlayPlots")
 
-    try:
-        c1.SaveAs("OverlayPlots/%s_overlayUnfolded.png" % (var))
-    except:
-        print("Problem saving plot.")
+    c1.SaveAs(f"OverlayPlots/{var}_overlayUnfolded.png")
     c1.Clear()
-    pdfcommand.append("OverlayPlots/%s_overlayUnfolded.png" % (var))
+    pdfcommand.append(f"OverlayPlots/{var}_overlayUnfolded.png")
 
 pdfcommand.append("OverlayPlots/overlay_plots.pdf")
 subprocess.call(pdfcommand)

@@ -4,8 +4,8 @@ import os
 from collections import OrderedDict
 
 import ROOT
-from python import ApplySelection
-from python.prettytable import PrettyTable
+from .python import ApplySelection
+from .python.prettytable import PrettyTable
 
 
 def getComLineArgs():
@@ -156,7 +156,7 @@ def skimNtuple(selections, analysis, trigger, filelist, output_file_name, dedupl
             tmpfile.Close()
     writeMetaTreeToFile(output_file, metaTree)
     event_info = PrettyTable(["Selection", "eee", "eem", "emm", "mmm"])
-    for selection, events in event_counts.iteritems():
+    for selection, events in event_counts.items():
         event_info.add_row([selection, events["eee"], events["eem"], events["emm"], events["mmm"]])
     print("\nResults for selection: %s" % selections)
     if deduplicate:

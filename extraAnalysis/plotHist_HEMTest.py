@@ -24,9 +24,9 @@ def checkZeroBin(hist, label):
     print(contents)
     for i in range(1, hist.GetNbinsX() + 1):
         if hist.GetBinContent(i) == 0.0:
-            print("WARNING: %s contains 0 in bin %s" % (label, i))
+            print(f"WARNING: {label} contains 0 in bin {i}")
         if hist.GetBinContent(i) < 0.0:
-            print("WARNING: %s contains negative value in bin %s" % (label, i))
+            print(f"WARNING: {label} contains negative value in bin {i}")
 
 
 pdfcommand = ["convert"]
@@ -58,7 +58,7 @@ for var in varlist:
     fnames = [sys.argv[1], sys.argv[2]]
     labels = ["Unfolded after/before"]
     hists = []
-    unfname = "tot_%s_unf" % var
+    unfname = f"tot_{var}_unf"
     # pdb.set_trace()
     fa = r.TFile(fnames[0])
     fb = r.TFile(fnames[1])
@@ -144,12 +144,9 @@ for var in varlist:
     if not os.path.isdir("HEMPlots"):
         os.mkdir("HEMPlots")
 
-    try:
-        c1.SaveAs("HEMPlots/%s_HEMUnfolded.png" % (var))
-    except:
-        print("Problem saving plot.")
+    c1.SaveAs(f"HEMPlots/{var}_HEMUnfolded.png")
     c1.Clear()
-    pdfcommand.append("HEMPlots/%s_HEMUnfolded.png" % (var))
+    pdfcommand.append(f"HEMPlots/{var}_HEMUnfolded.png")
 
 pdfcommand.append("HEMPlots/HEM_plots.pdf")
 subprocess.call(pdfcommand)

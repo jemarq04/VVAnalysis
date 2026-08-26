@@ -9,16 +9,13 @@ import socket
 import string
 import subprocess
 
-import UserInput
+from . import UserInput
 
-try:
-    import configparser
-except:
-    import ConfigParser as configparser
-    # from six.moves import configparser
+import configparser
+# from six.moves import configparser
 
 
-def get2DBinning(xvar="mjj", yvar="etajj", analysis="WZ"):
+def get2DBinning(xvar="mjj", yvar="etajj", _analysis="WZ"):
     # return (array.array('d', [500, 1000,1500, 2000, 2500]),
     # [0, 150, 300, 450] # for MT(WZ)
     #    return (array.array('d', [500, 1000, 1350, 1750, 2000, 2500]),
@@ -241,14 +238,14 @@ def getListOfFiles(filelist, selection, manager_path="", analysis=""):
     data_info = UserInput.readAllInfo("/".join([data_path, "data/*"]))
     mc_info = UserInput.readAllInfo("/".join([data_path, "montecarlo/*"]))
     analysis_info = UserInput.readInfo("/".join([data_path, analysis, selection])) if analysis != "" else []
-    valid_names = (data_info.keys() + mc_info.keys()) if not analysis_info else analysis_info.keys()
+    valid_names = (list(data_info.keys()) + list(mc_info.keys())) if not analysis_info else list(analysis_info.keys())
     names = []
     for name in filelist:
         if ".root" in name:
             names.append(name)
         elif "WZxsec2016" in name:
             dataset_file = manager_path + "%s/FileInfo/WZxsec2016/%s.json" % (getManagerPath(), selection)
-            allnames = json.load(open(dataset_file)).keys()
+            allnames = list(json.load(open(dataset_file)).keys())
             if "nodata" in name:
                 nodata = [x for x in allnames if "data" not in x]
                 names += nodata
@@ -258,7 +255,7 @@ def getListOfFiles(filelist, selection, manager_path="", analysis=""):
                 names += allnames
         elif "ZZ4l2016" in name:
             dataset_file = manager_path + "ZZ4lRun2DatasetManager/FileInfo/ZZ4l2016/%s.json" % selection
-            allnames = json.load(open(dataset_file)).keys()
+            allnames = list(json.load(open(dataset_file)).keys())
             print(allnames)
             if "nodata" in name:
                 nodata = [x for x in allnames if "data" not in x]
@@ -269,7 +266,7 @@ def getListOfFiles(filelist, selection, manager_path="", analysis=""):
                 names += allnames
         elif "ZZ4l2017" in name:
             dataset_file = manager_path + "ZZ4lRun2DatasetManager/FileInfo/ZZ4l2017/%s.json" % selection
-            allnames = json.load(open(dataset_file)).keys()
+            allnames = list(json.load(open(dataset_file)).keys())
             print(allnames)
             if "nodata" in name:
                 nodata = [x for x in allnames if "data" not in x]
@@ -280,7 +277,7 @@ def getListOfFiles(filelist, selection, manager_path="", analysis=""):
                 names += allnames
         elif "ZZ4l2018" in name:
             dataset_file = manager_path + "ZZ4lRun2DatasetManager/FileInfo/ZZ4l2018/%s.json" % selection
-            allnames = json.load(open(dataset_file)).keys()
+            allnames = list(json.load(open(dataset_file)).keys())
             print(allnames)
             if "nodata" in name:
                 nodata = [x for x in allnames if "data" not in x]
@@ -331,7 +328,7 @@ def getListOfFilesWithXSec(filelist, manager_path="", selection="LooseLeptons"):
             info.update({file_name: 1})
         else:
             file_info = mc_info[file_name.split("__")[0]]
-            kfac = file_info["kfactor"] if "kfactor" in file_info.keys() else 1
+            kfac = file_info["kfactor"] if "kfactor" in file_info else 1
             info.update({file_name: file_info["cross_section"] * kfac})
     return info
 
@@ -344,7 +341,7 @@ def getListOfFilesWithDASPath(filelist, analysis, selection, manager_path=""):
     selection_info = UserInput.readInfo("/".join([data_path, analysis, selection]))
     info = {}
     for file_name in files:
-        if "DAS" not in selection_info[file_name].keys():
+        if "DAS" not in selection_info[file_name]:
             print("ERROR: DAS path not defined for file %s in analysis %s/%s" % (file_name, analysis, selection))
             continue
         info.update({file_name: selection_info[file_name]["DAS"]})
@@ -383,12 +380,12 @@ def getPreviousStep(selection, analysis):
         }
     selection = selection.replace(";", ",")
     first_selection = selection.split(",")[0].strip()
-    if first_selection not in selection_map.keys():
+    if first_selection not in selection_map:
         if "preselection" in first_selection:
             first_selection = "preselection"
         else:
             raise ValueError(
-                "Invalid selection '%s'. Valid selections are:%s" % (first_selection, selection_map.keys())
+                "Invalid selection '%s'. Valid selections are:%s" % (first_selection, list(selection_map.keys()))
             )
     return selection_map[first_selection]
 
@@ -414,7 +411,7 @@ def getInputFilesPath(sample_name, selection, analysis, manager_path=""):
     input_file_name = getConfigFileName(input_file_base_name)
     # print "file_name: ",input_file_name
     input_files = UserInput.readInfo(input_file_name)
-    if sample_name not in input_files.keys():
+    if sample_name not in input_files:
         raise ValueError(
             "Invalid input file %s. Input file must correspond to a definition in %s" % (sample_name, input_file_name)
         )

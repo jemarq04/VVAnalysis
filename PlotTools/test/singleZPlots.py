@@ -174,7 +174,7 @@ for v in binning1l:
 
 
 for chan in ["z", "ze", "zm"]:
-    for varName, var in vars2l[chan].iteritems():
+    for varName, var in vars2l[chan].items():
         print(f"Plotting {chan} {varName}")
 
         hStack = stack.makeHist(var, "", binning2l[varName], mcWeight)
@@ -215,7 +215,7 @@ for chan in ["z", "ze", "zm"]:
         c.Print(f"{outdir}/{chan}{varName}.png")
 
 for chan in ["l", "e", "m"]:
-    for varName, var in vars1l[chan].iteritems():
+    for varName, var in vars1l[chan].items():
         print(f"Plotting {chan} {varName}")
 
         hStack = stack.makeHist(var, "", binning1l[varName], mcWeight)

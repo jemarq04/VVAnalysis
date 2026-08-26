@@ -13,7 +13,13 @@ from os import path as _path
 from os.path import exists as _exists
 from os.path import isdir as _isdir
 
-from Analysis.setupStandardSamples import *
+from Analysis.setupStandardSamples import (
+    standardZZBkg,
+    standardZZMC,
+    standardZZSamples,
+    zzIrreducibleBkg,
+    zzStackSignalOnly,
+)
 from Analysis.weightHelpers import baseMCWeight
 from rootpy.plotting import Canvas, Graph
 from rootpy.plotting.utils import draw
@@ -86,7 +92,7 @@ _xTitles = {
     "deltaRZZ": "\\Delta \\text{R} (\\text{Z}_1, \\text{Z}_2)",
 }
 
-for v, t in _xTitles.iteritems():
+for v, t in _xTitles.items():
     if _units[v]:
         t += f" \\, (\\text{{{{{_units[v]}}}}})"
 
@@ -182,30 +188,28 @@ for jSys in "jer", "jes":
     for shift in "Up", "Down":
         for nj in 1, 2:
             _vars4l[f"jet{nj}Pt_{jSys}{shift}"] = {
-                c: v.replace("jetPt", f"jetPt_{jSys}{shift}") for c, v in _vars4l[f"jet{nj}Pt"].iteritems()
+                c: v.replace("jetPt", f"jetPt_{jSys}{shift}") for c, v in _vars4l[f"jet{nj}Pt"].items()
             }
             _selections4l[f"jet{nj}Pt_{jSys}{shift}"] = _selections4l[f"jet{nj}Pt"].replace(
                 "nJets", f"nJets_{jSys}{shift}"
             )
             _vars4l[f"jet{nj}Eta_{jSys}{shift}"] = {
-                c: v.replace("jetEta", f"jetEta_{jSys}{shift}") for c, v in _vars4l[f"jet{nj}Eta"].iteritems()
+                c: v.replace("jetEta", f"jetEta_{jSys}{shift}") for c, v in _vars4l[f"jet{nj}Eta"].items()
             }
             _selections4l[f"jet{nj}Eta_{jSys}{shift}"] = _selections4l[f"jet{nj}Eta"].replace(
                 "nJets", f"nJets_{jSys}{shift}"
             )
 
-        _vars4l[f"mjj_{jSys}{shift}"] = {
-            c: v.replace("mjj", f"mjj_{jSys}{shift}") for c, v in _vars4l["mjj"].iteritems()
-        }
+        _vars4l[f"mjj_{jSys}{shift}"] = {c: v.replace("mjj", f"mjj_{jSys}{shift}") for c, v in _vars4l["mjj"].items()}
         _selections4l[f"mjj_{jSys}{shift}"] = _selections4l["mjj"].replace("nJets", f"nJets_{jSys}{shift}")
         _vars4l[f"deltaEtajj_{jSys}{shift}"] = {
-            c: v.replace("deltaEtajj", f"deltaEtajj_{jSys}{shift}") for c, v in _vars4l["deltaEtajj"].iteritems()
+            c: v.replace("deltaEtajj", f"deltaEtajj_{jSys}{shift}") for c, v in _vars4l["deltaEtajj"].items()
         }
         _selections4l[f"deltaEtajj_{jSys}{shift}"] = _selections4l["deltaEtajj"].replace(
             "nJets", f"nJets_{jSys}{shift}"
         )
         _vars4l[f"nJets_{jSys}{shift}"] = {
-            c: v.replace("nJets", f"nJets_{jSys}{shift}") for c, v in _vars4l["nJets"].iteritems()
+            c: v.replace("nJets", f"nJets_{jSys}{shift}") for c, v in _vars4l["nJets"].items()
         }
         _selections4l[f"nJets_{jSys}{shift}"] = ""
 
@@ -281,7 +285,7 @@ _binning1l = {
     "SIP3D": [40, 0.0, 10.0],
 }
 
-_binNormWidth1l = {v: abs(b[2] - b[1]) / b[0] for v, b in _binning1l.iteritems()}
+_binNormWidth1l = {v: abs(b[2] - b[1]) / b[0] for v, b in _binning1l.items()}
 
 _varTemps1l = {v: "{obj}" + v for v in _binning1l}
 _varTemps1l["PVDXY"] = "abs({obj}PVDXY)"
@@ -315,10 +319,10 @@ _vars1l = {
             "eemm": [vt.format(obj=ob) for ob in zm1Leps],
         },
     }
-    for v, vt in _varTemps1l.iteritems()
+    for v, vt in _varTemps1l.items()
 }
 
-_selections1l = dict.fromkeys(_vars1l.values()[0], "")
+_selections1l = dict.fromkeys(list(_vars1l.values())[0], "")
 _selections1l["l1"] = {
     "eeee": ["e1Pt > e3Pt", "e3Pt > e1Pt"],
     "eemm": ["e1Pt > m1Pt", "m1Pt > e1Pt"],
@@ -327,7 +331,7 @@ _selections1l["l1"] = {
 
 
 def _makeSystematics(
-    varName, var, sel, binning, sig, bkg, irr, sigSyst, bkgSyst, irrSyst, norm, puWeightFile, sfArgs={}
+    varName, var, sel, binning, sig, bkg, irr, sigSyst, bkgSyst, irrSyst, norm, puWeightFile, sfArgs=None
 ):
     """
     Get histograms of the systematic error sizes.
@@ -356,6 +360,8 @@ def _makeSystematics(
     Return:
     (hErrUp, hErrDown), histograms of the up- and down asymmetric systematics.
     """
+    if sfArgs is None:
+        sfArgs = {}
     nominalWeight = baseMCWeight("zz", puWeightFile, **sfArgs)
 
     hSigSyst = {}
@@ -380,7 +386,7 @@ def _makeSystematics(
         irr.applyWeight(nominalWeight, True)
 
     # lepton efficiency
-    for lep in set("".join(var.keys())):
+    for lep in set("".join(var)):
         hSigSyst[lep + "Syst"] = {}
         hIrrSyst[lep + "Syst"] = {}
         for sys in ["up", "dn"]:
@@ -399,7 +405,7 @@ def _makeSystematics(
     hSigSyst["lumi"] = {"up": hSigNom * 1.025, "dn": hSigNom * 0.975}
     hIrrSyst["lumi"] = {"up": hIrrNom * 1.025, "dn": hIrrNom * 0.975}
 
-    relevantLeptons = set("".join(var.keys()))
+    relevantLeptons = set("".join(var))
 
     # lepton fake rate
     for lep in relevantLeptons:
@@ -456,7 +462,7 @@ def _makeSystematics(
     hSigVariations = []
     hGG = None
     hEWK = None
-    for c, v in var.iteritems():
+    for c, v in var.items():
         if isinstance(sel, dict) and c in sel:
             thisSel = sel[c]
         else:
@@ -509,7 +515,7 @@ def _makeSystematics(
 
     # for each var bin in each sample, get the RMS across all the variations
     allSigRMSes = [
-        [Graph(h.ProjectionY(f"slice{i}", i + 1, i + 1)).GetRMS(2) for i in xrange(h.GetNbinsX())]
+        [Graph(h.ProjectionY(f"slice{i}", i + 1, i + 1)).GetRMS(2) for i in range(h.GetNbinsX())]
         for h in hSigVariations
     ]
 
@@ -517,7 +523,7 @@ def _makeSystematics(
     sigBinRMSes = [sum(rmses) for rmses in zip(*allSigRMSes)]
 
     # apply variations
-    for i in xrange(hSigNom.GetNbinsX()):
+    for i in range(hSigNom.GetNbinsX()):
         hSigSyst["pdf"]["up"][i + 1].value += sigBinRMSes[i]
         hSigSyst["pdf"]["dn"][i + 1].value = max(0.0, hSigSyst["pdf"]["dn"][i + 1].value - sigBinRMSes[i])
 
@@ -527,7 +533,7 @@ def _makeSystematics(
     hIrrVars = []
     for ind in variationIndices:
         hSigVars.append(hGG.empty_clone())
-        for c, v in var.iteritems():
+        for c, v in var.items():
             if isinstance(sel, dict) and c in sel:
                 thisSel = sel[c]
             else:
@@ -565,7 +571,7 @@ def _makeSystematics(
     hSigVars = []
     for ind in alphaSIndices:
         hSigVars.append(hSigNom.empty_clone())
-        for c, v in var.iteritems():
+        for c, v in var.items():
             if isinstance(sel, dict) and c in sel:
                 thisSel = sel[c]
             else:
@@ -630,7 +636,7 @@ def _makeSystematics(
     hUp = hSigNom.empty_clone()
     hDn = hSigNom.empty_clone()
 
-    for sys in set(hSigSyst.keys() + hBkgSyst.keys() + hIrrSyst.keys()):
+    for sys in set(list(hSigSyst.keys()) + list(hBkgSyst.keys()) + list(hIrrSyst.keys())):
         thisUp = (
             hSigSyst.get(sys, {}).get("up", hSigNom)
             - hSigNom
@@ -879,7 +885,7 @@ def main(
         if paper and chan != "zz":
             continue
 
-        for varName, binning in binning4l.iteritems():
+        for varName, binning in binning4l.items():
             if paper and varName != "Mass":
                 continue
 
@@ -887,7 +893,7 @@ def main(
 
             var = _vars4l[varName]
             if varName == "Mass" and ana == "smp":
-                var = {c: v + "/1000." for c, v in var.iteritems()}
+                var = {c: v + "/1000." for c, v in var.items()}
 
             if chan != "zz":
                 var = {chan: var[chan]}
@@ -948,8 +954,6 @@ def main(
 
             # cure inexplicable crash with inexplicable fix
             if chan == "eeee" and varName == "deltaPhiZZ":
-                cTemp = Canvas(1000, 1000)
-                cTemp2 = Canvas(1000, 1000)
                 c.cd()
 
             drawOpts = {
@@ -973,13 +977,13 @@ def main(
                 frame.Draw()  # for stack axis creation
                 # toPlot = toPlot[1:]
                 drawOpts["same"] = True
-                for i in xrange(frame.GetXaxis().GetNbins()):
+                for i in range(frame.GetXaxis().GetNbins()):
                     frame.GetXaxis().SetBinLabel(i + 1, str(i))
                 drawOpts["yaxis"] = frame.yaxis
             if varName in _nDivisions4l[ana]:
                 drawOpts["xdivisions"] = _nDivisions4l[ana][varName]
 
-            (xaxis, yaxis), (xmin, xmax, ymin, ymax) = draw(toPlot, c, **drawOpts)
+            _, (xmin, xmax, ymin, ymax) = draw(toPlot, c, **drawOpts)
 
             # blinding box
             if blind and varName == "Mass" and binning4l["Mass"][-1] > 500.0:
@@ -1039,7 +1043,7 @@ def main(
                 cTGC = Canvas(1000, 1000)
                 leg = makeLegend(cTGC, *toPlot, **legParams)
 
-                (xaxis, yaxis), (xmin, xmax, ymin, ymax) = draw(toPlot, cTGC, xtitle=xTitle, ytitle=yTitle, logy=True)
+                _, (xmin, xmax, ymin, ymax) = draw(toPlot, cTGC, xtitle=xTitle, ytitle=yTitle, logy=True)
                 # blinding box
                 if blind and binning4l["Mass"][-1] > 500.0:
                     box = TBox(max(xmin, 500.0), ymin, min(binning4l["Mass"][-1], xmax), ymax)
@@ -1064,7 +1068,7 @@ def main(
         binNormWidth2l["Mass"] = 2.0
 
     for z in ["z", "ze", "zm", "z1", "z2"]:
-        for varName, binning in binning2l.iteritems():
+        for varName, binning in binning2l.items():
             if paper:
                 if varName != "Mass":
                     continue
@@ -1145,7 +1149,7 @@ def main(
             if varName in _nDivisions2l[ana]:
                 drawArgs["xdivisions"] = _nDivisions2l[ana][varName]
 
-            (xaxis, yaxis), (xmin, xmax, ymin, ymax) = draw(toPlot, c, **drawArgs)
+            _, (xmin, xmax, ymin, ymax) = draw(toPlot, c, **drawArgs)
 
             # blinding box
             if blind and varName == "Pt" and binning2l["Pt"][-1] > 200.0:
@@ -1163,7 +1167,7 @@ def main(
             else:
                 c.Print(f"{outdir}/{z}{varName}.png")
 
-    for varName, binning in _binning1l.iteritems():
+    for varName, binning in _binning1l.items():
         if paper:
             continue
         for lep in _vars1l[varName]:
@@ -1214,7 +1218,7 @@ def main(
 
             yTitle = f"Leptons / {makeNumberPretty(_binNormWidth1l[varName], 2)} {units[varName]}"
 
-            (xaxis, yaxis), (xmin, xmax, ymin, ymax) = draw(toPlot, c, xtitle=xTitle, ytitle=yTitle, logy=logy)
+            _, (xmin, xmax, ymin, ymax) = draw(toPlot, c, xtitle=xTitle, ytitle=yTitle, logy=logy)
             leg.Draw("same")
 
             style.setCMSStyle(c, "", dataType=typeToPrint, intLumi=lumi, forLatex=paper)

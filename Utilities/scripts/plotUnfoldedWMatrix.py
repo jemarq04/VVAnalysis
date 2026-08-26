@@ -5,9 +5,9 @@ import math
 import os
 import subprocess
 
-import makeSimpleHtml
+from . import makeSimpleHtml
 import ROOT
-from python import ConfigureJobs, UserInput
+from .python import ConfigureJobs, UserInput
 from ROOT import vector as Vec
 
 VFloat = Vec("float")
@@ -134,7 +134,7 @@ _yTitle = {}
 _yTitleNoNorm = {}
 
 _yTitleTemp = "{prefix} \\frac{{d\\sigma_{{\\text{{fid}}}}}}{{d{xvar}}} {units}"
-for var, prettyVar in prettyVars.iteritems():
+for var, prettyVar in prettyVars.items():
     xt = prettyVar
     if yaxisunits[var]:
         xt += f" \\, \\left(\\text{{{yaxisunits[var]}}}\\right)"
@@ -184,7 +184,7 @@ legParams["deltaEtajj"]["topmargin"] = 0.05
 legParams["eta"] = legParams["deltaEtajj"].copy()
 # legParams['massFull']['leftmargin'] = 0.25
 
-legParamsLogy = {v: p.copy() for v, p in legParams.iteritems()}
+legParamsLogy = {v: p.copy() for v, p in legParams.items()}
 # legParamsLogy['l1Pt']['topmargin'] = 0.65
 # legParamsLogy['l1Pt']['leftmargin'] = 0.2
 # legParamsLogy['l1Pt']['rightmargin'] = 0.18
@@ -474,10 +474,10 @@ def MainErrorBand(hMain, hUncUp, hUncDn, varName, norm, normFb):
 
 
 def generatePlots(hUnfolded, hUncUp, hUncDn, hTruth, hTruthAlt, hMatrix, varName, norm, normFb, lumi, unfoldDir):
-    UnfHists = []
-    TrueHists = []
+    _UnfHists = []
+    _TrueHists = []
     # for normalization if needed
-    nomArea = hUnfolded.Integral(1, hUnfolded.GetNbinsX())
+    _nomArea = hUnfolded.Integral(1, hUnfolded.GetNbinsX())
     # Make uncertainties out of the unfolded histos
     ### plot
     hUnf = hUnfolded.Clone()
@@ -500,8 +500,8 @@ def generatePlots(hUnfolded, hUncUp, hUncDn, hTruth, hTruthAlt, hMatrix, varName
 
     print("hTrue histo here: ", hTrue)
     print("unfoldDir: ", unfoldDir)
-    xaxisSize = hUnf.GetXaxis().GetTitleSize()
-    yaxisSize = hTrue.GetXaxis().GetTitleSize()
+    _xaxisSize = hUnf.GetXaxis().GetTitleSize()
+    _yaxisSize = hTrue.GetXaxis().GetTitleSize()
     if unfoldDir:
         # Create a ratio plot
         c, pad1 = createCanvasPads(varName)
@@ -645,7 +645,7 @@ def generatePlots(hUnfolded, hUncUp, hUncDn, hTruth, hTruthAlt, hMatrix, varName
         leg.Draw()
 
         # Pad1a for Data/MATRIX ratio
-        pad1a = createPad1a(c)
+        _pad1a = createPad1a(c)
 
         hMatDistNoErrs = hMatDist.Clone()  # need central value only to keep ratio uncertainties consistent
 
@@ -657,7 +657,7 @@ def generatePlots(hUnfolded, hUncUp, hUncDn, hTruth, hTruthAlt, hMatrix, varName
         MatRatioErrorBand.GetYaxis().SetTitleSize(0)
         MatRatioErrorBand.Draw("a2")
 
-        MatTex = getSigTextBox(0.15, 0.8, MatLabel, 0.12)
+        _MatTex = getSigTextBox(0.15, 0.8, MatLabel, 0.12)
         MatRatio.Draw("PE1SAME")
         Matline.SetLineColor(ROOT.kBlack)
         Matline.Draw("same")
@@ -681,7 +681,7 @@ def generatePlots(hUnfolded, hUncUp, hUncDn, hTruth, hTruthAlt, hMatrix, varName
         Matyaxis.Draw("SAME")
 
         # SecondPad
-        pad2 = createPad2(c)
+        _pad2 = createPad2(c)
 
         hTrueNoErrs = hTrue.Clone()  # need central value only to keep ratio uncertainties consistent
         nbins = hTrueNoErrs.GetNbinsX()
@@ -697,7 +697,7 @@ def generatePlots(hUnfolded, hUncUp, hUncDn, hTruth, hTruthAlt, hMatrix, varName
         ratioErrorBand.GetYaxis().SetTitleSize(0)
         ratioErrorBand.Draw("a2")
 
-        sigTex = getSigTextBox(0.15, 0.8, sigLabel, 0.12)
+        _sigTex = getSigTextBox(0.15, 0.8, sigLabel, 0.12)
         Ratio.Draw("PE1SAME")
         line.SetLineColor(ROOT.kBlack)
         line.Draw("same")
@@ -721,7 +721,7 @@ def generatePlots(hUnfolded, hUncUp, hUncDn, hTruth, hTruthAlt, hMatrix, varName
         Altyaxis.Draw("SAME")
 
         # ThirdPad
-        pad3 = createPad3(c)
+        _pad3 = createPad3(c)
 
         hTrueAltNoErrs = hTrueAlt.Clone()  # need central value only to keep ratio uncertainties consistent
         # nbins=hTrueNoErrs.GetNbinsX()
@@ -742,7 +742,7 @@ def generatePlots(hUnfolded, hUncUp, hUncDn, hTruth, hTruthAlt, hMatrix, varName
         Altline.SetLineColor(ROOT.kRed)
         Altline.Draw("same")
 
-        AltTex = getSigTextBox(0.15, 0.8, sigLabelAlt, 0.10)
+        _AltTex = getSigTextBox(0.15, 0.8, sigLabelAlt, 0.10)
         # redraw axis
         xaxis = ROOT.TGaxis(
             hUnf.GetXaxis().GetXmin(),

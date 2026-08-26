@@ -99,7 +99,7 @@ _xTitle = {}
 _yTitle = {}
 _yTitleNoNorm = {}
 _yTitleTemp = "{prefix} \\frac{{d\\sigma_{{\\text{{fid}}}}}}{{d{xvar}}} {units}"
-for var, prettyVar in _prettyVars.iteritems():
+for var, prettyVar in _prettyVars.items():
     xt = prettyVar
     if _units[var]:
         xt += f" \\, \\text{{[{_units[var]}]}}"
@@ -147,8 +147,8 @@ _trueSelections = {
     "mmmm": "m1_m2_Mass > 60. && m3_m4_Mass > 60.",
 }
 
-for var, selections in _selections.iteritems():
-    for chan, sel in selections.iteritems():
+for selections in _selections.values():
+    for chan, sel in selections.items():
         if isinstance(sel, str):
             sel = combineWeights(sel, _trueSelections[chan], selections=True)
         else:
@@ -206,7 +206,7 @@ _logy = {
 
 def _normalizeBins(h):
     binUnit = 1  # min(h.GetBinWidth(b) for b in range(1,len(h)+1))
-    for ib in xrange(1, len(h) + 1):
+    for ib in range(1, len(h) + 1):
         w = h.GetBinWidth(ib)
         h.SetBinContent(ib, h.GetBinContent(ib) * binUnit / w)
         h.SetBinError(ib, h.GetBinError(ib) * binUnit / w)
@@ -217,7 +217,7 @@ def _normalizeBins(h):
 
 def _unnormalizeBins(h):
     binUnit = 1  # min(h.GetBinWidth(b) for b in range(1,len(h)+1))
-    for ib in xrange(1, len(h) + 1):
+    for ib in range(1, len(h) + 1):
         w = h.GetBinWidth(ib)
         h.SetBinContent(ib, h.GetBinContent(ib) * w / binUnit)
         h.SetBinError(ib, h.GetBinError(ib) * w / binUnit)
@@ -234,14 +234,14 @@ def _pdfError(sample, var, sel, binning):
                 s.makeHist2(var, "Iteration$", sel, binning, [100, 0.0, 100.0], "pdfWeights/pdfWeights[0]", False)
             )
     allTrueRMSes = [
-        [Graph(h.ProjectionY(f"slice{i}", i + 1, i + 1)).GetRMS(2) for i in xrange(h.GetNbinsX())]
+        [Graph(h.ProjectionY(f"slice{i}", i + 1, i + 1)).GetRMS(2) for i in range(h.GetNbinsX())]
         for h in hTrueVariations
     ]
     binTrueRMSes = [sum(rmses) for rmses in zip(*allTrueRMSes)]
 
-    out = sample.values()[0].makeHist("0", "0", binning)
+    out = list(sample.values())[0].makeHist("0", "0", binning)
 
-    for i in xrange(out.GetNbinsX()):
+    for i in range(out.GetNbinsX()):
         out[i + 1].value = binTrueRMSes[i]
 
     return out
@@ -293,8 +293,7 @@ mg5Name = r"\textbf{MG5\_aMC@NLO+MCFM+Pythia8}"
 matName = r"\textbf{MATRIX}"
 
 
-for varName in _variables:
-    var = _variables[varName]
+for varName, var in list(_variables.items()):
     sel = _selections[varName]
     bins = _binning[varName]
 
@@ -335,13 +334,13 @@ for varName in _variables:
 
         # un-normalize the bins, rebin, renormalize
         _unnormalizeBins(hMat)
-        hMat = hMat.rebinned([e for e in hNominalPow[""]._edges(0)])
+        hMat = hMat.rebinned(list(hNominalPow[""]._edges(0)))
         _normalizeBins(hMat)
         _unnormalizeBins(hUpMat)
-        hUpMat = hUpMat.rebinned([e for e in hNominalPow[""]._edges(0)])
+        hUpMat = hUpMat.rebinned(list(hNominalPow[""]._edges(0)))
         _normalizeBins(hUpMat)
         _unnormalizeBins(hDnMat)
-        hDnMat = hDnMat.rebinned([e for e in hNominalPow[""]._edges(0)])
+        hDnMat = hDnMat.rebinned(list(hNominalPow[""]._edges(0)))
         _normalizeBins(hDnMat)
 
         hMat /= _matrixXSecs[""]
@@ -367,8 +366,8 @@ for varName in _variables:
         legMat.fillstyle = "solid"
         legMat.legendstyle = "LF"
 
-    for c in hNominalPow:
-        hPow = hNominalPow[c].clone()
+    for c, htemp in hNominalPow.items():
+        hPow = htemp.clone()
         hPow.linecolor = "#000099"
         hPow.drawstyle = "hist"
         hPow.fillstyle = "hollow"

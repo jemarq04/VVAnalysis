@@ -32,7 +32,13 @@ from os.path import exists as _exists
 from os.path import isdir as _isdir
 from os.path import join as _join
 
-from Analysis.setupStandardSamples import *
+from Analysis.setupStandardSamples import (
+    genZZSamples,
+    zzStackSignalOnly,
+    zzIrreducibleBkg,
+    standardZZBkg,
+    standardZZData,
+)
 
 # from Analysis.unfoldingHelpers import getResponse, getResponsePDFErrors, \
 #     getResponseScaleErrors, getResponseAlphaSErrors
@@ -188,7 +194,7 @@ _yTitleNoNorm = {}
 #                                xvar=prettyVar, units='')
 #        ytnn = _yTitleTemp.format(prefix='', xvar=prettyVar, units='\\left( \\text{fb} \\right)')
 _yTitleTemp = "{prefix} \\frac{{d\\sigma_{{\\text{{fid}}}}}}{{d{xvar}}} {units}"
-for var, prettyVar in _prettyVars.iteritems():
+for var, prettyVar in _prettyVars.items():
     xt = prettyVar
     if _units[var]:
         xt += f" \\, \\left(\\text{{{_units[var]}}}\\right)"
@@ -380,7 +386,6 @@ _varNamesForResponseMaker = {
     "deltaRZZ": dict.fromkeys(_channels, "deltaRZZ"),
     "lPt": dict.fromkeys(_channels, "Pt"),
     "l1Pt": dict.fromkeys(_channels, "Pt"),
-    "zPt": dict.fromkeys(_channels, "Pt"),
     "jet1Pt": dict.fromkeys(_channels, "jetPt"),
     "jet2Pt": dict.fromkeys(_channels, "jetPt"),
     "jet1Eta": dict.fromkeys(_channels, "jetEta"),
@@ -426,7 +431,7 @@ _legParams["jet2Eta"]["topmargin"] = 0.058
 _legParams["nJets"]["topmargin"] = 0.058
 _legParams["massFull"]["leftmargin"] = 0.25
 
-_legParamsLogy = {v: p.copy() for v, p in _legParams.iteritems()}
+_legParamsLogy = {v: p.copy() for v, p in _legParams.items()}
 _legParamsLogy["deltaRZZ"]["textsize"] = 0.025
 _legParamsLogy["deltaRZZ"]["entryheight"] = 0.03
 _legParamsLogy["deltaRZZ"]["topmargin"] = 0.7
@@ -507,7 +512,7 @@ _cacheFileTemplate = _join(_env["zzt"], "Analysis", "savedResults", "unfoldCache
 
 def _normalizeBins(h):
     binUnit = 1  # min(h.GetBinWidth(b) for b in range(1,len(h)+1))
-    for ib in xrange(1, len(h) + 1):
+    for ib in range(1, len(h) + 1):
         w = h.GetBinWidth(ib)
         h.SetBinContent(ib, h.GetBinContent(ib) * binUnit / w)
         h.SetBinError(ib, h.GetBinError(ib) * binUnit / w)
@@ -518,7 +523,7 @@ def _normalizeBins(h):
 
 def _unnormalizeBins(h):
     binUnit = 1  # min(h.GetBinWidth(b) for b in range(1,len(h)+1))
-    for ib in xrange(1, len(h) + 1):
+    for ib in range(1, len(h) + 1):
         w = h.GetBinWidth(ib)
         h.SetBinContent(ib, h.GetBinContent(ib) * w / binUnit)
         h.SetBinError(ib, h.GetBinError(ib) * w / binUnit)
@@ -532,8 +537,8 @@ _printCounter = 0
 
 
 def _getUnfolded(hSig, hBkg, hTrue, hResponse, hData, nIter, withRespAndCov=False, printIt=False):
-    global _printNext
-    global _printCounter
+    global _printNext  # noqa
+    global _printCounter  # noqa
 
     response = Response(hSig, hTrue.clone(), hResponse.clone())
 
@@ -542,15 +547,15 @@ def _getUnfolded(hSig, hBkg, hTrue, hResponse, hData, nIter, withRespAndCov=Fals
         sig = svd.GetSig()
         try:
             condition = sig.Max() / max(0.0, sig.Min())
-        except ZeroDivisionError:
+        except ZeroDivisionError as err:
             condition = float("inf")
-            raise
+            raise err
 
         print()
         print(f"condition: {condition}")
         print()
 
-    except:
+    except ZeroDivisionError:
         print("It broke! Printing debug info")
         print(
             f"Sig: {hSig.Integral()}, bkg: {hBkg.Integral()}, true: {hTrue.Integral()}, response: {hResponse.Integral()}"
@@ -680,7 +685,10 @@ def _generateAnalysisInputs(puWeightFile, looseSIP=False, noSIP=False, sfRemake=
     return sfFiles, hPUWt, hSF, sipForBkg
 
 
-def _generateSamples(inData, inMC, ana, fakeRateFile, puWeightFile, lumi, amcatnlo=False, sipForBkg=4.0, sfFiles={}):
+def _generateSamples(inData, inMC, ana, fakeRateFile, puWeightFile, lumi, amcatnlo=False, sipForBkg=4.0, sfFiles=None):
+    if sfFiles is None:
+        sfFiles = {}
+
     puWeightStr, puWt = puWeight(puWeightFile, "")
     puWeightStrUp, puWtUp = puWeight(puWeightFile, "up")
     puWeightStrDn, puWtDn = puWeight(puWeightFile, "dn")
@@ -748,7 +756,7 @@ def _generateSamples(inData, inMC, ana, fakeRateFile, puWeightFile, lumi, amcatn
             **sfFiles,
         )
         sigFileNamesSyst[syst] = {
-            s.name: [f for f in s.getFileNames()] for s in allSamples["recoSyst"][syst].values()[0].getBaseSamples()
+            s.name: list(s.getFileNames()) for s in list(allSamples["recoSyst"][syst].values())[0].getBaseSamples()
         }
         allSamples["bkgMCSyst"][syst] = zzIrreducibleBkg(
             "eemm,mmmm", inMC.replace("mc_", f"mc_{syst}_"), ana, puWeightFile, lumi, **sfFiles
@@ -757,37 +765,42 @@ def _generateSamples(inData, inMC, ana, fakeRateFile, puWeightFile, lumi, amcatn
     return allSamples
 
 
-def _generateResponseClass(varName, channel, samples, hPUWt, hSF={}):
+def _generateResponseClass(varName, channel, samples, hPUWt, hSF=None):
+    if hSF is None:
+        hSF = {}
+
     className = _responseClassNames[varName][channel]
     if hSF:
         className = "SFHist" + className
 
     if not hasattr(_rootComp, className):
         # compile the code and register all the classes
-        classesNeeded = set([cn for cv in _responseClassNames.values() for cn in cv.values()])
-        classesNeeded |= set(["SFHist" + cn for cn in classesNeeded])
+        classesNeeded = {cn for cv in _responseClassNames.values() for cn in cv.values()}
+        classesNeeded |= {[f"SFHist{cn}" for cn in classesNeeded]}
 
         _rootComp.register_file(_join(_zztBaseDir, "Utilities", "ResponseMatrixMaker.cxx"), list(classesNeeded))
 
     C = getattr(_rootComp, className)
 
-    sigFileNames = {s.name: [f for f in s.getFileNames()] for s in samples["reco"].values()[0].getBaseSamples()}
+    sigFileNames = {s.name: list(s.getFileNames()) for s in list(samples["reco"].values())[0].getBaseSamples()}
     sigConstWeights = {
-        s.name: s.xsec * s.intLumi * float(s.kFactor) / s.sumW for s in samples["reco"].values()[0].getBaseSamples()
+        s.name: s.xsec * s.intLumi * float(s.kFactor) / s.sumW
+        for s in list(samples["reco"].values())[0].getBaseSamples()
     }
-    altSigFileNames = {s.name: [f for f in s.getFileNames()] for s in samples["altReco"].values()[0].getBaseSamples()}
+    altSigFileNames = {s.name: list(s.getFileNames()) for s in list(samples["altReco"].values())[0].getBaseSamples()}
     altSigConstWeights = {
-        s.name: s.xsec * s.intLumi * float(s.kFactor) / s.sumW for s in samples["altReco"].values()[0].getBaseSamples()
+        s.name: s.xsec * s.intLumi * float(s.kFactor) / s.sumW
+        for s in list(samples["altReco"].values())[0].getBaseSamples()
     }
     sigFileNamesSyst = {
-        syst: {s.name: [f for f in s.getFileNames()] for s in samples["recoSyst"][syst].values()[0].getBaseSamples()}
+        syst: {s.name: list(s.getFileNames()) for s in list(samples["recoSyst"][syst].values())[0].getBaseSamples()}
         for syst in samples["recoSyst"]
     }
 
     binning = _binning[varName]
     vBinning = _VFloat()
     if len(binning) == 3:
-        binningTemp = [binning[1] + i * (binning[2] - binning[1]) / float(binning[0]) for i in xrange(binning[0] + 1)]
+        binningTemp = [binning[1] + i * (binning[2] - binning[1]) / float(binning[0]) for i in range(binning[0] + 1)]
         for b in binningTemp:
             vBinning.push_back(b)
     else:
@@ -795,7 +808,7 @@ def _generateResponseClass(varName, channel, samples, hPUWt, hSF={}):
             vBinning.push_back(b)
 
     responseMakers = {}
-    for sample, fNameList in sigFileNames.iteritems():
+    for sample, fNameList in sigFileNames.items():
         resp = C(channel, _varNamesForResponseMaker[varName][channel], vBinning)
 
         for fName in fNameList:
@@ -818,7 +831,7 @@ def _generateResponseClass(varName, channel, samples, hPUWt, hSF={}):
         responseMakers[sample] = resp
 
     altResponseMakers = {}
-    for sample, fNameList in altSigFileNames.iteritems():
+    for sample, fNameList in altSigFileNames.items():
         if sample in responseMakers:
             continue
         resp = C(channel, _varNamesForResponseMaker[varName][channel], vBinning)
@@ -871,7 +884,7 @@ def _unfold(varName, chan, samples, puWeightFile, sfFiles, responseMakers, altRe
     hSigNominal = samples["reco"][chan].makeHist(var, sel, binning, perUnitWidth=False)
     hBkgMCNominal = samples["bkgMC"][chan].makeHist(var, sel, binning, perUnitWidth=False)
     hBkgNominal = samples["bkg"][chan].makeHist(var, sel, binning, perUnitWidth=False, postprocess=True)
-    hResponseNominal = {s: asrootpy(resp()) for s, resp in responseMakers.iteritems()}
+    hResponseNominal = {s: asrootpy(resp()) for s, resp in responseMakers.items()}
     hResponseNominalTotal = sum(resp for resp in hResponseNominal.values())
 
     hUnfolded[""], hCov, hResp = _getUnfolded(
@@ -940,7 +953,7 @@ def _unfold(varName, chan, samples, puWeightFile, sfFiles, responseMakers, altRe
     hSig = samples["altReco"][chan].makeHist(var, sel, binning, perUnitWidth=False)
     hTrueAlt[""] = samples["altTrue"][chan].makeHist(var, selTrue, binning, perUnitWidth=False)
     hResponses = []
-    altSigFileNames = {s.name: [f for f in s.getFileNames()] for s in samples["altReco"].values()[0].getBaseSamples()}
+    altSigFileNames = {s.name: list(s.getFileNames()) for s in list(samples["altReco"].values())[0].getBaseSamples()}
     for s in altSigFileNames:
         try:
             hResponses.append(asrootpy(altResponseMakers[s]()))
@@ -953,7 +966,7 @@ def _unfold(varName, chan, samples, puWeightFile, sfFiles, responseMakers, altRe
     # luminosity
     lumiUnc = 0.025
     lumiScale = {"up": 1.0 + lumiUnc, "dn": 1.0 - lumiUnc}
-    for sys, scale in lumiScale.iteritems():
+    for sys, scale in lumiScale.items():
         hSig = hSigNominal * scale
         hBkgMC = hBkgMCNominal * scale
         hTrueLumiShift = hTrue[""] * scale
@@ -1024,22 +1037,19 @@ def _unfold(varName, chan, samples, puWeightFile, sfFiles, responseMakers, altRe
                 s.makeHist2(var, "Iteration$", sel, binning, [100, 0.0, 100.0], "pdfWeights/pdfWeights[0]", False)
             )
     hResponseVariations = []
-    for s, resp in responseMakers.iteritems():
+    for s, resp in responseMakers.items():
         if "GluGluZZ" not in s and "phantom" not in s:
             hResponseVariations.append(asrootpy(resp.getPDFResponses()))
 
     # for each var bin in each sample, get the RMS across all the variations
     allSigRMSes = [
-        [Graph(h.ProjectionY(f"slice{i}", i + 1, i + 1)).GetRMS(2) for i in xrange(h.GetNbinsX())]
+        [Graph(h.ProjectionY(f"slice{i}", i + 1, i + 1)).GetRMS(2) for i in range(h.GetNbinsX())]
         for h in hSigVariations
     ]
     allResponseRMSes = [
         [
-            [
-                Graph(h.ProjectionZ(f"slice_{x}_{y}", x + 1, x + 1, y + 1, y + 1)).GetRMS(2)
-                for y in xrange(h.GetNbinsY())
-            ]
-            for x in xrange(h.GetNbinsX())
+            [Graph(h.ProjectionZ(f"slice_{x}_{y}", x + 1, x + 1, y + 1, y + 1)).GetRMS(2) for y in range(h.GetNbinsY())]
+            for x in range(h.GetNbinsX())
         ]
         for h in hResponseVariations
     ]
@@ -1053,11 +1063,11 @@ def _unfold(varName, chan, samples, puWeightFile, sfFiles, responseMakers, altRe
     hResponseDn = hResponseNominalTotal.clone()
 
     # apply variations
-    for i in xrange(hSigUp.GetNbinsX()):
+    for i in range(hSigUp.GetNbinsX()):
         hSigUp[i + 1].value += sigBinRMSes[i]
         hSigDn[i + 1].value = max(0.0, hSigDn[i + 1].value - sigBinRMSes[i])
-    for x in xrange(hResponseUp.GetNbinsX()):
-        for y in xrange(hResponseUp.GetNbinsY()):
+    for x in range(hResponseUp.GetNbinsX()):
+        for y in range(hResponseUp.GetNbinsY()):
             hResponseUp[x + 1, y + 1].value += responseBinRMSes[x][y]
             hResponseDn[x + 1, y + 1].value = max(0.0, hResponseDn[x + 1, y + 1].value - responseBinRMSes[x][y])
 
@@ -1070,13 +1080,13 @@ def _unfold(varName, chan, samples, puWeightFile, sfFiles, responseMakers, altRe
                 s.makeHist2(var, "Iteration$", selTrue, binning, [100, 0.0, 100.0], "pdfWeights/pdfWeights[0]", False)
             )
     allTrueRMSes = [
-        [Graph(h.ProjectionY(f"slice{i}", i + 1, i + 1)).GetRMS(2) for i in xrange(h.GetNbinsX())]
+        [Graph(h.ProjectionY(f"slice{i}", i + 1, i + 1)).GetRMS(2) for i in range(h.GetNbinsX())]
         for h in hTrueVariations
     ]
     binTrueRMSes = [sum(rmses) for rmses in zip(*allTrueRMSes)]
 
     # hTruePDFErr[chan] = hTrue.empty_clone() # save true variation for later
-    for i in xrange(hTrue["pdf_up"].GetNbinsX()):
+    for i in range(hTrue["pdf_up"].GetNbinsX()):
         hTrue["pdf_up"][i + 1].value += binTrueRMSes[i]
         hTrue["pdf_dn"][i + 1].value = max(0.0, hTrue["pdf_dn"][i + 1].value - binTrueRMSes[i])
         # hTruePDFErr[chan][i+1].value = binTrueRMSes[i]
@@ -1092,11 +1102,11 @@ def _unfold(varName, chan, samples, puWeightFile, sfFiles, responseMakers, altRe
                 s.makeHist2(var, "Iteration$", selTrue, binning, [100, 0.0, 100.0], "pdfWeights/pdfWeights[0]", False)
             )
     allTrueRMSesAlt = [
-        [Graph(h.ProjectionY(f"slice{i}", i + 1, i + 1)).GetRMS(2) for i in xrange(h.GetNbinsX())]
+        [Graph(h.ProjectionY(f"slice{i}", i + 1, i + 1)).GetRMS(2) for i in range(h.GetNbinsX())]
         for h in hTrueVariationsAlt
     ]
     binTrueRMSesAlt = [sum(rmses) for rmses in zip(*allTrueRMSesAlt)]
-    for i in xrange(hTrueAlt["pdf_up"].GetNbinsX()):
+    for i in range(hTrueAlt["pdf_up"].GetNbinsX()):
         hTrueAlt["pdf_up"][i + 1].value += binTrueRMSesAlt[i]
         hTrueAlt["pdf_dn"][i + 1].value = max(0.0, hTrueAlt["pdf_dn"][i + 1].value - binTrueRMSesAlt[i])
         # hTruePDFErrAlt[chan][i+1].value = binTrueRMSesAlt[i]
@@ -1172,10 +1182,10 @@ def _unfold(varName, chan, samples, puWeightFile, sfFiles, responseMakers, altRe
         bDn.value = min(b.value for b in variations)
 
     hResponseVariations = [hResponseNominalTotal.empty_clone() for v in variationIndices]
-    for s, resp in responseMakers.iteritems():
+    for s, resp in responseMakers.items():
         vResponses = resp.getScaleResponses()
         if vResponses.size() == len(hResponseVariations):
-            for iResp in xrange(vResponses.size()):
+            for iResp in range(vResponses.size()):
                 hResponseVariations[iResp] += asrootpy(vResponses.at(iResp))
         else:
             for hrv in hResponseVariations:
@@ -1247,7 +1257,7 @@ def _unfold(varName, chan, samples, puWeightFile, sfFiles, responseMakers, altRe
     hTrueAlt["alphaS_dn"] = hTruesAlt[1]
 
     hResponses = [hResponseNominalTotal.empty_clone(), hResponseNominalTotal.empty_clone()]
-    for s, resp in responseMakers.iteritems():
+    for s, resp in responseMakers.items():
         if resp.hasSystematic("alphaS_up"):
             hResponses[0] += asrootpy(resp("alphaS_up"))
             hResponses[1] += asrootpy(resp("alphaS_dn"))
@@ -1269,7 +1279,7 @@ def _unfold(varName, chan, samples, puWeightFile, sfFiles, responseMakers, altRe
     # since MCFM samples don't have LHE information, we just vary by
     # the cross section uncertainties
     mcfmUnc = {"up": 0.18, "dn": -0.15}
-    for sys, shift in mcfmUnc.iteritems():
+    for sys, shift in mcfmUnc.items():
         hSig = samples["reco"][chan].makeHist(var, sel, binning, {"GluGluZZ": str(1.0 + shift)}, perUnitWidth=False)
         hTrue["mcfmxsec_" + sys] = samples["true"][chan].makeHist(
             var, selTrue, binning, {"GluGluZZ": str(1.0 + shift)}, perUnitWidth=False
@@ -1278,7 +1288,7 @@ def _unfold(varName, chan, samples, puWeightFile, sfFiles, responseMakers, altRe
             var, selTrue, binning, {"GluGluZZ": str(1.0 + shift)}, perUnitWidth=False
         )
         hResponse = hResponseNominalTotal.empty_clone()
-        for s, h in hResponseNominal.iteritems():
+        for s, h in hResponseNominal.items():
             if "GluGluZZ" in s:
                 hResponse += h * (1.0 + shift)
             else:
@@ -1289,18 +1299,21 @@ def _unfold(varName, chan, samples, puWeightFile, sfFiles, responseMakers, altRe
         )
 
     # make everything local (we'll cache copies)
-    for h in hUnfolded.values() + hTrue.values() + hTrueAlt.values():
+    for h in list(hUnfolded.values()) + list(hTrue.values()) + list(hTrueAlt.values()):
         h.SetDirectory(0)
 
     return hUnfolded, hTrue, hTrueAlt
 
 
 def _sumUncertainties(errDict):
-    hUncUp = errDict["up"].values()[0].empty_clone()
-    hUncDn = errDict["dn"].values()[0].empty_clone()
-    sysList = errDict["up"].keys()
+    hUncUp = list(errDict["up"].values())[0].empty_clone()
+    hUncDn = list(errDict["dn"].values())[0].empty_clone()
+    sysList = list(errDict["up"])
     for bUncUp, bUncDn, allUncUp, allUncDn in zip(
-        hUncUp, hUncDn, zip(*[errDict["up"][sys] for sys in sysList]), zip(*[errDict["dn"][sys] for sys in sysList])
+        hUncUp,
+        hUncDn,
+        zip(*[errDict["up"][sys] for sys in sysList]),
+        zip(*[errDict["dn"][sys] for sys in sysList]),
     ):
         for b1, b2 in zip(allUncUp, allUncDn):
             bUncUp.value += max(b1.value, b2.value) ** 2
@@ -1317,13 +1330,13 @@ def _combineChannelUncertainties(*errDicts):
     uncList = []
     for errDict in errDicts:
         for sys in ["up", "dn"]:
-            uncList += errDict[sys].keys()
+            uncList += list(errDict[sys])
     uncList = set(uncList)
 
     for sys in ["up", "dn"]:
         hUncTot[sys] = {}
         for unc in uncList:
-            hUncTot[sys][unc] = errDicts[0][sys].values()[0].empty_clone()
+            hUncTot[sys][unc] = list(errDicts[0][sys].values())[0].empty_clone()
             for errDict in errDicts:
                 try:
                     hUncTot[sys][unc] += errDict[sys][unc]
@@ -1344,7 +1357,7 @@ def _generateUncertainties(hDict, norm, **plotArgs):
 
     nominalArea = hDict[""].Integral(0, hDict[""].GetNbinsX() + 1)
     hErr = {"up": {}, "dn": {}}
-    for sys, h in hDict.iteritems():
+    for sys, h in hDict.items():
         if not sys:
             continue
 
@@ -1514,7 +1527,7 @@ def _generatePlots(
     amcatnlo,
 ):
     # for normalization if needed
-    nominalArea = hUnfolded.Integral(0, hUnfolded.GetNbinsX() + 1)
+    _nominalArea = hUnfolded.Integral(0, hUnfolded.GetNbinsX() + 1)
     # Make uncertainties out of the unfolded histos
     ### plot
     hUnf = hUnfolded.clone()
@@ -1667,11 +1680,11 @@ def _generatePlots(
 
         # un-normalize the bins, rebin, renormalize
         _unnormalizeBins(matDist)
-        matDist = matDist.rebinned([e for e in hUnf._edges(0)])
+        matDist = matDist.rebinned(list(hUnf._edges(0)))
         _unnormalizeBins(matDistUp)
-        matDistUp = matDistUp.rebinned([e for e in hUnf._edges(0)])
+        matDistUp = matDistUp.rebinned(list(hUnf._edges(0)))
         _unnormalizeBins(matDistDn)
-        matDistDn = matDistDn.rebinned([e for e in hUnf._edges(0)])
+        matDistDn = matDistDn.rebinned(list(hUnf._edges(0)))
         if norm:
             matDist /= _matrixXSecs[""]
             matDistUp /= _matrixXSecs["up"]
@@ -1984,7 +1997,6 @@ def main(
     sfRemake=False,
     forceRedo=False,
     *varNames,
-    **kwargs,
 ):
     channels = _channels[:]
 
@@ -2089,7 +2101,7 @@ def main(
                     if hasattr(varDir, "true"):
                         varDir.rm("true")
                     trueDir = varDir.mkdir("true")
-                    for syst, hist in hTrue[chan].iteritems():
+                    for syst, hist in hTrue[chan].items():
                         if syst:
                             hist.name = syst
                             trueDir[syst] = hist.clone(name=syst)
@@ -2098,7 +2110,7 @@ def main(
                     if hasattr(varDir, "trueAlt"):
                         varDir.rm("trueAlt")
                     trueDirAlt = varDir.mkdir("trueAlt")
-                    for syst, hist in hTrueAlt[chan].iteritems():
+                    for syst, hist in hTrueAlt[chan].items():
                         if syst:
                             hist.name = syst
                             trueDirAlt[syst] = hist.clone(name=syst)
@@ -2107,7 +2119,7 @@ def main(
                     if hasattr(varDir, "unfolded"):
                         varDir.rm("unfolded")
                     unfDir = varDir.mkdir("unfolded")
-                    for syst, hist in hUnfolded[chan].iteritems():
+                    for syst, hist in hUnfolded[chan].items():
                         if syst:
                             hist.name = syst
                             unfDir[syst] = hist.clone(name=syst)

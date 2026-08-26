@@ -6,7 +6,7 @@ import os
 
 import ROOT
 
-import ConfigureJobs
+from . import ConfigureJobs
 
 
 def getDefaultParser():
@@ -111,7 +111,7 @@ def getHistInfo(analysis, input_hists, noConfig=False):
     excludedHistPatterns = ["wCR", "unrolled", "YieldByChannel"]
     config_hists = ConfigHistTools.getAllHistNames(manager_path, analysis) if "all" in input_hists else input_hists
 
-    hists = filter(lambda x: all(y not in x for y in excludedHistPatterns), config_hists)
+    hists = [x for x in config_hists if all(y not in x for y in excludedHistPatterns)]
     hist_inputs = [getHistExpr(hists, analysis)]
 
     return hists, hist_inputs

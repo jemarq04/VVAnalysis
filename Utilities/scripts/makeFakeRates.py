@@ -2,7 +2,7 @@
 import datetime
 
 import ROOT
-from python import ConfigureJobs, HistTools, OutputTools, SelectorTools, UserInput
+from .python import ConfigureJobs, HistTools, OutputTools, SelectorTools, UserInput
 
 ROOT.gROOT.SetBatch(True)
 
@@ -28,7 +28,7 @@ def getHistNames(channels):
 def makeCompositeHists(name, members, addRatios=True, overflow=False):
     composite = ROOT.TList()
     composite.SetName(name)
-    for directory in [str(i) for i in members.keys()]:
+    for directory in [str(i) for i in members]:
         for histname in getHistNames(["eee", "eem", "emm", "mmm"]):
             hist = fOut.Get("/".join([directory, histname]))
             if hist:

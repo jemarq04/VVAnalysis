@@ -26,7 +26,7 @@ errOrder = []
 
 def plotVar(errup, errdn, errtypes, var, year):
     errupa = np.array(errup)
-    errdna = np.array(errdn)
+    _errdna = np.array(errdn)
 
     ind = errupa.argsort()
     errtypes, errup, errdn = [np.take(x, ind) for x in [errtypes, errup, errdn]]
@@ -59,7 +59,7 @@ def plotVar(errup, errdn, errtypes, var, year):
     fig.tight_layout()
     # fig.subplots_adjust(wspace=0.09)
     # plt.show()
-    plt.savefig(year + "FullLog/plots/" + var + "_errorplot_%s.png" % year)
+    plt.savefig(year + "FullLog/plots/" + var + f"_errorplot_{year}.png")
     plt.close(fig)
 
 
@@ -105,23 +105,23 @@ for var in vars:
         errup = []
         errdn = []
 
-        fin = open(year + "FullLog/ErrorInfo_%s.log" % var)
-        for line in fin:
-            if "Error Summary" in line:
-                start = True
-                continue
-            if start:
-                if "Sum portion up and down" in line:
+        with open(f"{year}FullLog/ErrorInfo_{var}.log") as fin:
+            for line in fin:
+                if "Error Summary" in line:
+                    start = True
                     continue
+                if start:
+                    if "Sum portion up and down" in line:
+                        continue
 
-                etype = line.split(":")[0]
-                if etype in edict:
-                    etype = edict[etype]
-                errtypes.append(etype)
-                eup = float(line.split("PortionUp ")[1].split(" PortionDn ")[0])
-                edn = float(line.split(" PortionDn ")[1])
-                errup.append(eup)
-                errdn.append(edn)
+                    etype = line.split(":")[0]
+                    if etype in edict:
+                        etype = edict[etype]
+                    errtypes.append(etype)
+                    eup = float(line.split("PortionUp ")[1].split(" PortionDn ")[0])
+                    edn = float(line.split(" PortionDn ")[1])
+                    errup.append(eup)
+                    errdn.append(edn)
 
         if year == "2016":
             errtypesTot = errtypes
@@ -183,13 +183,13 @@ massprint = False
 for key in keysReorder:
     if not massprint:
         # print("Type: %s %s - %s"%(key,100*round(min(errRangeDict[key]),4),100*round(max(errRangeDict[key]),4) ))
-        print("& %s - %s \\" % (100 * round(min(errRangeDict[key]), 4), 100 * round(max(errRangeDict[key]), 4)) + "%")
+        print("&", 100 * round(min(errRangeDict[key]), 4), "-", 100 * round(max(errRangeDict[key]), 4), "\\%")
         # print("Type: %s & %s \\"%(key,100*round(max(errRangeDict[key]),4) )+"%")
 
     else:
         pstr = ""
-        for i, v in enumerate(vars):
-            pstr += "& %s " % (100 * round(max(errRangeDict[key][2 * i : 2 * i + 1 + 1]), 4))
+        for i, _v in enumerate(vars):
+            pstr += f"& {100 * round(max(errRangeDict[key][2 * i : 2 * i + 1 + 1]), 4)} "
             if round(max(errRangeDict[key][2 * i : 2 * i + 1 + 1]), 4) > 0.0:
                 pstr += "\\%"
             if i < len(vars) - 1:

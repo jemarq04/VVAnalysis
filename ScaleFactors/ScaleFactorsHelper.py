@@ -29,7 +29,7 @@ class ScaleFactorsHelper:
         self.registerPilupSFs()
 
     @staticmethod
-    def getScaleFactorExpression(self, state, muonId="tight", electronId="tight"):
+    def getScaleFactorExpression(state, muonId="tight", electronId="tight"):
         if muonId != "tight" and electronId != "tight":
             return "1"
         if state == "eem":

@@ -1,5 +1,3 @@
-import pdb
-
 import ROOT
 
 
@@ -24,8 +22,8 @@ def Ratiol(list1, list2):
     return [x / y for x, y in zip(list1, list2)]
 
 
-def printr(l, ro):
-    print([round(x, ro) for x in l])
+def printr(vals, ro):
+    print([round(x, ro) for x in vals])
 
 
 # fqq = ROOT.TFile("qqOutputHistMiNNLO.root")
@@ -87,13 +85,13 @@ for i, var in enumerate(vars2):
     hggNoGen.Scale(ggfacNG)
 
     # hsum = hqq.Clone("tot_MassAllj_trueNNLO")
-    hsum = hqq.Clone("tot_%s_trueNNLO" % var1)
+    hsum = hqq.Clone(f"tot_{var1}_trueNNLO")
     hsum.Add(hgg)
 
-    hsumEW = hqqEW.Clone("tot_%s_trueEWC" % var1)
+    hsumEW = hqqEW.Clone(f"tot_{var1}_trueEWC")
     hsumEW.Add(hggEW)
 
-    hsumNoGen = hqqNoGen.Clone("tot_%s_trueNNLONoGenW" % var1)
+    hsumNoGen = hqqNoGen.Clone(f"tot_{var1}_trueNNLONoGenW")
     hsumNoGen.Add(hggNoGen)
 
     if i == 0:
@@ -111,7 +109,7 @@ for i, var in enumerate(vars2):
     # printTH1N(hqqEW)
     # printTH1N(hgg)
     # printTH1N(hggEW)
-    pdb.set_trace()
+    # pdb.set_trace()
     printTH1N(hsum)
     # printTH1N(hsumNoGen)
 

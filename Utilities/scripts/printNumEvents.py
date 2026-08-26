@@ -4,8 +4,8 @@ import datetime
 import os
 
 import ROOT
-from python import ApplySelection, ConfigureJobs
-from python.prettytable import PrettyTable
+from .python import ApplySelection, ConfigureJobs
+from .python.prettytable import PrettyTable
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -36,8 +36,9 @@ args = parser.parse_args()
 isfile = any(os.path.isfile(name) or os.path.exists(name.rstrip("/*")) for name in args.filelist)
 filelist = ConfigureJobs.getListOfFiles(args.filelist, args.selection) if not isfile else args.filelist
 states = [x.strip() for x in args.channels.split(",")]
-state_yields = dict((i, 0) for i in ["eee", "emm", "eem", "mmm"])
-totals = dict((i, 0) for i in ["eee", "emm", "eem", "mmm"])
+channels = ["eee", "emm", "eem", "mmm"]
+state_yields = dict.fromkeys(channels, 0)
+totals = dict.fromkeys(channels, 0)
 totals["processed"] = 0
 total = 0
 if args.checkDuplicates:
@@ -86,7 +87,7 @@ for name in filelist:
             )
             output_file = file_name if output_dir == "" else "/".join([output_dir, name, file_name])
             if args.printEventNums:
-                outfile = open(output_file, "wa")
+                outfile = open(output_file, "w")
             outfile.write("# Made with cut: %s\n" % args.cut_string)
             for row in cut_tree:
                 eventId = f"{row.run}:{row.lumi}:{row.evt}"
@@ -124,7 +125,7 @@ for name in filelist:
             state_yields["eem"],
             state_yields["emm"],
             state_yields["mmm"],
-            sum(state_yields.values()[:-1]),
+            sum(list(state_yields.values())[:-1]),
             state_yields["processed"],
         ]
     )
@@ -136,7 +137,7 @@ event_info.add_row(
         totals["eem"],
         totals["emm"],
         totals["mmm"],
-        sum(totals.values()[:-1]),
+        sum(list(totals.values())[:-1]),
         totals["processed"],
     ]
 )
@@ -144,7 +145,7 @@ event_info.add_row(
 print()
 print("Results for all files:")
 total = 0
-for state, count in totals.iteritems():
+for state, count in totals.items():
     if state == "processed":
         continue
     print("Summed events for all files in %s state is %i" % (state, count))
@@ -159,5 +160,5 @@ else:
 if args.printEventNums:
     file_name = "summary.txt"
     summary_file = file_name if output_dir == "" else "/".join([output_dir, file_name])
-    with open(summary_file, "wa") as summary:
+    with open(summary_file, "w") as summary:
         summary.write(str(event_info))

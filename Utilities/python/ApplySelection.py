@@ -1,7 +1,7 @@
 import ROOT
-import UserInput
+from . import UserInput
 
-import ConfigureJobs
+from . import ConfigureJobs
 
 
 class CutString:
@@ -30,8 +30,8 @@ def buildCutString(state, selections, analysis, trigger):
             trigger_string = getTriggerCutString(trigger, analysis)
             if not cut_string.contains(trigger_string):
                 cut_string.append(trigger_string)
-        counts = dict((lep, state.count(lep)) for lep in state)
-        current = dict((lep, 0) for lep in state)
+        counts = {lep: state.count(lep) for lep in state}
+        current = dict.fromkeys(state, 0)
         for lep in state:
             current[lep] += 1
             lep_name = "".join([lep, "" if counts[lep] == 1 else str(current[lep])])
@@ -42,9 +42,9 @@ def buildCutString(state, selections, analysis, trigger):
 
 def setAliases(tree, state, aliases_json):
     aliases = UserInput.readInfo(aliases_json)
-    for name, value in aliases["State"][state].iteritems():
+    for name, value in aliases["State"][state].items():
         tree.SetAlias(name, value)
-    for name, value in aliases["Event"].iteritems():
+    for name, value in aliases["Event"].items():
         tree.SetAlias(name, value)
 
 
@@ -58,7 +58,7 @@ def applySelection(tree, state, selection, analysis, trigger):
     cut_string = buildCutString(state, analysis, selection, trigger)
     # tree.SetProof()
     listname = "_".join(["list", state])
-    num_passing = tree.Draw(">>" + listname, cut_string.getString(), "entrylist")
+    _num_passing = tree.Draw(">>" + listname, cut_string.getString(), "entrylist")
     # tlist = ROOT.gProof.GetOutputList().FindObject(listname)
     tlist = ROOT.gDirectory.FindObject(listname)
     tree.SetEntryList(tlist)

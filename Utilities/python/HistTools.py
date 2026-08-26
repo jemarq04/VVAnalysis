@@ -40,9 +40,9 @@ def getDifferenceDirect(fOut, name, comp1, comp2, ratioFunc=None):
             diff = hist1.Clone()
             diff.Add(hist2, -1)
         elif not hist1:
-            logging.warning("Hist %s was not produced for dataset(s) %s" % (histname, dir1))
+            logging.warning("Hist %s was not produced for dataset(s) %s" % (histname, comp1.GetName()))
         elif not hist2:
-            logging.warning("Hist %s was not produced for dataset(s) %s" % (histname, dir2))
+            logging.warning("Hist %s was not produced for dataset(s) %s" % (histname, comp1.GetName()))
         # for ind in range(1,diff.GetNbinsX()+1): # for nonprompt truncate negative bins
         #    if diff.GetBinContent(ind)<0.:
         #        diff.SetBinContent(ind,0.)
@@ -89,7 +89,7 @@ def makeUnrolledHist(init_2D_hist, xbins, ybins, name=""):
 
 def make1DaQGCHists(orig_file, input2D_hists, plot_info, rebin=None):
     output_folders = []
-    for name, data in plot_info.iteritems():
+    for name, data in plot_info.items():
         entry = data["lheWeightEntry"]
         file_name = str(data["Members"][0])
 
@@ -188,11 +188,6 @@ def getHessianPDFVariationHists(init2D_hist, entries, name, rebin=None, central=
     )
 
 
-def getAllHessianPDFHists():
-    hists, hist_name = getLHEWeightHists(init2D_hist, entries, name, "pdf", rebin)
-    return hists
-
-
 def getPDFPercentVariation(values):
     denom = values[84] + values[16]
     if denom == 0:
@@ -200,7 +195,11 @@ def getPDFPercentVariation(values):
     return abs(values[84] - values[16]) / denom
 
 
-def getScaleHists(scale_hist2D, name, rebin=None, entries=[i for i in range(1, 10)], central=0, exclude=[7, 9]):
+def getScaleHists(scale_hist2D, name, rebin=None, entries=None, central=0, exclude=None):
+    if entries is None:
+        entries = list(range(1, 10))
+    if exclude is None:
+        exclude = [7, 9]
     hists, hist_name = getLHEWeightHists(scale_hist2D, entries, name, "QCDscale", rebin)
     return getVariationHists(hists, name, hist_name, lambda x: x[-1], lambda x: x[1], central)
 
@@ -327,7 +326,7 @@ def addOverflow(hist):
 
 
 def addOverflowAndUnderflow(hist, underflow=True, overflow=True):
-    if not "TH1" in hist.ClassName():
+    if "TH1" not in hist.ClassName():
         return
     if overflow:
         # Returns num bins + overflow + underflow
@@ -339,12 +338,14 @@ def addOverflowAndUnderflow(hist, underflow=True, overflow=True):
         hist.SetBinContent(1, add_underflow)
 
 
-def makeCompositeHists(hist_file, name, members, lumi, hists=[], underflow=False, overflow=True, rebin=None):
+def makeCompositeHists(hist_file, name, members, lumi, hists=None, underflow=False, overflow=True, rebin=None):
+    if hists is None:
+        hists = []
     # pdb.set_trace()
     composite = ROOT.TList()
     composite.SetName(name)
     SumW = {}
-    for directory in [str(i) for i in members.keys()]:
+    for directory in [str(i) for i in members]:
         # For aQGC, the different plot groups should already be in their own files
         if "aqgc" in directory:
             directory = name
@@ -369,7 +370,7 @@ def makeCompositeHists(hist_file, name, members, lumi, hists=[], underflow=False
             tmphist = hist_file.Get("/".join([directory, histname]))
             if not tmphist:
                 raise RuntimeError("Failed to produce histogram %s" % "/".join([directory, histname]))
-            toRebin = rebin and not "TH2" in tmphist.ClassName()
+            toRebin = rebin and "TH2" not in tmphist.ClassName()
             hist = tmphist.Clone() if not toRebin else tmphist.Rebin(len(rebin) - 1, histname, rebin)
             tmphist.Delete()
             if hist:
@@ -395,18 +396,20 @@ def makeCompositeHists_scaling(
     name,
     members,
     lumi,
-    hists=[],
+    hists=None,
     underflow=False,
     overflow=True,
     rebin=None,
     scale_sample="ggZZ",
     scale_fac=1.0,
 ):
+    if hists is None:
+        hists = []
     # pdb.set_trace()
     composite = ROOT.TList()
     composite.SetName(name)
     SumW = {}
-    for directory in [str(i) for i in members.keys()]:
+    for directory in [str(i) for i in members]:
         # For aQGC, the different plot groups should already be in their own files
         if "aqgc" in directory:
             directory = name
@@ -429,7 +432,7 @@ def makeCompositeHists_scaling(
             tmphist = hist_file.Get("/".join([directory, histname]))
             if not tmphist:
                 raise RuntimeError("Failed to produce histogram %s" % "/".join([directory, histname]))
-            toRebin = rebin and not "TH2" in tmphist.ClassName()
+            toRebin = rebin and "TH2" not in tmphist.ClassName()
             hist = tmphist.Clone() if not toRebin else tmphist.Rebin(len(rebin) - 1, histname, rebin)
             tmphist.Delete()
             if hist:

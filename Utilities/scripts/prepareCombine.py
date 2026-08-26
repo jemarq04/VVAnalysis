@@ -7,8 +7,8 @@ import os
 import sys
 
 import ROOT
-from python import ConfigureJobs, HistTools, OutputTools, UserInput
-from python.prettytable import PrettyTable
+from .python import ConfigureJobs, HistTools, OutputTools, UserInput
+from .python.prettytable import PrettyTable
 
 
 def getComLineArgs():
@@ -39,7 +39,10 @@ def getComLineArgs():
     return vars(parser.parse_args())
 
 
-def combineChannels(group, chans, variations=[], central=True):
+def combineChannels(group, chans, variations=None, central=True):
+    if variations is None:
+        variations = []
+
     if central:
         variations.append("")
     for var in variations:
@@ -135,17 +138,17 @@ card_info = {
 
 pdf_entries = {
     "wzjj-vbfnlo": 0,
-    "EW-WZjj": [1] + range(11, 112),
-    "wzjj-aqgcfm": [1] + range(11, 112),
-    "wzjj-aqgcfs": [1] + range(11, 112),
-    "wzjj-aqgcft": [1] + range(11, 112),
-    "QCD-WZjj": [1] + range(11, 112),
-    "wz-powheg": [1] + range(11, 112),
-    "wz": [1] + range(11, 112),
-    "vv-powheg": [1] + range(11, 112),
-    "top-ewk": [1] + range(11, 112),
+    "EW-WZjj": [1] + list(range(11, 112)),
+    "wzjj-aqgcfm": [1] + list(range(11, 112)),
+    "wzjj-aqgcfs": [1] + list(range(11, 112)),
+    "wzjj-aqgcft": [1] + list(range(11, 112)),
+    "QCD-WZjj": [1] + list(range(11, 112)),
+    "wz-powheg": [1] + list(range(11, 112)),
+    "wz": [1] + list(range(11, 112)),
+    "vv-powheg": [1] + list(range(11, 112)),
+    "top-ewk": [1] + list(range(11, 112)),
     "zg": 0,
-    "vv": [1] + range(11, 112),
+    "vv": [1] + list(range(11, 112)),
     "AllData": 0,
 }
 
@@ -282,7 +285,7 @@ if args["aqgc"]:
         "WZxsec2016_aQGC-FT.json",
     ]:
         aqgc_names = json.load(open(base_name + filename))
-        aqgc_groups.extend([str(n) for n in aqgc_names.keys()])
+        aqgc_groups.extend([str(n) for n in aqgc_names])
     plot_groups.extend(aqgc_groups)
 
 if args["higgs"]:
@@ -415,10 +418,10 @@ output_info.add_row(
     ]
 )
 background = dict.fromkeys(chans, 0)
-for chan, yields in card_info.iteritems():
+for chan, yields in card_info.items():
     if chan == "all":
         continue
-    for name, value in yields.iteritems():
+    for name, value in yields.items():
         if "data" in name:
             continue
         if name not in ["EW_WZjj", "wz", "AllData", "wz_powheg", "wzjj_vbfnlo", "output_file"]:
@@ -478,7 +481,7 @@ with open("/".join([output_dir, "Yields%s.out" % signal_abv]), "w") as yields:
 if not args["noCards"]:
     if args["combineChannels"]:
         card_info["all"]["output_file"] = args["output_file"]
-    for chan, chan_dict in card_info.iteritems():
+    for chan, chan_dict in card_info.items():
         chan_dict["signal_name"] = signal.replace("_", "-")
         chan_dict["fit_variable"] = variable
         chan_dict["signal_yield"] = chan_dict[signal]

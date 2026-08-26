@@ -99,14 +99,14 @@ data = standardZZData("zz", inDir, "full")
 g = {"full": {}, "z4l": {}}
 for ch, sample in data.itersamples():
     nPtsMax = int(sample.getEntries())
-    for ana in g:
-        g[ana][ch] = Graph(nPtsMax, title=titles[ch])
-        g[ana][ch].color = colors[ch]
-        g[ana][ch].markerstyle = markers[ch]
-        g[ana][ch].drawstyle = "P"
-        g[ana][ch].SetMarkerSize(g[ana][ch].GetMarkerSize() * 1.5)
+    for ana in g.values():
+        ana[ch] = Graph(nPtsMax, title=titles[ch])
+        ana[ch].color = colors[ch]
+        ana[ch].markerstyle = markers[ch]
+        ana[ch].drawstyle = "P"
+        ana[ch].SetMarkerSize(ana[ch].GetMarkerSize() * 1.5)
         if ch == "mmmm":
-            g[ana][ch].SetMarkerSize(g[ana][ch].GetMarkerSize() * 1.18)
+            ana[ch].SetMarkerSize(ana[ch].GetMarkerSize() * 1.18)
 
     iFull = 0
     iZ4l = 0

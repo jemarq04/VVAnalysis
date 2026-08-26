@@ -16,7 +16,7 @@ randVal = array.array("f", [0.0])
 randB = dummyTree.Branch("randVal", randVal, "randVal/f")
 randVal2 = array.array("f", [0.0])
 randB2 = dummyTree.Branch("randVal2", randVal2, "randVal/f")
-for i in range(100):
+for _ in range(100):
     randVal[0] = ROOT.gRandom.Gaus()
     randVal2[0] = ROOT.gRandom.Gaus()
     dummyTree.Fill()

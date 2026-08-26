@@ -6,7 +6,7 @@ import os
 import subprocess
 import sys
 
-from python import ConfigureJobs, UserInput
+from .python import ConfigureJobs, UserInput
 
 
 def getComLineArgs():
@@ -75,10 +75,7 @@ def farmoutNtupleSkim(sample_name, selection, analysis, version, scaleFacs, noSu
         user=os.environ["USER"],
         folder=f"{datetime.date.today():%Y-%m-%d}_VVAnalysisJobs",
     )
-    try:
-        os.mkdir(submission_dir)
-    except:
-        pass
+    os.mkdir(submission_dir)
     farmout_dict["job_dir"] = submission_dir + "/" + job_name
     farmout_dict["files_per_job"] = getFilesPerJob(farmout_dict["input_files_path"])
     farmout_dict["job_name"] = job_name

@@ -6,11 +6,13 @@ import glob
 import json
 import os
 import string
+import subprocess
+import logging
 
 import UserInput
 
 
-def get2DBinning(xvar="mjj", yvar="etajj", analysis="WZ"):
+def get2DBinning(xvar="mjj", yvar="etajj", _analysis="WZ"):
     # return (array.array('d', [500, 1000,1500, 2000, 2500]),
     # [0, 150, 300, 450] # for MT(WZ)
     #    return (array.array('d', [500, 1000, 1350, 1750, 2000, 2500]),
@@ -139,7 +141,7 @@ def getNumberAndSizeOfLocalFiles(path_to_files):
 
 def getNumberAndSizeOfHDFSFiles(file_path):
     file_info = []
-    for line in out.splitlines():
+    for line in file_path.splitlines():
         split = line.split()
         if len(split) != 9:
             continue

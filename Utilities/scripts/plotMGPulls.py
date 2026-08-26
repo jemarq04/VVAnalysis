@@ -4,7 +4,7 @@ import datetime
 import math
 
 import ROOT
-from python import ConfigureJobs, UserInput
+from .python import ConfigureJobs, UserInput
 from ROOT import vector as Vec
 
 VFloat = Vec("float")
@@ -115,7 +115,7 @@ _yTitle = {}
 _yTitleNoNorm = {}
 
 _yTitleTemp = "{prefix} \\frac{{d\\sigma_{{\\text{{fid}}}}}}{{d{xvar}}} {units}"
-for var, prettyVar in prettyVars.iteritems():
+for var, prettyVar in prettyVars.items():
     xt = prettyVar
     if yaxisunits[var]:
         xt += f" \\, \\left(\\text{{{yaxisunits[var]}}}\\right)"
@@ -165,7 +165,7 @@ legParams["deltaEtajj"]["topmargin"] = 0.05
 legParams["eta"] = legParams["deltaEtajj"].copy()
 # legParams['massFull']['leftmargin'] = 0.25
 
-legParamsLogy = {v: p.copy() for v, p in legParams.iteritems()}
+legParamsLogy = {v: p.copy() for v, p in legParams.items()}
 # legParamsLogy['l1Pt']['topmargin'] = 0.65
 # legParamsLogy['l1Pt']['leftmargin'] = 0.2
 # legParamsLogy['l1Pt']['rightmargin'] = 0.18
@@ -178,7 +178,7 @@ legParamsLogy["leppt"]["topmargin"] = 0.05
 # legParamsLogy['massFull']['topmargin'] = 0.035
 
 
-def createCanvasPads(varName):
+def createCanvasPads(_varName):
     c = ROOT.TCanvas("c", "canvas")
     ROOT.gStyle.SetOptStat(0)
     ROOT.gStyle.SetLegendBorderSize(0)

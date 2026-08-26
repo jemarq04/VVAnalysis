@@ -40,7 +40,7 @@ with root_open("foo_new.root", "recreate") as f1:
     t1.create_branches({"y": "I"})
 
     # fill the copied branches with old stuff, fill new branches with new stuff
-    for i, row in enumerate(t0Again):
+    for i, _row in enumerate(t0Again):
         t1.y = i
         t1.fill()
 

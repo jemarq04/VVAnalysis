@@ -3,6 +3,7 @@ from os import path as _path
 from os import system as _unix
 from re import compile as _reComp
 from shutil import move as _mv
+from functools import reduce
 
 _texTemplate = """
 \\documentclass[tikz]{{standalone}}
@@ -76,7 +77,7 @@ def pdfViaTex(c, fname, texDir, pdfDir, **extraSubs):
     # there's probably a way to combine with the previous regex...
     subList.append((r"", _reComp(r"(?<=\\path \[pattern=crosshatch, pattern color=c, )fill (?=opacity=[01])")))
     # anything else that needs to change
-    subList += [(k, _reComp(v)) for k, v in extraSubs.iteritems()]
+    subList += [(k, _reComp(v)) for k, v in extraSubs.items()]
     with open(imgFile, "r") as fIm, open(imgFileFixed, "w") as fImFix:
         fImFix.writelines(reduce(_doSub, *subList, line) for line in fIm)
 

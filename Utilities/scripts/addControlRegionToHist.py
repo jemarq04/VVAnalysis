@@ -2,7 +2,7 @@ import argparse
 import array
 
 import ROOT
-from python import ConfigureJobs, HistTools, OutputTools
+from .python import ConfigureJobs, HistTools, OutputTools
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--input_file", "-i", type=str, default="test.root", help="Output file name")

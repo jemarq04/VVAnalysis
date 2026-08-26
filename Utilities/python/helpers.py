@@ -30,7 +30,7 @@ def combineWeights(*wts, **kwargs):
     kwargs['selections'] evaluates to True -> join with ' && ' instead of ' * '
     kwargs['joinwith'] can be used to replace ' * ' with an arbitrary string
     """
-    if not all(isinstance(w, str) or isinstance(w, _NumType) for w in wts):
+    if not all(isinstance(w, str) or isinstance(w, int) for w in wts):
         raise TypeError("You can only combine weights made of numbers or strings")
     goodWeights = [str(w) for w in wts if w]
     if not goodWeights:
@@ -40,9 +40,6 @@ def combineWeights(*wts, **kwargs):
         joiner = " && "
     joiner = "){}(".format(kwargs.get("joinwith", joiner))
     return "(" + joiner.join(goodWeights) + ")"
-
-
-identityFunction = lambda *args, **kwargs: True
 
 
 Z_MASS = 91.1876

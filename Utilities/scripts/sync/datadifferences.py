@@ -8,10 +8,10 @@ from Utilities.python import ApplySelection
 comparison = "KennethNotSvenja"
 
 
-def chunks(l, n):
-    """Yield successive n-sized chunks from l."""
-    for i in range(0, len(l), n):
-        yield l[i : i + n]
+def chunks(vals, n):
+    """Yield successive n-sized chunks from vals."""
+    for i in range(0, len(vals), n):
+        yield vals[i : i + n]
 
 
 for chan in ["eee", "eem", "emm", "mmm"]:

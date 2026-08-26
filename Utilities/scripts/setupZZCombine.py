@@ -2,7 +2,7 @@ import array
 import logging
 import sys
 
-from python import CombineCardTools, ConfigureJobs
+from .python import CombineCardTools, ConfigureJobs
 
 logging.basicConfig(level=logging.DEBUG)
 

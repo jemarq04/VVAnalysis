@@ -58,7 +58,7 @@ vName = {
     "z": r"\\text{Z}",
 }
 
-for fType, fName in fNames.iteritems():
+for fType, fName in fNames.items():
     with root_open(fName) as f:
         c = asrootpy(f.c1_par_pol2bs_fit)  # c1_par_expobs_fit)
 

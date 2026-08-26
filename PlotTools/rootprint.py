@@ -23,7 +23,7 @@ class RootMagics(Magics):
         super().__init__(shell)
 
     @cell_magic
-    def rootprint(self, line, cell):
+    def rootprint(self, _line, cell):
         """Capture Root stdout output and print in ipython notebook."""
 
         with tempfile.NamedTemporaryFile() as tmpFile:

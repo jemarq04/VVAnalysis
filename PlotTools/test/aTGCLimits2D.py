@@ -94,11 +94,11 @@ limits1D = {
     },
 }
 
-for nf, fName in fNames.iteritems():
+for nf, fName in fNames.items():
     graphs_ = OrderedDict()
 
     with root_open(fName) as f:
-        for name, nameInFile in graphNames.iteritems():
+        for name, nameInFile in graphNames.items():
             g = asrootpy(getattr(f, nameInFile))
             g.title = titles[name]
             if name == "bestFit":
@@ -122,7 +122,7 @@ for nf, fName in fNames.iteritems():
 
     # have to reorder. Ugh.
     graphs = OrderedDict()
-    for name, g in graphs_.iteritems():
+    for name, g in graphs_.items():
         if name == "bestFit":
             graphs["1D"] = bars1D
             continue

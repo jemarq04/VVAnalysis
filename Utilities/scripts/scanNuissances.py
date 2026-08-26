@@ -17,7 +17,7 @@ def getMuAndErr(arg):
         return (0, 0, 0)
     rtfile = ROOT.TFile("fitDiagnostics.root")
     tree = rtfile.Get("tree_fit_sb")
-    row = tree.__iter__().next()
+    row = next(tree.__iter__())
 
     return (row.r, row.rLoErr, row.rHiErr)
 
@@ -39,7 +39,7 @@ nuisances = {
     # "background_theory" : "group",
     # "prop_binmmm_bin0,prop_binemm_bin0,prop_bineem_bin0,prop_bineee_bin0": "simple" ,
 }
-for nuisance, nutype in nuisances.iteritems():
+for nuisance, nutype in nuisances.items():
     if nutype == "simple":
         arg = "--freezeParameters=%s" % nuisance
     else:

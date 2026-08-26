@@ -1,11 +1,11 @@
 import logging
 import os
 
-import HistTools
-import OutputTools
+from . import HistTools
+from . import OutputTools
 import ROOT
 
-import ConfigureJobs
+from . import ConfigureJobs
 
 
 class CombineCardTools:
@@ -45,7 +45,9 @@ class CombineCardTools:
     def setFitVariable(self, variable):
         self.fitVariable = variable
 
-    def setVariations(self, variations, exclude=[]):
+    def setVariations(self, variations, exclude=None):
+        if exclude is None:
+            exclude = []
         if not self.processes:
             raise ValueError("No processes defined, can't set variations")
         for process in self.processes.keys():
@@ -81,7 +83,7 @@ class CombineCardTools:
             os.makedirs(outputFolder)
 
     def getRootFile(self, rtfile, mode=None):
-        if type(rtfile) == str:
+        if type(rtfile) is str:
             if mode:
                 return ROOT.TFile.Open(rtfile, mode)
             else:
@@ -142,7 +144,7 @@ class CombineCardTools:
         return plots
 
     # processName needs to match a PlotGroup
-    def loadHistsForProcess(self, processName, addTheory, scaleNorm=1):
+    def loadHistsForProcess(self, processName, addTheory, _scaleNorm=1):
         plotsToRead = self.listOfHistsByProcess(processName, addTheory)
 
         group = HistTools.makeCompositeHists(
@@ -183,9 +185,13 @@ class CombineCardTools:
         # TODO: You may want to combine channels before removing zeros
         self.combineChannels(group)
         # TODO: Make optional
-        map(HistTools.addOverflow, filter(lambda x: x.GetName() not in processedHists, group))
+        for x in group:
+            if x.GetName() not in processedHists:
+                HistTools.addOverflow(x)
         if "data" not in group.GetName().lower():
-            map(HistTools.removeZeros, filter(lambda x: x.GetName() not in processedHists, group))
+            for x in group:
+                if x.GetName() not in processedHists:
+                    HistTools.removeZeros(x)
         self.histData[processName] = group
 
     # It's best to call this function for process, otherwise you can end up
@@ -197,7 +203,10 @@ class CombineCardTools:
         OutputTools.writeOutputListItem(processHists, self.outputFile)
         processHists.Delete()
 
-    def writeCards(self, chan, nuisances, year="", extraArgs={}):
+    def writeCards(self, chan, nuisances, year="", extraArgs=None):
+        if extraArgs is None:
+            extraArgs = {}
+
         chan_dict = self.yields[chan].copy()
         chan_dict.update(extraArgs)
         chan_dict["nuisances"] = nuisances

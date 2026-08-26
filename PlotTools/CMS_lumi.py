@@ -62,7 +62,7 @@ def CMS_lumi(pad, iPeriod, iPosX, forLatex=False):
     t = pad.GetTopMargin()
     r = pad.GetRightMargin()
     b = pad.GetBottomMargin()
-    e = 0.025
+    _e = 0.025
 
     if pad != rt.TVirtualPad.Pad():
         pad.cd()

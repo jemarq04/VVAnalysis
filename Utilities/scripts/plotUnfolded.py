@@ -6,11 +6,11 @@ import math
 import os
 import sys
 
-import makeSimpleHtml
+from . import makeSimpleHtml
 import ROOT
 
 # from python import ConfigureJobs
-from python import UserInput
+from .python import UserInput
 from ROOT import vector as Vec
 
 VFloat = Vec("float")
@@ -87,7 +87,7 @@ if "Full" in args["variable"]:
     logo_ht = 0.943
 # manager_path = ConfigureJobs.getManagerPath()
 # Only MassAllj should plot EWK correction
-EW_P4 = "MassAllj" in args["variable"] and not "Full" in args["variable"]  # or (args['variable'] == "nJets")
+EW_P4 = "MassAllj" in args["variable"] and "Full" not in args["variable"]  # or (args['variable'] == "nJets")
 
 # Currently don't plot EWK for non-m4l jet variables
 if not EW_P4:
@@ -209,7 +209,7 @@ varList = [
 ]  # With original list, histograms will be searched for all variables regardless of whether they are in runVariables
 varNames = {"mass": "Mass", "pt": "ZZPt", "zpt": "ZPt", "leppt": "LepPt", "dphiz1z2": "dPhiZ1Z2", "drz1z2": "dRZ1Z2"}
 
-for key in myvar_dict.keys():  # key is the variable
+for key in myvar_dict:  # key is the variable
     _binning[key] = myvar_dict[key]["_binning"]
     units[key] = myvar_dict[key]["units"]
     prettyVars[key] = myvar_dict[key]["prettyVars"]
@@ -229,7 +229,7 @@ _yTitle = {}
 _yTitleNoNorm = {}
 
 _yTitleTemp = "{prefix} \\frac{{d\\sigma_{{\\text{{fid}}}}}}{{d{xvar}}} {units}"
-for var, prettyVar in prettyVars.iteritems():
+for var, prettyVar in prettyVars.items():
     xt = prettyVar
     if yaxisunits[var]:
         xt += f" \\, \\left(\\text{{{yaxisunits[var]}}}\\right)"
@@ -289,17 +289,17 @@ legParams["deltaEtajj"]["topmargin"] = 0.05
 legParams["eta"] = legParams["deltaEtajj"].copy()
 # legParams['massFull']['leftmargin'] = 0.25
 
-legParamsLogy = {v: p.copy() for v, p in legParams.iteritems()}
+legParamsLogy = {v: p.copy() for v, p in legParams.items()}
 # legParamsLogy['l1Pt']['topmargin'] = 0.65
 # legParamsLogy['l1Pt']['leftmargin'] = 0.2
 # legParamsLogy['l1Pt']['rightmargin'] = 0.18
-for key in legParamsLogy:
+for key, vals in legParamsLogy.items():
     if "mass" in key.lower():
         print("legParamsLogy Key= %s==============================" % key)
-        legParamsLogy[key]["topmargin"] = 0.075
-        legParamsLogy[key]["leftmargin"] = 0.35
-        legParamsLogy[key]["rightmargin"] = 0.025
-        legParamsLogy[key]["textsize"] = 0.033
+        vals["topmargin"] = 0.075
+        vals["leftmargin"] = 0.35
+        vals["rightmargin"] = 0.025
+        vals["textsize"] = 0.033
 legParamsLogy["leppt"]["topmargin"] = 0.05
 # legParamsLogy['zHigherPt']['topmargin'] = 0.045
 # legParamsLogy['massFull']['topmargin'] = 0.035
@@ -363,7 +363,6 @@ def createRatio(h1, h2):
     with open("varsFile.json") as var_json_file:
         myvar_dict = json.load(var_json_file)
 
-    global my_varName
     Ratio.GetYaxis().SetRangeUser(myvar_dict[my_varName]["ratio_min"], myvar_dict[my_varName]["ratio_max"])
     # Ratio.GetYaxis().SetRangeUser(0.4,1.8)
     Ratio.SetStats(0)
@@ -388,7 +387,7 @@ def createRatio(h1, h2):
     return Ratio, line
 
 
-def getPrettyLegend(hTrue, data_hist, hAltTrue, error_hist, coords, hTrueNNLO=None, hTrueEWC=None):
+def getPrettyLegend(hTrue, data_hist, hAltTrue, _error_hist, coords, hTrueNNLO=None, hTrueEWC=None):
     tmpshift = 0.05
     if "MassAllj" in hTrue.GetName():
         tmpshift = 0.03
@@ -665,7 +664,7 @@ ratioBand_count = 0
 
 
 def RatioErrorBand(Ratio, hUncUp, hUncDn, hTrueNoErrs, varName):
-    global ratioBand_count
+    global ratioBand_count  # noqa
     ratioBand_count += 1
     ratioGraph = ROOT.TGraphAsymmErrors(Ratio)
     ROOT.SetOwnership(ratioGraph, False)
@@ -816,8 +815,8 @@ def generatePlots(
     hTruthNNLO=None,
     hTruthEWC=None,
 ):
-    global include_MiNNLO
-    global EW_corr
+    global include_MiNNLO  # noqa
+    global EW_corr  # noqa
     reset_include_MiNNLO = False
     reset_EW_corr = False
     if include_MiNNLO and not hTruthNNLO:
@@ -841,10 +840,10 @@ def generatePlots(
     ymax_fac = myvar_dict[varName]["ymax_fac"]
     ymin_fac_extra = myvar_dict[varName]["ymin_fac_extra"]
 
-    UnfHists = []
-    TrueHists = []
+    _UnfHists = []
+    _TrueHists = []
     # for normalization if needed
-    nomArea = hUnfolded.Integral(1, hUnfolded.GetNbinsX())
+    _nomArea = hUnfolded.Integral(1, hUnfolded.GetNbinsX())
     # Make uncertainties out of the unfolded histos
     ### plot
     hUnf = hUnfolded.Clone()
@@ -852,7 +851,7 @@ def generatePlots(
     hTrue = hTruth.Clone()
     # Alt Signal
     hTrueAlt = hTruthAlt.Clone()
-    hTrueLeg = hTruthAlt.Clone()  # doesn't seem to get used
+    _hTrueLeg = hTruthAlt.Clone()  # doesn't seem to get used
 
     if include_MiNNLO:
         hTrueNNLO = hTruthNNLO.Clone()
@@ -873,13 +872,13 @@ def generatePlots(
 
     print("hTrue histo here: ", hTrue)
     print("unfoldDir: ", unfoldDir)
-    xaxisSize = hUnf.GetXaxis().GetTitleSize()
-    yaxisSize = hTrue.GetXaxis().GetTitleSize()
+    _xaxisSize = hUnf.GetXaxis().GetTitleSize()
+    _yaxisSize = hTrue.GetXaxis().GetTitleSize()
     if unfoldDir:
         # Create a ratio plot
         c, pad1 = createCanvasPads(varName)
         c.SetCanvasSize(1000, 1300)
-        Unfmaximum = hUnf.GetMaximum()
+        _Unfmaximum = hUnf.GetMaximum()
         # hTrue.SetFillColor(ROOT.TColor.GetColor("#99ccff"))
         # hTrue.SetLineColor(ROOT.TColor.GetColor('#000099'))
         hTrue.SetFillColor(ROOT.TColor.GetColor("#add8e6"))
@@ -912,8 +911,8 @@ def generatePlots(
                 hTrueEWC.SetMarkerSize(0.0)
 
         print("Total Unf Data Integral", hUnf.Integral())
-        Truthmaximum = hTrue.GetMaximum()
-        Truthmaximum2 = hTrueAlt.GetMaximum()
+        _Truthmaximum = hTrue.GetMaximum()
+        _Truthmaximum2 = hTrueAlt.GetMaximum()
         hTrue.SetLineWidth(4 * hTrue.GetLineWidth())
         hTrueAlt.SetLineWidth(4 * hTrueAlt.GetLineWidth())
         if include_MiNNLO:
@@ -971,13 +970,12 @@ def generatePlots(
                     EWCTrueInt = hTrueEWC.Integral(1, hTrueEWC.GetNbinsX())
                     hTrueEWC.Scale(1.0 / EWCTrueInt)
 
-                    if (
-                        varName == "MassAllj"
-                    ):  # If m4l inclusive, after normalization, replace EWK with noEWK plot directly scaled by ratio [1.02244, etc.]
-                        EWkfac = [1.02244, 0.98414, 0.97058, 0.95705, 0.95456, 0.92758, 0.91712, 0.87614, 0.81093]
+                    # if varName == "MassAllj":
+                    # If m4l inclusive, after normalization, replace EWK with noEWK plot directly scaled by ratio [1.02244, etc.]
+                    # _EWkfac = [1.02244, 0.98414, 0.97058, 0.95705, 0.95456, 0.92758, 0.91712, 0.87614, 0.81093]
 
-                        # for ifac in range(1,hTrueEWC.GetNbinsX()+1):
-                        #    hTrueEWC.SetBinContent(ifac,hTrueNNLO.GetBinContent(ifac)*EWkfac[ifac-1])
+                    # for ifac in range(1,hTrueEWC.GetNbinsX()+1):
+                    #    hTrueEWC.SetBinContent(ifac,hTrueNNLO.GetBinContent(ifac)*EWkfac[ifac-1])
 
         elif normFb:
             hTrue.Scale(1.0 / lumifb)
@@ -1169,19 +1167,19 @@ def generatePlots(
 
         if varName in ["jetPt[0]", "jetPt[1]", "absjetEta[0]", "absjetEta[1]", "mjj", "dEtajj"]:
             if varName in ["jetPt[0]", "absjetEta[0]"]:
-                nJetsText = getAxisTextBox(0.17, 0.1, "Events with #geq 1 jet", 0.06, False)
+                _nJetsText = getAxisTextBox(0.17, 0.1, "Events with #geq 1 jet", 0.06, False)
             if varName in ["jetPt[1]", "absjetEta[1]", "mjj", "dEtajj"]:
-                nJetsText = getAxisTextBox(0.17, 0.1, "Events with #geq 2 jets", 0.06, False)
+                _nJetsText = getAxisTextBox(0.17, 0.1, "Events with #geq 2 jets", 0.06, False)
 
         if "Mass" in varName:
             if "0" in varName:
-                nJetsText = getAxisTextBox(0.17, 0.1, "Events with 0 jet", 0.06, False)
+                _nJetsText = getAxisTextBox(0.17, 0.1, "Events with 0 jet", 0.06, False)
             if "1" in varName:
-                nJetsText = getAxisTextBox(0.17, 0.1, "Events with 1 jet", 0.06, False)
+                _nJetsText = getAxisTextBox(0.17, 0.1, "Events with 1 jet", 0.06, False)
             if "2" in varName:
-                nJetsText = getAxisTextBox(0.17, 0.1, "Events with 2 jets", 0.06, False)
+                _nJetsText = getAxisTextBox(0.17, 0.1, "Events with 2 jets", 0.06, False)
             if "34" in varName:
-                nJetsText = getAxisTextBox(0.17, 0.1, "Events with #geq 3 jets", 0.06, False)
+                _nJetsText = getAxisTextBox(0.17, 0.1, "Events with #geq 3 jets", 0.06, False)
 
         # if varName=="dphiz1z2" or varName=="drz1z2":
         #    leg = ROOT.TLegend(0.15,0.60,0.15+0.015*len(sigLabelAlt),0.90,"")
@@ -1215,7 +1213,7 @@ def generatePlots(
         ratioName_nom = mylist_dict["sigLabel"]
         ratioName_alt = mylist_dict["sigLabelAlt"]
 
-        pad2 = createPad2(c)
+        _pad2 = createPad2(c)
 
         hTrueNoErrs = hTrue.Clone()  # need central value only to keep ratio uncertainties consistent
         nbins = hTrueNoErrs.GetNbinsX()
@@ -1239,7 +1237,7 @@ def generatePlots(
         ratioErrorBand.Draw(error_drawopt)  # a2
         Ratio.Draw(crossDrawOpt)  # This redraw is to make it on top of the syst error
 
-        sigTex = getSigTextBox(0.15, 0.8, sigLabel, 0.14)  # used?
+        _sigTex = getSigTextBox(0.15, 0.8, sigLabel, 0.14)  # used?
 
         line.SetLineColor(ROOT.kBlack)
         # line.SetLineColor(ROOT.TColor.GetColor('#377eb8'))
@@ -1266,8 +1264,8 @@ def generatePlots(
         else:
             dataTheoSize *= 0.97
             tmpy = 0.0
-        axText2 = getAxisTextBox(0.06, tmpy, "Data/Pred.", dataTheoSize, True)
-        MCTextNom = getAxisTextBox(top_xy[0], top_xy[1], ratioName_nom, top_fontsize, False)
+        _axText2 = getAxisTextBox(0.06, tmpy, "Data/Pred.", dataTheoSize, True)
+        _MCTextNom = getAxisTextBox(top_xy[0], top_xy[1], ratioName_nom, top_fontsize, False)
 
         # Altyaxis.SetTitle("#scale[1.2]{Data/%s}"%ratioName_nom)
         Altyaxis.SetTickLength(yrtl)
@@ -1282,10 +1280,10 @@ def generatePlots(
         Altyaxis.SetTitleOffset(0.29)  # 0.29
         # Altyaxis.ChangeLabel(2,-1,0.189,-1,-1,-1,"2")
         Altyaxis.Draw("SAME")
-        AltyaxisR = getRYaxis(hUnf, ratioErrorBand, False)
+        _AltyaxisR = getRYaxis(hUnf, ratioErrorBand, False)
 
         # ThirdPad
-        pad3 = createPad3(c)
+        _pad3 = createPad3(c)
 
         hTrueAltNoErrs = hTrueAlt.Clone()  # need central value only to keep ratio uncertainties consistent
         # nbins=hTrueNoErrs.GetNbinsX()
@@ -1317,11 +1315,11 @@ def generatePlots(
         Altline.Draw("same")
 
         if include_MiNNLO:
-            MCTextAlt = getAxisTextBox(bottom_xy[0], bottom_xy[1], ratioName_alt, bottom_fontsize, False)
+            _MCTextAlt = getAxisTextBox(bottom_xy[0], bottom_xy[1], ratioName_alt, bottom_fontsize, False)
         else:
-            MCTextAlt = getAxisTextBox(bottom_xy[0], bottom_xy[1], ratioName_alt, bottom_fontsize * (1 - bmg), False)
+            _MCTextAlt = getAxisTextBox(bottom_xy[0], bottom_xy[1], ratioName_alt, bottom_fontsize * (1 - bmg), False)
 
-        AltTex = getSigTextBox(0.15, 0.85, sigLabelAlt, 0.11)
+        _AltTex = getSigTextBox(0.15, 0.85, sigLabelAlt, 0.11)
 
         yaxis = ROOT.TGaxis(
             hUnf.GetXaxis().GetXmin(),
@@ -1349,11 +1347,11 @@ def generatePlots(
         yaxis.SetTitleOffset(0.365)
         yaxis.Draw("SAME")
 
-        yaxisR = getRYaxis(hUnf, ratioErrorBand, not include_MiNNLO)
+        _yaxisR = getRYaxis(hUnf, ratioErrorBand, not include_MiNNLO)
 
         if include_MiNNLO:
             # Fourth pad
-            pad4 = createPad4(c)
+            _pad4 = createPad4(c)
 
             hTrueNNLONoErrs = hTrueNNLO.Clone()  # need central value only to keep ratio uncertainties consistent
             if EW_corr:
@@ -1396,8 +1394,8 @@ def generatePlots(
 
             ratioName_NNLO = "nNNLO+PS"
             sigLabelNNLO = "nNNLO+PS"
-            MCTextNNLO = getAxisTextBox(xyP3[0], xyP3[1], ratioName_NNLO, fontsizeP3, False)
-            NNLOTex = getSigTextBox(0.15, 0.85, sigLabelNNLO, 0.11)
+            _MCTextNNLO = getAxisTextBox(xyP3[0], xyP3[1], ratioName_NNLO, fontsizeP3, False)
+            _NNLOTex = getSigTextBox(0.15, 0.85, sigLabelNNLO, 0.11)
 
             NNLOyaxis = ROOT.TGaxis(
                 hUnf.GetXaxis().GetXmin(),
@@ -1428,10 +1426,10 @@ def generatePlots(
             NNLOyaxis.SetTitleOffset(0.365)
             NNLOyaxis.Draw("SAME")
 
-            NNLOyaxisR = getRYaxis(hUnf, ratioErrorBand, not (EW_corr and EW_P4))
+            _NNLOyaxisR = getRYaxis(hUnf, ratioErrorBand, not (EW_corr and EW_P4))
 
             if EW_P4 and EW_corr:
-                pad5 = createPad5(c)
+                _pad5 = createPad5(c)
 
                 # EWCRatio.Draw(crossDrawOpt)
                 setErrGrStyle(EWCRatioErrorBand)
@@ -1443,8 +1441,8 @@ def generatePlots(
 
                 ratioName_EWC = "(nNNLO+PS)#times K_{EW}"
                 sigLabelEWC = "(nNNLO+PS)#times K_{EW}"
-                MCTextEWC = getAxisTextBox(xyP4[0], xyP4[1], ratioName_EWC, fontsizeP4, False)
-                EWCTex = getSigTextBox(0.15, 0.85, sigLabelEWC, 0.11)
+                _MCTextEWC = getAxisTextBox(xyP4[0], xyP4[1], ratioName_EWC, fontsizeP4, False)
+                _EWCTex = getSigTextBox(0.15, 0.85, sigLabelEWC, 0.11)
 
                 EWCyaxis = ROOT.TGaxis(
                     hUnf.GetXaxis().GetXmin(),
@@ -1468,7 +1466,7 @@ def generatePlots(
                 EWCyaxis.SetTitleSize(0.12)
                 EWCyaxis.SetTitleOffset(0.365)
                 EWCyaxis.Draw("SAME")
-                EWCyaxisR = getRYaxis(hUnf, ratioErrorBand, True)
+                _EWCyaxisR = getRYaxis(hUnf, ratioErrorBand, True)
 
         # redraw axis
         if "Full" in varName and "Mass" in varName:
@@ -1528,7 +1526,7 @@ def generatePlots(
         # xaxis.SetTickLength(0.1)
         if "Full" in varName and "Mass" in varName:
             xaxis.SetLabelSize(0.12)
-        elif "Mass" in varName and not "All" in varName or "mjj" in varName:
+        elif "Mass" in varName and "All" not in varName or "mjj" in varName:
             xaxis.SetLabelSize(0.15)
         else:
             xaxis.SetLabelSize(0.162)

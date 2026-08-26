@@ -6,7 +6,7 @@ import subprocess
 import sys
 
 import ROOT
-from python import ConfigureJobs, HistTools, OutputTools, SelectorTools, UserInput
+from .python import ConfigureJobs, HistTools, OutputTools, SelectorTools, UserInput
 
 # logging.basicConfig(level=logging.DEBUG)
 
@@ -165,7 +165,7 @@ def makeHistFile(args):
 
     selector.setNtupeType("UWVV" if args["uwvv"] else "NanoAOD")
     if args["uwvv"]:
-        logging.debug("Processing channels " % args["channels"])
+        logging.debug("Processing channels %s" % args["channels"])
         selector.setChannels(args["channels"])
     selector.setNumCores(args["numCores"])
 
@@ -173,7 +173,7 @@ def makeHistFile(args):
         selector.setDatasets(args["filenames"])
     else:
         selector.setFileList(*args["inputs_from_file"])
-    mc = selector.applySelector()
+    _mc = selector.applySelector()
 
     if args["test"]:
         fOut.Close()
@@ -183,11 +183,12 @@ def makeHistFile(args):
         selector.isBackground()
         selector.setInputs(sf_inputs + hist_inputs + fr_inputs)
         selector.setOutputfile(tmpFileName.replace(".root", "bkgd.root"))
-        nonprompt = selector.applySelector()
+        _nonprompt = selector.applySelector()
         tempfiles = [tmpFileName.replace(".root", "%s.root" % app) for app in ["sel", "bkgd"]]
         rval = subprocess.call(["hadd", "-f", tmpFileName] + tempfiles)
         if rval == 0:
-            map(os.remove, tempfiles)
+            for f in tempfiles:
+                os.remove(f)
 
     fOut.Close()
     fOut = ROOT.TFile.Open(tmpFileName, "update")

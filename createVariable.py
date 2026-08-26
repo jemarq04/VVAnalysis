@@ -133,7 +133,7 @@ for key in dict.keys():
     dict[key]["ratio_min"] = 0.4
     dict[key]["ytilt_fac"] = 1.3
 
-    if not "Mass" in key and not "Full" in key:
+    if "Mass" not in key and "Full" not in key:
         bmg = 0.45
         dict[key]["top_xy"] = (0.2, 0.78)
         dict[key]["top_size"] = 0.25
@@ -148,7 +148,7 @@ for key in dict.keys():
         dict[key]["ymin_fac_extra"] = 1.0
         dict[key]["ratio_max"] = 1.8
         dict[key]["ratio_min"] = 0.4
-    if "Mass" in key and not "Full" in key:  # or "nJets" in key:
+    if "Mass" in key and "Full" not in key:  # or "nJets" in key:
         bmg = 0.4
         dict[key]["top_xy"] = (0.2, 0.2)
         dict[key]["top_size"] = 0.27
@@ -160,7 +160,7 @@ for key in dict.keys():
         dict[key]["size_P4"] = round(dict[key]["size_P3"] * (1 - bmg), 2)
         dict[key]["ratio_max"] = 1.2
         dict[key]["ratio_min"] = 0.2
-        if not "All" in key:
+        if "All" not in key:
             dict[key]["ratio_max"] = 1.8
             dict[key]["top_xy"] = (0.2, 0.78)
             dict[key]["top_size"] = 0.25

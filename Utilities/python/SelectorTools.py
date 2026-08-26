@@ -5,10 +5,10 @@ import multiprocessing
 import os
 import subprocess
 
-import OutputTools
+from . import OutputTools
 import ROOT
 
-import ConfigureJobs
+from . import ConfigureJobs
 
 
 class SelectorDriver:
@@ -103,7 +103,7 @@ class SelectorDriver:
             raise ValueError("%s is not a valid file." % list_of_files)
         filelist = [f.split("#")[0].strip() for f in open(list_of_files)]
         # Remove empty/commented lines
-        filelist = filter(lambda x: len(x) > 2, filelist)
+        filelist = [x for x in filelist if len(x) > 2]
         nPerJob = int(nPerJob)
         if nPerJob < 1:
             raise ValueError("Number of files per job must be >= 1.")
@@ -124,7 +124,7 @@ class SelectorDriver:
             else:
                 # Intended for running specified files, use the format name:file
                 dataset, file_path = line.split("@")
-            if dataset not in self.datasets.keys():
+            if dataset not in self.datasets:
                 self.datasets[dataset] = [file_path]
             else:
                 self.datasets[dataset].append(file_path)
@@ -149,7 +149,7 @@ class SelectorDriver:
             if self.numCores > 1:
                 self.processParallelByDataset(self.datasets, chan)
             else:
-                for dataset, file_path in self.datasets.iteritems():
+                for dataset, file_path in self.datasets.items():
                     self.processDataset(dataset, file_path, chan)
         if len(self.channels) > 1 and self.numCores > 1:
             tempfiles = [self.outfile_name.replace(".root", "_%s.root" % c) for c in self.channels]
@@ -226,20 +226,20 @@ class SelectorDriver:
         return "Events" if self.ntupleType == "NanoAOD" else ("%s/ntuple" % channel)
 
     def combineParallelFiles(self, tempfiles, chan):
-        tempfiles = filter(os.path.isfile, tempfiles)
+        tempfiles = list(filter(os.path.isfile, tempfiles))
         outfile = self.outfile_name
         if chan != "Inclusive" and len(self.channels) != 1:
             outfile = self.outfile_name.replace(".root", "_%s.root" % chan)
         rval = subprocess.call(["hadd", "-f", outfile] + tempfiles)
         if rval == 0:
-            map(os.remove, tempfiles)
+            list(map(os.remove, tempfiles))
         else:
             raise RuntimeError("Failed to collect data from parallel run")
 
     def processParallelByDataset(self, datasets, chan):
-        numCores = min(self.numCores, len(datasets))
+        _numCores = min(self.numCores, len(datasets))
         p = multiprocessing.Pool(processes=self.numCores)
-        p.map(self, [[dataset, f, chan] for dataset, f in datasets.iteritems()])
+        p.map(self, [[dataset, f, chan] for dataset, f in datasets.items()])
         # Store arrays in temp files, since it can get way too big to keep around in memory
         tempfiles = [self.tempfileName(d) for d in datasets]
         self.combineParallelFiles(tempfiles, chan)

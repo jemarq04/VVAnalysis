@@ -2,7 +2,7 @@ import os
 import sys
 
 dir = sys.argv[1]
-for root, dirs, files in os.walk(dir):
+for root, _, files in os.walk(dir):
     for name in files:
         if "skim-" in name and ".err" in name:
             path = os.path.join(root, name)
@@ -11,6 +11,6 @@ for root, dirs, files in os.walk(dir):
                 for line in ferr:
                     text.append(line.strip())
             if len(text) > 1:
-                print("something happening with %s" % path)
+                print("something happening with", path)
                 for item in text:
                     print(item)

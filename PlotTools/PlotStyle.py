@@ -6,8 +6,8 @@ Author: Nate Woods, U. Wisconsin
 
 """
 
-import CMS_lumi
-import tdrstyle
+from . import CMS_lumi
+from . import tdrstyle
 from python.helpers import makeNumberPretty
 from ROOT import TH1, TH2, TGaxis, THStack, TLatex, TPad, gROOT, gStyle, kBlack
 
@@ -67,7 +67,7 @@ class PlotStyle:
         self,
         canvas,
         author="N. Woods",
-        textRight=True,
+        _textRight=True,
         dataType="Preliminary Simulation",
         energy=13,
         intLumi=19710.0,
@@ -104,7 +104,7 @@ class PlotStyle:
         try:
             intLumi = [float(intLumi)]
         except TypeError:
-            assert isinstance(intLumi, list) and all(isinstance(e, float) for il in intLumi), (
+            assert isinstance(intLumi, list) and all(isinstance(il, float) for il in intLumi), (
                 "Integrated Luminosity must be a float  or list of floats"
             )
         assert len(intLumi) == len(energy), "Must have exactly one integrated luminosity per energy"
@@ -125,13 +125,13 @@ class PlotStyle:
 
             if e == 13:
                 iPeriod += 4
-                CMS_lumi.lumi_13TeV = CMS_lumi.lumi_13TeV.replace("20.1", "%s" % iLStr).replace("fb^{-1}", unit)
+                CMS_lumi.lumi_13TeV = CMS_lumi.lumi_13TeV.replace("20.1", f"{iLStr}").replace("fb^{-1}", unit)
             elif energy == 8:
                 iPeriod += 2
-                CMS_lumi.lumi_8TeV = CMS_lumi.lumi_8TeV.replace("19.7", "%.1f" % iLStr).replace("fb^{-1}", unit)
+                CMS_lumi.lumi_8TeV = CMS_lumi.lumi_8TeV.replace("19.7", f"{iLStr:.1f}").replace("fb^{-1}", unit)
             if energy == 7:
                 iPeriod += 1
-                CMS_lumi.lumi_7TeV = CMS_lumi.lumi_7TeV.replace("5.1", "%.1f" % iLStr).replace("fb^{-1}", unit)
+                CMS_lumi.lumi_7TeV = CMS_lumi.lumi_7TeV.replace("5.1", f"{iLStr:.1f}").replace("fb^{-1}", unit)
 
         # Put "CMS preliminary simulation" or whatever above the left side of the plot
         iPos = 0

@@ -2,13 +2,13 @@ import argparse
 import os
 
 import ROOT
-from python import ApplySelection, ConfigureJobs
+from .python import ApplySelection, ConfigureJobs
 
 
-def chunks(l, n):
-    """Yield successive n-sized chunks from l."""
-    for i in range(0, len(l), n):
-        yield l[i : i + n]
+def chunks(vals, n):
+    """Yield successive n-sized chunks from vals."""
+    for i in range(0, len(vals), n):
+        yield vals[i : i + n]
 
 
 def getEventSelectionExpr(path, comparison, channel):

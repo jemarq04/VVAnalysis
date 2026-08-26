@@ -6,7 +6,6 @@
 # Modified from N. Smith, U. Wisconsin
 #
 
-#!/usr/bin/env python
 import argparse
 import os
 
@@ -26,7 +25,7 @@ def float2double(hist):
         new = ROOT.TH2D()
         hist.Copy(new)
     else:
-        raise Exception("Bad hist, dummy")
+        raise ValueError("Bad hist, dummy")
     return new
 
 
@@ -138,7 +137,7 @@ muonIsoSF.Write()
 # eCBTightFakeRate.Write()
 
 if os.path.isfile(args.medfr_file):
-    print("INFO: Adding medium fake rates to %s" % output_file)
+    print("INFO: Adding medium fake rates to", output_file)
     fakeRateFile = ROOT.TFile.Open(args.medfr_file)
     eCBMedFakeRateZjets = ROOT.ScaleFactor("eCBMedFakeRate", "Fake rate from Z+jet")
     eCBMedFakeRateZjets.Set2DHist(fakeRateFile.Get("DataEWKCorrected/ratio2D_allE"), 0, 0, ROOT.ScaleFactor.AsInHist)
@@ -149,7 +148,7 @@ if os.path.isfile(args.medfr_file):
     eCBMedFakeRateZjets.Write()
 
 if os.path.isfile(args.tightfr_file):
-    print("INFO: Adding tight fake rates to %s" % output_file)
+    print("INFO: Adding tight fake rates to", output_file)
     fakeRateFile = ROOT.TFile.Open(args.tightfr_file)
     eCBTightFakeRateZjets = ROOT.ScaleFactor("eCBTightFakeRate", "Fake rate from Z+jet")
     eCBTightFakeRateZjets.Set2DHist(fakeRateFile.Get("DataEWKCorrected/ratio2D_allE"), 0, 0, ROOT.ScaleFactor.AsInHist)

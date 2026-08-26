@@ -15,7 +15,7 @@ parser.add_option("-c", "--chan", dest="channel", help="channel")
 
 # search DataMC and "#name by format" in this script to see input dependent part
 def getTextBox(x, y, axisLabel, size=0.2, color=1, rotated=False):
-    texS = r.TLatex(x, y, "#color[%s]{%s}" % (color, axisLabel))
+    texS = r.TLatex(x, y, f"#color[{color}]{{{axisLabel}}}")
     texS.SetNDC()
     # rotate for y-axis
     if rotated:
@@ -28,18 +28,18 @@ def getTextBox(x, y, axisLabel, size=0.2, color=1, rotated=False):
 
 
 def checkZeroBin(hist, label, histn):
-    contents = [hist.GetBinContent(i) for i in range(1, hist.GetNbinsX() + 1)]
-    contentsn = [histn.GetBinContent(i) for i in range(1, histn.GetNbinsX() + 1)]
+    _contents = [hist.GetBinContent(i) for i in range(1, hist.GetNbinsX() + 1)]
+    _contentsn = [histn.GetBinContent(i) for i in range(1, histn.GetNbinsX() + 1)]
     # print(contents)
     # print(contentsn)
     for i in range(1, hist.GetNbinsX() + 1):
         if hist.GetBinContent(i) == 0.0:
-            # print("WARNING: %s contains 0 in bin %s"%(label,i))
-            if not histn.GetBinContent(i) == 0.0:
-                raise Exception("Zero denominator with nonzero numerator!")
+            # print(f"WARNING: {label} contains 0 in bin {i}")
+            if histn.GetBinContent(i) != 0.0:
+                raise ValueError("Zero denominator with nonzero numerator!")
             hist.SetBinContent(i, 0.000001)
         if hist.GetBinContent(i) < 0.0:
-            print("WARNING: %s contains negative value in bin %s" % (label, i))
+            print(f"WARNING: {label} contains negative value in bin {i}")
 
 
 def rebin(hist, binning):
@@ -107,24 +107,24 @@ else:
 
 # varlist=["nJets"]
 for var in varlist:
-    print("=======%s==========" % var)
-    prettyVar = "Lepton%s p_{T} [GeV]" % (var.replace("LepPt", "").replace("Full", ""))
+    print(f"======={var}==========")
+    prettyVar = "Lepton{} p_{{T}} [GeV]".format(var.replace("LepPt", "").replace("Full", ""))
     if "e1" in var or "e2" in var:  # name by format
         prettyVar = prettyVar.replace("Leptone", "Electron").replace("PtSorted", "")
     fnames = [sys.argv[1], sys.argv[2]]  # first numerator, then denominator
-    labels = [sname for sname in samples]
-    for l, la in enumerate(labels):
+    labels = list(samples)
+    for i, la in enumerate(labels):
         if la == "DataMC":
-            labels[l] = "qqZZ+ggZZ"
+            labels[i] = "qqZZ+ggZZ"
         if la == "AllData":
-            labels[l] = "Data"
+            labels[i] = "Data"
     hists = []
 
     # name by format
-    if not "AllData" in samples and not "DataMC" in samples:
-        unfname = ["%s_eeee" % var]
+    if "AllData" not in samples and "DataMC" not in samples:
+        unfname = [f"{var}_eeee"]
     else:
-        unfname = ["%s_eemm" % var, "%s_mmee" % var]
+        unfname = [f"{var}_eemm", f"{var}_mmee"]
 
     num = 0.0
     den = 0.0
@@ -134,7 +134,7 @@ for var in varlist:
     r.SetOwnership(fa, False)
     r.SetOwnership(fb, False)
 
-    if not "Data" in samples[0]:
+    if "Data" not in samples[0]:
         sumweights_hist = fa.Get(str("/".join([samples[0], "sumweights"])))  # provided first hist is not data
         # sumweights_hist2 = fb.Get(str("/".join([samples[0], "sumweights"])))
 
@@ -156,7 +156,7 @@ for var in varlist:
         factor = xsec * kfac * lumi / totWgt
 
     if "DataMC" in samples:
-        for s, sample in enumerate(fullsamples):
+        for s, _sample in enumerate(fullsamples):
             swgt_hist = fa.Get(str("/".join([fullsamples[s], "sumweights"])))
             r.SetOwnership(swgt_hist, False)
             swgt = swgt_hist.Integral(0, swgt_hist.GetNbinsX() + 1)
@@ -164,7 +164,7 @@ for var in varlist:
             fullfac.append(sfac)
 
     for i in range(len(samples)):
-        if not "DataMC" in samples[i]:
+        if "DataMC" not in samples[i]:
             if len(unfname) == 1:
                 hunfa = fa.Get(samples[i] + "/" + unfname[0]).Clone()
                 hunfb = fb.Get(samples[i] + "/" + unfname[0]).Clone()
@@ -172,26 +172,26 @@ for var in varlist:
                 # pdb.set_trace()
                 hunfa = fa.Get(samples[i] + "/" + unfname[ind0]).Clone()
                 htmpa = fa.Get(samples[i] + "/" + unfname[ind1]).Clone()
-                if not channel == "eemm" and not channel == "mmee":
+                if channel != "eemm" and channel != "mmee":
                     hunfa.Add(htmpa)
 
                 hunfb = fb.Get(samples[i] + "/" + unfname[ind0]).Clone()
                 htmpb = fb.Get(samples[i] + "/" + unfname[ind1]).Clone()
-                if not channel == "eemm" and not channel == "mmee":
+                if channel != "eemm" and channel != "mmee":
                     hunfb.Add(htmpb)
         else:  # this should correspond to eemm+mmee case only
             fullhistsa = []
             fullhistsb = []
-            for s, sample in enumerate(fullsamples):
+            for s, _sample in enumerate(fullsamples):
                 hunfat = fa.Get(fullsamples[s] + "/" + unfname[ind0]).Clone()
                 htmpat = fa.Get(fullsamples[s] + "/" + unfname[ind1]).Clone()
-                if not channel == "eemm" and not channel == "mmee":
+                if channel != "eemm" and channel != "mmee":
                     hunfat.Add(htmpat)
                 fullhistsa.append(hunfat)
 
                 hunfbt = fb.Get(fullsamples[s] + "/" + unfname[ind0]).Clone()
                 htmpbt = fb.Get(fullsamples[s] + "/" + unfname[ind1]).Clone()
-                if not channel == "eemm" and not channel == "mmee":
+                if channel != "eemm" and channel != "mmee":
                     hunfbt.Add(htmpbt)
                 fullhistsb.append(hunfbt)
 
@@ -214,7 +214,7 @@ for var in varlist:
         hists.append(hunf_a_b)  # append in the orders of labels
 
         if i == 0:
-            if not "Data" in samples[0]:
+            if "Data" not in samples[0]:
                 num = (
                     hunfa.Integral(1, hunfa.GetNbinsX() + 1) * factor
                 )  # only take amcnlo numerator and denominator for two MC comparison case
@@ -286,11 +286,11 @@ for var in varlist:
     latex.SetNDC()
     latex.SetTextSize(0.04)
     # if 'nonreg' in sys.argv[1]:
-    textbox_num = getTextBox(0.74, 0.28, "num. %s" % round(num, 2), 0.03, colors[0])
-    textbox_den = getTextBox(0.74, 0.25, "den. %s" % round(den, 2), 0.03, colors[0])
+    textbox_num = getTextBox(0.74, 0.28, f"num. {round(num, 2)}", 0.03, colors[0])
+    textbox_den = getTextBox(0.74, 0.25, f"den. {round(den, 2)}", 0.03, colors[0])
     if "Data" in samples[1]:
-        textbox_numd = getTextBox(0.74, 0.22, "num. %s" % round(numd, 2), 0.03, colors[1])
-        textbox_dend = getTextBox(0.74, 0.19, "den. %s" % round(dend, 2), 0.03, colors[1])
+        textbox_numd = getTextBox(0.74, 0.22, f"num. {round(numd, 2)}", 0.03, colors[1])
+        textbox_dend = getTextBox(0.74, 0.19, f"den. {round(dend, 2)}", 0.03, colors[1])
     if "Full" in var:
         textbox = getTextBox(0.35, 0.97, "With 80 GeV < m_{4l}< 110 GeV", 0.03)
     else:
@@ -300,12 +300,9 @@ for var in varlist:
     if not os.path.isdir(dirName):
         os.mkdir(dirName)
 
-    try:
-        c1.SaveAs("%s/%s_TrigEff.png" % (dirName, var))
-    except:
-        print("Problem saving plot.")
+    c1.SaveAs(f"{dirName}/{var}_TrigEff.png")
     c1.Clear()
-    pdfcommand.append("%s/%s_TrigEff.png" % (dirName, var))
+    pdfcommand.append(f"{dirName}/{var}_TrigEff.png")
 
-pdfcommand.append("%s/TrigEff_plots%s.pdf" % (dirName, suffix))
+pdfcommand.append(f"{dirName}/TrigEff_plots{suffix}.pdf")
 subprocess.call(pdfcommand)

@@ -3,7 +3,7 @@ import array
 import datetime
 import os
 
-import makeSimpleHtml
+from . import makeSimpleHtml
 import ROOT
 
 ROOT.gROOT.SetBatch(True)
@@ -65,7 +65,7 @@ def makeDataPlots(param, obj, outdir):
     text_box = getTextBox(obj)
     text_box.Draw()
 
-    if not "2D" in param:
+    if "2D" not in param:
         data_uncorr_graph = getTGraphAsymmErrors(frfile, "AllData", param, obj)
         data_uncorr_graph.Draw("P")
 
@@ -97,7 +97,7 @@ def makeMCPlots(param, obj, outdir):
     text_box = getTextBox(obj, "(MC)")
     text_box.Draw()
 
-    if not "2D" in param:
+    if "2D" not in param:
         legend = ROOT.TLegend(0.2, 0.85, 0.55, 0.70)
         legend.AddEntry(graph, "Nonprompt MC", "l")
         legend.Draw()

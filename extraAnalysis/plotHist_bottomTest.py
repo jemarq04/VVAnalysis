@@ -22,9 +22,9 @@ def getTextBox(x, y, axisLabel, size=0.2, rotated=False):
 def checkZeroBin(hist, label):
     for i in range(1, hist.GetNbinsX() + 1):
         if hist.GetBinContent(i) == 0.0:
-            print("WARNING: %s contains 0 in bin %s" % (label, i))
+            print(f"WARNING: {label} contains 0 in bin {i}")
         if hist.GetBinContent(i) < 0.0:
-            print("WARNING: %s contains negative value in bin %s" % (label, i))
+            print(f"WARNING: {label} contains negative value in bin {i}")
 
 
 pdfcommand = ["convert"]
@@ -55,11 +55,11 @@ for var in varlist:
     fnames = [sys.argv[1]]
     labels = ["Unfolded data/theo", "RECO data/theo", "MC shape RECO/Truth"]
     hists = []
-    unfname = "tot_%s_unf" % var
-    truthname = "tot_%s_true" % var
-    dataname = "tot_%s_data" % var
-    MCname = "tot_%s_SigMC" % var
-    bkgname = "tot_%s_bkg" % var
+    unfname = f"tot_{var}_unf"
+    truthname = f"tot_{var}_true"
+    dataname = f"tot_{var}_data"
+    MCname = f"tot_{var}_SigMC"
+    bkgname = f"tot_{var}_bkg"
     # pdb.set_trace()
 
     f = r.TFile(fnames[0])
@@ -148,12 +148,9 @@ for var in varlist:
     if not os.path.isdir("BottomLinePlots"):
         os.mkdir("BottomLinePlots")
 
-    try:
-        c1.SaveAs("BottomLinePlots/%s_BottomLineUnfolded.png" % (var))
-    except:
-        print("Problem saving plot.")
+    c1.SaveAs(f"BottomLinePlots/{var}_BottomLineUnfolded.png")
     c1.Clear()
-    pdfcommand.append("BottomLinePlots/%s_BottomLineUnfolded.png" % (var))
+    pdfcommand.append(f"BottomLinePlots/{var}_BottomLineUnfolded.png")
 
 pdfcommand.append("BottomLinePlots/BottomLine_plots.pdf")
 subprocess.call(pdfcommand)

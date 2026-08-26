@@ -19,14 +19,13 @@ def combineYears(l16, l17, l18, w16, w17, w18):
     return lcorr, luncorr
 
 
-def sumListAbs(l):
-    al = [abs(x) for x in l]
+def sumListAbs(vals):
+    al = [abs(x) for x in vals]
     return sum(al)
 
 
 def sqrt_sum(l1, l2):
-    l = [(x**2 + y**2) ** 0.5 for (x, y) in zip(l1, l2)]
-    return l
+    return [(x**2 + y**2) ** 0.5 for (x, y) in zip(l1, l2)]
 
 
 def sep_up_dn(lu, ld):
@@ -42,45 +41,45 @@ def sep_up_dn(lu, ld):
 def analyzeYear(var, foldername, froot=None):
     dict = {}
     area = 0.0
-    fname = foldername + "/ErrorInfo_%s.log" % var
+    fname = foldername + f"/ErrorInfo_{var}.log"
 
-    hvar = froot.Get("tot_%s_unf" % var)
+    hvar = froot.Get(f"tot_{var}_unf")
     area1 = hvar.Integral(1, hvar.GetNbinsX())
     # print("area from hist:%s"%area1)
 
-    fin = open(fname)
-    for line in fin:
-        if "Area" in line:
-            area = float(line.strip().split("Area: ")[1])
-            # print("area from text:%s"%area)
-        if "Source Up" in line:
-            ln = line.strip().replace("Source Up ", "")
-            sys = ln.split(":")[0]
-            contstr = (ln.split(":")[1][1:-1]).split(",")
-            cont = [float(x) for x in contstr]
-            dict[sys] = {}  # Up occurs before Dn, so initialize here
-            dict[sys]["Up"] = cont
+    with open(fname) as fin:
+        for line in fin:
+            if "Area" in line:
+                area = float(line.strip().split("Area: ")[1])
+                # print("area from text:%s"%area)
+            if "Source Up" in line:
+                ln = line.strip().replace("Source Up ", "")
+                sys = ln.split(":")[0]
+                contstr = (ln.split(":")[1][1:-1]).split(",")
+                cont = [float(x) for x in contstr]
+                dict[sys] = {}  # Up occurs before Dn, so initialize here
+                dict[sys]["Up"] = cont
 
-        if "Source Dn" in line:
-            ln = line.strip().replace("Source Dn ", "")
-            sys = ln.split(":")[0]
-            contstr = (ln.split(":")[1][1:-1]).split(",")
-            cont = [float(x) for x in contstr]
-            dict[sys]["Dn"] = cont
+            if "Source Dn" in line:
+                ln = line.strip().replace("Source Dn ", "")
+                sys = ln.split(":")[0]
+                contstr = (ln.split(":")[1][1:-1]).split(",")
+                cont = [float(x) for x in contstr]
+                dict[sys]["Dn"] = cont
 
-        if "Source Stat unc" in line:
-            ln = line.strip()
-            sys = "stat"
-            contstr = (ln.split(":")[1][1:-1]).split(",")
-            cont = [float(x) for x in contstr]
-            dict["stat"] = cont
+            if "Source Stat unc" in line:
+                ln = line.strip()
+                sys = "stat"
+                contstr = (ln.split(":")[1][1:-1]).split(",")
+                cont = [float(x) for x in contstr]
+                dict["stat"] = cont
 
-        if "Source pdf unc" in line:
-            ln = line.strip()
-            sys = "pdf"
-            contstr = (ln.split(":")[1][1:-1]).split(",")
-            cont = [float(x) for x in contstr]
-            dict["pdf"] = cont
+            if "Source pdf unc" in line:
+                ln = line.strip()
+                sys = "pdf"
+                contstr = (ln.split(":")[1][1:-1]).split(",")
+                cont = [float(x) for x in contstr]
+                dict["pdf"] = cont
 
     if area == 0.0:
         area = area1
@@ -96,11 +95,10 @@ for var in vars:
     FillDic[var] = []
     for fd in folders:
         year = fd[0:2]
-        froot = ROOT.TFile("%s/%s.root" % (fd, year))
-        areay, dicty = analyzeYear(var, fd, froot)
-        areas[var].append(areay)
-        totDic[var][year] = dicty
-        froot.Close()
+        with ROOT.TFile(f"{fd}/{year}.root") as froot:
+            areay, dicty = analyzeYear(var, fd, froot)
+            areas[var].append(areay)
+            totDic[var][year] = dicty
 
 dicComb = {}
 jes_list = []
@@ -117,7 +115,7 @@ for var in vars:
     var_jes = 0.0
     tot_corrUp, tot_uncorrUp = [], []
     tot_corrDn, tot_uncorrDn = [], []
-    for sys in totDic[var]["18"].keys():
+    for sys in totDic[var]["18"]:
         if sys == "stat" or sys == "pdf":
             up16 = totDic[var]["16"][sys]
             up17 = totDic[var]["17"][sys]
@@ -209,15 +207,14 @@ vars_sort = vars
 vars_sort = np.take(vars_sort, indjes)
 
 for var in vars_sort:
-    print("====%s===" % var)
-    print("%-10s %-6s uncorr" % (" ", "corr"))
+    print(f"===={var}===")
+    print("{:10} {:6}".format(" ", "corr"))
     fn_sys, fn_corr, fn_uncorr, final_corr, final_uncorr = dicComb[var]
     for i in range(len(fn_sys)):
-        print("%-10s %.4f %.4f" % (fn_sys[i], fn_corr[i], fn_uncorr[i]))
+        print(f"{fn_sys[i]:10} {fn_corr[i]:.4f} {fn_uncorr[i]:.4f}")
 
     print(
-        "Total uncertainty with jes correlated:%.4f uncorrelated:%.4f, relative diff %.4f"
-        % (final_corr, final_uncorr, abs(final_corr - final_uncorr) / final_corr)
+        f"Total uncertainty with jes correlated:{final_corr:.4f} uncorrelated:{final_uncorr:.4f}, relative diff {abs(final_corr - final_uncorr) / final_corr:.4f}"
     )
 
 with open("varsFile.json") as var_json_file:
@@ -229,8 +226,8 @@ fout = ROOT.TFile("out.root", "UPDATE")
 for var in vars:
     _binning = myvar_dict[var]["_binning"]
     histbins = array.array("d", _binning)
-    hUncUp = ROOT.TH1D("tot_%s_totUncUp" % var, "Total Up Uncert.", len(histbins) - 1, histbins)
-    hUncDn = ROOT.TH1D("tot_%s_totUncDown" % var, "Total Dn Uncert.", len(histbins) - 1, histbins)
+    hUncUp = ROOT.TH1D(f"tot_{var}_totUncUp", "Total Up Uncert.", len(histbins) - 1, histbins)
+    hUncDn = ROOT.TH1D(f"tot_{var}_totUncDown", "Total Dn Uncert.", len(histbins) - 1, histbins)
     for i in range(1, hUncUp.GetNbinsX() + 1):
         totUncUp = FillDic[var][0][i - 1]
         totUncDn = FillDic[var][1][i - 1]
@@ -239,12 +236,12 @@ for var in vars:
 
     # Command line tool doesn't work for some hist so have to do it manually
     fr2.cd()
-    olddata = fr2.Get("tot_%s_data" % var)
-    oldtrue = fr2.Get("tot_%s_true" % var)
-    oldtrueAlt = fr2.Get("tot_%s_trueAlt" % var)
-    oldBkg = fr2.Get("tot_%s_bkg" % var)
-    oldUnf = fr2.Get("tot_%s_unf" % var)
-    olddSigMC = fr2.Get("tot_%s_SigMC" % var)
+    olddata = fr2.Get(f"tot_{var}_data")
+    oldtrue = fr2.Get(f"tot_{var}_true")
+    oldtrueAlt = fr2.Get(f"tot_{var}_trueAlt")
+    oldBkg = fr2.Get(f"tot_{var}_bkg")
+    oldUnf = fr2.Get(f"tot_{var}_unf")
+    olddSigMC = fr2.Get(f"tot_{var}_SigMC")
 
     fout.cd()
     tmpHists = [olddata, oldtrue, oldtrueAlt, oldBkg, oldUnf, olddSigMC, hUncUp, hUncDn]

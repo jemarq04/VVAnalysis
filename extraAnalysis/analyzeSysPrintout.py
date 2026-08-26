@@ -5,7 +5,7 @@ import sys
 
 import numpy as np
 import ROOT as r
-from RooUnfoldBayes_reimplement import *
+from RooUnfoldBayes_reimplement import RooUnfoldBayes, RooUnfoldResponse
 
 
 def getTextBox(x, y, axisLabel, size=0.2, rotated=False):
@@ -23,7 +23,7 @@ def getTextBox(x, y, axisLabel, size=0.2, rotated=False):
 
 def makePlot(typesDiv, histsDiv, areasDiv, chan, c1, pdfcommand, plotlabel, folderName="SysDetailedPlots"):
     colors = [1, 2, 3, 4, 5, 6]
-    markers = [1, 2, 3, 4, 5, 6]
+    _markers = [1, 2, 3, 4, 5, 6]
     maxs = []
     mins = []
     for i in range(len(histsDiv)):
@@ -69,25 +69,22 @@ def makePlot(typesDiv, histsDiv, areasDiv, chan, c1, pdfcommand, plotlabel, fold
     latex.SetNDC()
     latex.SetTextSize(0.04)
     # if "Full" in var:
-    textbox = getTextBox(0.5, 0.96, chan, 0.03)
-    textbox2 = getTextBox(0.45, 0.9, plotlabel, 0.03)
+    _textbox = getTextBox(0.5, 0.96, chan, 0.03)
+    _textbox2 = getTextBox(0.45, 0.9, plotlabel, 0.03)
     # latex.DrawLatex(0.74,0.83 ,"59.7fb^{-1}")
 
     if not os.path.isdir(folderName):
         os.mkdir(folderName)
 
-    try:
-        c1.SaveAs("%s/%s_%s_%s.png" % (folderName, var, chan, order))
-    except:
-        print("Problem saving plot.")
+    c1.SaveAs(f"{folderName}/{var}_{chan}_{order}.png")
     c1.Clear()
-    pdfcommand.append("%s/%s_%s_%s.png" % (folderName, var, chan, order))
-    pdfcommand_global.append("%s/%s_%s_%s.png" % (folderName, var, chan, order))
+    pdfcommand.append(f"{folderName}/{var}_{chan}_{order}.png")
+    pdfcommand_global.append(f"{folderName}/{var}_{chan}_{order}.png")
 
 
 def makeMatrixPlot(typesDiv, histsDiv, areasDiv, chan, c1, pdfcommand, plotlabel, folderName="SysDetailedPlots"):
     colors = [1, 2, 3, 4, 5, 6]
-    markers = [1, 2, 3, 4, 5, 6]
+    _markers = [1, 2, 3, 4, 5, 6]
     maxs = []
     mins = []
     for i in range(len(histsDiv)):
@@ -133,20 +130,17 @@ def makeMatrixPlot(typesDiv, histsDiv, areasDiv, chan, c1, pdfcommand, plotlabel
     latex.SetNDC()
     latex.SetTextSize(0.04)
     # if "Full" in var:
-    textbox = getTextBox(0.5, 0.96, chan, 0.03)
-    textbox2 = getTextBox(0.45, 0.9, plotlabel, 0.03)
+    _textbox = getTextBox(0.5, 0.96, chan, 0.03)
+    _textbox2 = getTextBox(0.45, 0.9, plotlabel, 0.03)
     # latex.DrawLatex(0.74,0.83 ,"59.7fb^{-1}")
 
     if not os.path.isdir(folderName):
         os.mkdir(folderName)
 
-    try:
-        c1.SaveAs("%s/%s_%s_%s.png" % (folderName, var, chan, order))
-    except:
-        print("Problem saving plot.")
+    c1.SaveAs(f"{folderName}/{var}_{chan}_{order}.png")
     c1.Clear()
-    pdfcommand.append("%s/%s_%s_%s.png" % (folderName, var, chan, order))
-    pdfcommand_global.append("%s/%s_%s_%s.png" % (folderName, var, chan, order))
+    pdfcommand.append(f"{folderName}/{var}_{chan}_{order}.png")
+    pdfcommand_global.append(f"{folderName}/{var}_{chan}_{order}.png")
 
 
 nostat = True
@@ -185,115 +179,114 @@ labels = ["2016", "2017", "2018"]
 channels = ["eeee", "eemm", "mmmm"]
 sysDict = {"eeee": {}, "eemm": {}, "mmmm": {}}
 histDict = {"eeee": {}, "eemm": {}, "mmmm": {}}
-for chan in sysDict:
-    sysDict[chan]["typeList"] = []
-    sysDict[chan]["histList"] = []
-    sysDict[chan]["areaList"] = []
-for chan in histDict:
-    histDict[chan]["typeList"] = []
-    histDict[chan]["dataList"] = []
-    histDict[chan]["sigList"] = []
-    histDict[chan]["bkgList"] = []
-    histDict[chan]["truthList"] = []
-    histDict[chan]["matrixList"] = []
+for chanDict in sysDict.values():
+    chanDict["typeList"] = []
+    chanDict["histList"] = []
+    chanDict["areaList"] = []
+for chanDict in histDict.values():
+    chanDict["typeList"] = []
+    chanDict["dataList"] = []
+    chanDict["sigList"] = []
+    chanDict["bkgList"] = []
+    chanDict["truthList"] = []
+    chanDict["matrixList"] = []
 
 unctype = ""
 channel = ""
 recordbin = False
 
 # first series of reading
-fin = open(sys.argv[1])
-for line in fin:
-    if "Unc type before norm:" in line:
-        unctype = line.strip().split("Unc type before norm:")[1]
-        if not unctype:
-            unctype = "nominal"
-        continue
+with open(sys.argv[1]) as fin:
+    for line in fin:
+        if "Unc type before norm:" in line:
+            unctype = line.strip().split("Unc type before norm:")[1]
+            if not unctype:
+                unctype = "nominal"
+            continue
 
-    if "Bin content before norm for channel " in line:
-        # pdb.set_trace()
-        chanInd = line.strip().split("Bin content before norm for channel ")[1]
-        if chanInd == "0":
-            channel = "eeee"
-        if chanInd == "1":
-            channel = "eemm"
-        if chanInd == "2":
-            channel = "mmmm"
-        recordbin = True
-        continue
+        if "Bin content before norm for channel " in line:
+            # pdb.set_trace()
+            chanInd = line.strip().split("Bin content before norm for channel ")[1]
+            if chanInd == "0":
+                channel = "eeee"
+            if chanInd == "1":
+                channel = "eemm"
+            if chanInd == "2":
+                channel = "mmmm"
+            recordbin = True
+            continue
 
-    if recordbin:
-        bincontents = line.strip().split("[")[1].split("]")[0].split(", ")
-        htmp = r.TH1F(unctype + channel, unctype + channel, len(bincontents), 1, len(bincontents) + 1)
-        r.SetOwnership(htmp, False)
-        for i in range(1, len(bincontents) + 1):
-            htmp.SetBinContent(i, float(bincontents[i - 1]))
-        if not "PS" in unctype:
-            sysDict[channel]["typeList"].append(unctype)
-            sysDict[channel]["histList"].append(htmp)
-            sysDict[channel]["areaList"].append(htmp.Integral(1, len(bincontents)))
+        if recordbin:
+            bincontents = line.strip().split("[")[1].split("]")[0].split(", ")
+            htmp = r.TH1F(unctype + channel, unctype + channel, len(bincontents), 1, len(bincontents) + 1)
+            r.SetOwnership(htmp, False)
+            for i in range(1, len(bincontents) + 1):
+                htmp.SetBinContent(i, float(bincontents[i - 1]))
+            if "PS" not in unctype:
+                sysDict[channel]["typeList"].append(unctype)
+                sysDict[channel]["histList"].append(htmp)
+                sysDict[channel]["areaList"].append(htmp.Integral(1, len(bincontents)))
 
-        recordbin = False
-fin.close()
+            recordbin = False
 
 # second series of reading
 recordchannel = False
 recordhist = False
 recordmatrix = False
 histtype = ""
-fin = open(sys.argv[1])
-for line in fin:
-    if "Printout record start here:" in line:
-        recordchannel = True
-        continue
-    if recordchannel:
-        channel = line.strip().split("channel:  ")[1]
-        recordchannel = False
-        continue
-    if "Position Indicator:" in line:
-        unctype = line.strip().split("Position Indicator:")[1].replace(" ", "")
-        if not "PS" in unctype:
-            histDict[channel]["typeList"].append(unctype)
-        continue
-    if "Diagnostic bin contents of " in line:
-        histtype = line.split("Diagnostic bin contents of ")[1].split(" ")[0]
-        recordhist = True
-        continue
-    if recordhist:
-        bincontents = line.strip().split("[")[1].split("]")[0].split(", ")
-        htmp = r.TH1F(
-            unctype + channel + histtype, unctype + channel + histtype, len(bincontents), 1, len(bincontents) + 1
-        )
-        # r.SetOwnership(htmp,False)
-        for i in range(1, len(bincontents) + 1):
-            htmp.SetBinContent(i, float(bincontents[i - 1]))
-        if not "PS" in unctype:
-            histDict[channel][histtype + "List"].append(htmp)
-        del htmp
-        recordhist = False
-        continue
-    if "Diagnostic matrix bin contents of response matrix" in line:
-        histtype = "matrix"
-        recordmatrix = True
-        continue
-    if recordmatrix:
-        bincontents = line.strip().split("[")[1].split("]")[0].split(", ")
-        nbins = int((len(bincontents)) ** 0.5)
-        assert nbins == 10
-        htmp = r.TH2F(
-            unctype + channel + histtype, unctype + channel + histtype, nbins, 1, nbins + 1, nbins, 1, nbins + 1
-        )
-        indexmap = []
-        for i in range(1, htmp.GetNbinsX() + 1):
-            for j in range(1, htmp.GetNbinsX() + 1):
-                indexmap.append([i, j])
-        for i in range(len(bincontents)):
-            htmp.SetBinContent(indexmap[i][0], indexmap[i][1], float(bincontents[i]))
-        if not "PS" in unctype:
-            histDict[channel][histtype + "List"].append(htmp)
-        del htmp
-        recordmatrix = False
-        continue
+with open(sys.argv[1]) as fin:
+    for line in fin:
+        if "Printout record start here:" in line:
+            recordchannel = True
+            continue
+        if recordchannel:
+            channel = line.strip().split("channel:  ")[1]
+            recordchannel = False
+            continue
+        if "Position Indicator:" in line:
+            unctype = line.strip().split("Position Indicator:")[1].replace(" ", "")
+            if "PS" not in unctype:
+                histDict[channel]["typeList"].append(unctype)
+            continue
+        if "Diagnostic bin contents of " in line:
+            histtype = line.split("Diagnostic bin contents of ")[1].split(" ")[0]
+            recordhist = True
+            continue
+        if recordhist:
+            bincontents = line.strip().split("[")[1].split("]")[0].split(", ")
+            htmp = r.TH1F(
+                unctype + channel + histtype, unctype + channel + histtype, len(bincontents), 1, len(bincontents) + 1
+            )
+            # r.SetOwnership(htmp,False)
+            for i in range(1, len(bincontents) + 1):
+                htmp.SetBinContent(i, float(bincontents[i - 1]))
+            if "PS" not in unctype:
+                histDict[channel][histtype + "List"].append(htmp)
+            del htmp
+            recordhist = False
+            continue
+        if "Diagnostic matrix bin contents of response matrix" in line:
+            histtype = "matrix"
+            recordmatrix = True
+            continue
+        if recordmatrix:
+            bincontents = line.strip().split("[")[1].split("]")[0].split(", ")
+            nbins = int((len(bincontents)) ** 0.5)
+            assert nbins == 10
+            htmp = r.TH2F(
+                unctype + channel + histtype, unctype + channel + histtype, nbins, 1, nbins + 1, nbins, 1, nbins + 1
+            )
+            indexmap = []
+            for i in range(1, htmp.GetNbinsX() + 1):
+                for j in range(1, htmp.GetNbinsX() + 1):
+                    indexmap.append([i, j])
+            for i in range(len(bincontents)):
+                htmp.SetBinContent(indexmap[i][0], indexmap[i][1], float(bincontents[i]))
+            if "PS" not in unctype:
+                histDict[channel][histtype + "List"].append(htmp)
+            del htmp
+            recordmatrix = False
+            continue
 
 # Making all the plots
 c1 = r.TCanvas("canvas")
@@ -316,7 +309,7 @@ for chan in channels:
     for prefix in ["type", "data", "sig", "bkg", "truth", "matrix"]:
         histDict[chan][prefix + "List"] = [histDict[chan][prefix + "List"][i] for i in sortedInd2]
 
-    plotInd = [range(6), range(6, 12), range(12, len(types))]  # divide into groups
+    plotInd = [list(range(6)), list(range(6, 12)), list(range(12, len(types)))]  # divide into groups
     # pdb.set_trace()
     for order, ranges in enumerate(plotInd):
         typesDiv = [types[i] for i in ranges]
@@ -327,7 +320,7 @@ for chan in channels:
         divdict = {}
         for prefix in ["type", "data", "sig", "bkg", "truth", "matrix"]:
             divdict[prefix] = [histDict[chan][prefix + "List"][i] for i in ranges]
-        divdict["dmb"] = [divdict["data"][i].Clone("dmb%s" % i) for i in range(len(divdict["data"]))]
+        divdict["dmb"] = [divdict["data"][i].Clone(f"dmb{i}") for i in range(len(divdict["data"]))]
         for i in range(len(divdict["dmb"])):
             divdict["dmb"][i].Add(divdict["bkg"][i], -1)
         makePlot(
@@ -402,12 +395,12 @@ for chan in channels:
         # pdb.set_trace()
 
 
-pdfcommand.append("SysDetailedPlots" + "/SystematicPlots_%s.pdf" % var)
-pdfcommand_dmb.append("DataMinusBkgPlots" + "/DataMinusBkgPlots_%s.pdf" % var)
-pdfcommand_sig.append("SignalPlots" + "/SignalPlots_%s.pdf" % var)
-pdfcommand_truth.append("TruthPlots" + "/TruthPlots_%s.pdf" % var)
-pdfcommand_matrix.append("MatrixPlots" + "/MatrixPlots_%s.pdf" % var)
-pdfcommand_global.append("AllPlots" + "/AllPlots_%s.pdf" % var)
+pdfcommand.append("SysDetailedPlots" + f"/SystematicPlots_{var}.pdf")
+pdfcommand_dmb.append("DataMinusBkgPlots" + f"/DataMinusBkgPlots_{var}.pdf")
+pdfcommand_sig.append("SignalPlots" + f"/SignalPlots_{var}.pdf")
+pdfcommand_truth.append("TruthPlots" + f"/TruthPlots_{var}.pdf")
+pdfcommand_matrix.append("MatrixPlots" + f"/MatrixPlots_{var}.pdf")
+pdfcommand_global.append("AllPlots" + f"/AllPlots_{var}.pdf")
 if not os.path.isdir("AllPlots"):
     os.mkdir("AllPlots")
 for comm in commandlist:
