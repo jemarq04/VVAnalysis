@@ -176,7 +176,7 @@ for v in binning1l:
 
 for chan in ['z', 'ze', 'zm']:
     for varName, var in vars2l[chan].iteritems():
-        print "Plotting {} {}".format(chan, varName)
+        print("Plotting {} {}".format(chan, varName))
 
         hStack = stack.makeHist(var, '', binning2l[varName], mcWeight)
         dataPts = data.makeHist(var, '', binning2l[varName], poissonErrors=True)
@@ -184,8 +184,8 @@ for chan in ['z', 'ze', 'zm']:
         # for ratio
         dataHist = data.makeHist(var, '', binning2l[varName])
 
-        print "    data: {} MC: {:.2f}".format(dataHist.Integral(), hStack.Integral())
-        print ''
+        print("    data: {} MC: {:.2f}".format(dataHist.Integral(), hStack.Integral()))
+        print('')
 
         c = Canvas(1000,1000)
 
@@ -217,7 +217,7 @@ for chan in ['z', 'ze', 'zm']:
 
 for chan in ['l', 'e', 'm']:
     for varName, var in vars1l[chan].iteritems():
-        print "Plotting {} {}".format(chan, varName)
+        print("Plotting {} {}".format(chan, varName))
 
         hStack = stack.makeHist(var, '', binning1l[varName], mcWeight)
         dataPts = data.makeHist(var, '', binning1l[varName], poissonErrors=True)
@@ -225,8 +225,8 @@ for chan in ['l', 'e', 'm']:
         # for ratio
         dataHist = data.makeHist(var, '', binning1l[varName])
 
-        print "    data: {} MC: {:.2f}".format(dataHist.Integral(), hStack.Integral())
-        print ''
+        print("    data: {} MC: {:.2f}".format(dataHist.Integral(), hStack.Integral()))
+        print('')
 
         c = Canvas(1000,1200)
 

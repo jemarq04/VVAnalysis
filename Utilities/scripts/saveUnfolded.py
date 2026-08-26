@@ -413,10 +413,10 @@ def generateResponseClass(varName, channel,sigSamples,sigSamplesPath,sumW,hPUWt,
         #del resp
 
     for sample in responseMakers.keys():
-        print "sigSamples: " ,sample
+        print("sigSamples: " ,sample)
     
     for sample in altResponseMakers.keys():
-        print "altsigSamples: " ,sample
+        print("altsigSamples: " ,sample)
 
     for Resp in responseMakers.values()+altResponseMakers.values():
         ROOT.SetOwnership(Resp,False)
@@ -438,9 +438,9 @@ def unfold(varName,chan,responseMakers,altResponseMakers,hSigDic,hAltSigDic,hSig
     hTruth={}
     hTrueAlt = {}
     hResponseNominal={}
-    print "responseMakers: ",responseMakers
+    print("responseMakers: ",responseMakers)
     hResponseNominal = {s:resp for s,resp in responseMakers.items()}
-    print "hResponseNominal:",hResponseNominal
+    print("hResponseNominal:",hResponseNominal)
     
     #Setup() is called here for all signals?
     hResponseSig1 = hResponseNominal["ggZZ4e"].getResponse("pu_Up")
@@ -1075,10 +1075,10 @@ def unfold(varName,chan,responseMakers,altResponseMakers,hSigDic,hAltSigDic,hSig
     
     #Alternative signal zz4l-amcatnlo
     hResponseAltNominal={} 
-    print "AltresponseMakers: ",altResponseMakers
+    print("AltresponseMakers: ",altResponseMakers)
     hResponseAltNominal = {s:resp for s,resp in altResponseMakers.items()}
-    print "hResponseNominal:",hResponseNominal
-    print "hResponseAltNominal:",hResponseAltNominal
+    print("hResponseNominal:",hResponseNominal)
+    print("hResponseAltNominal:",hResponseAltNominal)
 
     hResponseSig7 = hResponseAltNominal[myaltname].getResponse("pu_Up")
     #This will pop the amcnlo response matrix from the hResponseAltNominal Dictionary
@@ -1090,7 +1090,7 @@ def unfold(varName,chan,responseMakers,altResponseMakers,hSigDic,hAltSigDic,hSig
     #Looping over the values of the dictionary (it doesn't have powheg anymore)
     #it only has the MFCFM signals in it so add them to the amcatnlo now!
     for response in hResponseNominal.values():
-        print "response: ",response
+        print("response: ",response)
         respMat = response.getResponse('nominal')
         hAltResponse.Add(respMat)
         respMat.SetDirectory(0)
@@ -1216,12 +1216,12 @@ def getUnfolded(hSig, hBkg, hTrue, hResponse, hData, nIter,withRespAndCov=False,
             raise
 
         print("Printout record start here:")
-        print "channel: ",chan
-        print "variable: ",varNames[varName]
-        print "hResp out of response: ",hResp
-        print ''
-        print 'condition: {}'.format(condition)
-        print ''
+        print("channel: ",chan)
+        print("variable: ",varNames[varName])
+        print("hResp out of response: ",hResp)
+        print('')
+        print('condition: {}'.format(condition))
+        print('')
 
     except:
         #commented_print "It broke! #commented_printing debug info"
@@ -1606,7 +1606,7 @@ def _sumUncertainties(errDict,varName):
     hUncDn=ROOT.TH1D("hUncDn","Total Dn Uncert.",len(histbins)-1,histbins)
     sysList = errDict['Up'].keys()
     #pdb.set_trace()
-    print "sysList: ",sysList
+    print("sysList: ",sysList)
     #print "hUncUp: ",hUncUp,"",hUncUp.Integral()
     #print "hUncDown: ",hUncDn,"",hUncDn.Integral()
     totUncUp=totUncDn=0.
@@ -1615,17 +1615,17 @@ def _sumUncertainties(errDict,varName):
     #commented_print "UncUpHistos: ",UncUpHistos
     #commented_print "UncDnHistos: ",UncDnHistos
     for i,sys in enumerate(sysList):
-        print "systematic: ",sys
-        print "UncUp: ",UncUpHistos[i].Integral()
-        print "UncDn: ",UncDnHistos[i].Integral()
+        print("systematic: ",sys)
+        print("UncUp: ",UncUpHistos[i].Integral())
+        print("UncDn: ",UncDnHistos[i].Integral())
     LumiUp = errDict['Up']['generator'] #lumi ->generator??
     LumiDn = errDict['Down']['generator']
-    print "GeneratorUp: ",LumiUp.Integral()
-    print "GeneratorDn: ",LumiDn.Integral()
+    print("GeneratorUp: ",LumiUp.Integral())
+    print("GeneratorDn: ",LumiDn.Integral())
     for i in range(1,hUncUp.GetNbinsX()+1):
         for h1, h2 in zip(UncUpHistos,UncDnHistos):
-            print "histUp: ",h1,"",h1.GetBinContent(i)
-            print "histDn: ",h2,"",h2.GetBinContent(i)
+            print("histUp: ",h1,"",h1.GetBinContent(i))
+            print("histDn: ",h2,"",h2.GetBinContent(i))
             totUncUp += max(h1.GetBinContent(i),h2.GetBinContent(i))**2
             totUncDn += min(h1.GetBinContent(i),h2.GetBinContent(i))**2
 
@@ -1867,7 +1867,7 @@ def mkdir(plotDir):
         try:
             os.makedirs(os.path.expanduser(outdir))
         except OSError as e:
-            print e
+            print(e)
             pass
 
 plotDir=args['plotDir']
@@ -1879,11 +1879,11 @@ nIterations=args['nIter']
 #Dictionary where signal samples are keys with cross-section*kfactors as values
 sigSampleDic=ConfigureJobs.getListOfFilesWithXSec(ConfigureJobs.getListOfEWK())
 sigSampleList=[str(i) for i in sigSampleDic.keys()]
-print "sigSamples: ",sigSampleList
+print("sigSamples: ",sigSampleList)
 
 AltsigSampleDic=ConfigureJobs.getListOfFilesWithXSec([myaltname,])
 AltsigSampleList=[str(i) for i in AltsigSampleDic.keys()]
-print "AltsigSamples: ",AltsigSampleList
+print("AltsigSamples: ",AltsigSampleList)
 
 #Combine sigSamples
 TotSigSampleList = list(set(sigSampleList) | set(AltsigSampleList))
@@ -1965,7 +1965,7 @@ allVVVmc,VVVSumW = HistTools.makeCompositeHists(fOut,"AllVVV", ConfigureJobs.get
 #This is the non-prompt background
 ewkcorr = HistTools.getDifferenceDirect(fOut, "DataEWKCorrected", alldata, ewkmc)
 
-print "Signals: ",ewkSumW
+print("Signals: ",ewkSumW)
 #print the sum for a sample (zz4l-powheg)
 zzSumWeights = ewkSumW[mynominalName]  
 #print "sumW (zz4l-powheg): ",zzSumWeights
@@ -1996,16 +1996,16 @@ hAltTrueDic=OutputTools.getHistsInDic(altSigmc,["Gen"+s for s in varList],channe
 #Non-prompt background dictionary
 hbkgDic=OutputTools.getHistsInDic(ewkcorr,[s+"_Fakes" for s in varList],channels)
 #strange python debug
-print "channels: ",channels
+print("channels: ",channels)
 if "mmee" in channels:
     channels.remove("mmee")
 #VVV background dictionary
 hbkgMCDic=OutputTools.getHistsInDic(allVVVmc,varList,channels)
-print "hbkgMCDic: ",hbkgMCDic
+print("hbkgMCDic: ",hbkgMCDic)
 
 runVariables=[]
 runVariables.append(args['variable'])
-print "runVariables: ",runVariables
+print("runVariables: ",runVariables)
 
 ##Systematic histos
 systList=[]
@@ -2021,7 +2021,7 @@ for chan in channels:
             for lep in set(chan):         
                 systList.append(varNames[s]+"_CMS_eff_"+lep+sys)
 
-print systList
+print(systList)
 if not args['noSyst']:  #systList has repeated variables, but shouldn't matter as it will just reassigin same value in the dictionary
     hSigSystDic=OutputTools.getHistsInDic(ewkmc,systList,channels)
     hSigSystDic_qqZZonly=OutputTools.getHistsInDic(ewkmc_qqZZonly,systList,channels)
@@ -2043,7 +2043,7 @@ SFhistos,PUhistos = generateAnalysisInputs()
 norm = not args['noNorm']
 savehists=[]
 for varName in runVariables:
-    print "varName:", varNames[varName]
+    print("varName:", varNames[varName])
     # save unfolded distributions by channel, then systematic
     hDataDict = {}
     hMCSigDict = {}
@@ -2054,9 +2054,9 @@ for varName in runVariables:
     hErr = {}
     hErrTrue = {}
     for chan in channels:
-        print "channel: ",chan
-        print "hUnfolded: ",hUnfolded
-        print "hTrue: ",hTrue
+        print("channel: ",chan)
+        print("hUnfolded: ",hUnfolded)
+        print("hTrue: ",hTrue)
         OutputDir=plotDir+"/"+chan+"/plots"
         if chan not in OutputDirs:
             OutputDirs[chan]=OutputDir
@@ -2065,9 +2065,9 @@ for varName in runVariables:
             OutputDirs[chan]=OutputDir
          
         responseMakers,altResponseMakers = generateResponseClass(varName, chan,sigSampleDic,sigSamplesPath,ewkSumW,PUhistos,SFhistos)
-        print "hUnfolded in main: ", hUnfolded
-        print "hTrue in main: ", hTrue
-        print "hTrue in main: ", hTrueAlt
+        print("hUnfolded in main: ", hUnfolded)
+        print("hTrue in main: ", hTrue)
+        print("hTrue in main: ", hTrueAlt)
         hUnfolded[chan], hTrue[chan],hTrueAlt[chan],hDataDict[chan],hMCSigDict[chan],hBkgTotDict[chan] = unfold(varName,chan,responseMakers,altResponseMakers,hSigDic,hAltSigDic,hSigSystDic,hTrueDic,hTrueSystDic_qqZZonly,hAltTrueDic,hDataDic,hbkgDic,hbkgMCDic,hbkgMCSystDic,nIterations,OutputDir)
         if args["fiducialinfo"]:
             if not chan == channels[-1]:
@@ -2082,7 +2082,7 @@ for varName in runVariables:
 
         if not args['noSyst']: 
             hErr[chan]= _generateUncertainties(hUnfolded[chan],varName,norm)
-            print "hErr[",chan,"]: ",hErr[chan]
+            print("hErr[",chan,"]: ",hErr[chan])
             (hUncUp, hUncDn) = _sumUncertainties_info(norm,hErr[chan],varName,hUnfolded[chan][''],chan)
         #hErrTrue[chan] = _generateUncertainties(hTrue[chan],norm)
         #(hTrueUncUp, hTrueUncDn) = _sumUncertainties(hErrTrue[chan],varName)
@@ -2115,7 +2115,7 @@ for varName in runVariables:
             UncDnName = chan+"_"+varName+"_totUncDown"
             UncDn.SetName(UncDnName)
             savehists.append(UncDn)
-    print "savehists: ",savehists
+    print("savehists: ",savehists)
     if args['makeTotals']:
         if not args['noSyst']:
             
@@ -2142,7 +2142,7 @@ for varName in runVariables:
             hTotalt.Add(hUnfolded[c]['generator'])
             hTrueTot.Add(hTrue[c][''])
             hTrueAltTot.Add(hTrueAlt[c][''])
-        print "hErr.values(): ",hErr.values()
+        print("hErr.values(): ",hErr.values())
         #Saving Total histograms
         hTotalData = hTotData.Clone()
         TotDatName = "tot_"+varName+"_data"

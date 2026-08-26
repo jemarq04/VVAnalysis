@@ -3,8 +3,8 @@ import ROOT
 import glob
 
 def checkduplicates(events):
-    print "Number of not deduplicated events in all datasets", len(events)
-    print "Number of deduplicated events in all datasets", len(set(events))
+    print("Number of not deduplicated events in all datasets", len(events))
+    print("Number of deduplicated events in all datasets", len(set(events)))
 
 def buildevents(state, datasets, deduplicate=False):
     chain = ROOT.TChain("%s/ntuple" % state)
@@ -43,35 +43,35 @@ allevents = []
 events,event_map = buildevents("mmm", "Wselection/2017-05-29-data_*Muon*")
 checkduplicates(events)
     
-print "\n", "-"*80
-print "DoubleMuon"
+print("\n", "-"*80)
+print("DoubleMuon")
 events, _ = buildevents("mmm", "Wselection/2017-05-29-data_DoubleMuon*")
 checkduplicates(events)
-print "    DoubleMuon Deduplicated"
+print("    DoubleMuon Deduplicated")
 events, _ = buildevents("mmm", "Wselection/2017-05-29-data_DoubleMuon*", True)
 checkduplicates(events)
 allevents += events
 
-print "\n", "-"*80
-print "MuonEG"
+print("\n", "-"*80)
+print("MuonEG")
 events, _ = buildevents("mmm", "Wselection/2017-05-29-data_MuonEG*")
 checkduplicates(events)
-print "    MuonEG Deduplicated"
+print("    MuonEG Deduplicated")
 events, _ = buildevents("mmm", "Wselection/2017-05-29-data_MuonEG*", True)
 checkduplicates(events)
 allevents += events
 
-print "\n", "-"*80
-print "SingleMuon"
+print("\n", "-"*80)
+print("SingleMuon")
 events, _ = buildevents("mmm", "Wselection/2017-05-29-data_SingleMuon*")
 checkduplicates(events)
-print "    MuonEG Deduplicated"
+print("    MuonEG Deduplicated")
 events, _ = buildevents("mmm", "Wselection/2017-05-29-data_SingleMuon*", True)
 checkduplicates(events)
 allevents += events
 
-print "*"*80
-print "    For all files"
+print("*"*80)
+print("    For all files")
 checkduplicates(allevents)
 
 missingevents = set(event_map.keys()).difference(set(allevents))

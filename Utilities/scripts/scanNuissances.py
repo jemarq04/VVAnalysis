@@ -36,15 +36,15 @@ for nuisance, nutype in nuisances.iteritems():
     mu, muErrDown, muErrUp = getMuAndErr(arg)
     muErrDownRel = muErrDown/mu if mu > 0 else 0
     muErrUpRel = muErrUp/mu if mu > 0 else 0
-    print "muErrUpRel", muErrUpRel
-    print "muErrDownRel", muErrDownRel
+    print("muErrUpRel", muErrUpRel)
+    print("muErrDownRel", muErrDownRel)
     muCentralErrDownRel = muCentralErrDown/muCentral
     muCentralErrUpRel = muCentralErrUp/muCentral
-    print "muCentralErrUpRel", muCentralErrUpRel
-    print "muCentralErrDownRel", muCentralErrDownRel
-    print "muCentral", muCentral
-    print "muCentralErrUp", muCentralErrUp
-    print "muCentralErrDown", muCentralErrDown
+    print("muCentralErrUpRel", muCentralErrUpRel)
+    print("muCentralErrDownRel", muCentralErrDownRel)
+    print("muCentral", muCentral)
+    print("muCentralErrUp", muCentralErrUp)
+    print("muCentralErrDown", muCentralErrDown)
 
     nuErrDown = math.sqrt(abs(muCentralErrDownRel**2-muErrDownRel**2))
     nuErrUp = math.sqrt(abs(muCentralErrUpRel**2-muErrUpRel**2))
@@ -55,15 +55,15 @@ for nuisance, nutype in nuisances.iteritems():
         "nuOnlyErrUp" : nuErrUp,
     }
 
-print "-"*80
-print "    Full fit gives %0.3f^{%0.3f}_{%0.3f}" % (muCentral, muCentralErrUp, muCentralErrDown)
-print ""
+print("-"*80)
+print("    Full fit gives %0.3f^{%0.3f}_{%0.3f}" % (muCentral, muCentralErrUp, muCentralErrDown))
+print("")
 for nuisance in nuisances:
     res = results[nuisance]
-    print "-"*80
-    print "    Nuisance %s" % nuisance
-    print "    Removing nuisance gives %0.3f^{%0.3f}_{%0.3f}" % \
-            (res["mu"], res["errUp"], res["errDown"])
-    print "    Only from nuisance: +%0.3f -%0.3f" % \
-            (res["nuOnlyErrUp"], res["nuOnlyErrDown"])
+    print("-"*80)
+    print("    Nuisance %s" % nuisance)
+    print("    Removing nuisance gives %0.3f^{%0.3f}_{%0.3f}" % \
+            (res["mu"], res["errUp"], res["errDown"]))
+    print("    Only from nuisance: +%0.3f -%0.3f" % \
+            (res["nuOnlyErrUp"], res["nuOnlyErrDown"]))
 

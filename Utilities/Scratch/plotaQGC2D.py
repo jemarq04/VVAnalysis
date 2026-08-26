@@ -15,7 +15,7 @@ for i in ['0', '4', 'm4', '8', 'm8', '16', 'm16']:
         xval = float(i[1:])*-1 if "m" in i else float(i)
         yval = float(j[1:])*-1 if "m" in j else float(j)
         hist = stack.GetHists().FindObject("wzjj-aqgcfm__fm0-%s_fm1-%s_WZxsec2016_VBSselection_MTWZ" % (i, j))
-        print "wzjj-aqgcfm__fm0-%s_fm1-%s_WZxsec2016_VBSselection_MTWZ" % (i, j)
+        print("wzjj-aqgcfm__fm0-%s_fm1-%s_WZxsec2016_VBSselection_MTWZ" % (i, j))
         hist2D.Fill(xval, yval, hist.Integral())
 
 c = ROOT.TCanvas("canvas", "canvas")

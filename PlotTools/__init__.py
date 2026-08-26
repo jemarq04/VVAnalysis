@@ -199,7 +199,7 @@ def makeErrorBand(hMean, errUp, errDn=None):
 
     for bMean, bUp, bDn in zip(hMean, hUp, hDn):
         if (bUp.value < bMean.value or bDn.value > bMean.value) and not bMean.overflow:
-            print "problem in bin {} ({:.2f} +{:.2f}/-{:.2f})".format(bMean.idx, bMean.value, bUp.value, bDn.value)
+            print("problem in bin {} ({:.2f} +{:.2f}/-{:.2f})".format(bMean.idx, bMean.value, bUp.value, bDn.value))
 
     err = _band(hDn, hUp, hMean)
     err.SetLineWidth(0)

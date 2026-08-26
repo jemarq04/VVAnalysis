@@ -163,7 +163,7 @@ def getListOfFiles(filelist, selection, manager_path=""):
             dataset_file = manager_path + \
                 "ZZ4lRun2DatasetManager/FileInfo/ZZ4l2016/%s.json" % selection
             allnames = json.load(open(dataset_file)).keys()
-            print allnames
+            print(allnames)
             if "nodata" in name:
                 nodata = [x for x in allnames if "data" not in x]
                 names += nodata
@@ -175,7 +175,7 @@ def getListOfFiles(filelist, selection, manager_path=""):
             dataset_file = manager_path + \
                 "ZZ4lRun2DatasetManager/FileInfo/ZZ4l2017/%s.json" % selection
             allnames = json.load(open(dataset_file)).keys()
-            print allnames
+            print(allnames)
             if "nodata" in name:
                 nodata = [x for x in allnames if "data" not in x]
                 names += nodata
@@ -187,7 +187,7 @@ def getListOfFiles(filelist, selection, manager_path=""):
             dataset_file = manager_path + \
                 "ZZ4lRun2DatasetManager/FileInfo/ZZ4l2018/%s.json" % selection
             allnames = json.load(open(dataset_file)).keys()
-            print allnames
+            print(allnames)
             if "nodata" in name:
                 nodata = [x for x in allnames if "data" not in x]
                 names += nodata
@@ -199,7 +199,7 @@ def getListOfFiles(filelist, selection, manager_path=""):
             names += fnmatch.filter(valid_names, name)
         else:
             if name.split("__")[0] not in valid_names:
-                print "%s is not a valid name" % name
+                print("%s is not a valid name" % name)
                 continue
             names += [name]
     return [str(i) for i in names]

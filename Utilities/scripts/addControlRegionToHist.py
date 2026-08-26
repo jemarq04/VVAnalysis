@@ -55,7 +55,7 @@ for key in input_file.GetListOfKeys():
             hist = HistTools.addControlRegionToFitHist(control_hist, h, args.hist_name)
             new_folder.Add(hist)
     except RuntimeError as e:
-        print e
+        print(e)
         continue
     output.append(new_folder)
 

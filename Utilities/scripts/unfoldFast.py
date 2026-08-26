@@ -488,7 +488,8 @@ def _unnormalizeBins(h):
         w = h.GetBinWidth(ib)
         h.SetBinContent(ib, h.GetBinContent(ib) * w / binUnit)
         h.SetBinError(ib, h.GetBinError(ib) * w / binUnit)
-        if h.GetBinError(ib) > h.GetBinContent        h.SetBinError(ib, h.GetBinContent(ib))
+        if h.GetBinError(ib) > h.GetBinContent:
+            h.SetBinError(ib, h.GetBinContent(ib))
     h.sumw2()
 
 _printNext = False
@@ -509,14 +510,14 @@ def _getUnfolded(hSig, hBkg, hTrue, hResponse, hData, nIter,
             condition = float('inf')
             raise
 
-        print ''
-        print 'condition: {}'.format(condition)
-        print ''
+        print('')
+        print('condition: {}'.format(condition))
+        print('')
 
     except:
-        print "It broke! Printing debug info"
-        print "Sig: {}, bkg: {}, true: {}, response: {}".format(hSig.Integral(), hBkg.Integral(), hTrue.Integral(), hResponse.Integral())
-        print "Generating debug plots sig{0}.png, bkg{0}.png, true{0}.png, data{0}.png, resp{0}.png, resp{0}.root".format(_printCounter)
+        print("It broke! Printing debug info")
+        print("Sig: {}, bkg: {}, true: {}, response: {}".format(hSig.Integral(), hBkg.Integral(), hTrue.Integral(), hResponse.Integral()))
+        print("Generating debug plots sig{0}.png, bkg{0}.png, true{0}.png, data{0}.png, resp{0}.png, resp{0}.root".format(_printCounter))
         c = Canvas(1000,1000)
         hSig.draw()
         _style.setCMSStyle(c, '', dataType='Debug', intLumi=35860.)
@@ -546,7 +547,7 @@ def _getUnfolded(hSig, hBkg, hTrue, hResponse, hData, nIter,
     if _printNext or printIt:
         _printNext = False
 
-        print "Generating debug plots sig{0}.png, bkg{0}.png, true{0}.png, data{0}.png, resp{0}.png, resp{0}.root".format(_printCounter)
+        print("Generating debug plots sig{0}.png, bkg{0}.png, true{0}.png, data{0}.png, resp{0}.png, resp{0}.root".format(_printCounter))
         c = Canvas(1000,1000)
         hSig.draw()
         _style.setCMSStyle(c, '', dataType='Debug', intLumi=35860.)
@@ -569,7 +570,7 @@ def _getUnfolded(hSig, hBkg, hTrue, hResponse, hData, nIter,
 
     hOut = unf.Hreco()
     if not hOut:
-        print hOut
+        print(hOut)
         raise ValueError("The unfolded histogram got screwed up somehow!")
 
     if withRespAndCov:
@@ -1496,7 +1497,7 @@ def _generatePlots(hUnfolded, hUncUp, hUncDn,
     hUnf.legendstyle = 'LPE1'
     hUnf.title = '\\textbf{Data + stat.\ unc.}'
     if not norm:
-        print "Inclusive {} fiducial cross section = {} fb".format(chan, hUnf.Integral(0,hUnf.GetNbinsX()+1))
+        print("Inclusive {} fiducial cross section = {} fb".format(chan, hUnf.Integral(0,hUnf.GetNbinsX()+1)))
     _normalizeBins(hUnf)
 
     signalName = 'POWHEG+MCFM+Pythia8'
@@ -1976,12 +1977,12 @@ def main(inData, inMC, plotDir, fakeRateFile, puWeightFile, lumi, nIter,
         hErrTrueAlt = {}
 
         for chan in channels[::-1]:
-            print ""
-            print "**************************************************"
-            print "**** " + varName
-            print "**** " + chan
-            print "**************************************************"
-            print ""
+            print("")
+            print("**************************************************")
+            print("**** " + varName)
+            print("**** " + chan)
+            print("**************************************************")
+            print("")
 
             # if the histograms are cached, get them (unless we don't want to)
             needToCreate = forceRedo

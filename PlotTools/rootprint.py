@@ -30,7 +30,7 @@ class RootMagics(Magics):
             # exec cell in self.shell.user_ns, ns
             exec cell in self.shell.user_ns
             ROOT.gROOT.ProcessLine("gSystem->RedirectOutput(0);")
-            print tmpFile.read()
+            print(tmpFile.read())
 
 # Register
 ip = get_ipython() 

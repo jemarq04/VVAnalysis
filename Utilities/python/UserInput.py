@@ -78,14 +78,14 @@ def readJson(json_file_name):
         try:
             json_info = json.load(json_file)
         except ValueError as err:
-            print "Error reading JSON file %s. The error message was:" % json_file_name 
+            print("Error reading JSON file %s. The error message was:" % json_file_name) 
             print(err)
     return json_info
 
 # Depends on ZZ4lRun2DatasetManagerModule
 def getHistInfo(analysis, input_hists, noConfig=False):
     if noConfig:
-        print "INFO: assuming histogram information is specified in selector"
+        print("INFO: assuming histogram information is specified in selector")
         return (input_hists, [])
 
     manager_path = ConfigureJobs.getManagerPath()

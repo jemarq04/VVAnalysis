@@ -801,7 +801,7 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
     elif normFb:
         hUnf.Scale(1.0/lumifb)
     else:
-        print "no special normalization"
+        print("no special normalization")
 
     print ("hTrue histo here: ",hTrue)
     print ("unfoldDir: ",unfoldDir)
@@ -843,7 +843,7 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
                 hTrueEWC.SetMarkerColor(ROOT.kOrange)
                 hTrueEWC.SetMarkerSize(0.)
                 
-        print "Total Unf Data Integral",hUnf.Integral()
+        print("Total Unf Data Integral",hUnf.Integral())
         Truthmaximum = hTrue.GetMaximum()
         Truthmaximum2 = hTrueAlt.GetMaximum()
         hTrue.SetLineWidth(4*hTrue.GetLineWidth())
@@ -854,7 +854,7 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
                 hTrueEWC.SetLineWidth(4*hTrueEWC.GetLineWidth())
 
         if not norm and normFb:
-            print "Inclusive fiducial cross section = {} fb".format(hUnf.Integral(1,hUnf.GetNbinsX()))
+            print("Inclusive fiducial cross section = {} fb".format(hUnf.Integral(1,hUnf.GetNbinsX())))
         if norm or normFb:
             normalizeBins(hUnf)
 
@@ -865,7 +865,7 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
             hUncUp.Scale(1.0/lumifb)
             hUncDn.Scale(1.0/lumifb)
         else:
-            print "no special normalization"
+            print("no special normalization")
 
         if norm or normFb:
             normalizeBins(hUncUp)
@@ -919,10 +919,10 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
                 if EW_corr:
                     hTrueEWC.Scale(1.0/lumifb)    
         else:
-            print "no special normalization"
+            print("no special normalization")
 
-        print "Total Truth Integral",hTrue.Integral()
-        print "Total Alt Truth Integral",hTrueAlt.Integral()
+        print("Total Truth Integral",hTrue.Integral())
+        print("Total Alt Truth Integral",hTrueAlt.Integral())
         if norm or normFb:
             normalizeBins(hTrue)
             #normalizeBins(hTrueUncUp)
@@ -1436,7 +1436,7 @@ def mkdir(plotDir):
         try:
             os.makedirs(os.path.expanduser(outdir))
         except OSError as e:
-            print e
+            print(e)
             pass
 
 #varNames={'mass': 'Mass','pt':'ZZPt','zpt':'ZPt','leppt':'LepPt','dphiz1z2':'dPhiZ1Z2','drz1z2':'dRZ1Z2'}
@@ -1449,7 +1449,7 @@ normFb = args['NormFb']
 #def main():
 runVariables=[]
 runVariables.append(args['variable'])
-print "runVariables: ",runVariables
+print("runVariables: ",runVariables)
 #Plot histograms from these respective root files generated wiht saveUnfolded.py
 with open('listFile.json') as list_json_file:
     mylist_dict = json.load(list_json_file)
@@ -1479,7 +1479,7 @@ my_varName = ''
 for varName in runVariables:
 
     my_varName = varName 
-    print "varName:", varNames[varName]
+    print("varName:", varNames[varName])
     # save unfolded distributions by channel, then systematic
     hUnfolded = {}
     hTrue = {}
@@ -1487,7 +1487,7 @@ for varName in runVariables:
     hErr = {}
     hErrTrue = {}
     for chan in channels:
-        print "channel: ",chan
+        print("channel: ",chan)
         #print "hUnfolded: ",hUnfolded
         #print "hTrue: ",hTrue
         UnfoldOutDir=UnfoldDir+"/"+chan+"/plots"

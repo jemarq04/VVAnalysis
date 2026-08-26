@@ -304,7 +304,7 @@ for plot_group in plot_groups:
                     try:
                         pdf_hists = HistTools.getPDFHists(weight_hist, pdf_entries[plot_group], plot_group, threbin)
                     except RuntimeError as e:
-                        print e 
+                        print(e) 
                         pass
             elif "TH3" in weight_hist.ClassName(): 
                 scale_hists = HistTools.getTransformed3DScaleHists(weight_hist, 
@@ -325,7 +325,7 @@ for plot_group in plot_groups:
                 
             # Account for gg component which doesn't have weights
             if "vv" in plot_group:
-                print "INFO: Scaling VV theory hists by 1.1!"
+                print("INFO: Scaling VV theory hists by 1.1!")
             for hist in scale_hists+pdf_hists:
                 HistTools.addOverflowAndUnderflow(hist,underflow=False)
                 if "vv" in plot_group:

@@ -295,7 +295,7 @@ class PrettyTable:
         border - should be True or False to print or not print borders
         hrules - controls printing of horizontal rules after each row.  Allowed values: FRAME, ALL, NONE"""
 
-        print self.get_string(start, end, fields, header, border, hrules, sortby, reversesort)
+        print(self.get_string(start, end, fields, header, border, hrules, sortby, reversesort))
 
     def get_string(self, start=0, end=None, fields=None, header=True, border=True, hrules=FRAME, sortby=None, reversesort=False):
 
@@ -440,7 +440,7 @@ class PrettyTable:
         hrules - include horizontal rule after each row
         attributes - dictionary of name/value pairs to include as HTML attributes in the <table> tag"""
 
-        print self.get_html_string(start, end, fields, sortby, reversesort, format, header, border, hrules, attributes)
+        print(self.get_html_string(start, end, fields, sortby, reversesort, format, header, border, hrules, attributes))
 
     def get_html_string(self, start=0, end=None, fields=None, sortby=None, reversesort=False, format=True, header=True, border=True, hrules=FRAME, attributes=None):
 
@@ -567,34 +567,34 @@ def main():
     x.add_row(["Sydney", 2058, 4336374, 1214.8])
     x.add_row(["Melbourne", 1566, 3806092, 646.9])
     x.add_row(["Perth", 5386, 1554769, 869.4])
-    print x
+    print(x)
 
     if len(sys.argv) > 1 and sys.argv[1] == "test":
 
     # This "test suite" is hideous and provides poor, arbitrary coverage.
     # I'll replace it with some proper unit tests Sometime Soon (TM).
     # Promise.
-        print "Testing field subset selection:"
+        print("Testing field subset selection:")
         x.printt(fields=["City name","Population"])
-        print "Testing row subset selection:"
+        print("Testing row subset selection:")
         x.printt(start=2, end=5)
-        print "Testing hrules settings:"
-        print "FRAME:"
+        print("Testing hrules settings:")
+        print("FRAME:")
         x.printt(hrules=FRAME)
-        print "ALL:"
+        print("ALL:")
         x.printt(hrules=ALL)
-        print "NONE:"
+        print("NONE:")
         x.printt(hrules=NONE)
-        print "Testing lack of headers:"
+        print("Testing lack of headers:")
         x.printt(header=False)
         x.printt(header=False, border=False)
-        print "Testing lack of borders:"
+        print("Testing lack of borders:")
         x.printt(border=False)
-        print "Testing sorting:"
+        print("Testing sorting:")
         x.printt(sortby="City name")
         x.printt(sortby="Annual Rainfall")
         x.printt(sortby="Annual Rainfall", reversesort=True)
-        print "Testing padding parameter:"
+        print("Testing padding parameter:")
         x.set_padding_width(0)
         x.printt()
         x.set_padding_width(5)
@@ -607,22 +607,22 @@ def main():
         x.set_left_padding(None)
         x.set_right_padding(None)
         x.set_padding_width(2)
-        print "Testing changing characters"
+        print("Testing changing characters")
         x.set_border_chars("*","*","*")
         x.printt()
         x.set_border_chars("!","~","o")
         x.printt()
         x.set_border_chars("|","-","+")
-        print "Testing everything at once:"
+        print("Testing everything at once:")
         x.printt(start=2, end=5, fields=["City name","Population"], border=False, hrules=True)
-        print "Rebuilding by columns:"
+        print("Rebuilding by columns:")
         x = PrettyTable()
         x.add_column("City name", ["Adelaide", "Brisbane", "Darwin", "Hobart", "Sydney", "Melbourne", "Perth"])
         x.add_column("Area", [1295, 5905, 112, 1357, 2058, 1566, 5385])
         x.add_column("Population", [1158259, 1857594, 120900, 205556, 4336374, 3806092, 1554769])
         x.add_column("Annual Rainfall", [600.5, 1146.4, 1714.7, 619.5, 1214.8, 646.9, 869.4])
         x.printt()
-        print "Testing HTML:"
+        print("Testing HTML:")
         x.print_html()
         x.print_html(border=False)
         x.print_html(border=True)

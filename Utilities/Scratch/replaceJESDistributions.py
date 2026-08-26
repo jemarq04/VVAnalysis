@@ -9,14 +9,14 @@ for proc in rtfile.GetListOfKeys():
         continue
     proc_dir = rtfile.Get(proc.GetName())
     proc_dir.cd()
-    print proc_dir
+    print(proc_dir)
     curvars = variations + ["QCDscale_%sUp" % proc_dir.GetName(),
         "QCDscale_%sDown" % proc_dir.GetName(),
         "pdf_%sUp" % proc_dir.GetName(),
         "pdf_%sDown" % proc_dir.GetName(),
     ]
     for var in curvars:
-        print var
+        print(var)
         hist_cen = proc_dir.Get(variable)
         hist_var = proc_dir.Get("_".join([variable,var]))
         corr_by_bin = []
@@ -27,5 +27,5 @@ for proc in rtfile.GetListOfKeys():
             new_hist = hist_var.Clone("_".join([hist_var.GetName(), chan]))
             for i,entry in enumerate(corr_by_bin):
                 new_hist.SetBinContent(i+1, entry*chan_hist.GetBinContent(i+1))
-            print new_hist.Write()
+            print(new_hist.Write())
 

@@ -152,7 +152,7 @@ class SelectorDriver(object):
 
     def processDataset(self, dataset, file_path, chan):
         logging.info("Processing dataset %s" % dataset)
-        print "Processing dataset: ", dataset
+        print("Processing dataset: ", dataset)
         select = getattr(ROOT, self.selector_name)()
         select.SetInputList(self.inputs)
         self.addTNamed("name", dataset)

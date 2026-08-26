@@ -107,7 +107,7 @@ for outdir in [data_outdir, mc_outdir]:
     try:
         os.makedirs(os.path.expanduser(outdir))
     except OSError as e:
-        print e
+        print(e)
         pass
 
 for param in ["1DPt", "1DEta", "2D"]:

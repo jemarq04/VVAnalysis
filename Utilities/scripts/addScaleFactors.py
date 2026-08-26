@@ -34,7 +34,7 @@ def addWeightsForState(original_file, state):
         m3TightIso_branch = tree.Branch('m3TightIsoSF', m3TightIso_weight, 'm3TightIsoSF/F') 
         tree.SetBranchStatus("m3TightIsoSF", 1)
     else:
-        print "That don't work :("
+        print("That don't work :(")
         exit(1)
     pileup_weight = array('f', [0])
     pileup_branch = tree.Branch('pileupSF', pileup_weight, 'pileupSF/F') 

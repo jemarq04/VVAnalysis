@@ -56,14 +56,14 @@ for chan in ["eee", "eem", "emm", "mmm"]:
     # print "For channel %s CR yield is %0.2f" % (chan, hist_chan.GetBinContent(1))
     scale_fac = scale_facs[chan]
     hist_chan_new.Scale(scale_fac)
-    print "For chan %s, ratio chan/inclusive = %f" % (chan, scale_fac)
+    print("For chan %s, ratio chan/inclusive = %f" % (chan, scale_fac))
     # Don't rescale background control region
     # hist_chan_new.SetBinContent(1, hist_chan.GetBinContent(1))
-    print hist_chan_new.Write()
+    print(hist_chan_new.Write())
     for var in ["CMS_scale_jUp", "CMS_scale_jDown", "CMS_res_jUp", "CMS_res_jDown"]:
         hist_var = nonprompt_dir.Get("mjj_etajj_unrolled_wCR_Fakes_%s;1" % var)
         hist_chan_var = hist_var.Clone()
         hist_chan_var.SetName(hist_var.GetName()+"_"+chan)
         hist_chan_var.Scale(scale_fac)
-        print hist_chan_var.Write()
+        print(hist_chan_var.Write())
 

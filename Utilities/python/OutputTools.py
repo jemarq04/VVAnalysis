@@ -12,8 +12,8 @@ def writeOutputListItem(item, directory):
         directory.cd()
         item.Write()
     else:
-        print "Couldn't write output item:"
-        print repr(item)
+        print("Couldn't write output item:")
+        print(repr(item))
     directory.cd()
 
 def getHistsInDic(output_list,varList,channels):

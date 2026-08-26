@@ -226,7 +226,7 @@ def createRatio(h1, h2):
         stackerror = hStackLast.GetBinError(i)
         datacontent = h1.GetBinContent(i)
         dataerror = h1.GetBinError(i)
-        print "stackcontent: ",stackcontent," and data content: ",datacontent
+        print("stackcontent: ",stackcontent," and data content: ",datacontent)
         ratiocontent=0
         if(datacontent!=0):
             ratiocontent = datacontent/stackcontent
@@ -234,8 +234,8 @@ def createRatio(h1, h2):
             error = ratiocontent*(math.sqrt(math.pow((dataerror/datacontent),2) + math.pow((stackerror/stackcontent),2)))
         else:
             error = 2.07
-        print "ratio content: ",ratiocontent
-        print "stat error: ", error
+        print("ratio content: ",ratiocontent)
+        print("stat error: ", error)
         Ratio.SetBinContent(i,ratiocontent)
         Ratio.SetBinError(i,error)
 
@@ -361,10 +361,10 @@ def RatioErrorBand(Ratio,hUncUp,hUncDn,hTrueNoErrs,varName):
             errorUp -= Ratio.GetBinContent(i) 
             errorDn = max(tmpData.GetBinContent(i) - math.sqrt(math.pow(tmpData.GetBinError(i),2) + math.pow((eDn/tru),2)),0)
             errorDn = Ratio.GetBinContent(i) - errorDn
-            print "stat. error: ",tmpData.GetBinError(i)
-            print "eUp/tru: ",eUp/tru
-            print "eDn/tru: ",eDn/tru
-            print "errorUp: ",errorUp, "","errorDn: ",errorDn
+            print("stat. error: ",tmpData.GetBinError(i))
+            print("eUp/tru: ",eUp/tru)
+            print("eDn/tru: ",eDn/tru)
+            print("errorUp: ",errorUp, "","errorDn: ",errorDn)
             ratioGraph.SetPointEYhigh(i-1, errorUp)
             ratioGraph.SetPointEYlow(i-1, errorDn)
         ratioGraph.SetFillColorAlpha(1,0.5)
@@ -396,7 +396,7 @@ def MainErrorBand(hMain,hUncUp,hUncDn,varName,norm,normFb):
             errorUp -= hMain.GetBinContent(i) 
             errorDn = max(tmpData.GetBinContent(i) - math.sqrt(math.pow(tmpData.GetBinError(i),2) + math.pow(eDn,2)),0)
             errorDn = hMain.GetBinContent(i) - errorDn
-            print "errorUp: ",errorUp, "","errorDn: ",errorDn
+            print("errorUp: ",errorUp, "","errorDn: ",errorDn)
             MainGraph.SetPointEYhigh(i-1, errorUp)
             MainGraph.SetPointEYlow(i-1, errorDn)
         MainGraph.SetFillColorAlpha(1,0.7)
@@ -451,7 +451,7 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
     elif normFb:
         hUnf.Scale(1.0/lumifb)
     else:
-        print "no special normalization"
+        print("no special normalization")
 
     print ("hTrue histo here: ",hTrue)
     print ("unfoldDir: ",unfoldDir)
@@ -469,15 +469,15 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
         hTrueAlt.SetLineStyle(10)#dashes
         hTrueAlt.SetFillStyle(0)#hollow
         hTrueAlt.SetLineColor(ROOT.kRed)
-        print "Total Truth Integral",hTrue.Integral()
-        print "Total Alt Truth Integral",hTrueAlt.Integral()
-        print "Total Unf Data Integral",hUnf.Integral()
+        print("Total Truth Integral",hTrue.Integral())
+        print("Total Alt Truth Integral",hTrueAlt.Integral())
+        print("Total Unf Data Integral",hUnf.Integral())
         Truthmaximum = hTrue.GetMaximum()
         hTrue.SetLineWidth(2*hTrue.GetLineWidth())
         hTrueAlt.SetLineWidth(2*hTrueAlt.GetLineWidth())
 
         if not norm and normFb:
-            print "Inclusive fiducial cross section = {} fb".format(hUnf.Integral(0,hUnf.GetNbinsX()+1))
+            print("Inclusive fiducial cross section = {} fb".format(hUnf.Integral(0,hUnf.GetNbinsX()+1)))
         if norm or normFb:
             normalizeBins(hUnf)
 
@@ -488,7 +488,7 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
             hUncUp.Scale(1.0/lumifb)
             hUncDn.Scale(1.0/lumifb)
         else:
-            print "no special normalization"
+            print("no special normalization")
 
         if norm or normFb:
             normalizeBins(hUncUp)
@@ -508,7 +508,7 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
             #hTrueUncDn /= lumifb
             hTrueAlt.Scale(1.0/lumifb)
         else:
-            print "no special normalization"
+            print("no special normalization")
 
         if norm or normFb:
             normalizeBins(hTrue)
@@ -671,7 +671,7 @@ def mkdir(plotDir):
         try:
             os.makedirs(os.path.expanduser(outdir))
         except OSError as e:
-            print e
+            print(e)
             pass
 
 varNames={'mass': 'Mass','pt':'ZZPt','zpt':'ZPt','leppt':'LepPt','dphiz1z2':'dPhiZ1Z2','drz1z2':'dRZ1Z2'}
@@ -684,11 +684,11 @@ normFb = args['NormFb']
 #def main():
 runVariables=[]
 runVariables.append(args['variable'])
-print "runVariables: ",runVariables
+print("runVariables: ",runVariables)
 #Save histograms from saveUnfolded.py in this root file
 fUse = ROOT.TFile.Open("PowMatrix_MGUnfHists-11Feb2020-ZZ4l2018.root","read")
 for varName in runVariables:
-    print "varName:", varNames[varName]
+    print("varName:", varNames[varName])
     # save unfolded distributions by channel, then systematic
     hUnfolded = {}
     hTrue = {}
@@ -696,9 +696,9 @@ for varName in runVariables:
     hErr = {}
     hErrTrue = {}
     for chan in channels:
-        print "channel: ",chan
-        print "hUnfolded: ",hUnfolded
-        print "hTrue: ",hTrue
+        print("channel: ",chan)
+        print("hUnfolded: ",hUnfolded)
+        print("hTrue: ",hTrue)
         UnfoldOutDir=UnfoldDir+"/"+chan+"/plots"
         if chan not in UnfoldOutDirs:
             UnfoldOutDirs[chan]=UnfoldOutDir
@@ -713,7 +713,7 @@ for varName in runVariables:
         #Get the total UncUp and total UncDown histograms from the file as well
         hUncUp = fUse.Get(chan+"_"+varName+"_totUncUp") 
         hUncDn = fUse.Get(chan+"_"+varName+"_totUncDown")
-        print "UnfoldOutDir:",UnfoldOutDir
+        print("UnfoldOutDir:",UnfoldOutDir)
         generatePlots(hUnfolded[chan],hUncUp,hUncDn,hTrue[chan],hTrueAlt[chan],varName,norm,normFb,args['lumi'],UnfoldOutDir)
     
     if args['makeTotals']:

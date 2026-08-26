@@ -238,7 +238,7 @@ def getListOfFiles(filelist, selection, manager_path="", analysis=""):
             dataset_file = manager_path + \
                 "ZZ4lRun2DatasetManager/FileInfo/ZZ4l2016/%s.json" % selection
             allnames = json.load(open(dataset_file)).keys()
-            print allnames
+            print(allnames)
             if "nodata" in name:
                 nodata = [x for x in allnames if "data" not in x]
                 names += nodata
@@ -250,7 +250,7 @@ def getListOfFiles(filelist, selection, manager_path="", analysis=""):
             dataset_file = manager_path + \
                 "ZZ4lRun2DatasetManager/FileInfo/ZZ4l2017/%s.json" % selection
             allnames = json.load(open(dataset_file)).keys()
-            print allnames
+            print(allnames)
             if "nodata" in name:
                 nodata = [x for x in allnames if "data" not in x]
                 names += nodata
@@ -262,7 +262,7 @@ def getListOfFiles(filelist, selection, manager_path="", analysis=""):
             dataset_file = manager_path + \
                 "ZZ4lRun2DatasetManager/FileInfo/ZZ4l2018/%s.json" % selection
             allnames = json.load(open(dataset_file)).keys()
-            print allnames
+            print(allnames)
             if "nodata" in name:
                 nodata = [x for x in allnames if "data" not in x]
                 names += nodata
@@ -274,8 +274,8 @@ def getListOfFiles(filelist, selection, manager_path="", analysis=""):
             names += fnmatch.filter(valid_names, name)
         else:
             if name.split("__")[0] not in valid_names:
-                print "%s is not a valid name" % name
-                print "Valid names must be defined in AnalysisDatasetManager/FileInfo/(data/montecarlo)*"
+                print("%s is not a valid name" % name)
+                print("Valid names must be defined in AnalysisDatasetManager/FileInfo/(data/montecarlo)*")
                 continue
             names += [name]
     return [str(i) for i in names]
@@ -322,7 +322,7 @@ def getListOfFilesWithDASPath(filelist, analysis, selection, manager_path=""):
     info = {}
     for file_name in files:
         if "DAS" not in selection_info[file_name].keys():
-            print "ERROR: DAS path not defined for file %s in analysis %s/%s" % (file_name, analysis, selection)
+            print("ERROR: DAS path not defined for file %s in analysis %s/%s" % (file_name, analysis, selection))
             continue
         info.update({file_name : selection_info[file_name]["DAS"]})
     return info
@@ -377,7 +377,7 @@ def getInputFilesPath(sample_name, selection, analysis, manager_path=""):
     if manager_path is "":
         manager_path = getManagerPath()
     if ".root" in sample_name:
-        print "INFO: using simple file %s" % sample_name
+        print("INFO: using simple file %s" % sample_name)
         return sample_name
     data_path = "%s/%s/FileInfo" % (manager_path, getManagerName())
     input_file_base_name = "/".join([data_path, analysis, selection])

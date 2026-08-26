@@ -84,10 +84,10 @@ manager_path = ConfigureJobs.getManagerPath()
 selection = args['selection']
 if selection == "":
     selection = "LooseLeptons"
-    print "Info: Using BasicZZSelections for hist defintions"
+    print("Info: Using BasicZZSelections for hist defintions")
 #analysis = "/".join([args['analysis'], selection])
 analysis=args['analysis']
-print "Analyzing: ",analysis
+print("Analyzing: ",analysis)
 _binning = {
     'pt' : [25.*i for i in range(4)] + [100., 150., 200., 300.,1200.],
     #'mass' : [100.+100.*i for i in range(12)],
@@ -384,10 +384,10 @@ def generateResponseClass(varName, channel,sigSamples,sigSamplesPath,sumW,hPUWt,
         #del resp
 
     for sample in responseMakers.keys():
-        print "sigSamples: " ,sample
+        print("sigSamples: " ,sample)
     
     for sample in altResponseMakers.keys():
-        print "altsigSamples: " ,sample
+        print("altsigSamples: " ,sample)
 
     for Resp in responseMakers.values()+altResponseMakers.values():
         ROOT.SetOwnership(Resp,False)
@@ -407,9 +407,9 @@ def unfold(varName,chan,responseMakers,altResponseMakers,hSigDic,hAltSigDic,hSig
     hTruth={}
     hTrueAlt = {}
     hResponseNominal={}
-    print "responseMakers: ",responseMakers
+    print("responseMakers: ",responseMakers)
     hResponseNominal = {s:resp for s,resp in responseMakers.items()}
-    print "hResponseNominal:",hResponseNominal
+    print("hResponseNominal:",hResponseNominal)
     
     #Setup() is called here for all signals?
     #hResponseSig1 = hResponseNominal["ggZZ4e"].getResponse("pu_Up")
@@ -422,7 +422,7 @@ def unfold(varName,chan,responseMakers,altResponseMakers,hSigDic,hAltSigDic,hSig
     hResponseNominalTotal = hResponseNominal.pop("zz4l-powheg")
     #print "hRespNominalTotal: ",hResponseNominalTotal
     #This gets us the response matrix as a TH2D for "zz4l-powheg"
-    print "This hResponse is full of leaks here"
+    print("This hResponse is full of leaks here")
     hResponse = hResponseNominalTotal.getResponse('nominal')
     hResponse.SetDirectory(0)
     #ROOT.SetOwnership(hResponse,False)
@@ -475,9 +475,9 @@ def unfold(varName,chan,responseMakers,altResponseMakers,hSigDic,hAltSigDic,hSig
     hTrue = hTrueDic[chan]["Gen"+varNames[varName]]
     #histTrue.Scale((1.256*35900*1.0835)/zzSumWeights)
 
-    print "hGenBins before rebin before unfolding: ",hTrue.GetNbinsX()
-    print "trueIntegral before rebin no overflow: ",hTrue,", ",hTrue.Integral()
-    print "trueIntegral before rebin including overflow: ",hTrue,", ",hTrue.Integral(0,hTrue.GetNbinsX()+1)
+    print("hGenBins before rebin before unfolding: ",hTrue.GetNbinsX())
+    print("trueIntegral before rebin no overflow: ",hTrue,", ",hTrue.Integral())
+    print("trueIntegral before rebin including overflow: ",hTrue,", ",hTrue.Integral(0,hTrue.GetNbinsX()+1))
     #hData = hDataDic[chan][varNames[varName]]
     #Change hData to MadGraph signal which is AltSignal in this case
     hData = hAltSigDic[chan][varNames[varName]]
@@ -510,12 +510,12 @@ def unfold(varName,chan,responseMakers,altResponseMakers,hSigDic,hAltSigDic,hSig
     hData=rebin(hData,varName)
     hBkgTotal=rebin(hBkgTotal,varName)
     
-    print "hGenBins after rebin before unfolding: ",hTrue.GetNbinsX()
+    print("hGenBins after rebin before unfolding: ",hTrue.GetNbinsX())
     xaxisSize = hSigNominal.GetXaxis().GetTitleSize()
     yaxisSize = hTrue.GetXaxis().GetTitleSize()
     #print "xaxisSize: ",xaxisSize
-    print "trueIntegral after rebin no overflow: ",hTrue,", ",hTrue.Integral()
-    print "trueIntegral after rebin including overflow: ",hTrue,", ",hTrue.Integral(0,hTrue.GetNbinsX()+1)
+    print("trueIntegral after rebin no overflow: ",hTrue,", ",hTrue.Integral())
+    print("trueIntegral after rebin including overflow: ",hTrue,", ",hTrue.Integral(0,hTrue.GetNbinsX()+1))
     #print "TotBkgHist after rebinning: ",hBkgTotal,", ",hBkgTotal.Integral()
     hTruth['']=hTrue
 
@@ -813,8 +813,8 @@ def UnfoldRebin(hist,varName):
 def getUnfolded(hSig, hBkg, hTrue, hResponse, hData, nIter,withRespAndCov=False):
     Response = getattr(ROOT,"RooUnfoldResponse")
 
-    print "TrueBeforeResponse: ", hTrue,", ",hTrue.Integral()
-    print "SigBeforeResponse: ", hSig,", ",hSig.Integral()
+    print("TrueBeforeResponse: ", hTrue,", ",hTrue.Integral())
+    print("SigBeforeResponse: ", hSig,", ",hSig.Integral())
     response = Response(hSig, hTrue.Clone(), hResponse.Clone())
     #response = Response(0, hTrue.Clone(), hResponse.Clone()) 
     ROOT.SetOwnership(response,False)
@@ -823,9 +823,9 @@ def getUnfolded(hSig, hBkg, hTrue, hResponse, hData, nIter,withRespAndCov=False)
     hResp = response.Hresponse()
     #hResp = hResponse
     #print "hResp out of response: ",hResp
-    print "hResponse Last bin: ",hResponse.GetXaxis().GetBinCenter(9)
-    print "MeasuredBins: ",response.GetNbinsMeasured()
-    print "TruthBins: ",response.GetNbinsTruth()
+    print("hResponse Last bin: ",hResponse.GetXaxis().GetBinCenter(9))
+    print("MeasuredBins: ",response.GetNbinsMeasured())
+    print("TruthBins: ",response.GetNbinsTruth())
     #RooUnfoldIter = getattr(ROOT,"RooUnfoldBayes")
 
     RooUnfoldInv = getattr(ROOT,"RooUnfoldInvert")
@@ -840,16 +840,16 @@ def getUnfolded(hSig, hBkg, hTrue, hResponse, hData, nIter,withRespAndCov=False)
             condition = float('inf')
             raise
 
-        print "channel: ",chan
-        print "variable: ",varNames[varName]
-        print "hResp out of response: ",hResp
-        print ''
-        print 'condition: {}'.format(condition)
-        print ''
+        print("channel: ",chan)
+        print("variable: ",varNames[varName])
+        print("hResp out of response: ",hResp)
+        print('')
+        print('condition: {}'.format(condition))
+        print('')
 
     except:
-        print "It broke! Printing debug info"
-        print "Sig: {}, bkg: {}, true: {}, response: {}".format(hSig.Integral(), hBkg.Integral(), hTrue.Integral(), hResponse.Integral())
+        print("It broke! Printing debug info")
+        print("Sig: {}, bkg: {}, true: {}, response: {}".format(hSig.Integral(), hBkg.Integral(), hTrue.Integral(), hResponse.Integral()))
         c = ROOT.TCanvas("c1","canvas",800,800)
         hSig.Draw()
         style.setCMSStyle(c, '', dataType='Debug', intLumi=35900.)
@@ -871,7 +871,7 @@ def getUnfolded(hSig, hBkg, hTrue, hResponse, hData, nIter,withRespAndCov=False)
         _printCounter += 1
 
     #We don't need to subtract background from MadGraph
-    print "hPowData: ", hData.Integral()
+    print("hPowData: ", hData.Integral())
     hDataMinusBkg = hData.Clone()
     #hDataMinusBkg.Reset()
     #print "hBkg: ", hBkg.Integral()
@@ -879,18 +879,18 @@ def getUnfolded(hSig, hBkg, hTrue, hResponse, hData, nIter,withRespAndCov=False)
     #hDataMinusBkg.Add(hBkg,-1)
     #hDataMinusBkg.Add(hBkg,-1)
     #HistTools.zeroNegativeBins(hDataMinusBkg)
-    print "DataMinusbkgIntegral: ",hDataMinusBkg, ", ",hDataMinusBkg.Integral()
+    print("DataMinusbkgIntegral: ",hDataMinusBkg, ", ",hDataMinusBkg.Integral())
     #Unfolding using 4 iterations and then stopping
     #if varNames[varName] not in ["Z1Mass","Z2Mass"]:
     #    nIter=8
     #print "No.of iterations: ",nIter
-    print "response: ",response
+    print("response: ",response)
 
     #Simply inverting the matrix
     unf = RooUnfoldInv(response, hDataMinusBkg)
     
     #unf = RooUnfoldIter(response, hDataMinusBkg, nIter)
-    print "unf: ",unf 
+    print("unf: ",unf) 
 
     #Unfolds using the method of correction factors
     #unf = RooUnfoldBinbyBin(response, hSig)
@@ -900,9 +900,9 @@ def getUnfolded(hSig, hBkg, hTrue, hResponse, hData, nIter,withRespAndCov=False)
     hOut = unf.Hreco()
     #ROOT.SetOwnership(hOut,False)
     if not hOut:
-        print hOut
+        print(hOut)
         raise ValueError("The unfolded histogram got screwed up somehow!")
-    print("hOut: ",hOut,"",hOut.Integral()) 
+    print("hOut: ",hOut,"",hOut.Integral())
     #Returns covariance matrices for error calculation of type withError
     #0: Errors are the square root of the bin content
     #1: Errors from the diagonals of the covariance matrix given by the unfolding
@@ -968,7 +968,7 @@ def _sumUncertainties(errDict,varName):
     hUncUp=ROOT.TH1D("hUncUp","Total Up Uncert.",len(histbins)-1,histbins)
     hUncDn=ROOT.TH1D("hUncDn","Total Dn Uncert.",len(histbins)-1,histbins)
     sysList = errDict['Up'].keys()
-    print "sysList: ",sysList
+    print("sysList: ",sysList)
     #print "hUncUp: ",hUncUp,"",hUncUp.Integral()
     #print "hUncDown: ",hUncDn,"",hUncDn.Integral()
     totUncUp=totUncDn=0.
@@ -1003,7 +1003,7 @@ def _combineChannelUncertainties(*errDicts):
         for sys in ['Up','Down']:
             uncList += errDict[sys].keys()
     uncList = set(uncList)
-    print "uncList:",uncList
+    print("uncList:",uncList)
     for sys in ['Up','Down']:
         hUncTot[sys] = {}
         for unc in uncList:
@@ -1029,7 +1029,7 @@ def mkdir(plotDir):
         try:
             os.makedirs(os.path.expanduser(outdir))
         except OSError as e:
-            print e
+            print(e)
             pass
 
 plotDir=args['plotDir']
@@ -1042,11 +1042,11 @@ varNames={'mass': 'Mass','pt':'ZZPt','zpt':'ZPt','leppt':'LepPt','dphiz1z2':'dPh
 #sigSampleDic=ConfigureJobs.getListOfFilesWithXSec(ConfigureJobs.getListOfEWK())
 sigSampleDic=ConfigureJobs.getListOfFilesWithXSec(ConfigureJobs.getListOfPowheg())
 sigSampleList=[str(i) for i in sigSampleDic.keys()]
-print "sigSamples: ",sigSampleList
+print("sigSamples: ",sigSampleList)
 
 AltsigSampleDic=ConfigureJobs.getListOfFilesWithXSec(["zz4l-amcatnlo",])
 AltsigSampleList=[str(i) for i in AltsigSampleDic.keys()]
-print "AltsigSamples: ",AltsigSampleList
+print("AltsigSamples: ",AltsigSampleList)
 
 #Combine sigSamples
 TotSigSampleList = list(set(sigSampleList) | set(AltsigSampleList))
@@ -1092,7 +1092,7 @@ allVVVmc,VVVSumW = HistTools.makeCompositeHists(fOut,"AllVVV", ConfigureJobs.get
 #This is the non-prompt background
 ewkcorr = HistTools.getDifference(fOut, "DataEWKCorrected", "AllData", "AllEWK")
 
-print "Signals: ",ewkSumW
+print("Signals: ",ewkSumW)
 #print the sum for a sample (zz4l-powheg)
 zzSumWeights = ewkSumW["zz4l-powheg"]  
 #print "sumW (zz4l-powheg): ",zzSumWeights
@@ -1116,16 +1116,16 @@ hAltTrueDic=OutputTools.getHistsInDic(altSigmc,["Gen"+s for s in varList],channe
 #Non-prompt background dictionary
 hbkgDic=OutputTools.getHistsInDic(ewkcorr,[s+"_Fakes" for s in varList],channels)
 #strange python debug
-print "channels: ",channels
+print("channels: ",channels)
 if "mmee" in channels:
     channels.remove("mmee")
 #VVV background dictionary
 hbkgMCDic=OutputTools.getHistsInDic(allVVVmc,varList,channels)
-print "hbkgMCDic: ",hbkgMCDic
+print("hbkgMCDic: ",hbkgMCDic)
 
 runVariables=[]
 runVariables.append(args['variable'])
-print "runVariables: ",runVariables
+print("runVariables: ",runVariables)
 
 ##Systematic histos
 systList=[]
@@ -1136,7 +1136,7 @@ for chan in channels:
             for lep in set(chan):         
                 systList.append(varNames[s]+"_CMS_eff_"+lep+sys)
 
-print systList
+print(systList)
 hSigSystDic=OutputTools.getHistsInDic(ewkmc,systList,channels)
 
 hbkgMCSystDic=OutputTools.getHistsInDic(allVVVmc,systList,channels)
@@ -1151,7 +1151,7 @@ SFhistos,PUhistos = generateAnalysisInputs()
 norm = not args['noNorm']
 savehists=[]
 for varName in runVariables:
-    print "varName:", varNames[varName]
+    print("varName:", varNames[varName])
     # save unfolded distributions by channel, then systematic
     hUnfolded = {"eeee":{},"eemm":{},"mmmm":{}}
     hTrue = {"eeee":{},"eemm":{},"mmmm":{}}
@@ -1159,9 +1159,9 @@ for varName in runVariables:
     hErr = {}
     hErrTrue = {}
     for chan in channels:
-        print "channel: ",chan
-        print "hUnfolded: ",hUnfolded
-        print "hTrue: ",hTrue
+        print("channel: ",chan)
+        print("hUnfolded: ",hUnfolded)
+        print("hTrue: ",hTrue)
         OutputDir=plotDir+"/"+chan+"/plots"
         if chan not in OutputDirs:
             OutputDirs[chan]=OutputDir
@@ -1170,9 +1170,9 @@ for varName in runVariables:
             OutputDirs[chan]=OutputDir
          
         responseMakers,altResponseMakers = generateResponseClass(varName, chan,sigSampleDic,sigSamplesPath,ewkSumW,PUhistos,SFhistos)
-        print "hUnfolded in main: ", hUnfolded
-        print "hTrue in main: ", hTrue
-        print "hTrue in main: ", hTrueAlt
+        print("hUnfolded in main: ", hUnfolded)
+        print("hTrue in main: ", hTrue)
+        print("hTrue in main: ", hTrueAlt)
         #hUnfolded[chan], hTrue[chan],hTrueAlt[chan] = unfold(varName,chan,responseMakers,altResponseMakers,hSigDic,hAltSigDic,hSigSystDic,hTrueDic,hAltTrueDic,hDataDic,hbkgDic,hbkgMCDic,hbkgMCSystDic,nIterations,OutputDir)
         unfold(varName,chan,responseMakers,altResponseMakers,hSigDic,hAltSigDic,hSigSystDic,hTrueDic,hAltTrueDic,hDataDic,hbkgDic,hbkgMCDic,hbkgMCSystDic,nIterations,OutputDir)
         #print("returning unfolded? ",hUnfolded[chan])

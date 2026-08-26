@@ -851,7 +851,7 @@ def main(inData, inMC, plotDir, ana, fakeRateFile, puWeightFile, lumi,
             if paper and varName != 'Mass':
                 continue
 
-            print "Plotting {} {}".format(chan, varName)
+            print("Plotting {} {}".format(chan, varName))
 
             var = _vars4l[varName]
             if varName == 'Mass' and ana == 'smp':
@@ -1063,7 +1063,7 @@ def main(inData, inMC, plotDir, ana, fakeRateFile, puWeightFile, lumi,
                 if ana == 'full' and z not in ['z','z1']:
                     continue
 
-            print "Plotting {} {}".format(z, varName)
+            print("Plotting {} {}".format(z, varName))
 
             var = {c:[vt.format(var=varName) for vt in _varTemplates2l[z][c]] for c in _varTemplates2l[z]}
 
@@ -1150,7 +1150,7 @@ def main(inData, inMC, plotDir, ana, fakeRateFile, puWeightFile, lumi,
         if paper:
             continue
         for lep in _vars1l[varName]:
-            print "Plotting {} {}".format(lep, varName)
+            print("Plotting {} {}".format(lep, varName))
 
             var = _vars1l[varName][lep]
 

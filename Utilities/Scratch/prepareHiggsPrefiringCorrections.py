@@ -40,7 +40,7 @@ for folder in names.values():
 
     cr_ratio = corr_hist.GetBinContent(1)/uncorr_hist.GetBinContent(1)
     cr_err = cr_ratio*math.sqrt((corr_hist.GetBinError(1)/corr_hist.GetBinContent(1))**2 + (uncorr_hist.GetBinError(1)/uncorr_hist.GetBinContent(1))**2)
-    print "Overall correction to yield for sample %s is %0.3f in CR and %0.3f in signal" % (folder, cr_ratio, int_ratio)
+    print("Overall correction to yield for sample %s is %0.3f in CR and %0.3f in signal" % (folder, cr_ratio, int_ratio))
     ratio = corr_hist.Clone(folder +"_ratio")
     ROOT.SetOwnership(ratio, False)
     # These seem too unstable to take bin-by-bin corrections
@@ -57,7 +57,7 @@ for folder in names.values():
             if ratio.GetBinError(i)/ratio.GetBinContent(i) > 0.5:
                 ratio.SetBinContent(i, int_ratio)
                 ratio.SetBinError(i, int_error)
-                print "WARNING! Setting bin %i of hist %s to total ratio" % (i, folder)
+                print("WARNING! Setting bin %i of hist %s to total ratio" % (i, folder))
     ratio.Write()
     canvas_name = folder+"_canvas"
     canvas = ROOT.TCanvas(canvas_name, canvas_name)
@@ -84,7 +84,7 @@ for hist_key in jakobs_file.GetListOfKeys():
     elif name in names.values():
         correction_hist = corrections_file.Get(name+"_ratio")
     else:
-        print "WARNING: Found no correction for process %s" % name
+        print("WARNING: Found no correction for process %s" % name)
         continue
     if not correction_hist.GetNbinsX() == hist.GetNbinsX():
         raise RuntimeError("Unequal number of bins for correction and central hist" \

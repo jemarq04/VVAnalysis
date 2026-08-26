@@ -3,11 +3,11 @@ class ScaleFactorsHelper(object):
     def __init__(self, scale_file):
         ROOT.gROOT.LoadMacro("ScaleFactors/ScaleFactor.C+")
         self.scale_file = ROOT.TFile(scale_file)
-        print self.scale_file
-        print self.scale_file.ls()
+        print(self.scale_file)
+        print(self.scale_file.ls())
     def registerElectronCBVIDs(self):
         electronTightIdSF = self.scale_file.Get('electronTightIdSF')
-        print electronTightIdSF
+        print(electronTightIdSF)
         electronTightIdSF.RegisterGlobalFunction(2) # 2D function
     def registerMuonPOGIDs(self):
         muonIsoSF = self.scale_file.Get('muonTightIsoSF')

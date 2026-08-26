@@ -404,7 +404,7 @@ def getTransformedHists(orig_file, folders, input_hists, transformation, transfo
             if not orig_hist:
                 if "Fakes" not in input_hist_name and \
                     "Up" not in input_hist_name and "Down" not in input_hist_name:
-                    print "WARNING: Histogram %s not found for dataset %s. Skipping." % (input_hist_name, folder)
+                    print("WARNING: Histogram %s not found for dataset %s. Skipping." % (input_hist_name, folder))
                 continue
             new_hist = transformation(orig_hist, *transform_inputs)
             ROOT.SetOwnership(new_hist, False)

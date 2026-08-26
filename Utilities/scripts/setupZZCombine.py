@@ -53,7 +53,7 @@ cardtool.setOutputFolder("/eos/user/u/uhussain/CombineStudies/ZZ/%s2016Fit" % fi
 for year in ["2016"]:#fileMap.keys():
     cardtool.setLumi(lumiMap[year])
     cardtool.setInputFile(fileMap[year])
-    print fileMap[year], lumiMap[year] 
+    print(fileMap[year], lumiMap[year]) 
     cardtool.setOutputFile("ZZCombineInput_{year}.root".format(year=year))
     #cardtool.setOutputFolder("/eos/user/k/kelong/CombineStudies/ZZ/%s%sFit" % (fitvar, year))
     for process in plot_groups:

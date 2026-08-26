@@ -11,7 +11,7 @@ for i in ["eee", "eem", "emm"]:
     
 hist_mjj_mtwz.GetXaxis().SetTitle("m_{jj} (GeV)")
 hist_mjj_mtwz.GetYaxis().SetTitle("M_{T}(3\\ell, p_{T}^{\\mathrm{miss}})")
-print "Correlation factor is", hist_mjj_mtwz.GetCorrelationFactor()
+print("Correlation factor is", hist_mjj_mtwz.GetCorrelationFactor())
 #hist_mjj_mtwz.GetYaxis().SetTitleOffset(0.7)
 ROOT.gStyle.SetPalette(ROOT.kCMYK)
 hist_mjj_mtwz.Draw("colz")

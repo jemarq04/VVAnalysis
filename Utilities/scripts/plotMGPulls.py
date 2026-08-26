@@ -211,11 +211,11 @@ def getLumiTextBox():
 varNames={'mass': 'Mass','pt':'ZZPt','zpt':'ZPt','leppt':'LepPt','dphiz1z2':'dPhiZ1Z2','drz1z2':'dRZ1Z2'}
 runVariables=[]
 runVariables.append(args['variable'])
-print "runVariables: ",runVariables
+print("runVariables: ",runVariables)
 #Save histograms from saveUnfolded.py in this root file
 savePullHists=[]
 for varName in runVariables:
-    print "varName:", varNames[varName]
+    print("varName:", varNames[varName])
     # save unfolded and Gen MadGraph histograms as key-value pairs in the histogram dictionary
     histosMG = {}
     for year in ["2016","2017","2018"]:
@@ -361,14 +361,14 @@ for newhists in savePullHists:
     output.cd()
     print("Pull:",newhists)
     name = newhists.GetName()
-    print "PullName: ",name
+    print("PullName: ",name)
     newhists.FitSlicesY(0,1,6)
     pull_1 = ROOT.gDirectory.Get(name+"_1")
     print("pull_1:",pull_1)
     pull_1.GetYaxis().SetRangeUser(-1.,1.)
     pull_1.Fit("pol0")
     name = newhists.GetName()
-    print "PullName: ",name
+    print("PullName: ",name)
     output.SaveAs("Pulls/"+name+"_mean.png")
     output.SaveAs("Pulls/"+name+"_mean.pdf")
     #output.SaveAs("Pulls/"+name+"_mean.root")

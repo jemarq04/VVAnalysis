@@ -99,7 +99,7 @@ selection = args['selection'].replace("LooseLeptons", "") \
     if args['output_selection'] == "" else args['output_selection'].split("_")[0]
 if selection == "":
     selection = "LooseLeptons"
-    print "Info: Using BasicZZSelections for hist defintions"
+    print("Info: Using BasicZZSelections for hist defintions")
 analysis = "/".join([args['analysis'], selection])
 hists = ConfigHistTools.getAllHistNames(manager_path, analysis) \
     if "all" in args['hist_names'] else args['hist_names']

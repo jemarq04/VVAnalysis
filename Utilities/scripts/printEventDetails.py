@@ -14,7 +14,7 @@ def getEventSelectionExpr(path, comparison, channel):
     events = []
     
     file_name = "%s/%s_%s.txt" % (path, comparison, channel)
-    print file_name
+    print(file_name)
     with open(file_name, "r") as events_file:
         for line in events_file.readlines():
             event_num = line.strip().split(":")
@@ -43,7 +43,7 @@ isfile = any(os.path.isfile(name) or os.path.exists(name.rstrip("/*"))
                 for name in args.filelist)
 filelist = ConfigureJobs.getListOfFiles(args.filelist, args.selection) if \
     not isfile else args.filelist
-print filelist
+print(filelist)
 states = [x.strip() for x in args.channels.split(",")]
 file_paths = []
 output_dir = os.path.dirname(args.output_file)
@@ -54,7 +54,7 @@ for name in filelist:
             file_paths.append((label, ConfigureJobs.getInputFilesPath(name, 
                 args.selection, "WZxsec2016")))
         except ValueError as e:
-            print e
+            print(e)
             continue
     else:
         label = filelist[0].split(".")[0].split("/")[-1]
@@ -62,7 +62,7 @@ for name in filelist:
     try:
         os.makedirs(output_dir + "/" + label)
     except OSError as e:
-        print e
+        print(e)
         pass
 
 for state in states:
@@ -75,7 +75,7 @@ for state in states:
         else:
             path = file_path[1]
         chain.Add(path)
-        print "Path is", path
+        print("Path is", path)
         ApplySelection.setAliases(chain, state, "Cuts/WZxsec2016/aliases.json")
         run_expr = "run:lumi:evt"
         trig_expr = "singleEPass:singleMuPass:singleIsoMuPass:singleESingleMuPass:singleMuSingleEPass:doubleMuPass:doubleMuDZPass:doubleEPass:(singleESingleMuPass || singleMuSingleEPass || doubleMuPass || doubleMuDZPass || doubleEPass || singleEPass || singleMuPass || singleIsoMuPass)"
@@ -98,13 +98,13 @@ for state in states:
         #        "WiscnotMP",
                 state
         )
-        print events
+        print(events)
         for i, eventlist in enumerate(chunks(events, 40)):
             if i > 0:
                 outfile_name = outfile_name.replace(".txt", "%i.txt" % i)
             evtstring = " || ".join(eventlist)
-            print chain, chain.GetEntries()
-            print "Output file", outfile_name
+            print(chain, chain.GetEntries())
+            print("Output file", outfile_name)
             chain.GetPlayer().SetScanRedirect(True)
             chain.GetPlayer().SetScanFileName(outfile_name)
             chain.Scan(scan_expr, evtstring,"colsize=30")

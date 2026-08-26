@@ -56,7 +56,7 @@ def callFarmout(output_dir, script_name, noSubmit):
     with open(log_file_name, 'a') as log:
         status = subprocess.call(farmout_command, stdout=log, stderr=log)
     if status != 0:
-        print "Error in submitting files to condor. Check the log file: %s" % log_file_name
+        print("Error in submitting files to condor. Check the log file: %s" % log_file_name)
     if noSubmit: status = -1
     return status
 def farmoutNtupleSkim(sample_name, selection, analysis, version, scaleFacs, noSubmit, extraArgs):
@@ -100,11 +100,11 @@ def farmoutNtupleSkim(sample_name, selection, analysis, version, scaleFacs, noSu
     )
     status = callFarmout(farmout_dict['job_dir'], script_name, noSubmit)
     if status == 0:
-        print "Submitted jobs for %s file set to condor." % sample_name
+        print("Submitted jobs for %s file set to condor." % sample_name)
     elif status == -1: 
-        print "Test run: submit directory created but not submitted"
+        print("Test run: submit directory created but not submitted")
     else:
-        print "Jobs not submitted"
+        print("Jobs not submitted")
 def createRunJob(base_dir, job_dir, selection, analysis, trigger_name, addScaleFacs, extraArgs):
     fill_dict = {'selection' : selection,
         'analysis' : analysis,
