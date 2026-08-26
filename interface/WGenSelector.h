@@ -17,22 +17,22 @@
 #include "DataFormats/HepMCCandidate/interface/GenParticle.h"
 
 class WGenSelector : public NanoGenSelectorBase {
-public :
-    // Derived values
-    LorentzVector wCand;
-    LorentzVector wCandMet;
+public:
+  // Derived values
+  LorentzVector wCand;
+  LorentzVector wCandMet;
 
-    // Readers to access the data (delete the ones you do not need).
-    virtual void    Init(TTree *tree) override;
-    WGenSelector(TTree * /*tree*/ =0) { }
-    ~WGenSelector() { }
+  // Readers to access the data (delete the ones you do not need).
+  virtual void Init(TTree *tree) override;
+  WGenSelector(TTree * /*tree*/ = 0) {}
+  ~WGenSelector() {}
 
-    ClassDefOverride(WGenSelector,0);
+  ClassDefOverride(WGenSelector, 0);
 
 protected:
-    virtual void SetComposite() override;
-    virtual void FillHistograms(Long64_t entry, std::pair<Systematic, std::string> variation) override;
-    void LoadBranchesNanoAOD(Long64_t entry, std::pair<Systematic, std::string> variation) override;
+  virtual void SetComposite() override;
+  virtual void FillHistograms(Long64_t entry, std::pair<Systematic, std::string> variation) override;
+  void LoadBranchesNanoAOD(Long64_t entry, std::pair<Systematic, std::string> variation) override;
 };
 
 #endif

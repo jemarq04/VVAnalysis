@@ -26,11 +26,9 @@ template <typename T>
 using UPtr = typename std::unique_ptr<T>;
 
 template <typename T>
-class ResponseMatrixMakerBase
-{
+class ResponseMatrixMakerBase {
 public:
-  ResponseMatrixMakerBase(const Str &channel, const Str &varName,
-                          const Vec<float> &binning);
+  ResponseMatrixMakerBase(const Str &channel, const Str &varName, const Vec<float> &binning);
   virtual ~ResponseMatrixMakerBase() { ; }
 
   // And scale factor histograms for PU reweighting and lepton efficiency
@@ -41,8 +39,7 @@ public:
   // Add files to run over
   void registerFile(const Str &f) { fileNames.push_back(f); }
   // Same but files are associated to a systematic
-  void registerFile(const Str &f, const Str &syst)
-  {
+  void registerFile(const Str &f, const Str &syst) {
     if (systFileNames.find(syst) == systFileNames.end())
       systFileNames[syst] = Vec<Str>();
     systFileNames[syst].push_back(f);
@@ -72,132 +69,82 @@ public:
   void setYear(int y) { year = y; }
   float getConstantScale() const { return scale; }
 
-  bool lep1IsTight() const
-  {
-    if (year == 2016 || year == 2017)
-    {
+  bool lep1IsTight() const {
+    if (year == 2016 || year == 2017) {
       return (l1IsTight && lep1IsIso());
-    }
-    else
-    {
+    } else {
       return (l1IsTight);
     }
   }
-  bool lep2IsTight() const
-  {
-    if (year == 2016 || year == 2017)
-    {
+  bool lep2IsTight() const {
+    if (year == 2016 || year == 2017) {
       return (l2IsTight && lep2IsIso());
-    }
-    else
-    {
+    } else {
       return (l2IsTight);
     }
   }
-  bool lep3IsTight() const
-  {
-    if (year == 2016 || year == 2017)
-    {
+  bool lep3IsTight() const {
+    if (year == 2016 || year == 2017) {
       return (l3IsTight && lep3IsIso());
-    }
-    else
-    {
+    } else {
       return (l3IsTight);
     }
   }
-  bool lep4IsTight() const
-  {
-    if (year == 2016 || year == 2017)
-    {
+  bool lep4IsTight() const {
+    if (year == 2016 || year == 2017) {
       return (l4IsTight && lep4IsIso());
-    }
-    else
-    {
+    } else {
       return (l4IsTight);
     }
   }
 
-  bool lep1IsIso() const
-  {
-    if (abs(l1PdgId) == 13)
-    {
-      if (l1IsIso < 0.35)
-      {
+  bool lep1IsIso() const {
+    if (abs(l1PdgId) == 13) {
+      if (l1IsIso < 0.35) {
         return true;
-      }
-      else
-      {
+      } else {
         return false;
       }
-    }
-    else
-    {
+    } else {
       return true;
     }
   }
-  bool lep2IsIso() const
-  {
-    if (abs(l2PdgId) == 13)
-    {
-      if (l2IsIso < 0.35)
-      {
+  bool lep2IsIso() const {
+    if (abs(l2PdgId) == 13) {
+      if (l2IsIso < 0.35) {
         return true;
-      }
-      else
-      {
+      } else {
         return false;
       }
-    }
-    else
-    {
+    } else {
       return true;
     }
   }
-  bool lep3IsIso() const
-  {
-    if (abs(l3PdgId) == 13)
-    {
-      if (l3IsIso < 0.35)
-      {
+  bool lep3IsIso() const {
+    if (abs(l3PdgId) == 13) {
+      if (l3IsIso < 0.35) {
         return true;
-      }
-      else
-      {
+      } else {
         return false;
       }
-    }
-    else
-    {
+    } else {
       return true;
     }
   }
-  bool lep4IsIso() const
-  {
-    if (abs(l4PdgId) == 13)
-    {
-      if (l4IsIso < 0.35)
-      {
+  bool lep4IsIso() const {
+    if (abs(l4PdgId) == 13) {
+      if (l4IsIso < 0.35) {
         return true;
-      }
-      else
-      {
+      } else {
         return false;
       }
-    }
-    else
-    {
+    } else {
       return true;
     }
   }
 
-  bool tightZ1Leptons() const
-  {
-    return lep1IsTight() && lep2IsTight();
-  }
-  bool tightZ2Leptons() const
-  {
-    return lep3IsTight() && lep4IsTight();
-  }
+  bool tightZ1Leptons() const { return lep1IsTight() && lep2IsTight(); }
+  bool tightZ2Leptons() const { return lep3IsTight() && lep4IsTight(); }
 
   // Can be set to calculate central values only
   void setSkipSystematics(bool skipIfTrue = true) { skipSyst = skipIfTrue; }
@@ -207,9 +154,7 @@ protected:
   typedef T ValType;
   //Vec<float>* valuevecfloat=NULL;
   // Event number -> value(s)
-  virtual UPtr<UMap<size_t, T> > getTrueValues(TChain &trueTree,
-                                               const Vec<Str> &objects,
-                                               const Str &syst = "") const = 0;
+  virtual UPtr<UMap<size_t, T> > getTrueValues(TChain &trueTree, const Vec<Str> &objects, const Str &syst = "") const = 0;
 
   // Point branches to correct addresses (child member objects)
   virtual void setRecoBranches(TChain &t, const Vec<Str> &objects) = 0;
@@ -219,19 +164,15 @@ protected:
   virtual T getEventResponse(const Str &option = "") const = 0;
 
   // Fill a histogram with a (set of) response(s)
-  virtual void fillResponse(TH2D &h, const T &val, const T &trueVal,
-                            float w) const = 0;
+  virtual void fillResponse(TH2D &h, const T &val, const T &trueVal, float w) const = 0;
   // For PDF responses
-  virtual void fillResponse(TH3D &h, const T &val, const T &trueVal,
-                            unsigned iteration, float w) const = 0;
+  virtual void fillResponse(TH3D &h, const T &val, const T &trueVal, unsigned iteration, float w) const = 0;
 
   //  virtual void fillResponse(TH2D& h, const Vec<float>& val, const Vec<float>& trueVal, float w) const {;}
 
   virtual bool selectEvent(const Str &option = "") const = 0;
 
-  virtual float getLepSF(const Vec<Str> &leptons,
-                         float electronSystematic = 0.,
-                         float muonSystematic = 0.);
+  virtual float getLepSF(const Vec<Str> &leptons, float electronSystematic = 0., float muonSystematic = 0.);
 
   // requires both true Zs to be on-shell unless overridden
   virtual bool selectTrueEvent(float mZ1, float mZ2) const;
@@ -239,8 +180,7 @@ protected:
   // If there is already a pointer to obj1_obj2_Mass pointing to the right
   // branch in t, return it. Otherwise, set the branch to use maybeUseThis
   // and return a pointer to it.
-  virtual float *getmZPtr(TChain &t, const Str &obj1, const Str &obj2,
-                          float &maybeUseThis) const;
+  virtual float *getmZPtr(TChain &t, const Str &obj1, const Str &obj2, float &maybeUseThis) const;
 
   UMap<Str, TH2D> responses;
   TH3D pdfResponses;
@@ -301,13 +241,10 @@ private:
 };
 
 template <class T>
-class SimpleValueResponseMatrixMakerBase : public ResponseMatrixMakerBase<T>
-{
+class SimpleValueResponseMatrixMakerBase : public ResponseMatrixMakerBase<T> {
 public:
-  SimpleValueResponseMatrixMakerBase(const Str &channel,
-                                     const Str &varName,
-                                     const Vec<float> &binning) : ResponseMatrixMakerBase<T>(channel, varName, binning)
-  {
+  SimpleValueResponseMatrixMakerBase(const Str &channel, const Str &varName, const Vec<float> &binning)
+      : ResponseMatrixMakerBase<T>(channel, varName, binning) {
     ;
   }
   virtual ~SimpleValueResponseMatrixMakerBase() { ; }
@@ -315,21 +252,16 @@ public:
 protected:
   typedef typename ResponseMatrixMakerBase<T>::ValType ValType;
 
-  virtual void fillResponse(TH2D &h, const T &val, const T &trueVal, float w) const
-  {
+  virtual void fillResponse(TH2D &h, const T &val, const T &trueVal, float w) const {
     //if(std::is_same<T,Vec<float>>::value){
     // h.Fill(val.at(0), trueVal.at(0), w);} //currently only used to handle jetPt case
     //else{
-    h.Fill(val, trueVal, w); //}
+    h.Fill(val, trueVal, w);  //}
     //if (val>430 || trueVal>430){
     //  std::cout<<"Event>430!!!"<<val<<""<<trueVal<<std::endl;}
   }
   // For PDF responses
-  void fillResponse(TH3D &h, const T &val, const T &trueVal,
-                    unsigned iteration, float w) const
-  {
-    h.Fill(val, trueVal, float(iteration), w);
-  }
+  void fillResponse(TH3D &h, const T &val, const T &trueVal, unsigned iteration, float w) const { h.Fill(val, trueVal, float(iteration), w); }
 
   //  void fillResponse(TH3D& h, const Vec<float>& val, const Vec<float>& trueVal,
   //                    unsigned iteration, float w) const
@@ -344,19 +276,15 @@ protected:
 };
 
 template <typename T>
-class BranchValueResponseMatrixMaker : public SimpleValueResponseMatrixMakerBase<T>
-{
+class BranchValueResponseMatrixMaker : public SimpleValueResponseMatrixMakerBase<T> {
 public:
-  BranchValueResponseMatrixMaker(const Str &channel, const Str &varName,
-                                 const Vec<float> &binning);
+  BranchValueResponseMatrixMaker(const Str &channel, const Str &varName, const Vec<float> &binning);
   virtual ~BranchValueResponseMatrixMaker() { ; }
 
 protected:
   typedef typename SimpleValueResponseMatrixMakerBase<T>::ValType ValType;
 
-  virtual UPtr<UMap<size_t, T> > getTrueValues(TChain &trueTree,
-                                               const Vec<Str> &objects,
-                                               const Str &syst = "") const;
+  virtual UPtr<UMap<size_t, T> > getTrueValues(TChain &trueTree, const Vec<Str> &objects, const Str &syst = "") const;
 
   // Point branches to correct addresses (child member objects)
   virtual void setRecoBranches(TChain &t, const Vec<Str> &objects) override;
@@ -373,36 +301,30 @@ private:
 
 // Takes any single-value response matrix maker, and does the same thing but
 // with abs(value)
-template <class R> // R is another ResponseMatrixMaker class
-class AbsValueResponseMatrixMaker : public R
-{
+template <class R>  // R is another ResponseMatrixMaker class
+class AbsValueResponseMatrixMaker : public R {
 protected:
-  typedef typename R::ValType T; // pretend we're like the other templates
+  typedef typename R::ValType T;  // pretend we're like the other templates
 public:
-  AbsValueResponseMatrixMaker(const Str &channel, const Str &varName,
-                              const Vec<float> &binning);
+  AbsValueResponseMatrixMaker(const Str &channel, const Str &varName, const Vec<float> &binning);
   virtual ~AbsValueResponseMatrixMaker() { ; }
 
 protected:
   typedef typename R::ValType ValType;
 
-  virtual UPtr<UMap<size_t, T> > getTrueValues(TChain &trueTree,
-                                               const Vec<Str> &objects,
-                                               const Str &syst = "") const;
+  virtual UPtr<UMap<size_t, T> > getTrueValues(TChain &trueTree, const Vec<Str> &objects, const Str &syst = "") const;
 
   virtual T getEventResponse(const Str &option = "") const;
 
   // val is modified in place and the same reference is returned
-  virtual T &doAbs(T &val) const; // {val = std::abs(val); return val;}
+  virtual T &doAbs(T &val) const;  // {val = std::abs(val); return val;}
 };
 
 // For jet-related variables that do not require an nJets cut
 template <typename T>
-class JetBranchResponseMatrixMakerBase : public BranchValueResponseMatrixMaker<T>
-{
+class JetBranchResponseMatrixMakerBase : public BranchValueResponseMatrixMaker<T> {
 public:
-  JetBranchResponseMatrixMakerBase(const Str &channel, const Str &varName,
-                                   const Vec<float> &binning);
+  JetBranchResponseMatrixMakerBase(const Str &channel, const Str &varName, const Vec<float> &binning);
   virtual ~JetBranchResponseMatrixMakerBase() { ; }
 
 protected:
@@ -419,26 +341,23 @@ protected:
 
 private:
   Vec<float> *valuevecfloat = NULL;
-  Vec<float> *value_jesUp = NULL; //T
+  Vec<float> *value_jesUp = NULL;  //T
   Vec<float> *value_jesDn = NULL;
   Vec<float> *value_jerUp = NULL;
   Vec<float> *value_jerDn = NULL;
 };
 
 template <typename T>
-class DijetBranchResponseMatrixMaker : public JetBranchResponseMatrixMakerBase<T>
-{
+class DijetBranchResponseMatrixMaker : public JetBranchResponseMatrixMakerBase<T> {
 public:
-  DijetBranchResponseMatrixMaker(const Str &channel, const Str &varName,
-                                 const Vec<float> &binning);
+  DijetBranchResponseMatrixMaker(const Str &channel, const Str &varName, const Vec<float> &binning);
   virtual ~DijetBranchResponseMatrixMaker() { ; }
 
 protected:
   typedef typename JetBranchResponseMatrixMakerBase<T>::ValType ValType;
 
-  virtual UPtr<UMap<size_t, T> > getTrueValues(TChain &trueTree,
-                                               const Vec<Str> &objects,
-                                               const Str &syst = "") const override; //Overide here
+  virtual UPtr<UMap<size_t, T> > getTrueValues(TChain &trueTree, const Vec<Str> &objects,
+                                               const Str &syst = "") const override;  //Overide here
 
   //virtual void fillResponse(TH2D& h, const T& val, const T& trueVal, float w) const;
 
@@ -465,11 +384,9 @@ private:
   float mjj_jerDn;
 };
 
-class testJets : public DijetBranchResponseMatrixMaker<float>
-{
+class testJets : public DijetBranchResponseMatrixMaker<float> {
 public:
-  testJets(const Str &channel, const Str &varName,
-           const Vec<float> &binning);
+  testJets(const Str &channel, const Str &varName, const Vec<float> &binning);
   virtual ~testJets() { ; }
 
 protected:
@@ -477,20 +394,15 @@ protected:
   //void fillResponse(TH2D& h, const Vec<float>& val, const Vec<float>& trueVal, float w) const {h.Fill(val.at(0), trueVal.at(0), w);}
 };
 
-class SelectedZResponseMatrixMakerBase : public SimpleValueResponseMatrixMakerBase<float>
-{
+class SelectedZResponseMatrixMakerBase : public SimpleValueResponseMatrixMakerBase<float> {
 public:
-  SelectedZResponseMatrixMakerBase(const Str &channel, const Str &varName,
-                                   const Vec<float> &binning,
-                                   const Str &comparisonVarName);
+  SelectedZResponseMatrixMakerBase(const Str &channel, const Str &varName, const Vec<float> &binning, const Str &comparisonVarName);
   virtual ~SelectedZResponseMatrixMakerBase() { ; }
 
 protected:
   typedef typename SimpleValueResponseMatrixMakerBase<float>::ValType ValType;
 
-  virtual UPtr<UMap<size_t, float> > getTrueValues(TChain &trueTree,
-                                                   const Vec<Str> &objects,
-                                                   const Str &syst = "") const;
+  virtual UPtr<UMap<size_t, float> > getTrueValues(TChain &trueTree, const Vec<Str> &objects, const Str &syst = "") const;
 
   // Point branches to correct addresses (child member objects)
   void setRecoBranches(TChain &t, const Vec<Str> &objects);
@@ -526,11 +438,9 @@ private:
   const bool compIsResp;
 };
 
-class Z1ByMassResponseMatrixMaker : public SelectedZResponseMatrixMakerBase
-{
+class Z1ByMassResponseMatrixMaker : public SelectedZResponseMatrixMakerBase {
 public:
-  Z1ByMassResponseMatrixMaker(const Str &channel, const Str &varName,
-                              const Vec<float> &binning);
+  Z1ByMassResponseMatrixMaker(const Str &channel, const Str &varName, const Vec<float> &binning);
   virtual ~Z1ByMassResponseMatrixMaker() { ; }
 
 protected:
@@ -546,11 +456,9 @@ private:
   const Str comparisonVarName;
 };
 
-class Z2ByMassResponseMatrixMaker : public SelectedZResponseMatrixMakerBase
-{
+class Z2ByMassResponseMatrixMaker : public SelectedZResponseMatrixMakerBase {
 public:
-  Z2ByMassResponseMatrixMaker(const Str &channel, const Str &varName,
-                              const Vec<float> &binning);
+  Z2ByMassResponseMatrixMaker(const Str &channel, const Str &varName, const Vec<float> &binning);
   virtual ~Z2ByMassResponseMatrixMaker() { ; }
 
 protected:
@@ -566,11 +474,9 @@ private:
   const Str comparisonVarName;
 };
 
-class Z1ByPtResponseMatrixMaker : public SelectedZResponseMatrixMakerBase
-{
+class Z1ByPtResponseMatrixMaker : public SelectedZResponseMatrixMakerBase {
 public:
-  Z1ByPtResponseMatrixMaker(const Str &channel, const Str &varName,
-                            const Vec<float> &binning);
+  Z1ByPtResponseMatrixMaker(const Str &channel, const Str &varName, const Vec<float> &binning);
   virtual ~Z1ByPtResponseMatrixMaker() { ; }
 
 protected:
@@ -586,11 +492,9 @@ private:
   const Str comparisonVarName;
 };
 
-class Z2ByPtResponseMatrixMaker : public SelectedZResponseMatrixMakerBase
-{
+class Z2ByPtResponseMatrixMaker : public SelectedZResponseMatrixMakerBase {
 public:
-  Z2ByPtResponseMatrixMaker(const Str &channel, const Str &varName,
-                            const Vec<float> &binning);
+  Z2ByPtResponseMatrixMaker(const Str &channel, const Str &varName, const Vec<float> &binning);
   virtual ~Z2ByPtResponseMatrixMaker() { ; }
 
 protected:
@@ -606,19 +510,15 @@ private:
   const Str comparisonVarName;
 };
 
-class ZZCompositeResponseMatrixMakerBase : public SimpleValueResponseMatrixMakerBase<float>
-{
+class ZZCompositeResponseMatrixMakerBase : public SimpleValueResponseMatrixMakerBase<float> {
 public:
-  ZZCompositeResponseMatrixMakerBase(const Str &channel, const Str &varName,
-                                     const Vec<float> &binning);
+  ZZCompositeResponseMatrixMakerBase(const Str &channel, const Str &varName, const Vec<float> &binning);
   virtual ~ZZCompositeResponseMatrixMakerBase() { ; }
 
 protected:
   typedef typename SimpleValueResponseMatrixMakerBase<float>::ValType ValType;
 
-  virtual UPtr<UMap<size_t, float> > getTrueValues(TChain &trueTree,
-                                                   const Vec<Str> &objects,
-                                                   const Str &syst = "") const;
+  virtual UPtr<UMap<size_t, float> > getTrueValues(TChain &trueTree, const Vec<Str> &objects, const Str &syst = "") const;
 
   virtual void setRecoBranches(TChain &t, const Vec<Str> &objects);
 
@@ -637,11 +537,9 @@ private:
   float z2InputVar;
 };
 
-class ZZDeltaPhiResponseMatrixMaker : public ZZCompositeResponseMatrixMakerBase
-{
+class ZZDeltaPhiResponseMatrixMaker : public ZZCompositeResponseMatrixMakerBase {
 public:
-  ZZDeltaPhiResponseMatrixMaker(const Str &channel, const Str &varName,
-                                const Vec<float> &binning);
+  ZZDeltaPhiResponseMatrixMaker(const Str &channel, const Str &varName, const Vec<float> &binning);
   virtual ~ZZDeltaPhiResponseMatrixMaker() { ; }
 
 protected:
@@ -651,19 +549,15 @@ protected:
   virtual float calculateZZVar(float z1Phi, float z2Phi) const;
 };
 
-class ZZDeltaRResponseMatrixMaker : public SimpleValueResponseMatrixMakerBase<float>
-{
+class ZZDeltaRResponseMatrixMaker : public SimpleValueResponseMatrixMakerBase<float> {
 public:
-  ZZDeltaRResponseMatrixMaker(const Str &channel, const Str &varName,
-                              const Vec<float> &binning);
+  ZZDeltaRResponseMatrixMaker(const Str &channel, const Str &varName, const Vec<float> &binning);
   virtual ~ZZDeltaRResponseMatrixMaker() { ; }
 
 protected:
   typedef typename SimpleValueResponseMatrixMakerBase<float>::ValType ValType;
 
-  virtual UPtr<UMap<size_t, float> > getTrueValues(TChain &trueTree,
-                                                   const Vec<Str> &objects,
-                                                   const Str &syst = "") const;
+  virtual UPtr<UMap<size_t, float> > getTrueValues(TChain &trueTree, const Vec<Str> &objects, const Str &syst = "") const;
 
   virtual void setRecoBranches(TChain &t, const Vec<Str> &objects);
 
@@ -674,8 +568,7 @@ protected:
 private:
   Str constructZVarName(const Str &channel, const Str &var, bool wantZ1) const;
 
-  float calculateDeltaR(float z1Eta, float z1Phi,
-                        float z2Eta, float z2Phi) const;
+  float calculateDeltaR(float z1Eta, float z1Phi, float z2Eta, float z2Phi) const;
 
   const Str z1EtaBranchName;
   const Str z2EtaBranchName;
@@ -688,12 +581,10 @@ private:
 };
 
 template <typename T>
-class VectorValueResponseMatrixMakerBase : public ResponseMatrixMakerBase<Vec<T> >
-{
+class VectorValueResponseMatrixMakerBase : public ResponseMatrixMakerBase<Vec<T> > {
 public:
-  VectorValueResponseMatrixMakerBase(const Str &channel, const Str &varName,
-                                     const Vec<float> &binning) : ResponseMatrixMakerBase<Vec<T> >(channel, varName, binning)
-  {
+  VectorValueResponseMatrixMakerBase(const Str &channel, const Str &varName, const Vec<float> &binning)
+      : ResponseMatrixMakerBase<Vec<T> >(channel, varName, binning) {
     ;
   }
 
@@ -703,35 +594,27 @@ protected:
   typedef typename ResponseMatrixMakerBase<Vec<T> >::ValType ValType;
 
   // Fill with all values in vector (only works for simple T right now)
-  void fillResponse(TH2D &h, const Vec<T> &vals,
-                    const Vec<T> &trueVals, float w) const
-  {
+  void fillResponse(TH2D &h, const Vec<T> &vals, const Vec<T> &trueVals, float w) const {
     for (size_t i = 0; i < vals.size() && i < trueVals.size(); ++i)
       h.Fill(vals[i], trueVals[i], w);
   }
   // For PDF responses
-  void fillResponse(TH3D &h, const Vec<T> &vals, const Vec<T> &trueVals,
-                    unsigned iteration, float w) const
-  {
+  void fillResponse(TH3D &h, const Vec<T> &vals, const Vec<T> &trueVals, unsigned iteration, float w) const {
     for (size_t i = 0; i < vals.size() && i < trueVals.size(); ++i)
       h.Fill(vals[i], trueVals[i], float(iteration), w);
   }
 };
 
 template <typename T>
-class MultiBranchResponseMatrixMakerBase : public VectorValueResponseMatrixMakerBase<T>
-{
+class MultiBranchResponseMatrixMakerBase : public VectorValueResponseMatrixMakerBase<T> {
 public:
-  MultiBranchResponseMatrixMakerBase(const Str &channel, const Str &varName,
-                                     const Vec<float> &binning);
+  MultiBranchResponseMatrixMakerBase(const Str &channel, const Str &varName, const Vec<float> &binning);
   virtual ~MultiBranchResponseMatrixMakerBase() { ; }
 
 protected:
   typedef typename VectorValueResponseMatrixMakerBase<T>::ValType ValType;
 
-  virtual UPtr<UMap<size_t, Vec<T> > > getTrueValues(TChain &trueTree,
-                                                     const Vec<Str> &objects,
-                                                     const Str &syst = "") const;
+  virtual UPtr<UMap<size_t, Vec<T> > > getTrueValues(TChain &trueTree, const Vec<Str> &objects, const Str &syst = "") const;
 
   virtual void setRecoBranches(TChain &t, const Vec<Str> &objects);
 
@@ -748,11 +631,9 @@ private:
   Vec<T> values;
 };
 
-class AllLeptonBranchResponseMatrixMaker : public MultiBranchResponseMatrixMakerBase<float>
-{
+class AllLeptonBranchResponseMatrixMaker : public MultiBranchResponseMatrixMakerBase<float> {
 public:
-  AllLeptonBranchResponseMatrixMaker(const Str &channel, const Str &varName,
-                                     const Vec<float> &binning);
+  AllLeptonBranchResponseMatrixMaker(const Str &channel, const Str &varName, const Vec<float> &binning);
   virtual ~AllLeptonBranchResponseMatrixMaker() { ; }
 
 protected:
@@ -761,11 +642,9 @@ protected:
   Vec<Str> constructObjectNames(const Str &channel) const;
 };
 
-class BothZsBranchResponseMatrixMaker : public MultiBranchResponseMatrixMakerBase<float>
-{
+class BothZsBranchResponseMatrixMaker : public MultiBranchResponseMatrixMakerBase<float> {
 public:
-  BothZsBranchResponseMatrixMaker(const Str &channel, const Str &varName,
-                                  const Vec<float> &binning);
+  BothZsBranchResponseMatrixMaker(const Str &channel, const Str &varName, const Vec<float> &binning);
   virtual ~BothZsBranchResponseMatrixMaker() { ; }
 
 protected:
@@ -774,19 +653,15 @@ protected:
   Vec<Str> constructObjectNames(const Str &channel) const;
 };
 
-class LeptonMaxBranchResponseMatrixMaker : public SimpleValueResponseMatrixMakerBase<float>
-{
+class LeptonMaxBranchResponseMatrixMaker : public SimpleValueResponseMatrixMakerBase<float> {
 public:
-  LeptonMaxBranchResponseMatrixMaker(const Str &channel, const Str &varName,
-                                     const Vec<float> &binning);
+  LeptonMaxBranchResponseMatrixMaker(const Str &channel, const Str &varName, const Vec<float> &binning);
   virtual ~LeptonMaxBranchResponseMatrixMaker() { ; }
 
 protected:
   typedef SimpleValueResponseMatrixMakerBase<float>::ValType ValType;
 
-  virtual UPtr<UMap<size_t, float> > getTrueValues(TChain &trueTree,
-                                                   const Vec<Str> &objects,
-                                                   const Str &syst = "") const;
+  virtual UPtr<UMap<size_t, float> > getTrueValues(TChain &trueTree, const Vec<Str> &objects, const Str &syst = "") const;
 
   virtual void setRecoBranches(TChain &t, const Vec<Str> &objects);
 
@@ -802,19 +677,15 @@ private:
 };
 
 template <typename T, size_t _N>
-class NthJetResponseMatrixMaker : public SimpleValueResponseMatrixMakerBase<T>
-{
+class NthJetResponseMatrixMaker : public SimpleValueResponseMatrixMakerBase<T> {
 public:
-  NthJetResponseMatrixMaker(const Str &channel, const Str &varName,
-                            const Vec<float> &binning);
+  NthJetResponseMatrixMaker(const Str &channel, const Str &varName, const Vec<float> &binning);
   virtual ~NthJetResponseMatrixMaker() { ; }
 
 protected:
   typedef typename SimpleValueResponseMatrixMakerBase<T>::ValType ValType;
 
-  virtual UPtr<UMap<size_t, T> > getTrueValues(TChain &trueTree,
-                                               const Vec<Str> &objects,
-                                               const Str &syst = "") const;
+  virtual UPtr<UMap<size_t, T> > getTrueValues(TChain &trueTree, const Vec<Str> &objects, const Str &syst = "") const;
 
   virtual void setRecoBranches(TChain &t, const Vec<Str> &objects);
 
@@ -824,7 +695,7 @@ protected:
 
 private:
   // some pointer bullshit to appease the gods of ROOT
-  UMap<Str, Vec<T> *> allJetValues; // values keyed to systematic
+  UMap<Str, Vec<T> *> allJetValues;  // values keyed to systematic
   Vec<T> allJetValues_object;
   Vec<T> allJetValues_jesUp_object;
   Vec<T> allJetValues_jesDn_object;
@@ -832,12 +703,10 @@ private:
   Vec<T> allJetValues_jerDn_object;
 };
 
-template <class R> // R is the type of the wrapped response maker
-class UseSFHists : public R
-{
+template <class R>  // R is the type of the wrapped response maker
+class UseSFHists : public R {
 public:
-  UseSFHists(const Str &channel, const Str &varName,
-             const Vec<float> &binning);
+  UseSFHists(const Str &channel, const Str &varName, const Vec<float> &binning);
   virtual ~UseSFHists() { ; }
 
   void registerElectronSelectionSFHist(const TH2F &h);
@@ -850,16 +719,12 @@ public:
 protected:
   typedef typename R::ValType ValType;
 
-  virtual float getLepSF(const Vec<Str> &leptons,
-                         float eSyst = 0., float mSyst = 0.);
+  virtual float getLepSF(const Vec<Str> &leptons, float eSyst = 0., float mSyst = 0.);
 
   virtual void setRecoBranches(TChain &t, const Vec<Str> &objects);
 
 private:
-  void setupOneLepton(TChain &t, const Str &obj,
-                      float *&ptPtr, float &ptVal,
-                      float *&etaPtr, float &etaVal,
-                      bool *&isGapPtr, bool &isGapVal);
+  void setupOneLepton(TChain &t, const Str &obj, float *&ptPtr, float &ptVal, float *&etaPtr, float &etaVal, bool *&isGapPtr, bool &isGapVal);
 
   UPtr<TH2F> hEleSelSF;
   UPtr<TH2F> hEleSelGapSF;
@@ -871,7 +736,7 @@ private:
   // pointers will point to floats below if this class makes the branches,
   // or to existing branch addresses if they're already made by the base class
   Vec<float *> lPtsSF;
-  Vec<float *> lEtasSF; // supercluster etas for electrons
+  Vec<float *> lEtasSF;  // supercluster etas for electrons
   Vec<bool *> lIsGapSF;
   float l1PtSF_value;
   float l2PtSF_value;
@@ -887,12 +752,10 @@ private:
   bool l4IsGapSF_value;
 };
 
-template <class R> // R is the type of the wrapped response maker
-class RelaxGenZCuts : public R
-{
+template <class R>  // R is the type of the wrapped response maker
+class RelaxGenZCuts : public R {
 public:
-  RelaxGenZCuts(const Str &channel, const Str &varName,
-                const Vec<float> &binning);
+  RelaxGenZCuts(const Str &channel, const Str &varName, const Vec<float> &binning);
   virtual ~RelaxGenZCuts() { ; }
 
 protected:

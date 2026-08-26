@@ -14,20 +14,20 @@
 
 #include "RooUnfoldTestHarness3D.h"
 
-RooUnfoldTestHarness3D* test3d= 0;
+RooUnfoldTestHarness3D* test3d = 0;
 
 //==============================================================================
 // Routine to run with parameters specified as a string
 //==============================================================================
 
-void RooUnfoldTest3D (const char* args= "")
-{
-// If run interactively, remove canvas and all histograms that might have been
-// created with a previous invocation.
-  delete test3d; test3d= 0;
+void RooUnfoldTest3D(const char* args = "") {
+  // If run interactively, remove canvas and all histograms that might have been
+  // created with a previous invocation.
+  delete test3d;
+  test3d = 0;
   gDirectory->Clear();
 
-  test3d= new RooUnfoldTestHarness3D ("RooUnfoldTest3D", args);
+  test3d = new RooUnfoldTestHarness3D("RooUnfoldTest3D", args);
   test3d->Run();
 }
 
@@ -37,8 +37,8 @@ void RooUnfoldTest3D (const char* args= "")
 // Main program when run stand-alone
 //==============================================================================
 
-int main (int argc, char** argv) {
-  RooUnfoldTestHarness3D maintest3d ("RooUnfoldTest3D", argc, argv);
+int main(int argc, char** argv) {
+  RooUnfoldTestHarness3D maintest3d("RooUnfoldTest3D", argc, argv);
   return maintest3d.Run();
 }
 

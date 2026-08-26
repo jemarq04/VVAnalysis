@@ -5,49 +5,56 @@ import ROOT as rt
 #   Translated in Python by: Joshua Hardenbrook (Princeton)
 #
 
-_cmsText     = "CMS";
-cmsTextFont   = 61
+_cmsText = "CMS"
+cmsTextFont = 61
 
 writeExtraText = True
-_extraText   = "Preliminary"
+_extraText = "Preliminary"
 extraTextFont = 52
 
-lumiTextSize     = 0.95#0.7
-lumiTextOffset   = 0.2
+lumiTextSize = 0.95  # 0.7
+lumiTextOffset = 0.2
 
-cmsTextSize      = 1.1#0.88
-cmsTextOffset    = 0.1
+cmsTextSize = 1.1  # 0.88
+cmsTextOffset = 0.1
 
-relPosX    = 0.045
-relPosY    = 0.035
+relPosX = 0.045
+relPosY = 0.035
 relExtraDY = 1.2
 
-extraOverCmsTextSize  = 0.86
+extraOverCmsTextSize = 0.86
 
 lumi_13TeV = "20.1 fb^{-1}"
-lumi_8TeV  = "19.7 fb^{-1}"
-lumi_7TeV  = "5.1 fb^{-1}"
+lumi_8TeV = "19.7 fb^{-1}"
+lumi_7TeV = "5.1 fb^{-1}"
 
-drawLogo      = False
+drawLogo = False
 
-def CMS_lumi(pad,  iPeriod,  iPosX,  forLatex=False):
+
+def CMS_lumi(pad, iPeriod, iPosX, forLatex=False):
     cmsText = _cmsText
     extraText = _extraText
     if forLatex:
-        cmsText = r'\textbf{'+cmsText+'}'
-        extraText = r'\textbf{'+extraText+'}'
+        cmsText = r"\textbf{" + cmsText + "}"
+        extraText = r"\textbf{" + extraText + "}"
 
-    outOfFrame    = False
-    if(iPosX/10==0 ): outOfFrame = True
+    outOfFrame = False
+    if iPosX / 10 == 0:
+        outOfFrame = True
 
-    alignY_=3
-    alignX_=2
-    if( iPosX/10==0 ): alignX_=1
-    if( iPosX==0    ): alignY_=1
-    if( iPosX/10==1 ): alignX_=1
-    if( iPosX/10==2 ): alignX_=2
-    if( iPosX/10==3 ): alignX_=3
-    align_ = 10*alignX_ + alignY_
+    alignY_ = 3
+    alignX_ = 2
+    if iPosX / 10 == 0:
+        alignX_ = 1
+    if iPosX == 0:
+        alignY_ = 1
+    if iPosX / 10 == 1:
+        alignX_ = 1
+    if iPosX / 10 == 2:
+        alignX_ = 2
+    if iPosX / 10 == 3:
+        alignX_ = 3
+    align_ = 10 * alignX_ + alignY_
 
     H = pad.GetWh()
     W = pad.GetWw()
@@ -61,23 +68,23 @@ def CMS_lumi(pad,  iPeriod,  iPosX,  forLatex=False):
         pad.cd()
 
     lumiText = ""
-    if( iPeriod==1 ):
+    if iPeriod == 1:
         lumiText += lumi_7TeV
         lumiText += " (7 TeV)"
-    elif ( iPeriod==2 ):
+    elif iPeriod == 2:
         lumiText += lumi_8TeV
         lumiText += " (8 TeV)"
 
-    elif( iPeriod==3 ):
+    elif iPeriod == 3:
         lumiText = lumi_8TeV
         lumiText += " (8 TeV)"
         lumiText += " + "
         lumiText += lumi_7TeV
         lumiText += " (7 TeV)"
-    elif ( iPeriod==4 ):
+    elif iPeriod == 4:
         lumiText += lumi_13TeV
         lumiText += " (13 TeV)"
-    elif ( iPeriod==7 ):
+    elif iPeriod == 7:
         lumiText += lumi_13TeV
         lumiText += " (13 TeV)"
         lumiText += " + "
@@ -88,59 +95,59 @@ def CMS_lumi(pad,  iPeriod,  iPosX,  forLatex=False):
         lumiText += " (7 TeV)"
 
         if outOfFrame and not forLatex:
-            lumiText = '#scale[0.85]{'+lumiText+'}'
+            lumiText = "#scale[0.85]{" + lumiText + "}"
 
-    elif ( iPeriod==12 ):
+    elif iPeriod == 12:
         lumiText += "8 TeV"
 
-    #print lumiText
+    # print lumiText
 
     if forLatex:
-        #lumiText = lumiText.replace("fb",r"\,fb").replace("pb",r"\,pb").replace("TeV",r"\,TeV")
-        lumiText = r'\textbf{'+lumiText.replace(r'^{-1}',r'}^\mathbf{-1} \textbf{')+'}'
+        # lumiText = lumiText.replace("fb",r"\,fb").replace("pb",r"\,pb").replace("TeV",r"\,TeV")
+        lumiText = r"\textbf{" + lumiText.replace(r"^{-1}", r"}^\mathbf{-1} \textbf{") + "}"
 
     latex = rt.TLatex()
     latex.SetNDC()
     latex.SetTextAngle(0)
     latex.SetTextColor(rt.kBlack)
 
-    extraTextSize = extraOverCmsTextSize*cmsTextSize
+    extraTextSize = extraOverCmsTextSize * cmsTextSize
 
     latex.SetTextFont(42)
     latex.SetTextAlign(31)
-    latex.SetTextSize(lumiTextSize*t)
+    latex.SetTextSize(lumiTextSize * t)
 
-    latex.DrawLatex(1-r,1-t+lumiTextOffset*t,lumiText)
+    latex.DrawLatex(1 - r, 1 - t + lumiTextOffset * t, lumiText)
 
-    if( outOfFrame ):
+    if outOfFrame:
         latex.SetTextFont(cmsTextFont)
         latex.SetTextAlign(11)
-        latex.SetTextSize(cmsTextSize*t)
-        latex.DrawLatex(l,1-t+lumiTextOffset*t,cmsText)
+        latex.SetTextSize(cmsTextSize * t)
+        latex.DrawLatex(l, 1 - t + lumiTextOffset * t, cmsText)
 
     if pad != rt.TVirtualPad.Pad():
         pad.cd()
 
     posX_ = 0
-    if( iPosX%10<=1 ):
-        posX_ =   l + relPosX*(1-l-r)
-    elif( iPosX%10==2 ):
-        posX_ =  l + 0.5*(1-l-r)
-    elif( iPosX%10==3 ):
-        posX_ =  1-r - relPosX*(1-l-r)
+    if iPosX % 10 <= 1:
+        posX_ = l + relPosX * (1 - l - r)
+    elif iPosX % 10 == 2:
+        posX_ = l + 0.5 * (1 - l - r)
+    elif iPosX % 10 == 3:
+        posX_ = 1 - r - relPosX * (1 - l - r)
 
-    posY_ = 1-t - relPosY*(1-t-b)
+    posY_ = 1 - t - relPosY * (1 - t - b)
 
-    if( not outOfFrame ):
-        if( drawLogo ):
-            posX_ =   l + 0.045*(1-l-r)*W/H
-            posY_ = 1-t - 0.045*(1-t-b)
+    if not outOfFrame:
+        if drawLogo:
+            posX_ = l + 0.045 * (1 - l - r) * W / H
+            posY_ = 1 - t - 0.045 * (1 - t - b)
             xl_0 = posX_
             yl_0 = posY_ - 0.15
-            xl_1 = posX_ + 0.15*H/W
+            xl_1 = posX_ + 0.15 * H / W
             yl_1 = posY_
             CMS_logo = rt.TASImage("CMS-BW-label.png")
-            pad_logo =  rt.TPad("logo","logo", xl_0, yl_0, xl_1, yl_1 )
+            pad_logo = rt.TPad("logo", "logo", xl_0, yl_0, xl_1, yl_1)
             pad_logo.Draw()
             pad_logo.cd()
             CMS_logo.Draw("X")
@@ -148,21 +155,21 @@ def CMS_lumi(pad,  iPeriod,  iPosX,  forLatex=False):
             pad.cd()
         else:
             latex.SetTextFont(cmsTextFont)
-            latex.SetTextSize(cmsTextSize*t)
+            latex.SetTextSize(cmsTextSize * t)
             latex.SetTextAlign(align_)
             latex.DrawLatex(posX_, posY_, cmsText)
-            if( writeExtraText ) :
+            if writeExtraText:
                 latex.SetTextFont(extraTextFont)
                 latex.SetTextAlign(align_)
-                latex.SetTextSize(extraTextSize*t)
-                latex.DrawLatex(posX_, posY_- relExtraDY*cmsTextSize*t, extraText)
-    elif( writeExtraText ):
-        if( iPosX==0):
-            posX_ =   l +  relPosX*(1-l-r)
-            posY_ =   1-t+lumiTextOffset*t
+                latex.SetTextSize(extraTextSize * t)
+                latex.DrawLatex(posX_, posY_ - relExtraDY * cmsTextSize * t, extraText)
+    elif writeExtraText:
+        if iPosX == 0:
+            posX_ = l + relPosX * (1 - l - r)
+            posY_ = 1 - t + lumiTextOffset * t
 
         latex.SetTextFont(extraTextFont)
-        latex.SetTextSize(extraTextSize*t)
+        latex.SetTextSize(extraTextSize * t)
         latex.SetTextAlign(align_)
         latex.DrawLatex(posX_, posY_, extraText)
 

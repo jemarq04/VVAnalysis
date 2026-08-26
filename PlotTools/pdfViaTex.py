@@ -1,10 +1,10 @@
-
-from os import path as _path, system as _unix, makedirs as _mkdirp
-from shutil import move as _mv
+from os import makedirs as _mkdirp
+from os import path as _path
+from os import system as _unix
 from re import compile as _reComp
+from shutil import move as _mv
 
-
-_texTemplate = '''
+_texTemplate = """
 \\documentclass[tikz]{{standalone}}
 \\usepackage{{standalone}}
 \\usetikzlibrary{{patterns}}
@@ -34,17 +34,18 @@ _texTemplate = '''
 \\begin{{document}}
   \\input{{{fname}}}
 \\end{{document}}
-'''
+"""
+
 
 def _doSub(s, sub, exp):
-    '''
+    """
     Replace regex exp with str sub in str s.
-    '''
-    return exp.sub(sub,s)
+    """
+    return exp.sub(sub, s)
 
 
 def pdfViaTex(c, fname, texDir, pdfDir, **extraSubs):
-    '''
+    """
     Print a Canvas as a PDF, via a ROOT-generated .tex file.
 
     c (Canvas): Canvas to print.
@@ -55,48 +56,46 @@ def pdfViaTex(c, fname, texDir, pdfDir, **extraSubs):
     extraSubs(str keyed to str): Value is a regular expression that will be
         replaced with key anywhere it appears in the output tex file, via
         re.sub().
-    '''
+    """
     if not _path.exists(texDir):
         _mkdirp(texDir)
 
-    imgFile = _path.join(texDir, fname+'_img.tex')
+    imgFile = _path.join(texDir, fname + "_img.tex")
 
     c.Print(imgFile)
 
     if not _path.exists(imgFile):
-        raise IOError("Something went wrong trying to print {} to a tex file.".format(fname))
+        raise OSError(f"Something went wrong trying to print {fname} to a tex file.")
 
     subList = []
 
     # Remove unwanted boxes from around hatched and transparent fill areas
-    imgFileFixed = imgFile.replace('.tex','_fixed.tex')
-    subList.append(('\\path',_reComp(r'\\draw(?= \[((pattern=)|(.+fill opacity=)))')))
+    imgFileFixed = imgFile.replace(".tex", "_fixed.tex")
+    subList.append(("\\path", _reComp(r"\\draw(?= \[((pattern=)|(.+fill opacity=)))")))
     # make transparency actually work for hatched areas
     # there's probably a way to combine with the previous regex...
-    subList.append((r'',_reComp(r'(?<=\\path \[pattern=crosshatch, pattern color=c, )fill (?=opacity=[01])')))
+    subList.append((r"", _reComp(r"(?<=\\path \[pattern=crosshatch, pattern color=c, )fill (?=opacity=[01])")))
     # anything else that needs to change
-    subList += [(k, _reComp(v)) for k,v in extraSubs.iteritems()]
-    with open(imgFile, 'r') as fIm:
-        with open(imgFileFixed, 'w') as fImFix:
-            for line in fIm:
-                fImFix.write(reduce(_doSub, *subList, line))
+    subList += [(k, _reComp(v)) for k, v in extraSubs.iteritems()]
+    with open(imgFile, "r") as fIm, open(imgFileFixed, "w") as fImFix:
+        fImFix.writelines(reduce(_doSub, *subList, line) for line in fIm)
 
-    texFile = _path.join(texDir, fname+'.tex')
+    texFile = _path.join(texDir, fname + ".tex")
 
-    with open(texFile, 'w') as f:
+    with open(texFile, "w") as f:
         f.write(_texTemplate.format(fname=imgFileFixed))
 
-    _unix('pdflatex -halt-on-error -output-directory {} {}'.format(texDir, texFile))
+    _unix(f"pdflatex -halt-on-error -output-directory {texDir} {texFile}")
 
-    pdfFile = texFile.replace('.tex','.pdf')
+    pdfFile = texFile.replace(".tex", ".pdf")
 
     if not _path.exists(pdfFile):
-        raise IOError("Something went wrong trying to make {} from {}.".format(pdfFile, texFile))
+        raise OSError(f"Something went wrong trying to make {pdfFile} from {texFile}.")
 
     if not _path.exists(pdfDir):
         _mkdirp(pdfDir)
 
-    newPDFFile = _path.join(pdfDir, fname+'.pdf')
+    newPDFFile = _path.join(pdfDir, fname + ".pdf")
     _mv(pdfFile, newPDFFile)
 
 

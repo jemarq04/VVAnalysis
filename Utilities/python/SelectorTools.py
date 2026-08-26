@@ -1,41 +1,45 @@
 #!/usr/bin/env python
-import ROOT
 import glob
-import datetime
-import ConfigureJobs, OutputTools
-import sys
-import os
-import multiprocessing
-import subprocess
 import logging
+import multiprocessing
+import os
+import subprocess
 
-class SelectorDriver(object):
+import OutputTools
+import ROOT
+
+import ConfigureJobs
+
+
+class SelectorDriver:
     def __init__(self, analysis, selection, input_tier, year):
         # TODO: Make this a configurable argument
-        #logging.basicConfig(level=logging.DEBUG)
+        # logging.basicConfig(level=logging.DEBUG)
         logging.basicConfig(level=logging.WARNING)
 
         selector_map = {
-            "WZxsec2016" : "WZSelector",
-            "Zstudy" : "ZSelector",
-            "Zstudy_2016" : "ZSelector",
-            "Zstudy_2017" : "ZSelector",
-            "ZZGen" : "ZZGenSelector",
-            "ZZ4l2016" : "ZZSelector",
-            "ZZ4l2017" : "ZZSelector",
-            "ZZ4l2018" : "ZZSelector",
-            "WGen" : "WGenSelector",
-            "ZGen" : "ZGenSelector",
-            "ThreeLep" : "ThreeLepSelector",
+            "WZxsec2016": "WZSelector",
+            "Zstudy": "ZSelector",
+            "Zstudy_2016": "ZSelector",
+            "Zstudy_2017": "ZSelector",
+            "ZZGen": "ZZGenSelector",
+            "ZZ4l2016": "ZZSelector",
+            "ZZ4l2017": "ZZSelector",
+            "ZZ4l2018": "ZZSelector",
+            "WGen": "WGenSelector",
+            "ZGen": "ZGenSelector",
+            "ThreeLep": "ThreeLepSelector",
         }
 
         self.analysis = analysis
         self.selection = selection
         self.input_tier = input_tier
-        if analysis not in selector_map.keys():
-            raise ValueError("Analysis does not point to " \
+        if analysis not in selector_map:
+            raise ValueError(
+                "Analysis does not point to "
                 "a defined selector. Please edit "
-                "Utilities/python/SelectorTools.py to add it.")
+                "Utilities/python/SelectorTools.py to add it."
+            )
         self.selector_name = selector_map[analysis]
         self.addSumweights = True
         self.ntupleType = "NanoAOD"
@@ -97,19 +101,21 @@ class SelectorDriver(object):
     def setFileList(self, list_of_files, nPerJob, jobNum):
         if not os.path.isfile(list_of_files):
             raise ValueError("%s is not a valid file." % list_of_files)
-        filelist = [f.split("#")[0].strip() for f in open(list_of_files).readlines()]
+        filelist = [f.split("#")[0].strip() for f in open(list_of_files)]
         # Remove empty/commented lines
-        filelist = filter(lambda  x: len(x) > 2, filelist)
+        filelist = filter(lambda x: len(x) > 2, filelist)
         nPerJob = int(nPerJob)
         if nPerJob < 1:
             raise ValueError("Number of files per job must be >= 1.")
         jobNum = int(jobNum)
         maxNum = len(filelist)
-        firstEntry = nPerJob*jobNum
+        firstEntry = nPerJob * jobNum
         if firstEntry > maxNum:
-            raise ValueError("The first file to process (nPerJob*jobNum) = (%i*%i)" % (nPerJob, jobNum) \
-                    + " is greater than the number of entries in file %s (%s)." % (list_of_files, maxNum))
-        lastEntry = min(nPerJob*(jobNum+1), maxNum)
+            raise ValueError(
+                "The first file to process (nPerJob*jobNum) = (%i*%i)" % (nPerJob, jobNum)
+                + " is greater than the number of entries in file %s (%s)." % (list_of_files, maxNum)
+            )
+        lastEntry = min(nPerJob * (jobNum + 1), maxNum)
 
         for line in filelist[firstEntry:lastEntry]:
             if "@" not in line:
@@ -130,8 +136,7 @@ class SelectorDriver(object):
                 dataset, file_path = [f.strip() for f in dataset.split("@")]
             else:
                 try:
-                    file_path = ConfigureJobs.getInputFilesPath(dataset,
-                        self.input_tier, self.analysis)
+                    file_path = ConfigureJobs.getInputFilesPath(dataset, self.input_tier, self.analysis)
                 except ValueError as e:
                     logging.warning(e)
                     continue
@@ -157,7 +162,12 @@ class SelectorDriver(object):
         select.SetInputList(self.inputs)
         self.addTNamed("name", dataset)
         # Only add for one channel
-        addSumweights = self.addSumweights and self.channels.index(chan) == 0 and "data" not in dataset and "Background" not in self.selector_name
+        addSumweights = (
+            self.addSumweights
+            and self.channels.index(chan) == 0
+            and "data" not in dataset
+            and "Background" not in self.selector_name
+        )
         if addSumweights:
             sumweights_hist = ROOT.gROOT.FindObject("sumweights")
             # Avoid accidentally combining sumweights across datasets
@@ -179,7 +189,7 @@ class SelectorDriver(object):
             if dataset_list and dataset_list.ClassName() == "TList":
                 logging.warning('Falling back to dataset "Unknown"')
             else:
-                logging.warning('Skipping dataset %s' % dataset)
+                logging.warning("Skipping dataset %s" % dataset)
                 return False
         if addSumweights:
             dataset_list.Add(ROOT.gROOT.FindObject("sumweights"))
@@ -198,17 +208,15 @@ class SelectorDriver(object):
         xrootd = "/store" in file_path.split("/hdfs/")[0][:7]
         xrootd_user = "/store/user" in file_path.split("/hdfs/")[0][:12]
         if not (xrootd or os.path.isfile(file_path) or os.path.isdir(file_path.rsplit("/", 1)[0].rstrip("/*"))):
-            raise ValueError("Invalid path! Skipping dataset. Path was %s"
-                % file_path)
+            raise ValueError("Invalid path! Skipping dataset. Path was %s" % file_path)
 
         # Assuming these are user files on HDFS, otherwise it won't work
-        if (xrootd and not xrootd_user):
-            xrd = 'root://%s/' % ConfigureJobs.getXrdRedirector()
+        if xrootd and not xrootd_user:
+            xrd = "root://%s/" % ConfigureJobs.getXrdRedirector()
             filenames = [xrd + file_path]
             return filenames
-        filenames =  glob.glob(file_path) if not xrootd_user else \
-                ConfigureJobs.getListOfHDFSFiles(file_path)
-        filenames = ['root://cmsxrootd.hep.wisc.edu/' + f if "/store/user" in f[0:12] else f for f in filenames]
+        filenames = glob.glob(file_path) if not xrootd_user else ConfigureJobs.getListOfHDFSFiles(file_path)
+        filenames = ["root://cmsxrootd.hep.wisc.edu/" + f if "/store/user" in f[0:12] else f for f in filenames]
         return filenames
 
     def getTreeName(self, chan):
@@ -240,23 +248,29 @@ class SelectorDriver(object):
     def processDatasetHelper(self, args):
         self.processDataset(*args)
 
-    def processLocalFiles(self, selector, file_path, addSumweights, chan,):
+    def processLocalFiles(
+        self,
+        selector,
+        file_path,
+        addSumweights,
+        chan,
+    ):
         filenames = []
         for entry in file_path:
             filenames.extend(self.getFileNames(entry))
         for i, filename in enumerate(filenames):
-            self.processFile(selector, filename, addSumweights, chan, i+1)
+            self.processFile(selector, filename, addSumweights, chan, i + 1)
 
     def processFile(self, selector, filename, addSumweights, chan, filenum=1):
         logging.debug("Processing file: %s" % filename)
         rtfile = ROOT.TFile.Open(filename)
         if not rtfile or not rtfile.IsOpen() or rtfile.IsZombie():
-            raise IOError("Failed to open file %s!" % filename)
+            raise OSError("Failed to open file %s!" % filename)
         tree_name = self.getTreeName(chan)
         tree = rtfile.Get(tree_name)
         if not tree:
-            raise ValueError(("tree %s not found for file %s. " \
-                    "Either the file is corrupted or the ntupleType (%s) is wrong.")
+            raise ValueError(
+                ("tree %s not found for file %s. Either the file is corrupted or the ntupleType (%s) is wrong.")
                 % (tree_name, filename, self.ntupleType)
             )
         logging.debug("Processing tree %s for file %s." % (tree.GetName(), rtfile.GetName()))
@@ -278,7 +292,7 @@ class SelectorDriver(object):
         meta_tree = rtfile.Get(meta_tree_name)
         ROOT.gROOT.cd()
         sumweights_hist = ROOT.gROOT.FindObject("sumweights")
-        tmplabel = sumweights_hist.GetName()+"_i"
+        tmplabel = sumweights_hist.GetName() + "_i"
         tmpweights_hist = sumweights_hist.Clone(tmplabel)
         meta_tree.Draw("%i>>%s" % (filenum, tmplabel), sumweights_branch)
         sumweights_hist.Add(tmpweights_hist)

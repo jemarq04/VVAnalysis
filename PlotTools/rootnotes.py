@@ -19,9 +19,11 @@ More examples: http://mazurov.github.io/webfest2013/
 """
 
 import ROOT
+
 ROOT.gROOT.SetBatch()
 
 import tempfile
+
 from IPython.core import display
 
 
@@ -31,23 +33,23 @@ def canvas(name="icanvas", size=(800, 600)):
     # Check if icanvas already exists
     # canvas = ROOT.gROOT.FindObject(name)
     assert len(size) == 2
-    #if canvas:
+    # if canvas:
     #    return canvas
-    #else:
-    #if canvas:
+    # else:
+    # if canvas:
     #    delete canvas
     return ROOT.TCanvas(name, name, size[0], size[1])
 
 
 def default_canvas(name="icanvas", size=(800, 600)):
-    """ deprecated """
+    """deprecated"""
     return canvas(name=name, size=size)
 
 
 def _display_canvas(canvas):
     file = tempfile.NamedTemporaryFile(suffix=".png")
     canvas.SaveAs(file.name)
-    ip_img = display.Image(filename=file.name, format='png', embed=True)
+    ip_img = display.Image(filename=file.name, format="png", embed=True)
     return ip_img._repr_png_()
 
 
@@ -55,11 +57,12 @@ def _display_any(obj):
     file = tempfile.NamedTemporaryFile(suffix=".png")
     obj.Draw()
     ROOT.gPad.SaveAs(file.name)
-    ip_img = display.Image(filename=file.name, format='png', embed=True)
+    ip_img = display.Image(filename=file.name, format="png", embed=True)
     return ip_img._repr_png_()
 
+
 # register display function with PNG formatter:
-png_formatter = get_ipython().display_formatter.formatters['image/png'] # noqa
+png_formatter = get_ipython().display_formatter.formatters["image/png"]  # noqa
 
 # Register ROOT types in ipython
 #

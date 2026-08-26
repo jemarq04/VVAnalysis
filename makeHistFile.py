@@ -1,14 +1,10 @@
 #!/usr/bin/env python3
 
-import ROOT
-from python import SelectorTools
-from python import UserInput
-from python import OutputTools
-from python import ConfigureJobs
-from python import HistTools
-import os
-import sys
 import datetime
+import sys
+
+import ROOT
+from python import ConfigureJobs, HistTools, OutputTools, SelectorTools, UserInput
 
 channels = ["eeee", "eemm", "mmee", "mmmm"]
 

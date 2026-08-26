@@ -1,12 +1,14 @@
 #!/usr/bin/env python
-import ROOT
+import array
 import datetime
 import os
+
 import makeSimpleHtml
-import array
+import ROOT
 
 ROOT.gROOT.SetBatch(True)
 canvas = ROOT.TCanvas("canvas", "canvas")
+
 
 def getTGraphAsymmErrors(frfile, folder, param, obj):
     tight_hist = frfile.Get("%s/passingTight%s_all%s" % (folder, param, obj))
@@ -17,8 +19,9 @@ def getTGraphAsymmErrors(frfile, folder, param, obj):
     graph.SetMaximum(0.8)
     return graph
 
+
 def getTextBox(obj, extra_text=""):
-    text_box = ROOT.TPaveText(0.2, 0.92, 0.4+0.02*len(extra_text), 0.86, "blNDC")
+    text_box = ROOT.TPaveText(0.2, 0.92, 0.4 + 0.02 * len(extra_text), 0.86, "blNDC")
     text_box.SetFillColor(0)
     text_box.SetLineColor(ROOT.kBlack)
     text_box.SetTextFont(42)
@@ -27,27 +30,30 @@ def getTextBox(obj, extra_text=""):
     ROOT.SetOwnership(text_box, False)
     return text_box
 
+
 def invert2DHist(hist):
-    new_hist = ROOT.TH2D(hist.GetName(), hist.GetTitle(),
-            3, 0, 2.5,
-            3, array.array('d', [10,20,30,50]))
+    new_hist = ROOT.TH2D(hist.GetName(), hist.GetTitle(), 3, 0, 2.5, 3, array.array("d", [10, 20, 30, 50]))
     ROOT.SetOwnership(new_hist, False)
-    for x in range(hist.GetNbinsX()+1):
-        for y in range(hist.GetNbinsY()+1):
+    for x in range(hist.GetNbinsX() + 1):
+        for y in range(hist.GetNbinsY() + 1):
             value = hist.GetBinContent(x, y)
             new_hist.SetBinContent(y, x, value)
     new_hist.GetXaxis().SetTitle(hist.GetXaxis().GetTitle())
     new_hist.GetYaxis().SetTitle(hist.GetYaxis().GetTitle())
     return new_hist
 
+
 def makeDataPlots(param, obj, outdir):
-    data_ewkcorr_graph = frfile.Get("DataEWKCorrected/ratio%s_all%s" % (param, obj)) \
-        if "2D" in param else getTGraphAsymmErrors(frfile, "DataEWKCorrected", param, obj)
+    data_ewkcorr_graph = (
+        frfile.Get("DataEWKCorrected/ratio%s_all%s" % (param, obj))
+        if "2D" in param
+        else getTGraphAsymmErrors(frfile, "DataEWKCorrected", param, obj)
+    )
     data_ewkcorr_graph.SetLineColor(ROOT.kRed)
     draw_opt = "PA" if "2D" not in param else "colz text"
     if "2D" in param:
         data_ewkcorr_graph = invert2DHist(data_ewkcorr_graph)
-        #data_ewkcorr_graph.GetYaxis().SetTitle("#eta")
+        # data_ewkcorr_graph.GetYaxis().SetTitle("#eta")
         data_ewkcorr_graph.GetYaxis().SetTitle("p_{T} [GeV]")
         data_ewkcorr_graph.GetXaxis().SetTitle("#eta")
     else:
@@ -63,7 +69,7 @@ def makeDataPlots(param, obj, outdir):
         data_uncorr_graph = getTGraphAsymmErrors(frfile, "AllData", param, obj)
         data_uncorr_graph.Draw("P")
 
-        legend = ROOT.TLegend(0.2,.85,.55,.70)
+        legend = ROOT.TLegend(0.2, 0.85, 0.55, 0.70)
         legend.AddEntry(data_uncorr_graph, "Data", "l")
         legend.AddEntry(data_ewkcorr_graph, "Data - EWK", "l")
         legend.Draw()
@@ -71,9 +77,13 @@ def makeDataPlots(param, obj, outdir):
     canvas.Print("%s/ratio%s_all%s.png" % (outdir, param, obj))
     canvas.Print("%s/ratio%s_all%s.pdf" % (outdir, param, obj))
 
+
 def makeMCPlots(param, obj, outdir):
-    graph = frfile.Get("NonpromptMC/ratio%s_all%s" % (param, obj)) \
-        if "2D" in param else getTGraphAsymmErrors(frfile, "NonpromptMC", param, obj)
+    graph = (
+        frfile.Get("NonpromptMC/ratio%s_all%s" % (param, obj))
+        if "2D" in param
+        else getTGraphAsymmErrors(frfile, "NonpromptMC", param, obj)
+    )
     graph.SetLineColor(ROOT.kRed)
     draw_opt = "PA" if "2D" not in param else "colz text"
     if "2D" in param:
@@ -88,18 +98,18 @@ def makeMCPlots(param, obj, outdir):
     text_box.Draw()
 
     if not "2D" in param:
-        legend = ROOT.TLegend(0.2,.85,.55,.70)
+        legend = ROOT.TLegend(0.2, 0.85, 0.55, 0.70)
         legend.AddEntry(graph, "Nonprompt MC", "l")
         legend.Draw()
-
 
     canvas.Print("%s/ratio%s_all%s.png" % (outdir, param, obj))
     canvas.Print("%s/ratio%s_all%s.pdf" % (outdir, param, obj))
 
+
 frfile = ROOT.TFile("/eos/user/k/kelong/WZAnalysisData/FakeRates/fakeRateMar2018-TightLepsFrom3MediumLeptons.root")
 
 
-data_folder_name = datetime.date.today().strftime("%Y%b"+"_ScaleFacs")
+data_folder_name = datetime.date.today().strftime("%Y%b" + "_ScaleFacs")
 data_outdir = "~/www/DibosonAnalysisData/PlottingResults/WZxsec2016/FakeRates/" + data_folder_name + "/plots"
 mc_outdir = "~/www/DibosonAnalysisData/PlottingResults/WZxsec2016/FakeRates/" + data_folder_name + "-MC/plots"
 
@@ -108,7 +118,6 @@ for outdir in [data_outdir, mc_outdir]:
         os.makedirs(os.path.expanduser(outdir))
     except OSError as e:
         print(e)
-        pass
 
 for param in ["1DPt", "1DEta", "2D"]:
     for obj in ["Mu", "E"]:

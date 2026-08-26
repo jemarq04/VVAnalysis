@@ -1,5 +1,6 @@
 import ROOT
 
+
 def writeOutputListItem(item, directory):
     if item.ClassName() == "TList":
         d = directory.Get(item.GetName())
@@ -8,7 +9,7 @@ def writeOutputListItem(item, directory):
             ROOT.SetOwnership(d, False)
         for subItem in item:
             writeOutputListItem(subItem, d)
-    elif hasattr(item, 'Write'):
+    elif hasattr(item, "Write"):
         directory.cd()
         item.Write()
     else:
@@ -16,55 +17,56 @@ def writeOutputListItem(item, directory):
         print(repr(item))
     directory.cd()
 
-def getHistsInDic(output_list,varList,channels):
-    histsChanDic={}
-    exist=False
+
+def getHistsInDic(output_list, varList, channels):
+    histsChanDic = {}
+    exist = False
     for chan in channels:
-        if chan=="eemm":
-            #Loop over the variables for which we want unfolded distributions
-            histsDic={}
+        if chan == "eemm":
+            # Loop over the variables for which we want unfolded distributions
+            histsDic = {}
             for var in varList:
-                exist=False
-                #Items are the histograms that the HistTools function saves in a composite list
+                exist = False
+                # Items are the histograms that the HistTools function saves in a composite list
                 for item in output_list:
-                    #print "MCsubItem:",subItem.GetName()
+                    # print "MCsubItem:",subItem.GetName()
                     if "Gen" in var:
-                        itemName=var+"_"+chan+"Gen"
+                        itemName = var + "_" + chan + "Gen"
                     else:
-                        itemName=var+"_"+chan
-                    if item.GetName()==itemName:
-                        exist=True
+                        itemName = var + "_" + chan
+                    if item.GetName() == itemName:
+                        exist = True
                         hist = item.Clone()
-                        #Find _mmee hist as well
+                        # Find _mmee hist as well
                         if "Gen" in var:
-                            h2 = output_list.FindObject(var+"_mmeeGen")
+                            h2 = output_list.FindObject(var + "_mmeeGen")
                         else:
-                            h2 = output_list.FindObject(var+"_mmee")
+                            h2 = output_list.FindObject(var + "_mmee")
                         hist.Add(h2)
                         hist.SetDirectory(0)
                 if not exist:
-                    raise ValueError("Histogram not found:%s"%itemName)
-                histsDic[var]=hist
-            histsChanDic[chan]=histsDic
+                    raise ValueError("Histogram not found:%s" % itemName)
+                histsDic[var] = hist
+            histsChanDic[chan] = histsDic
         else:
-            #Loop over the variables for which we want unfolded distributions
-            histsDic={}
+            # Loop over the variables for which we want unfolded distributions
+            histsDic = {}
             for var in varList:
-                exist=False
-                #print "var:",var
-                #Items are the histograms that the HistTools function saves in a composite list
+                exist = False
+                # print "var:",var
+                # Items are the histograms that the HistTools function saves in a composite list
                 for item in output_list:
-                    #print "MCsubItem:",item.GetName()
+                    # print "MCsubItem:",item.GetName()
                     if "Gen" in var:
-                        itemName=var+"_"+chan+"Gen"
+                        itemName = var + "_" + chan + "Gen"
                     else:
-                        itemName=var+"_"+chan
-                    if item.GetName()==itemName:
-                        exist=True
+                        itemName = var + "_" + chan
+                    if item.GetName() == itemName:
+                        exist = True
                         hist = item.Clone()
                         hist.SetDirectory(0)
                 if not exist:
-                    raise ValueError("Histogram not found:%s"%itemName)
-                histsDic[var]=hist
-            histsChanDic[chan]=histsDic
+                    raise ValueError("Histogram not found:%s" % itemName)
+                histsDic[var] = hist
+            histsChanDic[chan] = histsDic
     return histsChanDic

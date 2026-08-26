@@ -1,12 +1,14 @@
 import logging
-import ConfigureJobs
+import os
+
 import HistTools
 import OutputTools
-from prettytable import PrettyTable
-import os
 import ROOT
 
-class CombineCardTools(object):
+import ConfigureJobs
+
+
+class CombineCardTools:
     def __init__(self):
         self.fitVariable = ""
         self.fitVariableAppend = {}
@@ -62,7 +64,7 @@ class CombineCardTools(object):
 
     def setVariationsByProcess(self, process, variations):
         if "Up" not in variations and "Down" not in variations:
-            variations = [x+y for x in variations for y in ["Up", "Down"]]
+            variations = [x + y for x in variations for y in ["Up", "Down"]]
         self.variations[process] = variations
 
     def weightHistName(self, channel, process):
@@ -115,7 +117,7 @@ class CombineCardTools(object):
             variations.append("")
         for var in variations:
             # TODO: Remove these two replace statements, it's WZ/ZZ specific
-            name = fitVariable if var is "" else "_".join([fitVariable, var])
+            name = fitVariable if var == "" else "_".join([fitVariable, var])
             hist_name = name + "_" + self.channels[0]
             hist = group.FindObject(hist_name)
             if not hist:
@@ -143,22 +145,28 @@ class CombineCardTools(object):
     def loadHistsForProcess(self, processName, addTheory, scaleNorm=1):
         plotsToRead = self.listOfHistsByProcess(processName, addTheory)
 
-        group = HistTools.makeCompositeHists(self.inputFile, processName,
-                    {proc : self.crossSectionMap[proc] for proc in self.processes[processName]},
-                    self.lumi, plotsToRead, rebin=self.rebin, overflow=False)
+        group = HistTools.makeCompositeHists(
+            self.inputFile,
+            processName,
+            {proc: self.crossSectionMap[proc] for proc in self.processes[processName]},
+            self.lumi,
+            plotsToRead,
+            rebin=self.rebin,
+            overflow=False,
+        )
 
         fitVariable = self.getFitVariable(processName)
-        #TODO:Make optional
+        # TODO:Make optional
         processedHists = []
         for chan in self.channels:
             histName = "_".join([fitVariable, chan]) if chan != "all" else fitVariable
             hist = group.FindObject(histName)
-            #TODO: Make optional
+            # TODO: Make optional
             if "data" not in processName.lower():
                 HistTools.removeZeros(hist)
             HistTools.addOverflow(hist)
             processedHists.append(histName)
-            self.yields[chan].update({processName : round(hist.Integral(), 4) if hist.Integral() > 0 else 0.0001})
+            self.yields[chan].update({processName: round(hist.Integral(), 4) if hist.Integral() > 0 else 0.0001})
 
             if chan == self.channels[0]:
                 self.yields["all"][processName] = self.yields[chan][processName]
@@ -172,12 +180,12 @@ class CombineCardTools(object):
                     continue
                 scaleHists = HistTools.getScaleHists(weightHist, processName, self.rebin)
                 group.extend(scaleHists)
-        #TODO: You may want to combine channels before removing zeros
+        # TODO: You may want to combine channels before removing zeros
         self.combineChannels(group)
-        #TODO: Make optional
-        map(HistTools.addOverflow, filter(lambda x: (x.GetName() not in processedHists), group))
+        # TODO: Make optional
+        map(HistTools.addOverflow, filter(lambda x: x.GetName() not in processedHists, group))
         if "data" not in group.GetName().lower():
-            map(HistTools.removeZeros, filter(lambda x: (x.GetName() not in processedHists), group))
+            map(HistTools.removeZeros, filter(lambda x: x.GetName() not in processedHists, group))
         self.histData[processName] = group
 
     # It's best to call this function for process, otherwise you can end up
@@ -197,8 +205,7 @@ class CombineCardTools(object):
         chan_dict["output_file"] = self.outputFile.GetName()
         outputCard = self.templateName.split("/")[-1].format(channel=chan, year=year)
         outputCard = outputCard.replace("template", "")
-        #outputCard = outputCard.replace("__", "_")
-        ConfigureJobs.fillTemplatedFile(self.templateName.format(channel=chan, year=year),
-            "/".join([self.outputFolder, outputCard]),
-            chan_dict
+        # outputCard = outputCard.replace("__", "_")
+        ConfigureJobs.fillTemplatedFile(
+            self.templateName.format(channel=chan, year=year), "/".join([self.outputFolder, outputCard]), chan_dict
         )
