@@ -22,11 +22,11 @@
 \def\confID#1{\@doitrue\gdef\@confID{#1}}
 \def\doi{\@doitrue}
 
-\def\desyproc#1{\gdef\@desyproc{#1}}                       
+\def\desyproc#1{\gdef\@desyproc{#1}}
 \gdef\@desyproc{\@latex@warning{No DESY-PROC number given}}
 
-\def\acronym#1{\gdef\@acronym{#1}}                                  
-\let\@acronym\@empty                                     
+\def\acronym#1{\gdef\@acronym{#1}}
+\let\@acronym\@empty
 
 
 \def\@maketitle{%
@@ -44,7 +44,7 @@
      \par
      \vskip 1em
 % =======  To the editor:  ==========================================
-%   Please swap the comment of the following 2 lines. 
+%   Please swap the comment of the following 2 lines.
 %   So the propper DOI appears on the document.
 % -------------------------------------------------------------------
 %     {\bfseries DOI:} {\texttt http://dx.doi.org/10.3204/\@desyproc/\@contribID}

@@ -23,7 +23,7 @@ class SelectorBase : public TSelector {
  public :
     std::map<std::string, ScaleFactor*> scaleFactors;
     TEfficiency* prefireEff_;
-    
+
     TTree          *fChain = 0;   //!pointer to the analyzed TTree or TChain
 
     /*********************************/
@@ -33,19 +33,19 @@ class SelectorBase : public TSelector {
     /* | |___| |\  | |_| | |  | \__ \ */
     /* |_____|_| \_|\___/|_|  |_|___/ */
     /*********************************/
-                              
+
     enum NtupleType {
         UWVV,    NanoAOD,
     };
 
     enum Channel {
-        e,           m,         
-        ee,          em,        mm,     
+        e,           m,
+        ee,          em,        mm,
         eee,         eem,       emm,    mmm,
         eeee,        eemm,      mmee,   mmmm,
-        Inclusive,   Unknown,   lll,    
+        Inclusive,   Unknown,   lll,
     };
-  
+
     enum Selection {
         tightleptons,                 ZZGenFiducial,
         ZZselection,
@@ -77,7 +77,7 @@ class SelectorBase : public TSelector {
         electronEfficiencyUp,      electronEfficiencyDown,
         electronScaleUp,           electronScaleDown,
         pileupUp,                  pileupDown,
-    }; 
+    };
 
     /****************************/
     /*  __  __                  */
@@ -113,10 +113,10 @@ class SelectorBase : public TSelector {
         {"VBSBackgroundControlLoose_Full", VBSBackgroundControlLoose_Full},
         {"Inclusive2Jet", Inclusive2Jet},
         {"Inclusive2Jet_Full", Inclusive2Jet_Full},
-        {"TightWithLooseVeto", TightWithLooseVeto}, 
+        {"TightWithLooseVeto", TightWithLooseVeto},
         {"FourTopPlots", FourTopPlots},
         {"FourTopCutBasedEl", FourTopCutBasedEl},
-	{"FourTopMVAEl", FourTopMVAEl}, 
+	{"FourTopMVAEl", FourTopMVAEl},
     };
 
     std::map<std::string, Year> yearMap_ = {
@@ -125,9 +125,9 @@ class SelectorBase : public TSelector {
         {"2017", yr2017},
         {"2018", yr2018},
     };
-    
+
     std::map<std::string, Channel> channelMap_ = {
-        {"e", e},                   {"m", m},         
+        {"e", e},                   {"m", m},
         {"ee", ee},                 {"em", em},       {"mm", mm},
         {"eee", eee},               {"eem", eem},     {"emm", emm},     {"mmm", mmm},
         {"eeee", eeee},             {"eemm", eemm},   {"mmee", mmee},   {"mmmm", mmmm},
@@ -147,7 +147,7 @@ class SelectorBase : public TSelector {
     bool addSumweights_;
     bool applyScaleFactors_;
     bool applyPrefiringCorr_;
-    
+
     // Readers to access the data (delete the ones you do not need).
     SelectorBase(TTree * /*tree*/ =0) { }
     virtual ~SelectorBase() { }
@@ -183,8 +183,8 @@ class SelectorBase : public TSelector {
 	currentHistDir_->Add(ptr);
 	allObjects_.insert((TNamed**) &ptr);
     };
-    
-    void UpdateDirectory();    
+
+    void UpdateDirectory();
     ClassDef(SelectorBase,0);
 
  protected:
@@ -219,7 +219,7 @@ class SelectorBase : public TSelector {
     Year year_ = yrdefault;
     bool isMC_;
 
-    
+
     float GetPrefiringEfficiencyWeight(std::vector<float>* jetPt, std::vector<float>* jetEta);
     virtual std::string GetNameFromFile() { return ""; }
     void InitializeHistogramFromConfig(std::string name, std::string channel, std::vector<std::string> histData);
@@ -232,21 +232,20 @@ class SelectorBase : public TSelector {
 
     // Filling Functions
     template<typename T, typename... Args>
-	void SafeHistFill(std::map<std::string, T*> container, 
+	void SafeHistFill(std::map<std::string, T*> container,
 			  std::string histname, Args... args) {
 	if (container[histname] != nullptr)
 	    container[histname]->Fill(args...);
     };
-  
+
     template<typename T, typename... Args>
 	void HistFullFill(std::map<std::string, T*> container,
 			  std::string histname, std::string var, Args... args) {
 	SafeHistFill(container, getHistName(histname, var), args...);
 	SafeHistFill(container, getHistName(histname, var, "all"), args...);
     }
-  
-    
+
+
 };
 
 #endif
-

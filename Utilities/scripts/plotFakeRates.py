@@ -28,7 +28,7 @@ def getTextBox(obj, extra_text=""):
     return text_box
 
 def invert2DHist(hist):
-    new_hist = ROOT.TH2D(hist.GetName(), hist.GetTitle(), 
+    new_hist = ROOT.TH2D(hist.GetName(), hist.GetTitle(),
             3, 0, 2.5,
             3, array.array('d', [10,20,30,50]))
     ROOT.SetOwnership(new_hist, False)
@@ -58,7 +58,7 @@ def makeDataPlots(param, obj, outdir):
 
     text_box = getTextBox(obj)
     text_box.Draw()
-    
+
     if not "2D" in param:
         data_uncorr_graph = getTGraphAsymmErrors(frfile, "AllData", param, obj)
         data_uncorr_graph.Draw("P")
@@ -92,14 +92,14 @@ def makeMCPlots(param, obj, outdir):
         legend.AddEntry(graph, "Nonprompt MC", "l")
         legend.Draw()
 
-    
+
     canvas.Print("%s/ratio%s_all%s.png" % (outdir, param, obj))
     canvas.Print("%s/ratio%s_all%s.pdf" % (outdir, param, obj))
 
 frfile = ROOT.TFile("/eos/user/k/kelong/WZAnalysisData/FakeRates/fakeRateMar2018-TightLepsFrom3MediumLeptons.root")
 
 
-data_folder_name = datetime.date.today().strftime("%Y%b"+"_ScaleFacs") 
+data_folder_name = datetime.date.today().strftime("%Y%b"+"_ScaleFacs")
 data_outdir = "~/www/DibosonAnalysisData/PlottingResults/WZxsec2016/FakeRates/" + data_folder_name + "/plots"
 mc_outdir = "~/www/DibosonAnalysisData/PlottingResults/WZxsec2016/FakeRates/" + data_folder_name + "-MC/plots"
 

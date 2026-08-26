@@ -14,7 +14,7 @@
 #include <vector>
 
 
-class FakeRateSelector : public WZSelectorBase { 
+class FakeRateSelector : public WZSelectorBase {
 public :
     TH2D* passingTight2D_;
     TH1D* passingTight1DPt_;
@@ -29,7 +29,7 @@ public :
     Float_t type1_pfMETEt;
     UInt_t nCBVIDVetoElec;
     UInt_t nWZLooseMuon;
-    
+
     TBranch* b_type1_pfMETEt;
     TBranch* b_nCBVIDVetoElec;
     TBranch* b_nWZLooseMuon;

@@ -330,7 +330,7 @@ inline
 const TVectorD& RooUnfoldResponse::Vtruth() const
 {
   // Truth distribution as a TVectorD
-  if (!_vTru) _cached= (_vTru= H2V  (_tru, _nt, _overflow)); 
+  if (!_vTru) _cached= (_vTru= H2V  (_tru, _nt, _overflow));
   return *_vTru;
 }
 
@@ -338,7 +338,7 @@ inline
 const TVectorD& RooUnfoldResponse::Etruth() const
 {
   // Truth distribution errors as a TVectorD
-  if (!_eTru) _cached= (_eTru= H2VE (_tru, _nt, _overflow)); 
+  if (!_eTru) _cached= (_eTru= H2VE (_tru, _nt, _overflow));
   return *_eTru;
 }
 
@@ -346,7 +346,7 @@ inline
 const TMatrixD& RooUnfoldResponse::Mresponse() const
 {
   // Response matrix as a TMatrixD: (row,column)=(measured,truth)
-  if (!_mRes) _cached= (_mRes= H2M  (_res, _nm, _nt, _tru, _overflow)); 
+  if (!_mRes) _cached= (_mRes= H2M  (_res, _nm, _nt, _tru, _overflow));
   return *_mRes;
 }
 
@@ -354,7 +354,7 @@ inline
 const TMatrixD& RooUnfoldResponse::Eresponse() const
 {
   // Response matrix errors as a TMatrixD: (row,column)=(measured,truth)
-  if (!_eRes) _cached= (_eRes= H2ME (_res, _nm, _nt, _tru, _overflow)); 
+  if (!_eRes) _cached= (_eRes= H2ME (_res, _nm, _nt, _tru, _overflow));
   return *_eRes;
 }
 

@@ -89,7 +89,7 @@ public :
     Bool_t SingleMuon_Trigger;
     Bool_t SingleElectron_Trigger;
     Int_t numPU;
-    
+
     // UWVV specific branches
     Float_t nTruePU;
 
@@ -110,7 +110,7 @@ public :
     TBranch* b_ZMass;
 
     BranchManager b;
-    
+
     // Readers to access the data (delete the ones you do not need).
     virtual void    SetScaleFactors() override;
     virtual void    Init(TTree *tree) override;
@@ -134,5 +134,3 @@ protected:
 };
 
 #endif
-
-

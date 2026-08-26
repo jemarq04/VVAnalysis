@@ -1,9 +1,10 @@
+#!/usr/bin/env python3
 # Setup ScaleFactor objects to be "registered" with ROOT,
 # allowing them to be called from TTree.Draw(), for example.
 # Currently used for lepton scale factors and pileup weights.
 #
 # Modified from N. Smith, U. Wisconsin
-# 
+#
 
 #!/usr/bin/env python
 import ROOT

@@ -6,15 +6,15 @@
 %%                also holds for "generic" characters.
 %%
 %%  The principle of the naming scheme is described in heppennames2.tex
-%% 
+%%
 %%  Author: Michel Goossens <michel.goossens@cern.ch>
 %%          Andy Buckley <andy@insectnation.org> (for heppennames.sty)
 %%          Michel Goossens and Eric van Herwijnen (for original pennames.sty)
-%% 
-%%  1.1 (31/08/2005)  MG                      
+%%
+%%  1.1 (31/08/2005)  MG
 %%    - Start from heppennames.sty
 %%    - Complete redesign with new conventions
-%%  1.2 (03/10/2006)  MG                      
+%%  1.2 (03/10/2006)  MG
 %%    - add \PQq and \PAQq (generic quarks)
 %%    - add \PDq, \PDzq, \PADq, \PADzq (generic Dq mesons)
 %%    - add \PZL and \PZR
@@ -25,17 +25,17 @@
 %%    - add \PABd, \PADzd, \PABs, \PABzs
 %%    - add \PBq, \PABq, \PBzq, \PABzq
 %%    - add \PDst, \PDstm, \PDstp, \PDstp,
-%%  1.3 (14/08/2007)  MG                      
+%%  1.3 (14/08/2007)  MG
 %%    - change spacing for subscript in \PDs... commands
-%%  1.4 (21/04/2010)  MG                      
+%%  1.4 (21/04/2010)  MG
 %%    - introduce upsilon', '',''','''' (\PGUpr, etc.)
-%%    - introduce slepton L and R (\PSlL and \PSlR)   
-%%    - introduce selectron L and R (\PSeL and \PSeR)   
-%%    - introduce smuon L and R (\PSGmL and \PSGmR)   
-%%    - introduce stau L, R, 1 and 2 (\PSGtL, \PSGtR, \PSGtDo and \PSGtDt)   
-%%  
+%%    - introduce slepton L and R (\PSlL and \PSlR)
+%%    - introduce selectron L and R (\PSeL and \PSeR)
+%%    - introduce smuon L and R (\PSGmL and \PSGmR)
+%%    - introduce stau L, R, 1 and 2 (\PSGtL, \PSGtR, \PSGtDo and \PSGtDt)
+%%
 %%  Last Mod. 21 April 2010 MG
-%% 
+%%
 %% -------------------------------------------------------------
 
 \def\fileversion{1.4}
@@ -529,7 +529,7 @@
 \DeclareRobustCommand{\PfJP}[1]{\HepParticleResonanceFull{\Pf}{\,J}{}{#1}{}{}\Xspace}% f J resonance
 
 %% rho mesons
-\DeclareRobustCommand{\PGr}{\HepParticle{\uprho}{}{}\Xspace} 
+\DeclareRobustCommand{\PGr}{\HepParticle{\uprho}{}{}\Xspace}
 \DeclareRobustCommand{\PGrP}[1]{\HepParticleResonanceFull{\PGr}{}{}{#1}{}{}\Xspace}% rho resonance
 \DeclareRobustCommand{\PGrpP}[1]{\HepParticleResonanceFull{\PGr}{}{+}{#1}{}{}\Xspace}
 \DeclareRobustCommand{\PGrzP}[1]{\HepParticleResonanceFull{\PGr}{}{0}{#1}{}{}\Xspace}
@@ -844,8 +844,8 @@
 
 \DeclareRobustCommand{\PSH}{\HepParticle{H}{}{}\Xspace} % charged Higgs
 \DeclareRobustCommand{\PSHpm}{\HepParticle{\PSH}{}{\pm}\Xspace}
-\DeclareRobustCommand{\PSHp}{\HepParticle{\PSH}{}{+}\Xspace} 
-\DeclareRobustCommand{\PSHm}{\HepParticle{\PSH}{}{-}\Xspace} 
+\DeclareRobustCommand{\PSHp}{\HepParticle{\PSH}{}{+}\Xspace}
+\DeclareRobustCommand{\PSHm}{\HepParticle{\PSH}{}{-}\Xspace}
 \DeclareRobustCommand{\PSHpmpm}{\HepParticle{\PSH}{}{\pm}\Xspace} % doubly charged Higgs
 
 \DeclareRobustCommand{\PSh}{\HepParticle{h}{}{}\Xspace} % light Higgs
@@ -858,7 +858,7 @@
 \DeclareRobustCommand{\PSHzDt}{\HepParticle{\PSH}{2}{0}\Xspace} % H-zero 2
 \DeclareRobustCommand{\PSHzDT}{\HepParticle{\PSH}{3}{0}\Xspace} % H-zero 3
 
-%% Gauge bosons 
+%% Gauge bosons
 \DeclareRobustCommand{\PSGg}{\HepSusyParticle{\PGg}{}{}\Xspace} % photino
 \DeclareRobustCommand{\PSg}{\HepSusyParticle{\Pg}{}{}\Xspace} % gluino
 
@@ -872,10 +872,10 @@
 
 \DeclareRobustCommand{\PSGc}{\HepSusyParticle{\upchi}{}{}\Xspace} % chargino/neutralino
 \DeclareRobustCommand{\PSGcz}{\HepParticle{\PSGc}{}{0}\Xspace} % neutralino
-\DeclareRobustCommand{\PSGczDo}{\HepParticle{\PSGc}{1}{0}\Xspace} 
-\DeclareRobustCommand{\PSGczDt}{\HepParticle{\PSGc}{2}{0}\Xspace} 
-\DeclareRobustCommand{\PSGczDT}{\HepParticle{\PSGc}{3}{0}\Xspace} 
-\DeclareRobustCommand{\PSGczDf}{\HepParticle{\PSGc}{4}{0}\Xspace} 
+\DeclareRobustCommand{\PSGczDo}{\HepParticle{\PSGc}{1}{0}\Xspace}
+\DeclareRobustCommand{\PSGczDt}{\HepParticle{\PSGc}{2}{0}\Xspace}
+\DeclareRobustCommand{\PSGczDT}{\HepParticle{\PSGc}{3}{0}\Xspace}
+\DeclareRobustCommand{\PSGczDf}{\HepParticle{\PSGc}{4}{0}\Xspace}
 \DeclareRobustCommand{\PSGcm}{\HepParticle{\PSGc}{}{-}\Xspace} % chargino -
 \DeclareRobustCommand{\PSGcp}{\HepParticle{\PSGc}{}{+}\Xspace} % chargino +
 \DeclareRobustCommand{\PSGcpm}{\HepParticle{\PSGc}{}{\pm}\Xspace} % chargino
@@ -934,27 +934,27 @@
 \DeclareRobustCommand{\PSQR}{\HepSusyParticle{\PQq}{R}{}\Xspace}
 
 \DeclareRobustCommand{\PSQd}{\HepSusyParticle{\PQd}{}{}\Xspace} % down squark
-\DeclareRobustCommand{\PSQdL}{\HepSusyParticle{\PQd}{L}{}\Xspace} 
-\DeclareRobustCommand{\PSQdR}{\HepSusyParticle{\PQd}{R}{}\Xspace} 
+\DeclareRobustCommand{\PSQdL}{\HepSusyParticle{\PQd}{L}{}\Xspace}
+\DeclareRobustCommand{\PSQdR}{\HepSusyParticle{\PQd}{R}{}\Xspace}
 \DeclareRobustCommand{\PSQu}{\HepSusyParticle{\PQu}{}{}\Xspace} % up squark
-\DeclareRobustCommand{\PSQuL}{\HepSusyParticle{\PQu}{L}{}\Xspace} 
-\DeclareRobustCommand{\PSQuR}{\HepSusyParticle{\PQu}{R}{}\Xspace} 
+\DeclareRobustCommand{\PSQuL}{\HepSusyParticle{\PQu}{L}{}\Xspace}
+\DeclareRobustCommand{\PSQuR}{\HepSusyParticle{\PQu}{R}{}\Xspace}
 \DeclareRobustCommand{\PSQs}{\HepSusyParticle{\PQs}{}{}\Xspace} % strange squark
-\DeclareRobustCommand{\PSQsL}{\HepSusyParticle{\PQs}{L}{}\Xspace} 
-\DeclareRobustCommand{\PSQsR}{\HepSusyParticle{\PQs}{R}{}\Xspace} 
+\DeclareRobustCommand{\PSQsL}{\HepSusyParticle{\PQs}{L}{}\Xspace}
+\DeclareRobustCommand{\PSQsR}{\HepSusyParticle{\PQs}{R}{}\Xspace}
 \DeclareRobustCommand{\PSQc}{\HepSusyParticle{\PQc}{}{}\Xspace} % charm squark
-\DeclareRobustCommand{\PSQcL}{\HepSusyParticle{\PQc}{L}{}\Xspace} 
-\DeclareRobustCommand{\PSQcR}{\HepSusyParticle{\PQc}{R}{}\Xspace} 
+\DeclareRobustCommand{\PSQcL}{\HepSusyParticle{\PQc}{L}{}\Xspace}
+\DeclareRobustCommand{\PSQcR}{\HepSusyParticle{\PQc}{R}{}\Xspace}
 \DeclareRobustCommand{\PSQb}{\HepSusyParticle{\PQb}{}{}\Xspace} % bottom squark (sbottom)
-\DeclareRobustCommand{\PSQbL}{\HepSusyParticle{\PQb}{L}{}\Xspace} 
-\DeclareRobustCommand{\PSQbR}{\HepSusyParticle{\PQb}{R}{}\Xspace} 
-\DeclareRobustCommand{\PSQbDo}{\HepSusyParticle{\PQb}{1}{}\Xspace} 
-\DeclareRobustCommand{\PSQbDt}{\HepSusyParticle{\PQb}{2}{}\Xspace} 
+\DeclareRobustCommand{\PSQbL}{\HepSusyParticle{\PQb}{L}{}\Xspace}
+\DeclareRobustCommand{\PSQbR}{\HepSusyParticle{\PQb}{R}{}\Xspace}
+\DeclareRobustCommand{\PSQbDo}{\HepSusyParticle{\PQb}{1}{}\Xspace}
+\DeclareRobustCommand{\PSQbDt}{\HepSusyParticle{\PQb}{2}{}\Xspace}
 \DeclareRobustCommand{\PSQt}{\HepSusyParticle{\PQt}{}{}\Xspace} % top squark (stop)
-\DeclareRobustCommand{\PSQtL}{\HepSusyParticle{\PQt}{L}{}\Xspace} 
-\DeclareRobustCommand{\PSQtR}{\HepSusyParticle{\PQt}{R}{}\Xspace} 
-\DeclareRobustCommand{\PSQtDo}{\HepSusyParticle{\PQt}{1}{}\Xspace} 
-\DeclareRobustCommand{\PSQtDt}{\HepSusyParticle{\PQt}{2}{}\Xspace} 
+\DeclareRobustCommand{\PSQtL}{\HepSusyParticle{\PQt}{L}{}\Xspace}
+\DeclareRobustCommand{\PSQtR}{\HepSusyParticle{\PQt}{R}{}\Xspace}
+\DeclareRobustCommand{\PSQtDo}{\HepSusyParticle{\PQt}{1}{}\Xspace}
+\DeclareRobustCommand{\PSQtDt}{\HepSusyParticle{\PQt}{2}{}\Xspace}
 
 %% anti-squarks
 \DeclareRobustCommand{\PASQ}{\HepSusyAntiParticle{\PQq}{}{}\Xspace} % anti-squark (generic)
@@ -962,27 +962,27 @@
 \DeclareRobustCommand{\PASQR}{\HepSusyAntiParticle{\PQq}{R}{}\Xspace}
 
 \DeclareRobustCommand{\PASQd}{\HepSusyAntiParticle{\PQd}{}{}\Xspace} % anti-down squark
-\DeclareRobustCommand{\PASQdL}{\HepSusyAntiParticle{\PQd}{L}{}\Xspace} 
-\DeclareRobustCommand{\PASQdR}{\HepSusyAntiParticle{\PQd}{R}{}\Xspace} 
+\DeclareRobustCommand{\PASQdL}{\HepSusyAntiParticle{\PQd}{L}{}\Xspace}
+\DeclareRobustCommand{\PASQdR}{\HepSusyAntiParticle{\PQd}{R}{}\Xspace}
 \DeclareRobustCommand{\PASQu}{\HepSusyAntiParticle{\PQu}{}{}\Xspace} % anti-up squark
-\DeclareRobustCommand{\PASQuL}{\HepSusyAntiParticle{\PQu}{L}{}\Xspace} 
-\DeclareRobustCommand{\PASQuR}{\HepSusyAntiParticle{\PQu}{R}{}\Xspace} 
+\DeclareRobustCommand{\PASQuL}{\HepSusyAntiParticle{\PQu}{L}{}\Xspace}
+\DeclareRobustCommand{\PASQuR}{\HepSusyAntiParticle{\PQu}{R}{}\Xspace}
 \DeclareRobustCommand{\PASQs}{\HepSusyAntiParticle{\PQs}{}{}\Xspace} % anti-strange squark
-\DeclareRobustCommand{\PASQsL}{\HepSusyAntiParticle{\PQs}{L}{}\Xspace} 
-\DeclareRobustCommand{\PASQsR}{\HepSusyAntiParticle{\PQs}{R}{}\Xspace} 
+\DeclareRobustCommand{\PASQsL}{\HepSusyAntiParticle{\PQs}{L}{}\Xspace}
+\DeclareRobustCommand{\PASQsR}{\HepSusyAntiParticle{\PQs}{R}{}\Xspace}
 \DeclareRobustCommand{\PASQc}{\HepSusyAntiParticle{\PQc}{}{}\Xspace} % anti-charm squark
-\DeclareRobustCommand{\PASQcL}{\HepSusyAntiParticle{\PQc}{L}{}\Xspace} 
-\DeclareRobustCommand{\PASQcR}{\HepSusyAntiParticle{\PQc}{R}{}\Xspace} 
+\DeclareRobustCommand{\PASQcL}{\HepSusyAntiParticle{\PQc}{L}{}\Xspace}
+\DeclareRobustCommand{\PASQcR}{\HepSusyAntiParticle{\PQc}{R}{}\Xspace}
 \DeclareRobustCommand{\PASQb}{\HepSusyAntiParticle{\PQb}{}{}\Xspace} % anti-bottom squark
-\DeclareRobustCommand{\PASQbL}{\HepSusyAntiParticle{\PQb}{L}{}\Xspace} 
-\DeclareRobustCommand{\PASQbR}{\HepSusyAntiParticle{\PQb}{R}{}\Xspace} 
-\DeclareRobustCommand{\PASQbDo}{\HepSusyAntiParticle{\PQb}{1}{}\Xspace} 
-\DeclareRobustCommand{\PASQbDt}{\HepSusyAntiParticle{\PQb}{2}{}\Xspace} 
+\DeclareRobustCommand{\PASQbL}{\HepSusyAntiParticle{\PQb}{L}{}\Xspace}
+\DeclareRobustCommand{\PASQbR}{\HepSusyAntiParticle{\PQb}{R}{}\Xspace}
+\DeclareRobustCommand{\PASQbDo}{\HepSusyAntiParticle{\PQb}{1}{}\Xspace}
+\DeclareRobustCommand{\PASQbDt}{\HepSusyAntiParticle{\PQb}{2}{}\Xspace}
 \DeclareRobustCommand{\PASQt}{\HepSusyAntiParticle{\PQt}{}{}\Xspace} % anti-top squark (stop)
-\DeclareRobustCommand{\PASQtL}{\HepSusyAntiParticle{\PQt}{L}{}\Xspace} 
-\DeclareRobustCommand{\PASQtR}{\HepSusyAntiParticle{\PQt}{R}{}\Xspace} 
-\DeclareRobustCommand{\PASQtDo}{\HepSusyAntiParticle{\PQt}{1}{}\Xspace} 
-\DeclareRobustCommand{\PASQtDt}{\HepSusyAntiParticle{\PQt}{2}{}\Xspace} 
+\DeclareRobustCommand{\PASQtL}{\HepSusyAntiParticle{\PQt}{L}{}\Xspace}
+\DeclareRobustCommand{\PASQtR}{\HepSusyAntiParticle{\PQt}{R}{}\Xspace}
+\DeclareRobustCommand{\PASQtDo}{\HepSusyAntiParticle{\PQt}{1}{}\Xspace}
+\DeclareRobustCommand{\PASQtDt}{\HepSusyAntiParticle{\PQt}{2}{}\Xspace}
 
 %% Random things
 \DeclareRobustCommand{\PEz}{\HepParticle{E}{}{0}\Xspace}

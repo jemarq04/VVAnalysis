@@ -93,7 +93,7 @@ TSVDUnfold::TSVDUnfold( const TH1D *bdat, const TH1D *bini, const TH1D *xini, co
 {
   //! Alternative constructor
   //! User provides data and MC test spectra, as well as detector response matrix, diagonal covariance matrix of measured spectrum built from the uncertainties on measured spectrum
-   if (bdat->GetNbinsX() != bini->GetNbinsX() || 
+   if (bdat->GetNbinsX() != bini->GetNbinsX() ||
        bdat->GetNbinsX() != xini->GetNbinsX() ||
        bdat->GetNbinsX() != Adet->GetNbinsX() ||
        bdat->GetNbinsX() != Adet->GetNbinsY()) {
@@ -108,7 +108,7 @@ TSVDUnfold::TSVDUnfold( const TH1D *bdat, const TH1D *bini, const TH1D *xini, co
    }
 
    fBcov = (TH2D*)fAdet->Clone("bcov");
-   
+
    for(int i=1; i<=fBdat->GetNbinsX(); i++){
      fBcov->SetBinContent(i, i, fBdat->GetBinError(i)*fBdat->GetBinError(i));
      for(int j=1; j<=fBdat->GetNbinsX(); j++){
@@ -133,20 +133,20 @@ TSVDUnfold::TSVDUnfold( const TH1D *bdat, TH2D* Bcov, const TH1D *bini, const TH
      fSVHist     (NULL),
      fXtau       (NULL),
      fXinv       (NULL),
-     fBdat       (bdat), 
-     fBcov       (Bcov), 
+     fBdat       (bdat),
+     fBcov       (Bcov),
      fBini       (bini),
      fXini       (xini),
-     fAdet       (Adet), 
+     fAdet       (Adet),
      fToyhisto   (NULL),
      fToymat     (NULL),
      fToyMode    (kFALSE),
-     fMatToyMode (kFALSE) 
+     fMatToyMode (kFALSE)
 {
    //! Default constructor
    // Initialisation of TSVDUnfold
    // User provides data and MC test spectra, as well as detector response matrix and the covariance matrix of the measured distribution
-   if (bdat->GetNbinsX() != bini->GetNbinsX() || 
+   if (bdat->GetNbinsX() != bini->GetNbinsX() ||
        bdat->GetNbinsX() != xini->GetNbinsX() ||
        bdat->GetNbinsX() != Bcov->GetNbinsX() ||
        bdat->GetNbinsX() != Bcov->GetNbinsY() ||
@@ -187,7 +187,7 @@ TSVDUnfold::TSVDUnfold( const TSVDUnfold& other )
      fToyhisto   (other.fToyhisto),
      fToymat     (other.fToymat),
      fToyMode    (other.fToyMode),
-     fMatToyMode (other.fMatToyMode) 
+     fMatToyMode (other.fMatToyMode)
 {
    //! Copy constructor
 }
@@ -200,7 +200,7 @@ TSVDUnfold::~TSVDUnfold()
       delete fToyhisto;
       fToyhisto = 0;
    }
-   
+
    if(fToymat){
       delete fToymat;
       fToymat = 0;
@@ -237,7 +237,7 @@ TH1D* TSVDUnfold::Unfold( Int_t kreg )
 {
    //! Perform the unfolding with regularisation parameter kreg
    fKReg = kreg;
-   
+
    // Make the histos
    if (!fToyMode && !fMatToyMode) InitHistos( );
 
@@ -322,7 +322,7 @@ TH1D* TSVDUnfold::Unfold( Int_t kreg )
    }
 
    // Damping coefficient
-   Int_t k = GetKReg()-1; 
+   Int_t k = GetKReg()-1;
 
    TVectorD vx(fNdim); // Return variable
 
@@ -336,7 +336,7 @@ TH1D* TSVDUnfold::Unfold( Int_t kreg )
      Z(i,i) = vdz(i)*vdz(i);
    }
    TVectorD vz = CompProd( vd, vdz );
-   
+
    TMatrixD VortT(Vort);
    VortT.Transpose(VortT);
    TMatrixD W = mCinv*Vort*Z*VortT*mCinv;
@@ -363,7 +363,7 @@ TH1D* TSVDUnfold::Unfold( Int_t kreg )
 
    // Rescale by xini
    vx = CompProd( vw, vxini );
-   
+
    if(fNormalize){ // Scale result to unit area
      Double_t scale = vx.Sum();
      if (scale > 0){
@@ -377,7 +377,7 @@ TH1D* TSVDUnfold::Unfold( Int_t kreg )
       M2H(Xtau, *fXtau);
       M2H(Xinv, *fXinv);
    }
-   
+
    // Get Curvature and also chi2 in case of MC unfolding
    if (!fToyMode && !fMatToyMode) {
      Info( "Unfold", "Unfolding param: %i",k+1 );
@@ -397,12 +397,12 @@ TH1D* TSVDUnfold::Unfold( Int_t kreg )
 //_______________________________________________________________________
 TH2D* TSVDUnfold::GetUnfoldCovMatrix( const TH2D* cov, Int_t ntoys, Int_t seed )
 {
-   //! Determine for given input error matrix covariance matrix of unfolded 
+   //! Determine for given input error matrix covariance matrix of unfolded
    //! spectrum from toy simulation given the passed covariance matrix on measured spectrum
    //! "cov"    - covariance matrix on the measured spectrum, to be propagated
    //! "ntoys"  - number of pseudo experiments used for the propagation
    //! "seed"   - seed for pseudo experiments
-   //! Note that this covariance matrix will contain effects of forced normalisation if spectrum is normalised to unit area. 
+   //! Note that this covariance matrix will contain effects of forced normalisation if spectrum is normalised to unit area.
 
    fToyMode = true;
    TH1D* unfres = 0;
@@ -411,10 +411,10 @@ TH2D* TSVDUnfold::GetUnfoldCovMatrix( const TH2D* cov, Int_t ntoys, Int_t seed )
    for(int i=1; i<=fNdim; i++)
       for(int j=1; j<=fNdim; j++)
          unfcov->SetBinContent(i,j,0.);
-  
+
    // Code for generation of toys (taken from RooResult and modified)
    // Calculate the elements of the upper-triangular matrix L that
-   // gives Lt*L = C, where Lt is the transpose of L (the "square-root method")  
+   // gives Lt*L = C, where Lt is the transpose of L (the "square-root method")
    TMatrixD L(fNdim,fNdim); L *= 0;
 
    for (Int_t iPar= 0; iPar < fNdim; iPar++) {
@@ -498,19 +498,19 @@ TH2D* TSVDUnfold::GetUnfoldCovMatrix( const TH2D* cov, Int_t ntoys, Int_t seed )
    delete Lt;
    delete toymean;
    fToyMode = kFALSE;
-   
+
    return unfcov;
 }
 
 //_______________________________________________________________________
 TH2D* TSVDUnfold::GetAdetCovMatrix( Int_t ntoys, Int_t seed, const TH2D* uncmat )
 {
-   //! Determine covariance matrix of unfolded spectrum from finite statistics in 
+   //! Determine covariance matrix of unfolded spectrum from finite statistics in
    //! response matrix using pseudo experiments
    //! "ntoys"  - number of pseudo experiments used for the propagation
    //! "seed"   - seed for pseudo experiments
    //! "uncmat" - matrix to be interpreted as uncertainties on detector response matrix, to be propagated by toys, if no matrix passed, uncertainties on Adet will be used in toys with Gaussian smearing if Sumw2 is set for Adet, otherwise Poisson variations on Adet will be performed in toys
-  if (uncmat && (uncmat->GetNbinsX() != fNdim || uncmat->GetNbinsY() != fNdim)) 
+  if (uncmat && (uncmat->GetNbinsX() != fNdim || uncmat->GetNbinsY() != fNdim))
     {
       TString msg = "Uncertainty histogram must have the same dimension as all other histograms.\n";
       msg += Form( "  Found: dim(uncmat)=%i,%i\n", uncmat->GetNbinsX(), uncmat->GetNbinsY() );
@@ -535,7 +535,7 @@ TH2D* TSVDUnfold::GetAdetCovMatrix( Int_t ntoys, Int_t seed, const TH2D* uncmat 
    TH1D *toymean = (TH1D*)fXini->Clone("toymean");
    for (Int_t j=1; j<=fNdim; j++) toymean->SetBinContent(j,0.);
 
-   for (int i=1; i<=ntoys; i++) {    
+   for (int i=1; i<=ntoys; i++) {
       for (Int_t k=1; k<=fNdim; k++) {
          for (Int_t m=1; m<=fNdim; m++) {
 	   if (fAdet->GetBinContent(k,m)){
@@ -543,7 +543,7 @@ TH2D* TSVDUnfold::GetAdetCovMatrix( Int_t ntoys, Int_t seed, const TH2D* uncmat 
 	       fToymat->SetBinContent(k, m, fAdet->GetBinContent(k,m)+random.Gaus(0.,uncmat->GetBinContent(k,m)));
 	     else if(fAdet->GetSumw2N())
 	       fToymat->SetBinContent(k, m, fAdet->GetBinContent(k,m)+random.Gaus(0.,fAdet->GetBinError(k,m)));
-	     else 
+	     else
 	       fToymat->SetBinContent(k, m, random.Poisson(fAdet->GetBinContent(k,m)));
 	   }
          }
@@ -569,7 +569,7 @@ TH2D* TSVDUnfold::GetAdetCovMatrix( Int_t ntoys, Int_t seed, const TH2D* uncmat 
 	       fToymat->SetBinContent(k, m, fAdet->GetBinContent(k,m)+random.Gaus(0.,uncmat->GetBinContent(k,m)));
 	     else if(fAdet->GetSumw2N())
 	       fToymat->SetBinContent(k, m, fAdet->GetBinContent(k,m)+random.Gaus(0.,fAdet->GetBinError(k,m)));
-	     else 
+	     else
 	       fToymat->SetBinContent(k, m, random.Poisson(fAdet->GetBinContent(k,m)));
 	   }
          }
@@ -587,47 +587,47 @@ TH2D* TSVDUnfold::GetAdetCovMatrix( Int_t ntoys, Int_t seed, const TH2D* uncmat 
    }
    delete toymean;
    fMatToyMode = kFALSE;
-   
+
    return unfcov;
 }
 
 //_______________________________________________________________________
-TH1D* TSVDUnfold::GetD() const 
-{ 
+TH1D* TSVDUnfold::GetD() const
+{
    //! Returns d vector (for choosing appropriate regularisation)
    for (int i=1; i<=fDHist->GetNbinsX(); i++) {
-      if (fDHist->GetBinContent(i)<0.) fDHist->SetBinContent(i, TMath::Abs(fDHist->GetBinContent(i))); 
+      if (fDHist->GetBinContent(i)<0.) fDHist->SetBinContent(i, TMath::Abs(fDHist->GetBinContent(i)));
    }
-   return fDHist; 
+   return fDHist;
 }
 
 //_______________________________________________________________________
-TH1D* TSVDUnfold::GetSV() const 
-{ 
+TH1D* TSVDUnfold::GetSV() const
+{
    //! Returns singular values vector
-   return fSVHist; 
+   return fSVHist;
 }
 
 //_______________________________________________________________________
-TH2D* TSVDUnfold::GetXtau() const 
-{ 
+TH2D* TSVDUnfold::GetXtau() const
+{
    //! Returns the computed regularized covariance matrix corresponding to total uncertainties on measured spectrum as passed in the constructor.
   //! Note that this covariance matrix will not contain the effects of forced normalization if spectrum is normalized to unit area.
-   return fXtau; 
+   return fXtau;
 }
 
 //_______________________________________________________________________
-TH2D* TSVDUnfold::GetXinv() const 
-{ 
+TH2D* TSVDUnfold::GetXinv() const
+{
    //! Returns the computed inverse of the covariance matrix
-   return fXinv; 
+   return fXinv;
 }
 
 //_______________________________________________________________________
-TH2D* TSVDUnfold::GetBCov() const 
-{ 
+TH2D* TSVDUnfold::GetBCov() const
+{
    //! Returns the covariance matrix
-   return fBcov; 
+   return fBcov;
 }
 
 //_______________________________________________________________________
@@ -715,8 +715,8 @@ TVectorD TSVDUnfold::CompProd( const TVectorD& vec1, const TVectorD& vec2 )
 }
 
 //_______________________________________________________________________
-Double_t TSVDUnfold::GetCurvature(const TVectorD& vec, const TMatrixD& curv) 
-{      
+Double_t TSVDUnfold::GetCurvature(const TVectorD& vec, const TMatrixD& curv)
+{
    //! Compute curvature of vector
    return vec*(curv*vec);
 }
@@ -812,18 +812,18 @@ void TSVDUnfold::FillCurvatureMatrix( TMatrixD& tCurv, TMatrixD& tC ) const
 void TSVDUnfold::InitHistos( )
 {
 
-   fDHist = new TH1D( "dd", "d vector after orthogonal transformation", fNdim, 0, fNdim );  
+   fDHist = new TH1D( "dd", "d vector after orthogonal transformation", fNdim, 0, fNdim );
    fDHist->Sumw2();
 
-   fSVHist = new TH1D( "sv", "Singular values of AC^-1", fNdim, 0, fNdim );  
+   fSVHist = new TH1D( "sv", "Singular values of AC^-1", fNdim, 0, fNdim );
    fSVHist->Sumw2();
 
    fXtau = (TH2D*)fAdet->Clone("Xtau");
-   fXtau->SetTitle("Regularized covariance matrix");  
+   fXtau->SetTitle("Regularized covariance matrix");
    fXtau->Sumw2();
 
    fXinv = (TH2D*)fAdet->Clone("Xinv");
-   fXinv->SetTitle("Inverse covariance matrix");  
+   fXinv->SetTitle("Inverse covariance matrix");
    fXinv->Sumw2();
 }
 
@@ -834,7 +834,7 @@ void TSVDUnfold::RegularisedSymMatInvert( TMatrixDSym& mat, Double_t eps )
 
    // init reduced matrix
    const UInt_t n = mat.GetNrows();
-   UInt_t nn = 0;   
+   UInt_t nn = 0;
 
    UInt_t *ipos = new UInt_t[n];
    //   UInt_t ipos[n];
@@ -897,4 +897,3 @@ Double_t TSVDUnfold::ComputeChiSquared( const TH1D& truspec, const TH1D& unfspec
 
    return chi2;
 }
-

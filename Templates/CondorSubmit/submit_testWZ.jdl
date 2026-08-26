@@ -36,11 +36,10 @@ NProcesses = 47
 # mv list.txt tmp && sort -R tmp > list.txt
 
 # example: --inputs_from_file DYNano_LOandNLO.txt 2 0 -s Zselection --input_tier NanoAOD -o testZGenJets.root -a ZGen --test
-Arguments            = -a $(Analysis) -s Wselection_Full --output_file $(Analysis)_$(Filelist)_$(Process).root --input_tier NanoAOD --test --inputs_from_file $(Filelist).txt $(NPerJob) $(Process) 
+Arguments            = -a $(Analysis) -s Wselection_Full --output_file $(Analysis)_$(Filelist)_$(Process).root --input_tier NanoAOD --test --inputs_from_file $(Filelist).txt $(NPerJob) $(Process)
 Transfer_Input_Files = $(Analysis)_AnalysisCode.tgz
 output               = logs/$(Analysis)_$(Filelist)_$(Process).out
 error                = logs/$(Analysis)_$(Filelist)_$(Process).err
 Log                  = logs/$(Analysis)_$(Filelist)_$(Process).log
 
 Queue $(NProcesses)
-

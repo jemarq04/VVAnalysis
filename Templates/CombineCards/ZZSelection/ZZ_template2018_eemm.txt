@@ -3,15 +3,15 @@ jmax 4  number of backgrounds plus signals minus 1
 kmax ${nuisances} number of nuisance parameters (sources of systematical uncertainties)
 ------------
 
-shapes HZZ_signal * ${output_file} HZZ_signal/${fit_variable}_$$CHANNEL       HZZ_signal/${fit_variable}_$$SYSTEMATIC_$$CHANNEL 
-shapes qqZZ_powheg * ${output_file} qqZZ_powheg/${fit_variable}_$$CHANNEL     qqZZ_powheg/${fit_variable}_$$SYSTEMATIC_$$CHANNEL 
-shapes ggZZ * ${output_file} ggZZ/${fit_variable}_$$CHANNEL                   ggZZ/${fit_variable}_$$SYSTEMATIC_$$CHANNEL 
-shapes VVV  * ${output_file} VVV/${fit_variable}_$$CHANNEL                    VVV/${fit_variable}_$$SYSTEMATIC_$$CHANNEL 
+shapes HZZ_signal * ${output_file} HZZ_signal/${fit_variable}_$$CHANNEL       HZZ_signal/${fit_variable}_$$SYSTEMATIC_$$CHANNEL
+shapes qqZZ_powheg * ${output_file} qqZZ_powheg/${fit_variable}_$$CHANNEL     qqZZ_powheg/${fit_variable}_$$SYSTEMATIC_$$CHANNEL
+shapes ggZZ * ${output_file} ggZZ/${fit_variable}_$$CHANNEL                   ggZZ/${fit_variable}_$$SYSTEMATIC_$$CHANNEL
+shapes VVV  * ${output_file} VVV/${fit_variable}_$$CHANNEL                    VVV/${fit_variable}_$$SYSTEMATIC_$$CHANNEL
 
 shapes nonprompt * ${output_file} nonprompt/${fit_variable}_Fakes_$$CHANNEL nonprompt/${fit_variable}_Fakes_$$SYSTEMATIC_$$CHANNEL
 shapes data_obs  * ${output_file} data/${fit_variable}_$$CHANNEL
 
-bin          eemm   
+bin          eemm
 observation  ${data}
 
 ------------
@@ -20,15 +20,15 @@ observation  ${data}
 # the second 'process' line must have a positive number for backgrounds, and 0 for signal
 # then we list the independent sources of uncertainties, and give their effect (syst. error)
 # on each process and bin
-bin                                eemm              eemm               eemm       eemm         eemm         
-process                         HZZ_signal        qqZZ_powheg           ggZZ       VVV        nonprompt  
+bin                                eemm              eemm               eemm       eemm         eemm
+process                         HZZ_signal        qqZZ_powheg           ggZZ       VVV        nonprompt
 process                            -2                  -1                 0         1             1
 rate                           ${HZZ_signal}       ${qqZZ_powheg}       ${ggZZ}    ${VVV}     ${nonprompt}
---------------------------------------------------------------------------------------------------------------                                                                                                                                                                                                                    
+--------------------------------------------------------------------------------------------------------------
 bkg_mm_18                 lnN        -                  -                 -            -        1.1
 bkg_ee_18                 lnN        -                  -                 -           -         1.1
-trigger_ee_18            lnN       1.01             1.01                1.01         1.01        -       
-trigger_mm_18            lnN       1.01             1.01                1.01         1.01        -       
+trigger_ee_18            lnN       1.01             1.01                1.01         1.01        -
+trigger_mm_18            lnN       1.01             1.01                1.01         1.01        -
 CMS_eff_e               shape       1                 1                 1            1          0
 CMS_RecoEff_e           shape       1                 1                 1            1          0
 CMS_eff_m               shape       1                 1                 1            1          0

@@ -77,7 +77,7 @@ for var in vars:
     htot = ftot.Get("tot_"+var+"_unf")
     sysUp =ftot.Get("tot_"+var+"_totUncUp")
     sysDn =ftot.Get("tot_"+var+"_totUncDown")
-    
+
     a16 = h16.Integral(1,h16.GetNbinsX())
     a17 = h17.Integral(1,h17.GetNbinsX())
     a18 = h18.Integral(1,h18.GetNbinsX())
@@ -112,7 +112,7 @@ for var in vars:
                if "Sum portion up and down" in line:
                    continue
 
-               etype = line.split(":")[0] 
+               etype = line.split(":")[0]
                if etype in edict.keys():
                    etype = edict[etype]
                errtypes.append(etype)
@@ -120,7 +120,7 @@ for var in vars:
                edn = float(line.split(" PortionDn ")[1])
                errup.append(eup)
                errdn.append(edn)
-        
+
         if year == '2016':
             errtypesTot=errtypes
             errupTot = [a16*et for et in errup]
@@ -144,7 +144,7 @@ for var in vars:
 
         #plotVar(errup, errdn, errtypes,var,year)
 
-    
+
     errupTot = [et/asum for et in errupTot]
     errdnTot = [et/asum for et in errdnTot]
     #print(var, 'Total', errtypesTot[testind],asum,atot,errupTot[testind],errdnTot[testind])
@@ -153,7 +153,7 @@ for var in vars:
         for key in errtypesTot:
             if not (key == 'statistical' or key =='total'):
                 errRangeDict[key] = []
-    
+
     for order,key in enumerate(errtypesTot):
         if not (key == 'statistical' or key =='total'):
             errRangeDict[key].append(errupTot[order])

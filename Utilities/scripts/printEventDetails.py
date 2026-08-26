@@ -12,7 +12,7 @@ def chunks(l, n):
 
 def getEventSelectionExpr(path, comparison, channel):
     events = []
-    
+
     file_name = "%s/%s_%s.txt" % (path, comparison, channel)
     print(file_name)
     with open(file_name, "r") as events_file:
@@ -24,8 +24,8 @@ def getEventSelectionExpr(path, comparison, channel):
                 events.append("evt == {0}".format(*event_num))
     return events
 
-parser = argparse.ArgumentParser() 
-parser.add_argument("-f", "--filelist", 
+parser = argparse.ArgumentParser()
+parser.add_argument("-f", "--filelist",
                     type=lambda x : [i.strip() for i in x.split(',')],
                     required=True, help="List of input file names "
                     "to be processed (separated by commas)")
@@ -39,7 +39,7 @@ parser.add_argument("-o", "--output_file", required=False, type=str,
                     default=".")
 args = parser.parse_args()
 
-isfile = any(os.path.isfile(name) or os.path.exists(name.rstrip("/*")) 
+isfile = any(os.path.isfile(name) or os.path.exists(name.rstrip("/*"))
                 for name in args.filelist)
 filelist = ConfigureJobs.getListOfFiles(args.filelist, args.selection) if \
     not isfile else args.filelist
@@ -51,7 +51,7 @@ for name in filelist:
     if not isfile:
         try:
             label = name
-            file_paths.append((label, ConfigureJobs.getInputFilesPath(name, 
+            file_paths.append((label, ConfigureJobs.getInputFilesPath(name,
                 args.selection, "WZxsec2016")))
         except ValueError as e:
             print(e)

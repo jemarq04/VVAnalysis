@@ -13,7 +13,7 @@ printvar = False
 printch = False
 
 for i,line in enumerate(fin):
-    
+
     if 'channel:  ' in line:
         chl = line
         printch = True
@@ -28,7 +28,7 @@ for i,line in enumerate(fin):
         if iteration ==3:
             check = True
             continue
-    
+
     if 'Chi^2 of change ' in line and check:
         chi2 = float(line.split('Chi^2 of change ')[1])
         check = False
@@ -48,4 +48,3 @@ for i,line in enumerate(fin):
         if 'Position Indicator:' in line:
             print(line)
             record = False
-            

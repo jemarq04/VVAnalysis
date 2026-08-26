@@ -7,11 +7,11 @@ from RooUnfoldBayes_reimplement import *
 def getTextBox(x,y,axisLabel,size=0.2,rotated=False):
     texS = r.TLatex(x,y,axisLabel)
     texS.SetNDC()
-    #rotate for y-axis                                                                                                                                                                                             
+    #rotate for y-axis
     if rotated:
         texS.SetTextAngle(90)
     texS.SetTextFont(42)
-    #texS.SetTextColor(ROOT.kBlack)                                                                                                                                                                                
+    #texS.SetTextColor(ROOT.kBlack)
     texS.SetTextSize(size)
     texS.Draw()
     return texS
@@ -37,7 +37,7 @@ def makePlot(typesDiv,histsDiv,areasDiv,chan,c1,pdfcommand,plotlabel,folderName 
         histsDiv[i].SetMaximum(max(maxs)*1.2)
         histsDiv[i].SetMinimum(min(mins))
         histsDiv[i].SetMarkerStyle(1)
-        if i == 0:   
+        if i == 0:
             #histsDiv[i].Draw("HIST P")
             if nostat:
                 histsDiv[i].Draw("HIST")
@@ -45,7 +45,7 @@ def makePlot(typesDiv,histsDiv,areasDiv,chan,c1,pdfcommand,plotlabel,folderName 
                 histsDiv[i].Draw()
             r.gStyle.SetLegendFont(42)
             r.gStyle.SetLegendTextSize(0.03)
-            
+
             legend = r.TLegend (0.73 ,0.8 ,0.83 ,0.92)
         else:
             #histsDiv[i].SetMarkerStyle(markers[i])
@@ -67,7 +67,7 @@ def makePlot(typesDiv,histsDiv,areasDiv,chan,c1,pdfcommand,plotlabel,folderName 
     textbox= getTextBox(0.5,0.96,chan,0.03)
     textbox2= getTextBox(0.45,0.9,plotlabel,0.03)
     #latex.DrawLatex(0.74,0.83 ,"59.7fb^{-1}")
-    
+
     if not os.path.isdir(folderName):
         os.mkdir(folderName)
 
@@ -100,7 +100,7 @@ def makeMatrixPlot(typesDiv,histsDiv,areasDiv,chan,c1,pdfcommand,plotlabel,folde
         histsDiv[i].SetMaximum(max(maxs)*1.2)
         histsDiv[i].SetMinimum(min(mins))
         histsDiv[i].SetMarkerStyle(1)
-        if i == 0:   
+        if i == 0:
             #histsDiv[i].Draw("HIST P")
             if nostat:
                 histsDiv[i].Draw("lego")
@@ -108,7 +108,7 @@ def makeMatrixPlot(typesDiv,histsDiv,areasDiv,chan,c1,pdfcommand,plotlabel,folde
                 histsDiv[i].Draw("lego")
             r.gStyle.SetLegendFont(42)
             r.gStyle.SetLegendTextSize(0.03)
-            
+
             legend = r.TLegend (0.73 ,0.8 ,0.83 ,0.92)
         else:
             #histsDiv[i].SetMarkerStyle(markers[i])
@@ -130,7 +130,7 @@ def makeMatrixPlot(typesDiv,histsDiv,areasDiv,chan,c1,pdfcommand,plotlabel,folde
     textbox= getTextBox(0.5,0.96,chan,0.03)
     textbox2= getTextBox(0.45,0.9,plotlabel,0.03)
     #latex.DrawLatex(0.74,0.83 ,"59.7fb^{-1}")
-    
+
     if not os.path.isdir(folderName):
         os.mkdir(folderName)
 
@@ -271,7 +271,7 @@ for line in fin:
         htmp = r.TH2F(unctype+channel+histtype,unctype+channel+histtype,nbins,1,nbins+1,nbins,1,nbins+1)
         indexmap = []
         for i in range(1,htmp.GetNbinsX()+1):
-            for j in range(1,htmp.GetNbinsX()+1): 
+            for j in range(1,htmp.GetNbinsX()+1):
                 indexmap.append([i,j])
         for i in range(0,len(bincontents)):
             htmp.SetBinContent(indexmap[i][0],indexmap[i][1],float(bincontents[i]))
@@ -296,17 +296,17 @@ for chan in channels:
     types = [types[i] for i in sortedInd]
     hists = [hists[i] for i in sortedInd]
     areas = [areas[i] for i in sortedInd]
-    
+
     assert len(types) == len(histDict[chan]['typeList'])
     sortedInd2 = [histDict[chan]['typeList'].index(types[i]) for i in range(0,len(types))]
     for prefix in ['type','data','sig','bkg','truth','matrix']:
         histDict[chan][prefix+'List'] = [histDict[chan][prefix+'List'][i] for i in sortedInd2]
-    
+
 
     plotInd = [range(0,6), range(6,12),range(12,len(types))] #divide into groups
     #pdb.set_trace()
     for order,ranges in enumerate(plotInd):
-        
+
         typesDiv = [types[i] for i in ranges]
         histsDiv = [hists[i] for i in ranges]
         areasDiv = [areas[i] for i in ranges]
@@ -318,11 +318,11 @@ for chan in channels:
         divdict['dmb'] = [divdict['data'][i].Clone('dmb%s'%i) for i in range(0,len(divdict['data']))]
         for i in range(0,len(divdict['dmb'])):
             divdict['dmb'][i].Add(divdict['bkg'][i],-1)
-        makePlot(divdict['type'],divdict['dmb'],areasDiv,chan,c1,pdfcommand_dmb,"Data minus bkg",folderName = 'DataMinusBkgPlots')    
+        makePlot(divdict['type'],divdict['dmb'],areasDiv,chan,c1,pdfcommand_dmb,"Data minus bkg",folderName = 'DataMinusBkgPlots')
         makePlot(divdict['type'],divdict['sig'],areasDiv,chan,c1,pdfcommand_sig,"Sig Plot",folderName = 'SignalPlots')
         makePlot(divdict['type'],divdict['truth'],areasDiv,chan,c1,pdfcommand_truth,"Truth Plot",folderName = 'TruthPlots')
         makeMatrixPlot(divdict['type'],divdict['matrix'],areasDiv,chan,c1,pdfcommand_matrix,"Resp Matrices",folderName = 'MatrixPlots')
-        
+
         if testUnf and order == 0 and chan=='eeee':
             print('Testing '+ divdict['type'][0])
             #afile = r.TFile('ggZZxsec_down.root','RECREATE')
@@ -350,7 +350,7 @@ for chan in channels:
 
         #pdb.set_trace()
 
-        
+
 
 pdfcommand.append('SysDetailedPlots'+"/SystematicPlots_%s.pdf"%var)
 pdfcommand_dmb.append('DataMinusBkgPlots'+"/DataMinusBkgPlots_%s.pdf"%var)
@@ -362,4 +362,3 @@ if not os.path.isdir('AllPlots'):
         os.mkdir('AllPlots')
 for comm in commandlist:
     subprocess.call(comm)
-

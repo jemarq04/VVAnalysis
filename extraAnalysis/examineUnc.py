@@ -23,7 +23,7 @@ def analyzeYear(var,foldername,froot=None):
     dict = {}
     area = 0.
     fname = foldername+"/ErrorInfo_%s.log"%var
-    
+
     hvar = froot.Get("tot_%s_unf"%var)
     area1 = hvar.Integral(1,hvar.GetNbinsX())
     #print("area from hist:%s"%area1)
@@ -36,7 +36,7 @@ def analyzeYear(var,foldername,froot=None):
         if "Source Up" in line:
             ln= line.strip().replace("Source Up ","")
             sys = ln.split(":")[0]
-            contstr = (ln.split(":")[1][1:-1]).split(",") 
+            contstr = (ln.split(":")[1][1:-1]).split(",")
             cont = [float(x) for x in contstr]
             dict[sys]={} #Up occurs before Dn, so initialize here
             dict[sys]["Up"] = cont
@@ -44,24 +44,24 @@ def analyzeYear(var,foldername,froot=None):
         if "Source Dn" in line:
             ln= line.strip().replace("Source Dn ","")
             sys = ln.split(":")[0]
-            contstr = (ln.split(":")[1][1:-1]).split(",") 
+            contstr = (ln.split(":")[1][1:-1]).split(",")
             cont = [float(x) for x in contstr]
             dict[sys]["Dn"] = cont
 
         if "Source Stat unc" in line:
             ln= line.strip()
             sys = "stat"
-            contstr = (ln.split(":")[1][1:-1]).split(",") 
+            contstr = (ln.split(":")[1][1:-1]).split(",")
             cont = [float(x) for x in contstr]
             dict["stat"] = cont
-        
+
         if "Source pdf unc" in line:
             ln= line.strip()
             sys = "pdf"
-            contstr = (ln.split(":")[1][1:-1]).split(",") 
+            contstr = (ln.split(":")[1][1:-1]).split(",")
             cont = [float(x) for x in contstr]
             dict["pdf"] = cont
-    
+
     if area == 0.:
         area = area1
     return area,dict
@@ -83,7 +83,7 @@ dicComb = {}
 jes_list = []
 years = ["16","17","18"]
 for var in vars:
-    
+
     totarea = sum(areas[var])
     w16 = areas[var][0]/totarea
     w17 = areas[var][1]/totarea
@@ -190,12 +190,5 @@ for var in vars_sort:
     fn_sys,fn_corr,fn_uncorr,final_corr,final_uncorr = dicComb[var]
     for i in range(0,len(fn_sys)):
         print("%-10s %.4f %.4f"%(fn_sys[i],fn_corr[i],fn_uncorr[i]))
-    
+
     print("Total uncertainty with jes correlated:%.4f uncorrelated:%.4f, relative diff %.4f"%(final_corr,final_uncorr, abs(final_corr-final_uncorr)/final_corr))
-
-
-
-
-
-        
-    

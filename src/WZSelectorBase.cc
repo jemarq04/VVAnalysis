@@ -8,7 +8,7 @@
 std::string WZSelectorBase::GetNameFromFile() {
     std::regex expr = std::regex("201[0-9]-[0-9][0-9]-[0-9][0-9]-(.*)-WZxsec2016");
     std::smatch matches;
-    std::string fileName = fChain->GetTree()->GetDirectory()->GetFile()->GetName(); 
+    std::string fileName = fChain->GetTree()->GetDirectory()->GetFile()->GetName();
 
     std::regex_search(fileName, matches, expr);
     return std::string(matches.str(1));
@@ -16,37 +16,37 @@ std::string WZSelectorBase::GetNameFromFile() {
 
 void WZSelectorBase::SetScaleFactors() {
     pileupSF_ = (ScaleFactor *) GetInputList()->FindObject("pileupSF");
-    if (pileupSF_ == nullptr ) 
+    if (pileupSF_ == nullptr )
         std::invalid_argument("Must pass pileup weights SF");
     eIdSF_ = (ScaleFactor *) GetInputList()->FindObject("electronTightIdSF");
-    if (eIdSF_ == nullptr ) 
+    if (eIdSF_ == nullptr )
         std::invalid_argument("Must pass electron ID SF");
     eGsfSF_ = (ScaleFactor *) GetInputList()->FindObject("electronGsfSF");
-    if (eGsfSF_ == nullptr ) 
+    if (eGsfSF_ == nullptr )
         std::invalid_argument("Must pass electron GSF SF");
     mIdSF_ = (ScaleFactor *) GetInputList()->FindObject("muonTightIdSF");
-    if (mIdSF_ == nullptr ) 
+    if (mIdSF_ == nullptr )
         std::invalid_argument("Must pass muon ID SF");
     mIsoSF_ = (ScaleFactor *) GetInputList()->FindObject("muonIsoSF");
-    if (mIsoSF_ == nullptr ) 
+    if (mIsoSF_ == nullptr )
         std::invalid_argument("Must pass muon Iso SF");
 
     prefireEff_ = (TEfficiency*) GetInputList()->FindObject("prefireEfficiencyMap");
-    if (prefireEff_ == nullptr ) 
+    if (prefireEff_ == nullptr )
         std::invalid_argument("Must pass prefiring efficiency map");
 }
 
 void WZSelectorBase::Init(TTree *tree)
 {
-    isVBS_ = (selection_ == VBSselection_Loose || 
-        selection_ == VBSselection_Loose_Full || 
-        selection_ == VBSselection_NoZeppenfeld || 
-        selection_ == VBSselection_NoZeppenfeld_Full || 
-        selection_ == VBSselection_Tight || 
-        selection_ == VBSselection_Tight_Full || 
-        selection_ == VBSBackgroundControl || 
-        selection_ == VBSBackgroundControl_Full || 
-        selection_ == VBSBackgroundControlATLAS || 
+    isVBS_ = (selection_ == VBSselection_Loose ||
+        selection_ == VBSselection_Loose_Full ||
+        selection_ == VBSselection_NoZeppenfeld ||
+        selection_ == VBSselection_NoZeppenfeld_Full ||
+        selection_ == VBSselection_Tight ||
+        selection_ == VBSselection_Tight_Full ||
+        selection_ == VBSBackgroundControl ||
+        selection_ == VBSBackgroundControl_Full ||
+        selection_ == VBSBackgroundControlATLAS ||
         selection_ == VBSBackgroundControlLoose ||
         selection_ == VBSBackgroundControlLoose_Full
         );
@@ -235,7 +235,7 @@ void WZSelectorBase::SetBranchesNanoAOD() {
     //b.SetBranch("Flag_globalTightHalo2016FilterPass", Flag_globalTightHalo2016FilterPass);
 }
 
-void WZSelectorBase::LoadBranchesNanoAOD(Long64_t entry, std::pair<Systematic, std::string> variation) { 
+void WZSelectorBase::LoadBranchesNanoAOD(Long64_t entry, std::pair<Systematic, std::string> variation) {
     b.SetEntry(entry);
     weight = 1;
 
@@ -393,14 +393,14 @@ void WZSelectorBase::SetChannelAndIndicesNano() {
         channelName_ = "mmm";
     else
         channelName_ = "Unknown";
-    
-    //std::cout << "Channel " << channelName_ << " " << channel_ << " elecIndices " << looseElecIndices.size() 
+
+    //std::cout << "Channel " << channelName_ << " " << channel_ << " elecIndices " << looseElecIndices.size()
     //          << " muon indices " << looseMuonIndices.size() << std::endl;
 
     channel_ = channelMap_[channelName_];
 }
 
-void WZSelectorBase::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::string> variation){ 
+void WZSelectorBase::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::string> variation){
     b.SetEntry(entry);
     weight = 1;
 
@@ -417,7 +417,7 @@ void WZSelectorBase::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std:
     // Veto on loose leptons
     //passesLeptonVeto = (nWZMediumMuon + nCBVIDHLTSafeElec) == 3;
     passesLeptonVeto = (nWZMediumMuon + nCBVIDVetoElec) == 3;
- 
+
 }
 
 void WZSelectorBase::ApplyScaleFactors() {
@@ -498,15 +498,15 @@ void WZSelectorBase::SetMasses() {
 // Meant to be a wrapper for the tight ID just in case it changes
 // To be a function of multiple variables
 bool WZSelectorBase::zlep1IsTight() {
-    return l1IsTight; 
+    return l1IsTight;
 }
 
 bool WZSelectorBase::zlep2IsTight() {
-    return l2IsTight; 
+    return l2IsTight;
 }
 
 bool WZSelectorBase::tightZLeptons() {
-    return zlep1IsTight() && zlep2IsTight(); 
+    return zlep1IsTight() && zlep2IsTight();
 }
 
 bool WZSelectorBase::lepton3IsTight() {
@@ -515,7 +515,7 @@ bool WZSelectorBase::lepton3IsTight() {
 
 bool WZSelectorBase::IsGenMatched3l() {
     //return true;
-    return (!isMC_ || isNonpromptMC_ || 
+    return (!isMC_ || isNonpromptMC_ ||
         (isZgamma_ && l1GenPt > 0 && l2GenPt > 0) ||
         (l1GenPt > 0 && l2GenPt > 0 && l3GenPt > 0));
 }

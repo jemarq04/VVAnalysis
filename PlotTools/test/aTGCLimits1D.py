@@ -72,4 +72,3 @@ for fType, fName in fNames.iteritems():
         c.Draw()
         c.Print(pjoin(outdir,'limits1DVsCutoff_{}.png'.format(fType)))
         pdfViaTex(c, 'limits1DVsCutoff_{}'.format(fType), texdir, pdfdir, **sub)
-

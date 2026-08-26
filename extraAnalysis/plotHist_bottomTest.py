@@ -5,11 +5,11 @@ import sys,json,os
 def getTextBox(x,y,axisLabel,size=0.2,rotated=False):
     texS = r.TLatex(x,y,axisLabel)
     texS.SetNDC()
-    #rotate for y-axis                                                                                                                                                                                             
+    #rotate for y-axis
     if rotated:
         texS.SetTextAngle(90)
     texS.SetTextFont(42)
-    #texS.SetTextColor(ROOT.kBlack)                                                                                                                                                                                
+    #texS.SetTextColor(ROOT.kBlack)
     texS.SetTextSize(size)
     texS.Draw()
     return texS
@@ -67,7 +67,7 @@ for var in varlist:
     hRECO_d_t = hdata.Clone()
     hRECO_d_t.Add(hbkg,-1)
     hRECO_d_t.Divide(hMC)
-    
+
     hMC_R_t = hMC.Clone()
     areaMC = hMC.Integral(1,hMC.GetNbinsX())
     areatrue = htrue.Integral(1,htrue.GetNbinsX())
@@ -79,7 +79,7 @@ for var in varlist:
     hists.append(hunf_d_t) #append in the orders of labels
     hists.append(hRECO_d_t)
     hists.append(hMC_R_t)
-    
+
     colors = [3,2,4]
     markers = [1,2,3]
     maxs = []
@@ -106,7 +106,7 @@ for var in varlist:
     for i in range(len(hists)):
         hists[i].SetMaximum(max(maxs)*1.2)
         hists[i].SetMarkerStyle(1)
-        if i == 0:   
+        if i == 0:
             #hists[i].Draw("HIST P")
             if nostat:
                 hists[i].Draw("HIST")
@@ -114,7 +114,7 @@ for var in varlist:
                 hists[i].Draw()
             r.gStyle.SetLegendFont(42)
             r.gStyle.SetLegendTextSize(0.03)
-            
+
             legend = r.TLegend (0.6 ,0.75 ,0.75 ,0.90)
         else:
             #hists[i].SetMarkerStyle(markers[i])

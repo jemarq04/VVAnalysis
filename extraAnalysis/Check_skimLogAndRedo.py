@@ -44,14 +44,14 @@ print("/hdfs/store/user/hhe62/%s created"%rm_name)
 with open("/hdfs/store/user/hehe/%s"%json_name) as json_file:
     obj = json.load(json_file)
 
-#remove dataset that doesn't need resubmit from josn file 
+#remove dataset that doesn't need resubmit from josn file
 match = False
 for key in obj.keys():
     match = False
     for item in redolist:
         if key in item:
             match = True
-    
+
     if not match:
         del obj[key]
 
@@ -60,7 +60,3 @@ with open("/hdfs/store/user/hehe/Resubmit_%s"%json_name,'w') as output_file:
 
 os.system("mv /hdfs/store/user/hehe/Resubmit_%s ~/vvanalysis_skim/CMSSW_10_3_1/src/Data_manager/ZZ4lRun2DatasetManager/FileInfo/ZZ4l%s/ntuples.json"%(json_name,year))
 print("New json moved to ~/vvanalysis_skim/CMSSW_10_3_1/src/Data_manager/ZZ4lRun2DatasetManager/FileInfo/ZZ4l%s/ntuples.json"%year)
-        
-
-
-

@@ -5,11 +5,11 @@ import sys,json,os
 def getTextBox(x,y,axisLabel,size=0.2,rotated=False):
     texS = r.TLatex(x,y,axisLabel)
     texS.SetNDC()
-    #rotate for y-axis                                                                                                                                                                                             
+    #rotate for y-axis
     if rotated:
         texS.SetTextAngle(90)
     texS.SetTextFont(42)
-    #texS.SetTextColor(ROOT.kBlack)                                                                                                                                                                                
+    #texS.SetTextColor(ROOT.kBlack)
     texS.SetTextSize(size)
     texS.Draw()
     return texS
@@ -41,16 +41,16 @@ for var in varlist:
     hists=[]
     histname='tot_%s_unf'%var
     #pdb.set_trace()
-    for fn in fnames: 
+    for fn in fnames:
         f=r.TFile(fn)
         htmp = f.Get(histname).Clone()
         htmp.Scale(1./htmp.Integral(1,htmp.GetNbinsX()))
         for i in range(1,htmp.GetNbinsX()+1):
-            htmp.SetBinContent(i,htmp.GetBinContent(i)/htmp.GetBinWidth(i)) 
+            htmp.SetBinContent(i,htmp.GetBinContent(i)/htmp.GetBinWidth(i))
             htmp.SetBinError(i,htmp.GetBinError(i)/htmp.GetBinWidth(i))
         r.SetOwnership(f,False)
         hists.append(htmp)
-    
+
 
 
     colors = [3,2,4]
@@ -79,7 +79,7 @@ for var in varlist:
     for i in range(len(hists)):
         hists[i].SetMaximum(max(maxs)*1.2)
         hists[i].SetMarkerStyle(1)
-        if i == 0:   
+        if i == 0:
             #hists[i].Draw("HIST P")
             if nostat:
                 hists[i].Draw("HIST")
@@ -87,7 +87,7 @@ for var in varlist:
                 hists[i].Draw()
             r.gStyle.SetLegendFont(42)
             r.gStyle.SetLegendTextSize(0.03)
-            
+
             legend = r.TLegend (0.8 ,0.75 ,0.95 ,0.90)
         else:
             #hists[i].SetMarkerStyle(markers[i])

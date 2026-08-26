@@ -44,7 +44,7 @@ def getComLineArgs():
         help="Don't fit channels independently")
     parser.add_argument("--addControlRegion", action='store_true',
         help="Add control region to fit distribution")
-    parser.add_argument("-b", "--hist_names", 
+    parser.add_argument("-b", "--hist_names",
                         type=lambda x : [i.strip() for i in x.split(',')],
                         default=["all"], help="List of histograms, "
                         "as defined in AnalysisDatasetManager, separated "
@@ -63,7 +63,7 @@ def combineChannels(group, chans, variations=[], central=True):
             continue
         hist = hist.Clone(name)
         ROOT.SetOwnership(hist, False)
-        group.Add(hist) 
+        group.Add(hist)
         for chan in chans[1:]:
             chan_hist = group.FindObject(name + "_" + chan)
             hist.Add(chan_hist)
@@ -106,14 +106,14 @@ def addInterference(fOut, variable, addControlRegion):
             if addControlRegion:
                 int_hist.SetBinContent(1, hist.GetBinContent(1)*(1.0 + 0.12*(-1 if var == "Down" else 1)))
             int_hist.Write()
-        
+
 ROOT.gROOT.SetBatch(True)
 chans = ConfigureJobs.getChannels()
 stat_variations = { chan : [] for chan in (chans + ["all"])}
 
 args = getComLineArgs()
 
-manager_path = ConfigureJobs.getManagerPath() 
+manager_path = ConfigureJobs.getManagerPath()
 sys.path.append("/".join([manager_path, "AnalysisDatasetManager",
     "Utilities/python"]))
 
@@ -127,7 +127,7 @@ fOut = ROOT.TFile(args['output_file'], "recreate")
 fIn = ROOT.TFile(args['input_file'])
 
 card_info = {
-    chan : { 
+    chan : {
         "wzjj_vbfnlo" : 0,
         "EW_WZjj" : 0,
         "QCD_WZjj" : 0,
@@ -181,13 +181,13 @@ manualStatUnc = args['manualStats']
 variations = [i for x in ["CMS_scale_j", "CMS_res_j", \
     "CMS_eff_m", "CMS_scale_m", "CMS_eff_e", "CMS_scale_e", "CMS_pileup", "CMS_scale_unclEnergy"] for i in [x+"Up", x+"Down"]]
 jeVariations = [i for x in ["CMS_scale_j", "CMS_res_j"] for i in [x+"Up", x+"Down"]]
-#variations = jeVariations 
+#variations = jeVariations
 
 output_info = PrettyTable(["Filename", "eee", "eem", "emm", "mmm", "All states"])
 
 signal = "wzjj_vbfnlo" if args['vbfnlo'] else "EW_WZjj"
 initNumvars = 22 if "VBS" in args['selection'] else 17
-isVBS = "VBS" in args['selection'] 
+isVBS = "VBS" in args['selection']
 #variable = "mjj" if isVBS else "yield"
 #variable = "yield"
 #variable = "mjj_etajj_unrolled" if isVBS else "yield"
@@ -206,12 +206,12 @@ if args['addControlRegion']:
     variable = base_variable + "_wCR"
 
 #mjj_binning = ConfigureJobs.get2DBinning()[0]
-#mjj_binning = array.array('d', [i*100 for i in range(0,25)]) 
-mjj_binning = array.array('d', [150,200,250,300,350,400,450,500,750,1000,1250,1500,2000,3000]) 
+#mjj_binning = array.array('d', [i*100 for i in range(0,25)])
+mjj_binning = array.array('d', [150,200,250,300,350,400,450,500,750,1000,1250,1500,2000,3000])
 rebin = mjj_binning if base_variable == "mjj" else None
 if variable == "MTWZ":
     rebin = array.array('d', ConfigureJobs.getBinning(isVBS=isVBS, isHiggs=args['higgs']))
-alldata = HistTools.makeCompositeHists(fIn, "AllData", 
+alldata = HistTools.makeCompositeHists(fIn, "AllData",
     ConfigureJobs.getListOfFilesWithXSec(["WZxsec2016data"], manager_path), args['lumi'],
     [variable +"_"+ c for c in chans], rebin=rebin)
 for chan in chans:
@@ -304,17 +304,17 @@ for plot_group in plot_groups:
                     try:
                         pdf_hists = HistTools.getPDFHists(weight_hist, pdf_entries[plot_group], plot_group, threbin)
                     except RuntimeError as e:
-                        print(e) 
+                        print(e)
                         pass
-            elif "TH3" in weight_hist.ClassName(): 
-                scale_hists = HistTools.getTransformed3DScaleHists(weight_hist, 
+            elif "TH3" in weight_hist.ClassName():
+                scale_hists = HistTools.getTransformed3DScaleHists(weight_hist,
                     HistTools.makeUnrolledHist,
                     ConfigureJobs.get2DBinning(yvar="etajj" if "dRjj" not in variable else "dRjj"),
                     plot_group
                 )
                 if pdf_entries[plot_group]:
-                    pdf_hists = HistTools.getTransformed3DPDFHists(weight_hist, 
-                        HistTools.makeUnrolledHist, 
+                    pdf_hists = HistTools.getTransformed3DPDFHists(weight_hist,
+                        HistTools.makeUnrolledHist,
                         ConfigureJobs.get2DBinning(yvar="etajj" if "dRjj" not in variable else "dRjj"),
                         pdf_entries[plot_group],
                         plot_group
@@ -322,7 +322,7 @@ for plot_group in plot_groups:
             else:
                 raise RuntimeError("Invalid weight hist %s" % weight_hist_name +
                         " for %s. Can't make scale variations" % plot_group)
-                
+
             # Account for gg component which doesn't have weights
             if "vv" in plot_group:
                 print("INFO: Scaling VV theory hists by 1.1!")
@@ -334,12 +334,12 @@ for plot_group in plot_groups:
             if plot_group in ["wz", "QCD-WZjj", "wz-powheg"]:
                 wz_qcd_theory_hists.append(hist.Clone(hist.GetName().replace(chan, "_".join([plot_group, chan]))))
                 wz_qcd_theory_hists.extend(scale_hists+pdf_hists)
-            
+
             theory_hists = []
             if args['addControlRegion']:
                 control_hist2D = group.FindObject("backgroundControlYield_lheWeights_" + chan)
                 control_hists = ROOT.TList()
-                unrolled_theory = HistTools.getScaleHists(control_hist2D, plot_group) 
+                unrolled_theory = HistTools.getScaleHists(control_hist2D, plot_group)
                 if pdf_entries[plot_group]:
                     unrolled_theory += HistTools.getPDFHists(control_hist2D, pdf_entries[plot_group], plot_group)
                 for h in unrolled_theory:
@@ -349,12 +349,12 @@ for plot_group in plot_groups:
                     control_hist = control_hists.FindObject(control_hist_name)
                     hist = HistTools.addControlRegionToFitHist(control_hist, h, base_variable)
                     theory_hists.append(hist)
-            elif not isNPpoint: 
+            elif not isNPpoint:
                 theory_hists = scale_hists + pdf_hists
             group.extend(theory_hists)
 
     theory_vars = []
-    if not isNPpoint and "__" not in plot_group: 
+    if not isNPpoint and "__" not in plot_group:
         theory_vars = ["_".join([var, plot_group + shift]) for var in ["QCDscale", "pdf"] for shift in ["Up", "Down"]]
     combineChannels(group, chans, variations + theory_vars, True)
     for hist in group:
@@ -370,10 +370,10 @@ for plot_group in plot_groups:
     yields.append(sum([card_info[c][name] for c in chans]))
     output_info.add_row([plot_group] + yields)
 
-output_info.add_row(["nonprompt", card_info["eee"]["nonprompt"], 
-    card_info["eem"]["nonprompt"], 
-    card_info["emm"]["nonprompt"], 
-    card_info["mmm"]["nonprompt"], 
+output_info.add_row(["nonprompt", card_info["eee"]["nonprompt"],
+    card_info["eem"]["nonprompt"],
+    card_info["emm"]["nonprompt"],
+    card_info["mmm"]["nonprompt"],
     sum([card_info[c]["nonprompt"] for c in chans])]
 )
 background = {c : 0 for c in chans}
@@ -383,15 +383,15 @@ for chan,yields in card_info.iteritems():
     for name,value in yields.iteritems():
         if "data" in name:
             continue
-        if name not in ["EW_WZjj", "wz", 
+        if name not in ["EW_WZjj", "wz",
                 "AllData", "wz_powheg", "wzjj_vbfnlo", "output_file"]:
             background[chan] += float(value)
-output_info.add_row(["Total background", 
-    round(background["eee"], 4), 
-    round(background["eem"], 4), 
-    round(background["emm"], 4), 
+output_info.add_row(["Total background",
+    round(background["eee"], 4),
+    round(background["eem"], 4),
+    round(background["emm"], 4),
     round(background["mmm"], 4),
-    round(sum([background[c] for c in chans]), 4), 
+    round(sum([background[c] for c in chans]), 4),
 ])
 
 yields = [card_info[c]["AllData"] for c in chans]
@@ -399,18 +399,18 @@ yields.append(sum([card_info[c]["AllData"] for c in chans]))
 output_info.add_row(["Data"] + yields)
 
 for name in ["EW_WZjj", "wzjj_vbfnlo"]:
-    significance_info.add_row([name, 
-        round(card_info["eee"][name]/math.sqrt(background["eee"]), 4), 
-        round(card_info["eem"][name]/math.sqrt(background["eem"]), 4), 
-        round(card_info["emm"][name]/math.sqrt(background["emm"]), 4), 
-        round(card_info["mmm"][name]/math.sqrt(background["mmm"]), 4), 
+    significance_info.add_row([name,
+        round(card_info["eee"][name]/math.sqrt(background["eee"]), 4),
+        round(card_info["eem"][name]/math.sqrt(background["eem"]), 4),
+        round(card_info["emm"][name]/math.sqrt(background["emm"]), 4),
+        round(card_info["mmm"][name]/math.sqrt(background["mmm"]), 4),
         round(sum([card_info[c][name] for c in chans])
-            /math.sqrt(sum([background[c] for c in chans])), 4), 
+            /math.sqrt(sum([background[c] for c in chans])), 4),
     ])
 
-combine_dir = ConfigureJobs.getCombinePath() 
+combine_dir = ConfigureJobs.getCombinePath()
 folder_name = args['folder_name'] if args['folder_name'] != "" else \
-                datetime.date.today().strftime("%d%b%Y") 
+                datetime.date.today().strftime("%d%b%Y")
 
 output_dir = '/'.join([combine_dir,args['selection'], folder_name])
 try:
@@ -438,7 +438,7 @@ if not args['noCards']:
         chan_dict["signal_name"] = signal.replace("_", "-")
         chan_dict["fit_variable"] = variable
         chan_dict["signal_yield"] = chan_dict[signal]
-        numvars = initNumvars+len(chans)*(chan != "all")*len(stat_variations[chan]) 
+        numvars = initNumvars+len(chans)*(chan != "all")*len(stat_variations[chan])
         numvars += args['addInterference']
         if args['allWZSignal']:
             numvars -= 5
@@ -448,7 +448,7 @@ if not args['noCards']:
         file_name = '%s/WZjj%s_%s.txt' % (output_dir, signal_abv, chan) if isVBS \
                 else '%s/WZ_%s.txt' % (output_dir, chan)
 
-        template_process = "WZ" if not isVBS else "WZjj_EWK" 
+        template_process = "WZ" if not isVBS else "WZjj_EWK"
         if args['aqgc']:
             template_process = template_process.replace("EWK", "aQGC")
         elif args['higgs']:
@@ -474,7 +474,7 @@ if not args['noCards']:
                     if isVBS and chan == c:
                         chan_file.write(
                             "%s     shape   %i               %i               %i           %i               %i           %i\n" \
-                                % (hist_name, 
+                                % (hist_name,
                                     chan_dict["signal_name"] in hist_name,
                                     "QCD-WZjj" in hist_name,
                                     "vv" in hist_name,
@@ -488,7 +488,7 @@ if not args['noCards']:
                     else:
                         chan_file.write(
                             "%s     shape   %i               %i               %i           %i               %i\n" \
-                                % (hist_name, 
+                                % (hist_name,
                                     "wz-powheg" in hist_name,
                                     "vv" in hist_name,
                                     "top-ewk" in hist_name,
@@ -498,7 +498,7 @@ if not args['noCards']:
                     )
     ConfigureJobs.fillTemplatedFile(
         'Templates/CombineCards/%s/runCombine_Template.sh' % args['selection'].split("/")[-1],
-        '%s/runCombine%s.sh' % (output_dir, signal_abv), 
+        '%s/runCombine%s.sh' % (output_dir, signal_abv),
         {"sample" : signal_abv}
     )
 
@@ -507,4 +507,3 @@ if args['addInterference']:
 if args['aqgc']:
     fOut.Close()
     HistTools.addaQGCTheoryHists(args['output_file'], aqgc_groups, variable)
-

@@ -193,9 +193,9 @@ void ResponseMatrixMakerBase<T>::setup()
         "pu_Up","pu_Down","jes_up","jes_dn","jer_up","jer_dn",
         //"pdf_Up","pdf_Down",
         });
-  
+
   Vec<Str> jsysts = Vec<Str>({"jes_up","jes_dn","jer_up","jer_dn",
-        
+
         });
   //const bool isJetVar = (varName.find("jet") != Str::npos ||
   //                       varName.find("Jet") != Str::npos ||
@@ -261,9 +261,9 @@ void ResponseMatrixMakerBase<T>::setup()
 
   // Scale and PDF systematics only done for samples that have LHE info (e.g.
   // not MCFM)
-  // Not doing pdf and scale systematics at the moment. 
+  // Not doing pdf and scale systematics at the moment.
   // -> Now include these systematics
-  bool hasLHE = bool(recoTree->FindBranch("pdfWeights")); 
+  bool hasLHE = bool(recoTree->FindBranch("pdfWeights"));
   //bool hasLHE = false;
 
   //see https://twiki.cern.ch/twiki/bin/view/CMS/HowToPDF#How_to_retrieve_LHE_weights_info
@@ -343,7 +343,7 @@ void ResponseMatrixMakerBase<T>::setup()
   //std::cout<<"upperEdge: "<<upperEdge<<std::endl;
   float lowerEdge = binning[binning.size()-2];
   //std::cout<<"lowerEdge: "<<lowerEdge<<std::endl;
-  float binCenter = (lowerEdge)+((upperEdge - lowerEdge)/2.); 
+  float binCenter = (lowerEdge)+((upperEdge - lowerEdge)/2.);
   //std::cout<<"Last bin center: "<<binCenter<<std::endl;
   // Loop through base reco tree, fill most things
   for(size_t row = 0; row < size_t(std::abs(recoTree->GetEntries())); ++row)
@@ -406,25 +406,25 @@ void ResponseMatrixMakerBase<T>::setup()
       //Do JES and JER systematics here
       for(auto& js : jsysts){
         if(this->selectEvent(js))
-        {  
-         
+        {
+
           T val = this->getEventResponse(js);
-	
+
           const float nominalWeight = scale * puWt * lepSF * genWeight;
-	 
+
 
 	        if (val >= upperEdge){val=binCenter;}
-	   
+
           if (trueVal >= upperEdge){trueVal=binCenter;}
-	  
-         
+
+
           this->fillResponse(responses[js], val, trueVal, nominalWeight);
 
         }
       }
 
       if(this->selectEvent())
-        {  
+        {
           // Nominal value
           //const T val = this->getEventResponse();
           //if(this->nJets != this->valuevecfloat->size()) {std::cout<<"==================size unequal========================"<<this->nJets<<" vs "<< this->valuevecfloat->size()<<std::endl;}
@@ -436,9 +436,9 @@ void ResponseMatrixMakerBase<T>::setup()
 	  //std::cout<<"True Val "<<trueVal<<" RecoVal "<<val<<std::endl;
           //const float nominalWeight = scale * lepSF * genWeight;
           // fill histos that use nominal value but with different weights
-         
+
           //this section is for variables like leppt or all multibranch response matrices
-	  
+
           //for(size_t i = 0; i < val.size(); ++i){
           //  if (val[i] > upperEdge){val[i]=binCenter;}
             //std::cout<<"val: "<<val[i]<<std::endl;
@@ -447,9 +447,9 @@ void ResponseMatrixMakerBase<T>::setup()
           //for(size_t i = 0; i < trueVal.size(); ++i){
           //  if (trueVal[i] > upperEdge){trueVal[i]=binCenter;}
             //std::cout<<"trueVal: "<<trueVal[i]<<std::endl;
-          //} 
-	  
-	  
+          //}
+
+
           //this section is for variables like mass or all singlebranch response matrices
 
 	  //std::cout<<"val is of simple float type "<<val<<std::endl;
@@ -489,8 +489,8 @@ void ResponseMatrixMakerBase<T>::setup()
                   //this->fillResponse(responses["mEff_Down"], val, trueVal, scale * lepSFMDn * genWeight);
                 }
 
-	      
-	      
+
+
               if(hasLHE && pdfAndAlphaSWeights.at(0))
                 {
                   // fill once for each scale variation
@@ -503,7 +503,7 @@ void ResponseMatrixMakerBase<T>::setup()
                     this->fillResponse(scaleResponses.at(ind), val, trueVal,
                                        nominalWeightScaleNorm * scaleWeights.at(scaleIndicesWeCareAbout.at(ind))); */
 
-	
+
                   float nominalWeightPDFNorm = nominalWeight / pdfAndAlphaSWeights.at(0); //nominal PDF not included for 2016
                   for(size_t ind = 0; ind <= lastLHEind-9; ++ind)
                     this->fillResponse(scaleResponses.at(ind+9), val, trueVal,
@@ -512,11 +512,11 @@ void ResponseMatrixMakerBase<T>::setup()
                                        //use nominalWeightScaleNorm here since the 9th index is not nominal PDF for 2016, but 0th always scale nominal
 
                   // the last two items in the PDF weight vector are alpha_S variations
-                 //In our ntuplizer uwvv codes, scaleWeight corresponds to lhe weights index 0 to 8, and pdf weights 9 to 9999 (used until 111). 
+                 //In our ntuplizer uwvv codes, scaleWeight corresponds to lhe weights index 0 to 8, and pdf weights 9 to 9999 (used until 111).
 
 		  // fill the 3-D histogram with one response for each PDF variation
                   //float nominalWeightPDFNorm = nominalWeight / pdfAndAlphaSWeights.at(0);
-                  
+
 		  //for(size_t ind = 0; ind < nPDFVariations; ++ind)
 		  //{this->fillResponse(pdfResponses, val, trueVal, ind,
                   //                     nominalWeightPDFNorm * pdfAndAlphaSWeights.at(ind));}
@@ -694,25 +694,25 @@ void ResponseMatrixMakerBase<T>::setCommonBranches(TChain& t, const Vec<Str>& ob
   t.SetBranchAddress("evt", &evt);
   t.SetBranchAddress("genWeight", &genWeight);
   t.SetBranchAddress("jetPUSFmulfac", &jetPUSFmulfac);
-  
+
     if (year ==2016 || year==2017){
     t.SetBranchAddress("L1prefiringWeight", &L1prefiringWeight);}
 
-    if(channel.find("eeee") != Str::npos){    
+    if(channel.find("eeee") != Str::npos){
     t.SetBranchAddress("e1SIP3D", &l1SIP3D);
     t.SetBranchAddress("e2SIP3D", &l2SIP3D);
     t.SetBranchAddress("e3SIP3D", &l3SIP3D);
     t.SetBranchAddress("e4SIP3D", &l4SIP3D);
-    
+
     t.SetBranchAddress("e1ZZTightIDNoVtx", &l1IsTight);
     t.SetBranchAddress("e1ZZIso", &l1IsIso);
-    
+
     t.SetBranchAddress("e2ZZTightIDNoVtx", &l2IsTight);
     t.SetBranchAddress("e2ZZIso", &l2IsIso);
-    
+
     t.SetBranchAddress("e3ZZTightIDNoVtx", &l3IsTight);
     t.SetBranchAddress("e3ZZIso", &l3IsIso);
-    
+
     t.SetBranchAddress("e4ZZTightIDNoVtx", &l4IsTight);
     t.SetBranchAddress("e4ZZIso", &l4IsIso);
 
@@ -721,17 +721,17 @@ void ResponseMatrixMakerBase<T>::setCommonBranches(TChain& t, const Vec<Str>& ob
     t.SetBranchAddress("e3PdgId", &l3PdgId);
     t.SetBranchAddress("e4PdgId", &l4PdgId);
     }
-    
 
-    if(channel.find("eemm") != Str::npos){    
+
+    if(channel.find("eemm") != Str::npos){
     t.SetBranchAddress("e1SIP3D", &l1SIP3D);
     t.SetBranchAddress("e2SIP3D", &l2SIP3D);
     t.SetBranchAddress("m1SIP3D", &l3SIP3D);
     t.SetBranchAddress("m2SIP3D", &l4SIP3D);
-    
+
     t.SetBranchAddress("e1ZZTightIDNoVtx", &l1IsTight);
     t.SetBranchAddress("e1ZZIso", &l1IsIso);
-    
+
     t.SetBranchAddress("e2ZZTightIDNoVtx", &l2IsTight);
     t.SetBranchAddress("e2ZZIso", &l2IsIso);
 
@@ -753,14 +753,14 @@ void ResponseMatrixMakerBase<T>::setCommonBranches(TChain& t, const Vec<Str>& ob
     t.SetBranchAddress("m1PdgId", &l3PdgId);
     t.SetBranchAddress("m2PdgId", &l4PdgId);
     }
-    
 
-    if(channel.find("mmmm") != Str::npos){    
+
+    if(channel.find("mmmm") != Str::npos){
     t.SetBranchAddress("m1SIP3D", &l1SIP3D);
     t.SetBranchAddress("m2SIP3D", &l2SIP3D);
     t.SetBranchAddress("m3SIP3D", &l3SIP3D);
     t.SetBranchAddress("m4SIP3D", &l4SIP3D);
-    
+
      if (year == 2016 || year == 2017)
     {
       t.SetBranchAddress("m1PASTightIDNoVtx", &l1IsTight);
@@ -785,7 +785,7 @@ void ResponseMatrixMakerBase<T>::setCommonBranches(TChain& t, const Vec<Str>& ob
     t.SetBranchAddress("m3PdgId", &l3PdgId);
     t.SetBranchAddress("m4PdgId", &l4PdgId);
     }
-  
+
 
 
 }
@@ -1067,7 +1067,7 @@ void
 DijetBranchResponseMatrixMaker<T>::setRecoBranches(TChain& t, const Vec<Str>& objects)
 {
   JetBranchResponseMatrixMakerBase<T>::setRecoBranches(t, objects);
-  
+
   t.SetBranchAddress("nJets", &nJets);
   t.SetBranchAddress("mjj", &mjj);
   //t.SetBranchAddress("Mass", &Mass);
@@ -1085,7 +1085,7 @@ template<typename T>
 T DijetBranchResponseMatrixMaker<T>::getEventResponse(const Str& syst) const
 {
   //std::cout<<"getEventResponse overwrite success======================================="<<std::endl;
-  
+
   if(this->getVar()=="nJets")
   {
     unsigned int tmp_val = nJets;
@@ -1097,7 +1097,7 @@ T DijetBranchResponseMatrixMaker<T>::getEventResponse(const Str& syst) const
     tmp_val = nJets_jerUp;}
   else if(syst.find("jer_dn") != Str::npos){
     tmp_val= nJets_jerDn;}
-  
+
   return tmp_val;
   }
 
@@ -1112,7 +1112,7 @@ T DijetBranchResponseMatrixMaker<T>::getEventResponse(const Str& syst) const
     tmp_val = mjj_jerUp;}
   else if(syst.find("jer_dn") != Str::npos){
     tmp_val= mjj_jerDn;}
-  
+
   return tmp_val;
   }
    // return mjj;}
@@ -1121,11 +1121,11 @@ T DijetBranchResponseMatrixMaker<T>::getEventResponse(const Str& syst) const
 }
 
 //template<typename T>
-//void 
+//void
 //DijetBranchResponseMatrixMaker<T>::fillResponse(TH2D& h, const Vec<float>& val, const Vec<float>& trueVal, float w) const
 //{
 
-//  h.Fill(val.at(0), trueVal.at(0), w); //currently only used to handle jetPt case                                                                                                                    
+//  h.Fill(val.at(0), trueVal.at(0), w); //currently only used to handle jetPt case
 
 
 //}
@@ -1140,7 +1140,7 @@ DijetBranchResponseMatrixMaker<T>::selectEvent(const Str& syst) const
   bool  mass_selFull = false;
   bool  mass_selBase = mZ1 > 60. && mZ1 < 120. && mZ2 > 60. && mZ2 < 120.;
   bool  tight_sel = (this->tightZ1Leptons() && this->tightZ2Leptons());
-  
+
   if (this->year ==2016 || this->year==2017){
     bool sip_sel= this->l1SIP3D < 4.0 && this->l2SIP3D < 4.0 && this->l3SIP3D < 4.0 && this->l4SIP3D < 4.0;
     mass_sel = mass_selBase && tight_sel && sip_sel;
@@ -1157,13 +1157,13 @@ DijetBranchResponseMatrixMaker<T>::selectEvent(const Str& syst) const
   else if(syst.find("jes_up") != Str::npos)
     {tmp_nJets = nJets_jesUp;}
   else if(syst.find("jes_dn") != Str::npos)
-    {tmp_nJets = nJets_jesDn;} 
+    {tmp_nJets = nJets_jesDn;}
   else if(syst.find("jer_up") != Str::npos)
     {tmp_nJets = nJets_jerUp ;}
   else if(syst.find("jer_dn") != Str::npos)
     {tmp_nJets = nJets_jerDn ;}
 
-    //std::cout<<"===========================Selection with no syst entered==============="<<std::endl; 
+    //std::cout<<"===========================Selection with no syst entered==============="<<std::endl;
     //std::cout<<this->getVar().c_str()<<" "<<this->getVar()<<"  "<<(this->getVar().c_str()==this->getVar())<<std::endl;
     //std::cout<<(this->getVar().c_str()=="jetEta[0]")<<std::endl;
     //std::cout<<(this->getVar()=="jetEta[0]")<<std::endl;
@@ -1193,9 +1193,9 @@ DijetBranchResponseMatrixMaker<T>::selectEvent(const Str& syst) const
     if (this->getVar() == "Mass3jFull") {return tmp_nJets == 3 && mass_selFull;}
     if (this->getVar() == "Mass34jFull") {return tmp_nJets >= 3 && mass_selFull;}
     if (this->getVar() == "Mass4jFull") {return tmp_nJets >= 4 && mass_selFull;}
-  
 
-  
+
+
 
   std::cout<<"======================NO MATCH in selection!====================================="<<std::endl;
   return mass_sel;
@@ -2056,7 +2056,7 @@ UseSFHists<R>::getLepSF(const Vec<Str>& leptons,
                                           *lPtsSF.at(i));
             }
           if(*lPtsSF.at(i)<20.)
-            { 
+            {
             sf *= ::getContentFromHist(*hEleLowRecoSF, *lEtasSF.at(i),
                                      *lPtsSF.at(i));
             if(eSyst)
@@ -2069,7 +2069,7 @@ UseSFHists<R>::getLepSF(const Vec<Str>& leptons,
                 err = eSyst * std::sqrt(err*err + recoErr*recoErr);
               }
             }
-          else 
+          else
           {
             sf *= ::getContentFromHist(*hEleRecoSF, *lEtasSF.at(i),
                                      *lPtsSF.at(i));
@@ -2123,7 +2123,7 @@ typedef NthJetResponseMatrixMaker<float,0> FirstJetFloatResponseMatrixMaker;
 typedef NthJetResponseMatrixMaker<float,1> SecondJetFloatResponseMatrixMaker;
 typedef AbsValueResponseMatrixMaker<FirstJetFloatResponseMatrixMaker> FirstJetAbsFloatResponseMatrixMaker;
 typedef AbsValueResponseMatrixMaker<SecondJetFloatResponseMatrixMaker> SecondJetAbsFloatResponseMatrixMaker;
-//typedef DijetBranchResponseMatrixMaker<Vecfloat> testJet; 
+//typedef DijetBranchResponseMatrixMaker<Vecfloat> testJet;
 
 typedef UseSFHists<FloatBranchResponseMatrixMaker>       SFHistFloatBranchResponseMatrixMaker;
 typedef UseSFHists<AbsFloatBranchResponseMatrixMaker>    SFHistAbsFloatBranchResponseMatrixMaker;

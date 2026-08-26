@@ -17,17 +17,17 @@
 % The text will not normally be truncated in the middle of a word,
 % nor at a space specified by the tie "~".  For example:
 %
-%     "\truncate{122pt}{This text has been~truncated}"   
+%     "\truncate{122pt}{This text has been~truncated}"
 % gives
 %     "This text has...      "
 %
 % You can give one of the package options "[hyphenate]", "[breakwords]",
-% or "[breakall]" to allow breaking in the middle of words. The first 
-% two only truncate at hyphenation points; with the difference being that 
-% "breakwords" suppresses the hyphen character.  On the other hand, 
-% "breakall" allows truncation at any character.  For example: 
+% or "[breakall]" to allow breaking in the middle of words. The first
+% two only truncate at hyphenation points; with the difference being that
+% "breakwords" suppresses the hyphen character.  On the other hand,
+% "breakall" allows truncation at any character.  For example:
 %
-%     "\truncate{122pt}{This text has been~truncated}" 
+%     "\truncate{122pt}{This text has been~truncated}"
 % gives
 %     "This text has been trun-..."   (hyphenate)
 %     "This text has been trun... "   (breakwords)
@@ -101,7 +101,7 @@
     \ifnum\badness>\@M  % text does not fit
       \settowidth\rightskip{#1}%
       \advance\rightskip \z@\@plus\p@
-      \parfillskip-\@ne\rightskip \@plus\@ne fil 
+      \parfillskip-\@ne\rightskip \@plus\@ne fil
       \parshape \tw@ \z@\hsize \z@\maxdimen \linepenalty60
       \tracinglostchars\z@
       %% \let\par\relax -- don't do this because \vskip causes infinite loop
@@ -131,9 +131,9 @@
 % (Note that the text may be proessed twice.  I could avoid that
 % if there are problems with global counters etc.)
 
-% we save (implicit global) hyphenchar settings for each font on a 
+% we save (implicit global) hyphenchar settings for each font on a
 % manual stack -- the token register \@Trunc@RestHyph -- before changing
-% them.  We execute \@Trunc@RestHyph to set them to the invisible 
+% them.  We execute \@Trunc@RestHyph to set them to the invisible
 % characters and then again to restore them.  (I can't imagine this
 % will ever be required.)
 \newtoks\@Trunc@RestHyph
@@ -141,7 +141,7 @@
 %
 \def\@Trunc@SaveHChar{\begingroup
   \edef\@tempa{%
-    \hyphenchar\the\font=\noexpand\@Trunc@HC{\the\hyphenchar\font}\relax 
+    \hyphenchar\the\font=\noexpand\@Trunc@HC{\the\hyphenchar\font}\relax
     \the\@Trunc@RestHyph}%
   \global\@Trunc@RestHyph\expandafter{\@tempa}%
 %  \hyphenchar\font\z@

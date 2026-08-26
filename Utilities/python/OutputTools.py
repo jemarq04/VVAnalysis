@@ -20,7 +20,7 @@ def getHistsInDic(output_list,varList,channels):
     histsChanDic={}
     exist=False
     for chan in channels:
-        if chan=="eemm": 
+        if chan=="eemm":
             #Loop over the variables for which we want unfolded distributions
             histsDic={}
             for var in varList:
@@ -30,13 +30,13 @@ def getHistsInDic(output_list,varList,channels):
                     #print "MCsubItem:",subItem.GetName()
                     if "Gen" in var:
                         itemName=var+"_"+chan+"Gen"
-                    else: 
+                    else:
                         itemName=var+"_"+chan
                     if item.GetName()==itemName:
                         exist=True
                         hist = item.Clone()
                         #Find _mmee hist as well
-                        if "Gen" in var: 
+                        if "Gen" in var:
                             h2 = output_list.FindObject(var+"_mmeeGen")
                         else:
                             h2 = output_list.FindObject(var+"_mmee")
@@ -57,7 +57,7 @@ def getHistsInDic(output_list,varList,channels):
                     #print "MCsubItem:",item.GetName()
                     if "Gen" in var:
                         itemName=var+"_"+chan+"Gen"
-                    else: 
+                    else:
                         itemName=var+"_"+chan
                     if item.GetName()==itemName:
                         exist=True

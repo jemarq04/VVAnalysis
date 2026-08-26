@@ -109,7 +109,7 @@ prettyVars = {
     'zHigherPt' : 'p_\\text{T}^{\\text{Z}_{\\text{lead}}}',
     'zLowerPt' : 'p_\\text{T}^{\\text{Z}_{\\text{sublead}}}',
     'leppt' : 'p_{T}^{\\ell}',
-    'l1Pt' : 'p_\\text{T}^{\\ell_1}', 
+    'l1Pt' : 'p_\\text{T}^{\\ell_1}',
     'dphiz1z2': '\\Delta\\phi_{Z_{1},Z_{2}}',
     'drz1z2':'\\Delta\\text{R}_{Z_{1},Z_{2}}}',
     }
@@ -244,7 +244,7 @@ for varName in runVariables:
         fUse.Close()
         #print the dictionary containing 9 pairs of MG unfolded and true histograms
     #print("9 sets of histos: ",histosMG)
-    
+
     # save unfolded and Gen Powheg histograms as key-value pairs in the histogram dictionary
     histosPow = {}
     for year in ["2016","2017","2018"]:
@@ -304,7 +304,7 @@ for varName in runVariables:
                     print("binCenter: ",binCenter,"-","MGUnfContent: ",hUnf.GetBinContent(i),"-","MGGen: ",hGen.GetBinContent(i),"-","statError: ",hUnf.GetBinError(i),"-","syst: ",hSystUnc.GetBinContent(i))
                 print("pull: ",round(pull,4))
                 hPull.Fill(binCenter,round(pull,4))
-        
+
             for hPoUnf,histTuplePow in histosPow.items():
                 hPowGen = histTuplePow[0]
                 hSystUncPow = histTuplePow[1]
@@ -320,7 +320,7 @@ for varName in runVariables:
                 #pull = (hPoUnf.GetBinContent(i) - hPowGen.GetBinContent(i))/(hSystUncPow.GetBinContent(i))
                     pullPow = (hPoUnf.GetBinContent(i) - hPowGen.GetBinContent(i))/(hPoUnf.GetBinError(i))
                     PowbinCenter = hPoUnf.GetXaxis().GetBinCenter(i)
-                    print("binCenter: ",PowbinCenter,"-","PowUnfContent: ",hPoUnf.GetBinContent(i),"-","statError: ",hPoUnf.GetBinError(i),"-","syst: ",hSystUncPow.GetBinContent(i)) 
+                    print("binCenter: ",PowbinCenter,"-","PowUnfContent: ",hPoUnf.GetBinContent(i),"-","statError: ",hPoUnf.GetBinError(i),"-","syst: ",hSystUncPow.GetBinContent(i))
                 print("pullPow: ",round(pullPow,4))
                 hPull.Fill(PowbinCenter,round(pullPow,4))
 
@@ -332,25 +332,25 @@ for varName in runVariables:
                 #pull = (hUnf.GetBinContent(i) - hGen.GetBinContent(i))/(hSystUnc.GetBinContent(i))
                 pull = (hUnf.GetBinContent(i) - hGen.GetBinContent(i))/(hUnf.GetBinError(i))
                 binCenter = hUnf.GetXaxis().GetBinCenter(i)
-                print("binCenter: ",binCenter,"-","MGUnfContent: ",hUnf.GetBinContent(i),"-","statError: ",hUnf.GetBinError(i),"-","syst: ",hSystUnc.GetBinContent(i)) 
+                print("binCenter: ",binCenter,"-","MGUnfContent: ",hUnf.GetBinContent(i),"-","statError: ",hUnf.GetBinError(i),"-","syst: ",hSystUnc.GetBinContent(i))
                 print("pull: ",round(pull,4))
                 hPull.Fill(binCenter,round(pull,4))
-        
+
             for hPoUnf,histTuplePow in histosPow.items():
                 hPowGen = histTuplePow[0]
                 hSystUncPow = histTuplePow[1]
                 #pull = (hPoUnf.GetBinContent(i) - hPowGen.GetBinContent(i))/(hSystUncPow.GetBinContent(i))
                 pullPow = (hPoUnf.GetBinContent(i) - hPowGen.GetBinContent(i))/(hPoUnf.GetBinError(i))
                 PowbinCenter = hPoUnf.GetXaxis().GetBinCenter(i)
-                print("binCenter: ",PowbinCenter,"-","PowUnfContent: ",hPoUnf.GetBinContent(i),"-","statError: ",hPoUnf.GetBinError(i),"-","syst: ",hSystUncPow.GetBinContent(i)) 
+                print("binCenter: ",PowbinCenter,"-","PowUnfContent: ",hPoUnf.GetBinContent(i),"-","statError: ",hPoUnf.GetBinError(i),"-","syst: ",hSystUncPow.GetBinContent(i))
                 print("pullPow: ",round(pullPow,4))
                 hPull.Fill(PowbinCenter,round(pullPow,4))
-    
+
     savePullHists.append(hPull)
 
 
 today = datetime.date.today().strftime("%d%b%Y")
-tmpFileName = "MGPowMatrix_PowMGUnfGenPullsExtrabins-%s.root" % (today) 
+tmpFileName = "MGPowMatrix_PowMGUnfGenPullsExtrabins-%s.root" % (today)
 #fHistOut = ROOT.TFile.Open(tmpFileName, "update")
 #fHistOut.cd()
 for newhists in savePullHists:

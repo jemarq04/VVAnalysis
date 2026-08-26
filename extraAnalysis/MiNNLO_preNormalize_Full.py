@@ -1,4 +1,4 @@
-import ROOT 
+import ROOT
 import array
 import pdb
 
@@ -63,7 +63,7 @@ for i,var in enumerate(vars2):
         hggNoGen= hggmNG
     hqqEW = fqq.Get("Wh_"+var)
     hggEW= fgg.Get("Wh_"+var)
-    
+
     hqq.Scale(qqfac)
     hgg.Scale(ggfac)
     hqqEW.Scale(qqfac)
@@ -99,11 +99,11 @@ for i,var in enumerate(vars2):
     pdb.set_trace()
     printTH1N(hsum)
     #printTH1N(hsumNoGen)
-    
+
     #Print group for checkin with paper
     '''
     print("Normalized hsum, hsumNoGen and paperNorm, followed by two ratios")
-    paperNorm = [0.17590936266589538, 0.3781595634643841, 0.1963998830023097, 0.10069941959681805, 0.05568004727354278, 0.052217673625462646, 0.02160027834458957, 0.01459272741863249, 0.006666502098751068]    
+    paperNorm = [0.17590936266589538, 0.3781595634643841, 0.1963998830023097, 0.10069941959681805, 0.05568004727354278, 0.052217673625462646, 0.02160027834458957, 0.01459272741863249, 0.006666502098751068]
     lhsum = listNh(hsum)
     lhsumNoGen = listNh(hsumNoGen)
     printr(lhsum,7)
@@ -150,5 +150,3 @@ if compare:
     print("Ratio with/without")
     print([round(hc2EW.GetBinContent(i)/hc2EW.Integral(1,9)/hc2.GetBinContent(i)*hc2.Integral(1,9)/kfacs[i-1],9) for i in range(1,hc2.GetNbinsX()+1)])
     '''
-
-

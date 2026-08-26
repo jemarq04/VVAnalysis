@@ -51,7 +51,7 @@ histpath=$(./Utilities/scripts/getConfigValue.py hist_output)
 frfile=${frpath}/fakeRateFinal-${lepid}LepsFrom${looselepsfile}.root
 histfile=${histpath}/${output}-${DATE}.root
 
-if [[ "$3" != "" ]]; then 
+if [[ "$3" != "" ]]; then
     histfile=${histfile/.root/_${3}.root}
 fi
 
@@ -59,18 +59,18 @@ cd $CMSSW_BASE/src/Analysis/VVAnalysis
 if [ -f $frfile ] && [ "$2" != "RedoFakeRates" ]; then
     echo "INFO: Fake rate file $frfile exists! Using exisiting file."
     if [ "$2" != "combineOnly" ]; then
-        python ScaleFactors/setupScaleFactors.py -t $frfile 
+        python ScaleFactors/setupScaleFactors.py -t $frfile
     fi
 else
     echo "INFO: Fake rate file $frfile not found. It will be created."
-    python ScaleFactors/setupScaleFactors.py 
+    python ScaleFactors/setupScaleFactors.py
     frfile=${frpath}/fakeRate${DATE_MONTHONLY}-${lepid}LepsFrom${looselepsfile}.root
-    ./Utilities/scripts/makeFakeRates.py -s ${looselepsfile} -l $lumi -o $frfile 
-    python ScaleFactors/setupScaleFactors.py -t $frfile 
+    ./Utilities/scripts/makeFakeRates.py -s ${looselepsfile} -l $lumi -o $frfile
+    python ScaleFactors/setupScaleFactors.py -t $frfile
 fi
 
 if [ "$2" != "combineOnly" ]; then
-    ./Utilities/scripts/makeHistFile.py -l $lumi -s $input -o $histfile --output_selection $output 
+    ./Utilities/scripts/makeHistFile.py -l $lumi -s $input -o $histfile --output_selection $output
     if [ -f $histfile ]; then
         echo "Histogram file $histfile produced"
     else
@@ -81,7 +81,7 @@ fi
 if [ "$2" != "noCombine" ]; then
     combine_selection=WZxsec2016/${output}
     combine_folder=${DATE}
-    if [[ "$3" != "" ]]; then 
+    if [[ "$3" != "" ]]; then
         combine_folder=${combine_folder}_${3}
     fi
     if [[ $output == *_* ]]; then
@@ -97,7 +97,7 @@ if [ "$2" != "noCombine" ]; then
     fi
     if [ "$1" != "FakeRate"* ]; then
         combine_path=$(./Utilities/scripts/getConfigValue.py combine_output)
-        combine_file=${combine_path}/$(basename $histfile) 
+        combine_file=${combine_path}/$(basename $histfile)
         echo ./Utilities/scripts/prepareCombine.py \
             --input_file $histfile \
             -s $combine_selection \
@@ -105,7 +105,7 @@ if [ "$2" != "noCombine" ]; then
             -l 35.9 \
             --combineChannels \
             --addControlRegion \
-            --output_file $combine_file 
+            --output_file $combine_file
         echo "Info: File $combine_file created"
     fi
 fi

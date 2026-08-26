@@ -101,11 +101,11 @@ class CombineCardTools(object):
             self.yields[chan] = {}
 
     def processHists(self, processName):
-        return self.histData[processName] 
+        return self.histData[processName]
 
     def getFitVariable(self, process):
         if process not in self.fitVariableAppend:
-            return self.fitVariable 
+            return self.fitVariable
         return "_".join([self.fitVariable, self.fitVariableAppend[process]])
 
     def combineChannels(self, group, central=True):
@@ -123,7 +123,7 @@ class CombineCardTools(object):
                 continue
             hist = hist.Clone(name)
             ROOT.SetOwnership(hist, False)
-            group.Add(hist) 
+            group.Add(hist)
             for chan in self.channels[1:]:
                 chan_hist = group.FindObject(name + "_" + chan)
                 hist.Add(chan_hist)
@@ -139,12 +139,12 @@ class CombineCardTools(object):
             plots += [self.weightHistName(c, processName) for c in self.channels]
         return plots
 
-    # processName needs to match a PlotGroup 
+    # processName needs to match a PlotGroup
     def loadHistsForProcess(self, processName, addTheory, scaleNorm=1):
         plotsToRead = self.listOfHistsByProcess(processName, addTheory)
 
-        group = HistTools.makeCompositeHists(self.inputFile, processName, 
-                    {proc : self.crossSectionMap[proc] for proc in self.processes[processName]}, 
+        group = HistTools.makeCompositeHists(self.inputFile, processName,
+                    {proc : self.crossSectionMap[proc] for proc in self.processes[processName]},
                     self.lumi, plotsToRead, rebin=self.rebin, overflow=False)
 
         fitVariable = self.getFitVariable(processName)
@@ -188,18 +188,17 @@ class CombineCardTools(object):
         processHists = self.histData[processName]
         OutputTools.writeOutputListItem(processHists, self.outputFile)
         processHists.Delete()
-        
+
     def writeCards(self, chan, nuisances, year="", extraArgs={}):
         chan_dict = self.yields[chan].copy()
         chan_dict.update(extraArgs)
         chan_dict["nuisances"] = nuisances
         chan_dict["fit_variable"] = self.fitVariable
         chan_dict["output_file"] = self.outputFile.GetName()
-        outputCard = self.templateName.split("/")[-1].format(channel=chan, year=year) 
+        outputCard = self.templateName.split("/")[-1].format(channel=chan, year=year)
         outputCard = outputCard.replace("template", "")
         #outputCard = outputCard.replace("__", "_")
         ConfigureJobs.fillTemplatedFile(self.templateName.format(channel=chan, year=year),
             "/".join([self.outputFolder, outputCard]),
             chan_dict
         )
-

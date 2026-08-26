@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 # Modified from N. Smith, U. Wisconsin
 # https://twiki.cern.ch/twiki/bin/view/CMS/EgammaIDRecipesRun2#Efficiencies_and_scale_factors
 wget http://fcouderc.web.cern.ch/fcouderc/EGamma/scaleFactors/Moriond17/approval/RECO/passingRECO/egammaEffi.txt_EGM2D.root -O ../data/moriond17ElectronRecoSF.root

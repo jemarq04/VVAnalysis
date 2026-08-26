@@ -4,8 +4,8 @@
 void WZBackgroundSelector::SlaveBegin(TTree * /*tree*/)
 {
     systematics_ = {
-        {jetEnergyScaleUp, "CMS_scale_jUp"}, 
-        {jetEnergyScaleDown, "CMS_scale_jDown"}, 
+        {jetEnergyScaleUp, "CMS_scale_jUp"},
+        {jetEnergyScaleDown, "CMS_scale_jDown"},
         {jetEnergyResolutionUp, "CMS_res_jUp"},
         {jetEnergyResolutionDown, "CMS_res_jDown"},
     };
@@ -21,14 +21,14 @@ void WZBackgroundSelector::SlaveBegin(TTree * /*tree*/)
 void WZBackgroundSelector::SetupNewDirectory()
 {
     WZSelector::SetupNewDirectory();
-   
+
     // Insure that hist ranges are exactly the same as WZSelector, just change name
     for (const auto && obj : *currentHistDir_) {
         std::string name = obj->GetName();
         TNamed* named = dynamic_cast<TNamed*>(obj);
         named->SetName(name.insert(name.length()-3, "Fakes_").c_str());
     }
-    
+
     AddObject<TH1D>(mjjHistPPF_, ("mjj_PPF_"+channelName_).c_str(), "mjj; m_{jj} [GeV]; Events;", 15, 0, 1500);
     AddObject<TH1D>(mjjHistPFP_, ("mjj_PFP_"+channelName_).c_str(), "mjj; m_{jj} [GeV]; Events;", 15, 0, 1500);
     AddObject<TH1D>(mjjHistFPP_, ("mjj_FPP_"+channelName_).c_str(), "mjj; m_{jj} [GeV]; Events;", 15, 0, 1500);
@@ -113,7 +113,7 @@ float WZBackgroundSelector::getl1FakeRate() {
         fr = fakeRate_allE_->Evaluate2D(pt_fillval, std::abs(l1Eta));
     else
         fr = fakeRate_allMu_->Evaluate2D(pt_fillval, std::abs(l1Eta));
-    return fr/(1-fr); 
+    return fr/(1-fr);
 }
 
 float WZBackgroundSelector::getl2FakeRate() {
@@ -123,7 +123,7 @@ float WZBackgroundSelector::getl2FakeRate() {
         fr = fakeRate_allE_->Evaluate2D(pt_fillval, std::abs(l2Eta));
     else
         fr = fakeRate_allMu_->Evaluate2D(pt_fillval, std::abs(l2Eta));
-    return fr/(1-fr); 
+    return fr/(1-fr);
 }
 
 float WZBackgroundSelector::getl3FakeRate() {
@@ -133,7 +133,7 @@ float WZBackgroundSelector::getl3FakeRate() {
         fr = fakeRate_allE_->Evaluate2D(pt_fillval, std::abs(l3Eta));
     else
         fr = fakeRate_allMu_->Evaluate2D(pt_fillval, std::abs(l3Eta));
-    return fr/(1-fr); 
+    return fr/(1-fr);
 }
 
 bool WZBackgroundSelector::IsFPPRegion() {

@@ -28,4 +28,3 @@ for proc in rtfile.GetListOfKeys():
             for i,entry in enumerate(corr_by_bin):
                 new_hist.SetBinContent(i+1, entry*chan_hist.GetBinContent(i+1))
             print(new_hist.Write())
-

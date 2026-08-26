@@ -1,7 +1,7 @@
 #include "Analysis/VVAnalysis/interface/FakeRateSelector.h"
 #include <TStyle.h>
 
-void FakeRateSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::string> variation) { 
+void FakeRateSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::string> variation) {
     if (!passesLeptonVeto)
         return;
     if (l1Pt < 25 || l2Pt < 15)
@@ -46,7 +46,7 @@ void FakeRateSelector::SetupNewDirectory() {
     AddObject<TH2D>(passingTight2D_, ("passingTight2D_"+channelName_).c_str(), "#eta; p_{T} [GeV]", nvarbins, variable_pt_bins, 3, 0, 2.5);
     AddObject<TH1D>(passingTight1DPt_, ("passingTight1DPt_"+channelName_).c_str(), "Tight leptons; p_{T} [GeV]", nvarbins, variable_pt_bins);
     AddObject<TH1D>(passingTight1DEta_, ("passingTight1DEta_"+channelName_).c_str(), "Tight leptons; #eta", 3, 0, 2.5);
-    
+
     AddObject<TH2D>(passingLoose2D_, ("passingLoose2D_"+channelName_).c_str(), "#eta; p_{T} [GeV]", nvarbins, variable_pt_bins, 3, 0, 2.5);
     AddObject<TH1D>(passingLoose1DPt_, ("passingLoose1DPt_"+channelName_).c_str(), "Loose leptons; p_{T} [GeV]", nvarbins, variable_pt_bins);
     AddObject<TH1D>(passingLoose1DEta_, ("passingLoose1DEta_"+channelName_).c_str(), "Loose leptons; #eta", 3, 0, 2.5);

@@ -12,9 +12,9 @@
 //____________________________________________________________
 /*! \class RooUnfoldErrors
 \brief A graph drawing class to view the errors associated with an unfolding technique</p>
-<p>Before these can be run, the RooUnfoldErrors object must be created and the operation Plotting() run on the object in order to do the 
+<p>Before these can be run, the RooUnfoldErrors object must be created and the operation Plotting() run on the object in order to do the
 maths needed to plot these graphs. The object requires the number of toys over which the errors are calculated and a RooUnfold object.</p>
-<p>For each iteration each bin in the measured distribution is added to a random number from a gaussian with a width based on the error in that bin. This is then unfolded and the results plotted for each bin. The rms in each bin is then used as the spread of the values in every bin. This gives errors that are slightly larger than those returned by RooUnfold, but are a better representation of the spread in the data.</p> 
+<p>For each iteration each bin in the measured distribution is added to a random number from a gaussian with a width based on the error in that bin. This is then unfolded and the results plotted for each bin. The rms in each bin is then used as the spread of the values in every bin. This gives errors that are slightly larger than those returned by RooUnfold, but are a better representation of the spread in the data.</p>
 <p> If the true distribution is not known, the following can be returned:</p>
 <ul>
 <li> A graph of the errors from the unfolding (Unf_err())
@@ -22,10 +22,10 @@ maths needed to plot these graphs. The object requires the number of toys over w
 <li> An error matrix based on the spread of the reconstructed points (True_err())
 </ul>
 <p> If the true distribution is known then a plot of the chi squared values can also be returned (Chi2()).
- This requires the inclusion of the truth distribution and the error method on which the chi squared is based 
+ This requires the inclusion of the truth distribution and the error method on which the chi squared is based
  (0 for a simple calculation, 1 or 2 for a method based on the covariance matrix, depending on the method used for calculation of errors.). </p>
-<p>On some occasions the chi squared value can be very large. This is due to the covariance matrices being near singular and thus 
-difficult to invert reliably. A warning will be displayed if this is the case. To plot the chi squared distribution use the option Draw("chi2"), to filter out the larger values use Draw("chi2","abs(chi2 < max") where max is the largest value to be included.</p> 
+<p>On some occasions the chi squared value can be very large. This is due to the covariance matrices being near singular and thus
+difficult to invert reliably. A warning will be displayed if this is the case. To plot the chi squared distribution use the option Draw("chi2"), to filter out the larger values use Draw("chi2","abs(chi2 < max") where max is the largest value to be included.</p>
  */
 /////////////////////////////////////////////////////////////////
 
@@ -57,8 +57,8 @@ RooUnfoldErrors::RooUnfoldErrors (int NToys,  RooUnfold* unfold_in, const TH1* T
 {
     h_err=0;
     h_err_res=0;
-    hchi2=0; 
-    GraphParameters(); 
+    hchi2=0;
+    GraphParameters();
     if (hTrue) CreatePlotsWithChi2();
     else       CreatePlots();
 }
@@ -69,10 +69,10 @@ RooUnfoldErrors::~RooUnfoldErrors()
 {
   delete h_err;
   delete h_err_res;
-  delete hchi2;  
+  delete hchi2;
 }
 
-void 
+void
 RooUnfoldErrors::GraphParameters()
 {
     //!Gets graph size parameters
@@ -90,9 +90,9 @@ RooUnfoldErrors::GraphParameters()
 
 TNtuple*
 RooUnfoldErrors::Chi2()
-{   
+{
     if (!hchi2) return hchi2;
-    //!Returns TNtuple of chi squared values. 
+    //!Returns TNtuple of chi squared values.
     hchi2->SetFillColor(4);
     return hchi2;
 }
@@ -107,7 +107,7 @@ RooUnfoldErrors::RMSResiduals(){
     return dynamic_cast<TH1*>(h_err_res->Clone());
 }
 
-TH1* 
+TH1*
 RooUnfoldErrors::UnfoldingError(){
     if (!h_err) return h_err;
     //!Returns a TH1D of the errors from the unfolding
@@ -126,8 +126,8 @@ RooUnfoldErrors::CreatePlots()
 
     Bool_t oldstat= TH1::AddDirectoryStatus();
     TH1::AddDirectory (kFALSE);
-    h_err     = new TH1D ("unferr", "Unfolding errors", ntx, xlo, xhi); 
-    h_err_res = new TH1D ("toyerr", "Toy MC RMS",       ntx, xlo, xhi); 
+    h_err     = new TH1D ("unferr", "Unfolding errors", ntx, xlo, xhi);
+    h_err_res = new TH1D ("toyerr", "Toy MC RMS",       ntx, xlo, xhi);
     TH1::AddDirectory (oldstat);
 
     unfold->SetNToys(toys);
@@ -139,7 +139,7 @@ RooUnfoldErrors::CreatePlots()
     }
     return;
 }
-    
+
 
 void
 RooUnfoldErrors::CreatePlotsWithChi2()
@@ -152,8 +152,8 @@ RooUnfoldErrors::CreatePlotsWithChi2()
     Bool_t oldstat= TH1::AddDirectoryStatus();
     TH1::AddDirectory (kFALSE);
 
-    h_err     = new TProfile ("unferr", "Unfolding errors", ntx, xlo, xhi); 
-    h_err_res = new TH1D     ("toyerr", "Toy MC RMS",       ntx, xlo, xhi); 
+    h_err     = new TProfile ("unferr", "Unfolding errors", ntx, xlo, xhi);
+    h_err_res = new TH1D     ("toyerr", "Toy MC RMS",       ntx, xlo, xhi);
     hchi2     = new TNtuple  ("chi2", "chi2", "chi2");
     std::vector<TH1D*> graph_vector(ntx);
     for (int a=0; a<ntx; a++) {
@@ -161,19 +161,19 @@ RooUnfoldErrors::CreatePlotsWithChi2()
       graph_name.Form("resbin%d",a);
       graph_vector[a]= new TH1D (graph_name,graph_name, 100,0,10000);
     }
-    
+
     TH1::AddDirectory (oldstat);
-    
+
     int odd_ch=0;
-    for (int k=0; k<toys;k++){  
+    for (int k=0; k<toys;k++){
         RooUnfold* toy= unfold->RunToy();
         Double_t chi2=       toy->Chi2 (hTrue);
         const TVectorD reco= toy->Vreco();
         const TVectorD err=  toy->ErecoV();
-        for (int i=0; i<ntx; i++) {    
+        for (int i=0; i<ntx; i++) {
             graph_vector[i]->Fill(reco[i]);
             h_err->Fill(h_err->GetBinCenter(i+1),err[i]);
-        } 
+        }
         if (hTrue){
             hchi2->Fill(chi2);
             if (fabs(chi2)>=maxchi2 && toy->verbose()>=1){
@@ -192,10 +192,9 @@ RooUnfoldErrors::CreatePlotsWithChi2()
         h_err_res->SetBinError   (i+1, spr/sqrt(2*n));
         delete graph;
     }
-    
+
     if (odd_ch){
         cout <<"There are " << odd_ch << " bins over outside the range of 0 to "<<maxchi2 <<endl;
     }
 
 }
-

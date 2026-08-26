@@ -255,7 +255,7 @@ void RooUnfoldTestHarness2D::Results()
   hMeasY   ->Draw("SAME");
   if (hFakeY) hFakeY->Draw("SAME");
   if (hRecoY) hRecoY->Draw("SAME");
-  
+
   lTest->Draw();
   canvas->Update();
 

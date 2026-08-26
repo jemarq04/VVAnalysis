@@ -41,9 +41,9 @@ extern "C" {
   extern void bayes_ (const int* noc, const int* noe, int* nsteps, const int* mode, const int* er_mode, const int* keep, int* ier);
   // bayesc_ must agree with the /BAYESC/ common block in bayes_c.for.
   extern struct {
-    float pec[SIZE_C][SIZE_E], pce[SIZE_E][SIZE_C], 
-          pc[SIZE_C], ne[SIZE_E], nc[SIZE_C], 
-          nec_mc[SIZE_C][SIZE_E], nc_mc[SIZE_C], 
+    float pec[SIZE_C][SIZE_E], pce[SIZE_E][SIZE_C],
+          pc[SIZE_C], ne[SIZE_E], nc[SIZE_C],
+          nec_mc[SIZE_C][SIZE_E], nc_mc[SIZE_C],
           Vc[SIZE_C][SIZE_C], eff[SIZE_C], eff_0, eff_true,
           Vc0[SIZE_C][SIZE_C], Vc1[SIZE_C][SIZE_C],
           M_unf[SIZE_E][SIZE_C], Vc_u[SIZE_C][SIZE_C],
@@ -118,7 +118,7 @@ RooUnfoldDagostini::Unfold()
     nm= SIZE_E;
   }
   if (_haveCovMes) cerr << "Warning: BAYES does not account for bin-bin correlations on measured input" << endl;
-  
+
   const TMatrixD& res= _res->Mresponse();
   const TVectorD& tru= _res->Vtruth();
   const TVectorD& meas= Vmeasured();

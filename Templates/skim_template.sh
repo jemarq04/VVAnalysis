@@ -1,8 +1,8 @@
 #!/bin/bash
-# This script was created at ${time} with the command: 
+# This script was created at ${time} with the command:
 #     ${command}
 
-# To run this script locally (for testing) from the submit directory 
+# To run this script locally (for testing) from the submit directory
 # uncomment the following lines:
 # INPUT=input_file_list.txt
 # OUTPUT=test.root

@@ -41,7 +41,7 @@ def getComLineArgs():
         default="", help="Selection stage of input files")
     parser.add_argument("--year", type=str,
         default="default", help="Year of Analysis")
-    parser.add_argument("-c", "--channels", 
+    parser.add_argument("-c", "--channels",
                         type=lambda x : [i.strip() for i in x.split(',')],
                         default=["eee","eem","emm","mmm"], help="List of channels"
                         "separated by commas. NOTE: set to Inclusive for NanoAOD")
@@ -52,7 +52,7 @@ def getComLineArgs():
     parser.add_argument("--output_selection", type=str,
         default="", help="Selection stage of output file "
         "(Same as input if not give)")
-    parser.add_argument("-b", "--hist_names", 
+    parser.add_argument("-b", "--hist_names",
                         type=lambda x : [i.strip() for i in x.split(',')],
                         default=["all"], help="List of histograms, "
                         "as defined in ZZ4lRun2DatasetManager, separated "
@@ -144,7 +144,7 @@ prettyVars = {
     'zHigherPt' : 'p_\\text{T}^{\\text{Z}_{\\text{lead}}}',
     'zLowerPt' : 'p_\\text{T}^{\\text{Z}_{\\text{sublead}}}',
     'leppt' : 'p_{T}^{\\ell}',
-    'l1Pt' : 'p_\\text{T}^{\\ell_1}', 
+    'l1Pt' : 'p_\\text{T}^{\\ell_1}',
     'dphiz1z2': '\\Delta\\phi_{Z_{1},Z_{2}}',
     'drz1z2':'\\Delta\\text{R}_{Z_{1},Z_{2}}}',
     }
@@ -215,30 +215,30 @@ def getLumiTextBox():
 # list of variables not counting systematic shifts
 varList=['Mass','ZZPt','ZPt','LepPt','dPhiZ1Z2','dRZ1Z2']
 
-def generateAnalysisInputs():    
+def generateAnalysisInputs():
     #dictionary of SF histograms
     hSF = {}
     year = analysis[4:]
-    eLowRecoFile = ROOT.TFile.Open('data/Ele_Reco_LowEt_%s.root' % (year)) 
+    eLowRecoFile = ROOT.TFile.Open('data/Ele_Reco_LowEt_%s.root' % (year))
     hSF['eLowReco'] = eLowRecoFile.Get('EGamma_SF2D').Clone()
     hSF['eLowReco'].SetDirectory(0)
     eLowRecoFile.Close()
-    
+
     eRecoFile = ROOT.TFile.Open('data/Ele_Reco_%s.root' % (year))
     hSF['eReco'] = eRecoFile.Get('EGamma_SF2D').Clone()
     hSF['eReco'].SetDirectory(0)
     eRecoFile.Close()
-    
+
     eIdFile = ROOT.TFile.Open('data/ElectronSF_Legacy_%s_NoGap.root' % (year))
-    hSF['eSel'] = eIdFile.Get('EGamma_SF2D').Clone() 
+    hSF['eSel'] = eIdFile.Get('EGamma_SF2D').Clone()
     hSF['eSel'].SetDirectory(0)
     eIdFile.Close()
 
     eIdGapFile = ROOT.TFile.Open('data/ElectronSF_Legacy_%s_Gap.root' % (year))
-    hSF['eSelGap'] = eIdGapFile.Get('EGamma_SF2D').Clone() 
+    hSF['eSelGap'] = eIdGapFile.Get('EGamma_SF2D').Clone()
     hSF['eSelGap'].SetDirectory(0)
     eIdGapFile.Close()
-    
+
     if year=="2016":
         mIdFile = ROOT.TFile.Open('data/final_HZZ_SF_2016_legacy_mupogsysts_newLoose_noTracking_1610.root')
     elif year=="2017":
@@ -258,7 +258,7 @@ def generateAnalysisInputs():
     hPU[''] = pileupFile.Get('pileup')
     hPU[''].SetDirectory(0)
     pileupFile.Close()
-    
+
     pileupFileUp = ROOT.TFile.Open('data/PileupWeights%s/PU_minBiasUP.root' % (year))
     hPU['Up'] = pileupFileUp.Get('pileup')
     hPU['Up'].SetDirectory(0)
@@ -275,7 +275,7 @@ def generateAnalysisInputs():
 #sumW is a dictionary with sigsample:sumweights stored
 ROOT.gSystem.Load('Utilities/scripts/ResponseMatrixMaker_cxx')
 def generateResponseClass(varName, channel,sigSamples,sigSamplesPath,sumW,hPUWt,hSF={}):
-    
+
     className = responseClassNames[varName][channel]
 
     for h in hSF.values()+hPUWt.values():
@@ -286,17 +286,17 @@ def generateResponseClass(varName, channel,sigSamples,sigSamplesPath,sumW,hPUWt,
 
     #if not hasattr(ROOT,className):
     #        ROOT.gSystem.Load('Utilities/scripts/ResponseMatrixMaker_cxx','kTRUE')
-    
-    #for example C=<class 'ROOT.BranchValueResponseMatrixMaker<float>'>     
+
+    #for example C=<class 'ROOT.BranchValueResponseMatrixMaker<float>'>
     C = getattr(ROOT, className)
     print("className:",C)
-    
+
     #filelist=["zz4l-powheg"]
-    filelist=[str(i) for i in sigSamples.keys()] 
+    filelist=[str(i) for i in sigSamples.keys()]
     #improve this by getting this info from ZZDatasetManager just like its done in makeCompositeHists
     #sigConstWeights = {sample : (1.256*35900*1.0835)/sumW
     #                   for sample in ConfigureJobs.getListOfFiles(filelist, selection)}
-   
+
     sigConstWeights = {sample : (sigSamples[sample.split("__")[0]]*1000*args['lumi'])/sumW[sample]
                        for sample in [str(i) for i in sigSamples.keys()] }
     #print "sigConstWeights: ",sigConstWeights
@@ -355,7 +355,7 @@ def generateResponseClass(varName, channel,sigSamples,sigSamplesPath,sumW,hPUWt,
 
     altResponseMakers = {}
     for sample in ["zz4l-amcatnlo"]:
-        #we only need to make new responseMatrix for zz4l-amcatnlo, ggZZ responseMatrices are already done above. 
+        #we only need to make new responseMatrix for zz4l-amcatnlo, ggZZ responseMatrices are already done above.
         file_path=sigSamplesPath[sample]
         #print("where are the histos leaking")
         resp = C(channel, varNamesForResponseMaker[varName][channel], vBinning)
@@ -385,13 +385,13 @@ def generateResponseClass(varName, channel,sigSamples,sigSamplesPath,sumW,hPUWt,
 
     for sample in responseMakers.keys():
         print("sigSamples: " ,sample)
-    
+
     for sample in altResponseMakers.keys():
         print("altsigSamples: " ,sample)
 
     for Resp in responseMakers.values()+altResponseMakers.values():
         ROOT.SetOwnership(Resp,False)
-    
+
     return responseMakers,altResponseMakers
 
 _printCounter = 0
@@ -410,7 +410,7 @@ def unfold(varName,chan,responseMakers,altResponseMakers,hSigDic,hAltSigDic,hSig
     print("responseMakers: ",responseMakers)
     hResponseNominal = {s:resp for s,resp in responseMakers.items()}
     print("hResponseNominal:",hResponseNominal)
-    
+
     #Setup() is called here for all signals?
     #hResponseSig1 = hResponseNominal["ggZZ4e"].getResponse("pu_Up")
     #hResponseSig2 = hResponseNominal["ggZZ4m"].getResponse("pu_Up")
@@ -426,13 +426,13 @@ def unfold(varName,chan,responseMakers,altResponseMakers,hSigDic,hAltSigDic,hSig
     hResponse = hResponseNominalTotal.getResponse('nominal')
     hResponse.SetDirectory(0)
     #ROOT.SetOwnership(hResponse,False)
-    #print("where are all the leaks") 
+    #print("where are all the leaks")
     #print "type of hResp: " ,hResponse
     #Now we need to add the rest of the response matrices (MCFMs) to this POHWEG matrix
     #Looping over the values of the dictionary (it doesn't have powheg anymore)
     #print "hResponseNominal after zz-pohwheg:",hResponseNominal
 
-    #Comment this out to implement 
+    #Comment this out to implement
     #Make a matrix just with POWHEG and unfold MadGraph amcnlo signal with it
     #for response in hResponseNominal.values():
     #    print "Is the leak here"
@@ -442,13 +442,13 @@ def unfold(varName,chan,responseMakers,altResponseMakers,hSigDic,hAltSigDic,hSig
     #    hResponse.Add(respMat)
     #    respMat.SetDirectory(0)
     #    print "Is the leak where"
-    #    #ROOT.SetOwnership(respMat,False)  
+    #    #ROOT.SetOwnership(respMat,False)
     #    del respMat
     #    #respMat.Delete()
 
     #print ("The leaks happen in this for loop")
     #hResponseNominalTotal = sum(resp for resp in hResponseNominal.values())
-    
+
 
     #print "type of Total hResp: " ,hResponse
     # But its better to use RooUnfoldResponse here
@@ -481,7 +481,7 @@ def unfold(varName,chan,responseMakers,altResponseMakers,hSigDic,hAltSigDic,hSig
     #hData = hDataDic[chan][varNames[varName]]
     #Change hData to MadGraph signal which is AltSignal in this case
     #hData = hAltSigDic[chan][varNames[varName]]
-    
+
     #Change hData to Powheg signal which is Signal in this case
     hData = hSigDic[chan][varNames[varName]]
 
@@ -499,7 +499,7 @@ def unfold(varName,chan,responseMakers,altResponseMakers,hSigDic,hAltSigDic,hSig
     #No need to rebin certain variables
     #if varNames[varName] not in ['ZZEta']:
         #bins=array.array('d',_binning[varName])
-        #Nbins=len(bins)-1 
+        #Nbins=len(bins)-1
         #hSigNominal=hSigNominal.Rebin(Nbins,"",bins)
         #hTrue=hTrue.Rebin(Nbins,"",bins)
         #hData=hData.Rebin(Nbins,"",bins)
@@ -509,7 +509,7 @@ def unfold(varName,chan,responseMakers,altResponseMakers,hSigDic,hAltSigDic,hSig
     hTrue=rebin(hTrue,varName)
     hData=rebin(hData,varName)
     hBkgTotal=rebin(hBkgTotal,varName)
-    
+
     print("hGenBins after rebin before unfolding: ",hTrue.GetNbinsX())
     xaxisSize = hSigNominal.GetXaxis().GetTitleSize()
     yaxisSize = hTrue.GetXaxis().GetTitleSize()
@@ -522,8 +522,8 @@ def unfold(varName,chan,responseMakers,altResponseMakers,hSigDic,hAltSigDic,hSig
     hUnfolded[''], hCov, hResp = getUnfolded(hSigNominal,hBkgTotal,hTruth[''],hResponse,hData, nIter,True)
 
     #print "hUnfolded['']: ",hUnfolded[''].Integral()
-    
-    #print("hResp: ",hResp) 
+
+    #print("hResp: ",hResp)
     #del hResponse
     # plot covariance and response
     if plotDir and args['plotResponse']:
@@ -539,12 +539,12 @@ def unfold(varName,chan,responseMakers,altResponseMakers,hSigDic,hAltSigDic,hSig
         hResp.Draw(draw_opt)
         texS,texS1=getLumiTextBox()
         #style.setCMSStyle(cRes, '', dataType='  Preliminary', intLumi=35900.)
-        #print "plotDir: ",plotDir 
+        #print "plotDir: ",plotDir
         plotName="response_%s" % (varName)
         output_name="/".join([plotDir,plotName])
         #cRes.Print("%s/response_%s.png" % (plotDir,varName))
         cRes.Print(output_name+".eps")
-        cRes.Print(output_name+".png") 
+        cRes.Print(output_name+".png")
         subprocess.call(["epstopdf", "--outfile=%s" % output_name+".pdf", output_name+".eps"],env={})
         os.remove(output_name+".eps")
 
@@ -560,13 +560,13 @@ def unfold(varName,chan,responseMakers,altResponseMakers,hSigDic,hAltSigDic,hSig
         covName="covariance_%s" % (varName)
         cov_name="/".join([plotDir,covName])
         cCov.Print(cov_name+".eps")
-        cCov.Print(cov_name+".png") 
+        cCov.Print(cov_name+".png")
         subprocess.call(["epstopdf", "--outfile=%s" % cov_name+".pdf", cov_name+".eps"],env={})
         os.remove(cov_name+".eps")
         #style.setCMSStyle(cCov, '', dataType='Preliminary', intLumi=35900.)
         #cCov.Print("%s/covariance_%s.pdf" % (plotDir,varName))
         del cCov
-    if not args['noSyst']: 
+    if not args['noSyst']:
         # luminosity
         lumiUnc = 0.023
         lumiScale = {'Up':1.+lumiUnc,'Down':1.-lumiUnc}
@@ -622,9 +622,9 @@ def unfold(varName,chan,responseMakers,altResponseMakers,hSigDic,hAltSigDic,hSig
                 #print "plotDir: ",plotDir
                 cResLumi.Print("%s/response_%s_%s.png" % (plotDir,varName,'lumi'+sys))
                 cResLumi.Print("%s/response_%s_%s.pdf" % (plotDir,varName,'lumi'+sys))
-            
+
                 del cResLumi
-        
+
         hResponsePU = {s:resp for s,resp in responseMakers.items()}
         hRespPUTot = hResponsePU.pop("zz4l-powheg")
         print("No errors in PU chain?")
@@ -640,7 +640,7 @@ def unfold(varName,chan,responseMakers,altResponseMakers,hSigDic,hAltSigDic,hSig
             #print "hSigSystDic: ",hSigSystDic
             hSigPU = hSigSystDic[chan][varNames[varName]+"_CMS_pileup"+sys]
             hSigPU.SetDirectory(0)
-            #print 'pu_'+sys 
+            #print 'pu_'+sys
             #print "sigHist: ", hSigPU,", ",hSigPU.Integral()
             hBkgPU = hbkgDic[chan][varNames[varName]+"_Fakes"]
             hBkgPU.SetDirectory(0)
@@ -654,7 +654,7 @@ def unfold(varName,chan,responseMakers,altResponseMakers,hSigDic,hAltSigDic,hSig
             hSigPU=rebin(hSigPU,varName)
             hBkgPUTotal=rebin(hBkgPUTotal,varName)
             #print "TotBkgPUHist after Rebinning: ",hBkgPUTotal,", ",hBkgPUTotal.Integral()
-            
+
             hUnfolded['pu_'+sys] = getUnfolded(hSigPU,
                                                      hBkgPUTotal,
                                                      hTruth[''],
@@ -681,7 +681,7 @@ def unfold(varName,chan,responseMakers,altResponseMakers,hSigDic,hAltSigDic,hSig
                 #print "hSigSystDic: ",hSigSystDic
                 hSigSyst = hSigSystDic[chan][varNames[varName]+"_CMS_eff_"+lep+sys]
                 hSigSyst.SetDirectory(0)
-                #print lep+'Eff_'+sys 
+                #print lep+'Eff_'+sys
                 #print "sigHist: ", hSigSyst,", ",hSigSyst.Integral()
                 hBkgSyst = hbkgDic[chan][varNames[varName]+"_Fakes"]
                 hBkgSyst.SetDirectory(0)
@@ -695,7 +695,7 @@ def unfold(varName,chan,responseMakers,altResponseMakers,hSigDic,hAltSigDic,hSig
                 hSigSyst=rebin(hSigSyst,varName)
                 hBkgSystTotal=rebin(hBkgSystTotal,varName)
                 #print "TotBkgSystHist after Rebinning: ",hBkgSystTotal,", ",hBkgSystTotal.Integral()
-                
+
                 hUnfolded[lep+'Eff_'+sys] ,hCovLep,hRespLep = getUnfolded(hSigSyst,
                                                          hBkgSystTotal,
                                                          hTruth[''],
@@ -723,10 +723,10 @@ def unfold(varName,chan,responseMakers,altResponseMakers,hSigDic,hAltSigDic,hSig
                     cResSyst.Print("%s/response_%s_%s.pdf" % (plotDir,varName,lep+'Eff_'+sys))
                     del cResSyst
 
-    del hResponse 
-    
+    del hResponse
+
     #Alternative signal zz4l-amcatnlo
-    hResponseAltNominal={} 
+    hResponseAltNominal={}
     print("AltresponseMakers: ",altResponseMakers)
     hResponseAltNominal = {s:resp for s,resp in altResponseMakers.items()}
     print("hResponseNominal:",hResponseNominal)
@@ -741,7 +741,7 @@ def unfold(varName,chan,responseMakers,altResponseMakers,hSigDic,hAltSigDic,hSig
 
     #Looping over the values of the dictionary (it doesn't have powheg anymore)
     #it only has the MFCFM signals in it so add them to the amcatnlo now!
-    #Comment this out to implement 
+    #Comment this out to implement
     #Make a matrix just with POWHEG and unfold MadGraph amcnlo signal with it
     #for response in hResponseNominal.values():
     #    print "response: ",response
@@ -758,10 +758,10 @@ def unfold(varName,chan,responseMakers,altResponseMakers,hSigDic,hAltSigDic,hSig
     hAltTrue=rebin(hAltTrue,varName)
 
     print("AltTrueHist: ",hAltTrue,", ",hAltTrue.Integral())
-    
+
     hTrueAlt['']=hAltTrue
 
-    hUnfolded['generator']  = getUnfolded(hAltSigNominal,hBkgTotal,hTrueAlt[''],hAltResponse,hData, nIter) 
+    hUnfolded['generator']  = getUnfolded(hAltSigNominal,hBkgTotal,hTrueAlt[''],hAltResponse,hData, nIter)
 
     # make everything local (we'll cache copies)
     for h in hUnfolded.values()+hTruth.values()+hTrueAlt.values():
@@ -779,7 +779,7 @@ def rebin(hist,varName):
     #No need to rebin certain variables but still might need overflow check
     if varName not in ['eta']:
         bins=array.array('d',_binning[varName])
-        Nbins=len(bins)-1 
+        Nbins=len(bins)-1
         hist=hist.Rebin(Nbins,"",bins)
     else:
         Nbins = hist.GetSize() - 2
@@ -793,7 +793,7 @@ def rebin(hist,varName):
 #    #No need to rebin certain variables but still might need overflow check
 #    if varName not in ['eta']:
 #        bins=array.array('d',_Unfoldbinning[varName])
-#        Nbins=len(bins)-1 
+#        Nbins=len(bins)-1
 #        hist=hist.Rebin(Nbins,"",bins)
 #    else:
 #        Nbins = hist.GetSize() - 2
@@ -808,7 +808,7 @@ def getUnfolded(hSig, hBkg, hTrue, hResponse, hData, nIter,withRespAndCov=False)
     print("TrueBeforeResponse: ", hTrue,", ",hTrue.Integral())
     print("SigBeforeResponse: ", hSig,", ",hSig.Integral())
     response = Response(hSig, hTrue.Clone(), hResponse.Clone())
-    #response = Response(0, hTrue.Clone(), hResponse.Clone()) 
+    #response = Response(0, hTrue.Clone(), hResponse.Clone())
     ROOT.SetOwnership(response,False)
     ROOT.SetOwnership(hData,False)
     #Response matrix as a 2D-histogram: (x,y)=(measured,truth)
@@ -880,9 +880,9 @@ def getUnfolded(hSig, hBkg, hTrue, hResponse, hData, nIter,withRespAndCov=False)
 
     #Simply inverting the matrix
     unf = RooUnfoldInv(response, hDataMinusBkg)
-    
+
     #unf = RooUnfoldIter(response, hDataMinusBkg, nIter)
-    print("unf: ",unf) 
+    print("unf: ",unf)
 
     #Unfolds using the method of correction factors
     #unf = RooUnfoldBinbyBin(response, hSig)
@@ -894,7 +894,7 @@ def getUnfolded(hSig, hBkg, hTrue, hResponse, hData, nIter,withRespAndCov=False)
     if not hOut:
         print(hOut)
         raise ValueError("The unfolded histogram got screwed up somehow!")
-    print("hOut: ",hOut,"",hOut.Integral()) 
+    print("hOut: ",hOut,"",hOut.Integral())
     #Returns covariance matrices for error calculation of type withError
     #0: Errors are the square root of the bin content
     #1: Errors from the diagonals of the covariance matrix given by the unfolding
@@ -904,13 +904,13 @@ def getUnfolded(hSig, hBkg, hTrue, hResponse, hData, nIter,withRespAndCov=False)
     #hOut.SetDirectory(0)
     #hResp.SetDirectory(0)
     #ROOT.SetOwnership(hCov,False)
-    print("hCov: ",hCov) 
+    print("hCov: ",hCov)
     print("where is the crash happening?")
     #return hCov.Clone(),hResp.Clone()
     #return hOut
     if withRespAndCov:
         return hOut,hCov.Clone(),hResp.Clone()
-    
+
     #del hDataMinusBkg
     #print "DataMinusbkgIntegral: ",hDataMinusBkg, ", ",hDataMinusBkg.Integral()
     return hOut
@@ -938,17 +938,17 @@ def _generateUncertainties(hDict,norm,varName):
 
         if '_Up' in sys:
             hErr['Up'][sysName] = he
-            #hErr['Up'][sysName] = UnfoldRebin(hErr['Up'][sysName],varName) 
+            #hErr['Up'][sysName] = UnfoldRebin(hErr['Up'][sysName],varName)
         elif '_Down' in sys:
             hErr['Down'][sysName] = he
-            #hErr['Down'][sysName] = UnfoldRebin(hErr['Down'][sysName],varName) 
+            #hErr['Down'][sysName] = UnfoldRebin(hErr['Down'][sysName],varName)
         else:
             hErr['Up'][sysName] = he
-            #hErr['Up'][sysName]=UnfoldRebin(hErr['Up'][sysName],varName) 
+            #hErr['Up'][sysName]=UnfoldRebin(hErr['Up'][sysName],varName)
             he2 = he.Clone()
             hErr['Down'][sysName] = he2
-            #hErr['Down'][sysName] = UnfoldRebin(hErr['Down'][sysName],varName) 
-    
+            #hErr['Down'][sysName] = UnfoldRebin(hErr['Down'][sysName],varName)
+
     return hErr
 
 def _sumUncertainties(errDict,varName):
@@ -983,7 +983,7 @@ def _sumUncertainties(errDict,varName):
         #print "totUncDn: ",totUncDn
         hUncUp.SetBinContent(i,totUncUp)
         hUncDn.SetBinContent(i,totUncDn)
-    print("hUncUp: ",hUncUp,"",hUncUp.Integral()) 
+    print("hUncUp: ",hUncUp,"",hUncUp.Integral())
     print("hUncDown: ",hUncDn,"",hUncDn.Integral())
 
     return hUncUp, hUncDn
@@ -1050,7 +1050,7 @@ if args['test']:
         fUse = ROOT.TFile("SystGenFiles/Hists10Mar2020-ZZ4l2016_Moriond.root","update")
     elif analysis=="ZZ4l2017":
         fUse = ROOT.TFile("SystGenFiles/Hists10Mar2020-ZZ4l2017_Moriond.root","update")
-    elif analysis=="ZZ4l2018": 
+    elif analysis=="ZZ4l2018":
         fUse = ROOT.TFile("SystGenFiles/Hists11Mar2020-ZZ4l2018_MVA.root","update")
     fOut=fUse
     for dataset in TotSigSampleList:
@@ -1059,7 +1059,7 @@ if args['test']:
         sigSamplesPath[dataset]=file_path
 
 #Sum all data and return a TList of all histograms that are booked. And an empty datSumW dictionary as there are no sumWeights
-alldata,dataSumW = HistTools.makeCompositeHists(fOut,"AllData", 
+alldata,dataSumW = HistTools.makeCompositeHists(fOut,"AllData",
     ConfigureJobs.getListOfFilesWithXSec([args['analysis']+"data"],manager_path), args['lumi'],
     underflow=False, overflow=False)
 
@@ -1086,7 +1086,7 @@ ewkcorr = HistTools.getDifference(fOut, "DataEWKCorrected", "AllData", "AllEWK")
 
 print("Signals: ",ewkSumW)
 #print the sum for a sample (zz4l-powheg)
-zzSumWeights = ewkSumW["zz4l-powheg"]  
+zzSumWeights = ewkSumW["zz4l-powheg"]
 #print "sumW (zz4l-powheg): ",zzSumWeights
 
 #getHistInDic function also takes care of adding the histograms in eemm+mmee, hence the input here is channels=[eeee,eemm,mmmm]
@@ -1122,10 +1122,10 @@ print("runVariables: ",runVariables)
 ##Systematic histos
 systList=[]
 for chan in channels:
-    for sys in ["Up","Down"]: 
+    for sys in ["Up","Down"]:
         for s in runVariables:
             systList.append(varNames[s]+"_CMS_pileup"+sys)
-            for lep in set(chan):         
+            for lep in set(chan):
                 systList.append(varNames[s]+"_CMS_eff_"+lep+sys)
 
 print(systList)
@@ -1161,7 +1161,7 @@ for varName in runVariables:
         if not os.path.exists(OutputDir):
             mkdir(OutputDir)
             OutputDirs[chan]=OutputDir
-         
+
         responseMakers,altResponseMakers = generateResponseClass(varName, chan,sigSampleDic,sigSamplesPath,ewkSumW,PUhistos,SFhistos)
         print("hUnfolded in main: ", hUnfolded)
         print("hTrue in main: ", hTrue)
@@ -1170,7 +1170,7 @@ for varName in runVariables:
         print("returning unfolded? ",hUnfolded[chan])
         #print("returning truth? ",hTrue[chan])
 
-        if not args['noSyst']: 
+        if not args['noSyst']:
             hErr[chan]= _generateUncertainties(hUnfolded[chan],norm,varName)
             print("hErr[",chan,"]: ",hErr[chan])
             (hUncUp, hUncDn) = _sumUncertainties(hErr[chan],varName)
@@ -1265,17 +1265,16 @@ for varName in runVariables:
         TotUncDn.SetName(TotUncDnName)
         savehists.append(TotUncDn)
 
-if args['plotResponse']:       
-    for cat in ["eeee","eemm","mmmm"]:   
+if args['plotResponse']:
+    for cat in ["eeee","eemm","mmmm"]:
     #This is where we put all the response plots in html format for quick access/debugging
         makeSimpleHtml.writeHTML(os.path.expanduser(OutputDirs[cat].replace("/plots", "")), "2D ResponseMatrices (from MC)")
 
 today = datetime.date.today().strftime("%d%b%Y")
-tmpFileName = "PowMatrix_PowUnfHistsWOverflow-%s-%s.root" % (today, analysis) 
+tmpFileName = "PowMatrix_PowUnfHistsWOverflow-%s-%s.root" % (today, analysis)
 fHistOut = ROOT.TFile.Open(tmpFileName, "update")
 #fOut = ROOT.TFile.Open("/".join([outputFolder, outputFile]), "RECREATE")
 fHistOut.cd()
 for newhists in savehists:
     newhists.Write()
 fHistOut.Close()
-

@@ -45,7 +45,7 @@ public :
     Float_t GenJet_mass[N_KEEP_GEN_];
     Float_t GenMET_pt;
     Float_t GenMET_phi;
-    
+
     TBranch* b_genWeight;
     TBranch* b_nGenPart;
     TBranch* b_GenPart_pt;
@@ -62,7 +62,7 @@ public :
     TBranch* b_GenJet_status;
     TBranch* b_GenMET_pt;
     TBranch* b_GenMET_phi;
-    
+
     // Readers to access the data (delete the ones you do not need).
     virtual void    Init(TTree *tree) override;
     NanoGenSelectorBase(TTree * /*tree*/ =0) { }
@@ -80,6 +80,3 @@ protected:
 };
 
 #endif
-
-
-

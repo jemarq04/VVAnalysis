@@ -51,7 +51,7 @@ Bool_t disambiguateFinalStates::Process(Long64_t entry)
 
   fCurrentRun = run;
   fCurrentEvt = evt;
-  
+
   // TODO Understand why this gives segfault for chains
   // with multiple entries
   if ( fCutFormula && fCutFormula->EvalInstance() > 0. )

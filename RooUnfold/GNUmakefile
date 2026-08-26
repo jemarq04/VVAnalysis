@@ -279,7 +279,7 @@ OLIST         = $(addprefix $(OBJDIR),$(addsuffix .$(ObjSuf),$(basename $(SRCLIS
 ifneq ($(filter %.for,$(SRCLIST)),)
   ifeq ($(findstring 77,$(FC)),77)
 	GCCLIBS       = -lg2c
-  endif	
+  endif
 endif
 
 ROOTLIBFILES := $(wildcard $(patsubst -l%,$(ROOTLIBDIR)/lib%.$(DllSuf),$(filter -l%,$(ROOTLIBS))))

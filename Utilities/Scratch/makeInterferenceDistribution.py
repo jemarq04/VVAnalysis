@@ -11,4 +11,3 @@ for chan in ["eee", "eem", "emm", "mmm",]:
         for i in range(2, int_hist.GetNbinsX()+1):
             int_hist.SetBinContent(i, hist.GetBinContent(i)*(1.0 + 0.04*(-1 if var == "Down" else 1)))
         print(int_hist.Write())
-        

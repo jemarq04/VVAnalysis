@@ -22,12 +22,12 @@ def getDefaultParser():
                         required=False, default="WZxsec2016",
                         help="Analysis name, used in selecting the cut json")
     input_group = parser.add_mutually_exclusive_group(required=True)
-    input_group.add_argument("-f", "--filenames", 
+    input_group.add_argument("-f", "--filenames",
                         type=lambda x : [i.strip() for i in x.split(',')],
                         help="List of input file names, "
                         "as defined in ZZ4lRun2DatasetManager, separated "
                         "by commas")
-    input_group.add_argument("--inputs_from_file", nargs=3, 
+    input_group.add_argument("--inputs_from_file", nargs=3,
                         metavar=('filelist', 'nPerJob', 'jobNum'),
                         help="Text file with one input file per line, "
                         "number of files to process per job, job number")
@@ -37,7 +37,7 @@ def readPythonOrJson(file_path):
     if ".py" not in file_path[-3:] and ".json" not in file_path[-5:]:
         if os.path.isfile(file_path+".py"):
             file_path = file_path +".py"
-        elif os.path.isfile(file_path+".json"): 
+        elif os.path.isfile(file_path+".json"):
             file_path = file_path +".json"
         else:
             raise ValueError("Configuration file %s(.py/json) not found!" % file_path)
@@ -71,14 +71,14 @@ def readInfo(file_path):
     else:
         info = readJson(file_path)
     return info
-    
+
 def readJson(json_file_name):
     json_info = {}
     with open(json_file_name) as json_file:
         try:
             json_info = json.load(json_file)
         except ValueError as err:
-            print("Error reading JSON file %s. The error message was:" % json_file_name) 
+            print("Error reading JSON file %s. The error message was:" % json_file_name)
             print(err)
     return json_info
 
@@ -89,7 +89,7 @@ def getHistInfo(analysis, input_hists, noConfig=False):
         return (input_hists, [])
 
     manager_path = ConfigureJobs.getManagerPath()
-    ConfigHistTools = imp.load_source("ConfigHistTools", 
+    ConfigHistTools = imp.load_source("ConfigHistTools",
         "/".join([manager_path, "ZZ4lRun2DatasetManager/Utilities/python/ConfigHistTools.py"]))
     # For histograms produced with some postprocessing on the hist file
     excludedHistPatterns = ["wCR", "unrolled", "YieldByChannel"]
@@ -103,7 +103,7 @@ def getHistInfo(analysis, input_hists, noConfig=False):
 
 def getHistExpr(hist_names, selection):
     manager_path = ConfigureJobs.getManagerPath()
-    ConfigHistTools = imp.load_source("ConfigHistTools", 
+    ConfigHistTools = imp.load_source("ConfigHistTools",
         "/".join([manager_path, "ZZ4lRun2DatasetManager/Utilities/python/ConfigHistTools.py"]))
 
     info = ROOT.TList()
@@ -116,4 +116,3 @@ def getHistExpr(hist_names, selection):
             bin_expr = "{nbinsx}, {xmin}, {xmax}, {nbinsy}, {ymin}, {ymax}".format(**bin_info)
         info.Add(ROOT.TNamed(hist_name, " $ ".join([hist_name, bin_expr])))
     return info
-

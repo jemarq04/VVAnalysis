@@ -296,7 +296,7 @@ private:
   const size_t iAlphaSUp;
   const size_t iAlphaSDn;
   float scale;
-  
+
   bool skipSyst;
 };
 

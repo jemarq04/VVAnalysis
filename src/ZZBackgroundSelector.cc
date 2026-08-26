@@ -5,8 +5,8 @@
 void ZZBackgroundSelector::SlaveBegin(TTree * /*tree*/)
 {
     //systematics_ = {
-    //    {jetEnergyScaleUp, "CMS_scale_jUp"}, 
-    //    {jetEnergyScaleDown, "CMS_scale_jDown"}, 
+    //    {jetEnergyScaleUp, "CMS_scale_jUp"},
+    //    {jetEnergyScaleDown, "CMS_scale_jDown"},
     //    {jetEnergyResolutionUp, "CMS_res_jUp"},
     //    {jetEnergyResolutionDown, "CMS_res_jDown"},
     //};
@@ -22,16 +22,16 @@ void ZZBackgroundSelector::SlaveBegin(TTree * /*tree*/)
 void ZZBackgroundSelector::SetupNewDirectory()
 {
     ZZSelector::SetupNewDirectory();
-   
+
     // Insure that hist ranges are exactly the same as ZZSelector, just change name
     for (const auto && obj : *currentHistDir_) {
         std::string name = obj->GetName();
         TNamed* named = dynamic_cast<TNamed*>(obj);
         named->SetName(name.insert(name.length()-4, "Fakes_").c_str());
-    } 
+    }
       AddObject<TH1D>(Z1MassHistPPPF_, ("Z1Mass_PPPF_"+channelName_).c_str(), "Z1Mass; m_{Z_{1}} [GeV]; Events;", 60, 0, 120);
       AddObject<TH1D>(Z1MassHistPPFF_, ("Z1Mass_PPFF_"+channelName_).c_str(), "Z1Mass; m_{Z_{1}} [GeV]; Events;", 60, 0, 120);
-      
+
       AddObject<TH1D>(Z2MassHistPPPF_, ("Z2Mass_PPPF_"+channelName_).c_str(), "Z2Mass; m_{Z_{2}} [GeV]; Events;", 60, 0, 120);
       AddObject<TH1D>(Z2MassHistPPFF_, ("Z2Mass_PPFF_"+channelName_).c_str(), "Z2Mass; m_{Z_{2}} [GeV]; Events;", 60, 0, 120);
 
@@ -92,13 +92,13 @@ float ZZBackgroundSelector::getEventWeight(Long64_t entry) {
 
 void ZZBackgroundSelector::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::string> variation) {
     ZZSelector::LoadBranchesUWVV(entry, variation);
-    SetZ1Z2Masses(); 
+    SetZ1Z2Masses();
     if (!ZZSelection()){
       return;}
     //std::cout<<"isNonPrompt_ from ZZSelector: "<<isNonPrompt_<<std::endl;
     isNonPrompt_ = true;
     //std::cout<<"isNonPrompt_ from ZZBackgroundSelector: "<<isNonPrompt_<<std::endl;
-    //We don't want systematics to run for data-driven nonPrompt Estimate so save time and space 
+    //We don't want systematics to run for data-driven nonPrompt Estimate so save time and space
     weight = getEventWeight(entry);
     //std::cout<<"eventWeight in loadBranchesUWVV: "<<weight<<std::endl;
 }
@@ -120,7 +120,7 @@ float ZZBackgroundSelector::getl3FakeRate(Long64_t entry) {
     else{
       fr=0.;
     }
-    return fr/(1-fr); 
+    return fr/(1-fr);
 }
 
 float ZZBackgroundSelector::getl4FakeRate(Long64_t entry) {
@@ -141,7 +141,7 @@ float ZZBackgroundSelector::getl4FakeRate(Long64_t entry) {
     else{
       fr=0.;
     }
-    return fr/(1-fr); 
+    return fr/(1-fr);
 }
 //Remember that we only build Z1 (Real Z) out of OS-SF tight leptons
 bool ZZBackgroundSelector::IsPPPFRegion() {
@@ -182,7 +182,7 @@ void ZZBackgroundSelector::SetZ1Z2Masses() {
         l4Eta = templ3Eta;
       }
     }
-    else if(tightZ2Leptons() && !tightZ1Leptons()){  
+    else if(tightZ2Leptons() && !tightZ1Leptons()){
       Z1mass = (lepton3+lepton4).M();
       Z2mass = (lepton1+lepton2).M();
       Z1pt = (lepton3+lepton4).Pt();
@@ -260,4 +260,3 @@ void ZZBackgroundSelector::SetZ1Z2Masses() {
       }
     }
 }
-

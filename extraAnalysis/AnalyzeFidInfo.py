@@ -22,12 +22,12 @@ def countXY(h,hrsp,xy): #value of xy: "x" or "y"
     h2 = h.Clone(h.GetName()+"Count"+xy)
     nbins = h.GetNbinsX()
     assert nbins == hrsp.GetNbinsX()
-    assert nbins == hrsp.GetNbinsY() 
+    assert nbins == hrsp.GetNbinsY()
     for i in range(1,nbins+1):
         if xy == "x":
             sumbin = sum([hrsp.GetBinContent(i,j) for j in range(1,nbins+1)])
             h2.SetBinContent(i,h.GetBinContent(i)-sumbin)
-        
+
         if xy == "y":
             sumbin = sum([hrsp.GetBinContent(j,i) for j in range(1,nbins+1)])
             h2.SetBinContent(i,h.GetBinContent(i)-sumbin)
@@ -54,14 +54,14 @@ def getLumiTextBox():
     texS2.SetTextColor(r.kBlack)
     texS2.SetTextSize(0.045)
     texS2.Draw()
-    
+
     return texS,texS1,texS2
 
 def redrawXaxis(h,varName):
-    
+
     if "Full" in varName and "Mass" in varName:
             xaxis = r.TGaxis(h.GetXaxis().GetXmin(),h.GetMinimum(),h.GetXaxis().GetXmax(),h.GetMinimum(),h.GetXaxis().GetXmin(),h.GetXaxis().GetXmax(),510,"G")
-        
+
             xaxis.SetMoreLogLabels(True)
             xaxis.SetTickLength(0.03)
             #xaxis.SetLabelSize(0.025)
@@ -151,7 +151,7 @@ with open('varsFile.json') as var_json_file:
 units = {}
 prettyVars = {}
 for key in myvar_dict.keys(): #key is the variable
-    
+
     units[key] = myvar_dict[key]["units"]
     prettyVars[key] = myvar_dict[key]["prettyVars"]
 
@@ -207,14 +207,14 @@ for var in vars:
             h.GetXaxis().SetTickLength(0)
             h.SetLineWidth(4*h.GetLineWidth())
 
-              
+
         c1.Divide(2,1)
 
         c1.cd(1)
         if "Full" in var:
             r.gPad.SetLogx()
         else:
-            r.gPad.SetLogx(0)  
+            r.gPad.SetLogx(0)
 
         portionR,legend1 = plotHist(hR,hdx,"Total signal","Out of fiducial")
         t1,t2,t3 = getLumiTextBox()
@@ -227,18 +227,18 @@ for var in vars:
         elif "Mass" in var:
             texf = extraTex(0.65,0.7,"On-shell ZZ")
         if "[0]" in var:
-            texf = extraTex(0.65,0.7,"Events with #geq 1 jet")    
+            texf = extraTex(0.65,0.7,"Events with #geq 1 jet")
         if "[1]" in var:
-            texf = extraTex(0.65,0.7,"Events with #geq 2 jets")   
+            texf = extraTex(0.65,0.7,"Events with #geq 2 jets")
 
-        
+
         #pdb.set_trace()
-        
+
         c1.cd(2)
         if "Full" in var:
             r.gPad.SetLogx()
         else:
-            r.gPad.SetLogx(0)  
+            r.gPad.SetLogx(0)
 
         portionT,legend2 = plotHist(hT,hdy,"Total signal","Not reconstructed")
         t4,t5,t6 = getLumiTextBox()
@@ -251,10 +251,10 @@ for var in vars:
         elif "Mass" in var:
             texf2 = extraTex(0.65,0.7,"On-shell ZZ")
         if "[0]" in var:
-            texf2 = extraTex(0.65,0.7,"Events with #geq 1 jet")    
+            texf2 = extraTex(0.65,0.7,"Events with #geq 1 jet")
         if "[1]" in var:
-            texf2 = extraTex(0.65,0.7,"Events with #geq 2 jets") 
-        
+            texf2 = extraTex(0.65,0.7,"Events with #geq 2 jets")
+
         c1.SaveAs(os.path.join(outdir,"%s_%s.png"%(var,chan)))
 
         #if chan == "Total":
@@ -269,10 +269,7 @@ if year != "tot":
     yearp = "20"+year
 else:
     yearp = "Run2"
-pdfcommand.append(os.path.join("./","%s.pdf"%yearp))      
-#pdfcommand2.append(os.path.join(outdir,"channels.pdf"))   
+pdfcommand.append(os.path.join("./","%s.pdf"%yearp))
+#pdfcommand2.append(os.path.join(outdir,"channels.pdf"))
 subprocess.call(pdfcommand)
 #subprocess.call(pdfcommand2)
-
-
-

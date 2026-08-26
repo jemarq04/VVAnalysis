@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-#
 # PrettyTable 0.5
 # Copyright (c) 2009, Luke Maurits <luke@maurits.id.au>
 # All rights reserved.
@@ -357,12 +355,12 @@ class PrettyTable:
 
     def get_latex_string(self, start=0, end=None, fields=None, header=True, border=True, hrules=FRAME, sortby=None, reversesort=False):
         self.set_border_chars("&", "", "")
-        latex_string = "\\begin{tabular}{ %s } \n\hline" % "|".join(["l" for i in self.fields])
+        latex_string = "\\begin{tabular}{ %s } \n\\hline" % "|".join(["l" for i in self.fields])
         for line in self.get_string(start, end, fields, header, border, hrules, sortby, reversesort).splitlines():
             latex_line = line.replace("& ", "", 1)
             latex_string += latex_line[::-1].replace("&",r"\\",1)[::-1] + "\n"
         latex_string += "\\hline\n\\end{tabular}"
-        return latex_string 
+        return latex_string
 
     def _stringify_hrule(self, fields=None, border=True):
 
@@ -631,5 +629,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-

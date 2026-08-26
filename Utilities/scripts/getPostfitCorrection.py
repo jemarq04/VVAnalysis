@@ -10,9 +10,9 @@ def getComLineArgs():
                         help="Name of process")
     parser.add_argument("--backgroundOnly", action='store_true',
                         help="Use background only fit rather than s+b")
-    parser.add_argument("-c", "--channels", type=lambda x: [str(i) for i in x.split(",")], 
+    parser.add_argument("-c", "--channels", type=lambda x: [str(i) for i in x.split(",")],
                         default=["eee","mmm","eem","emm",],
-                        help="List (separate by commas) of channels to plot") 
+                        help="List (separate by commas) of channels to plot")
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--bins", type=lambda x: [int(i) for i in x.split(",")], default=0,
                         help="Bins in the histogram to include (separate by commas)")
@@ -52,8 +52,7 @@ else:
         postfit_err += postfit_hist.GetBinError(i)**2
     prefit_err = math.sqrt(prefit_err)
     postfit_err = math.sqrt(postfit_err)
-    
+
 print("Prefit integral across all bins = %0.2f +/- %0.2f (stat)" % (prefit_sum, prefit_err))
 print("Postfit integral across all bins = %0.2f +/- %0.2f (syst)" % (postfit_sum, postfit_err))
 print("    Ratio = %0.3f +/- %0.3f" % ((postfit_sum/prefit_sum), (postfit_err/prefit_sum)))
-

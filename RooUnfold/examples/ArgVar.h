@@ -19,12 +19,12 @@
 
 class ArgVar : public TNamed {
 public:
-  const char *defhelp;      //! 
-  Int_t      *ivar;  //! 
-  Int_t      idef;   
-  Double_t   *fvar;   //! 
+  const char *defhelp;      //!
+  Int_t      *ivar;  //!
+  Int_t      idef;
+  Double_t   *fvar;   //!
   Double_t   fdef;
-  TString    *svar;   //! 
+  TString    *svar;   //!
   TString    sdef;
   bool       setdef;
   ArgVar ()                           :                defhelp(0), ivar(0), idef(0), fvar(0), fdef(0), svar(0), setdef(false) {}

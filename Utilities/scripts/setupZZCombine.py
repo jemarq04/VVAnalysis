@@ -9,7 +9,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 cardtool = CombineCardTools.CombineCardTools()
 
-manager_path = ConfigureJobs.getManagerPath() 
+manager_path = ConfigureJobs.getManagerPath()
 manager_name = ConfigureJobs.getManagerName()
 #print "manager_path: ", manager_path
 #print "manager_name: ", manager_name
@@ -22,7 +22,7 @@ config_factory = ConfigHistFactory(
     "ZZ4l2016/LooseLeptons",
 )
 
-plot_groups = ["HZZ-signal","qqZZ-powheg","ggZZ", "VVV", "data", "nonprompt",] 
+plot_groups = ["HZZ-signal","qqZZ-powheg","ggZZ", "VVV", "data", "nonprompt",]
 plotGroupsMap = {name : config_factory.getPlotGroupMembers(name) for name in plot_groups}
 
 xsecs  = ConfigureJobs.getListOfFilesWithXSec([f for files in plotGroupsMap.values() for f in files])
@@ -53,7 +53,7 @@ cardtool.setOutputFolder("/eos/user/u/uhussain/CombineStudies/ZZ/%s2016Fit" % fi
 for year in ["2016"]:#fileMap.keys():
     cardtool.setLumi(lumiMap[year])
     cardtool.setInputFile(fileMap[year])
-    print(fileMap[year], lumiMap[year]) 
+    print(fileMap[year], lumiMap[year])
     cardtool.setOutputFile("ZZCombineInput_{year}.root".format(year=year))
     #cardtool.setOutputFolder("/eos/user/k/kelong/CombineStudies/ZZ/%s%sFit" % (fitvar, year))
     for process in plot_groups:
@@ -66,4 +66,3 @@ for year in ["2016"]:#fileMap.keys():
         cardtool.setTemplateFileName("Templates/CombineCards/ZZSelection/ZZ_template{year}_{channel}.txt")
         logging.info("Writting cards for channel %s" % chan)
         cardtool.writeCards(chan, nuissance_map[chan], year=year)
-

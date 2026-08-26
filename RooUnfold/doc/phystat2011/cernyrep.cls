@@ -28,7 +28,7 @@
 %                                                              %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\def\fileversion{2.06} 
+\def\fileversion{2.06}
 \def\filedate{2009/05/13}
 \def\docdate {2009/05/13}
 \NeedsTeXFormat{LaTeX2e}
@@ -49,8 +49,8 @@
 
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{report}}
 \ProcessOptions
- 
-% openright option starts chapters, etc. on RH page 
+
+% openright option starts chapters, etc. on RH page
 \LoadClass[a4paper,11pt,openright]{report}
 
 \RequirePackage{ifthen,calc}
@@ -91,7 +91,7 @@
                          \widowpenalty4000%
                          \sfcode`\.\@m}
                        {\endlist}
-                    }   
+                    }
    }
    {\RequirePackage{cite}}%
 }
@@ -174,5 +174,5 @@
 %%% Text font : Times Roman
 \renewcommand{\rmdefault}{ptm}
 
- 
+
 \endinput

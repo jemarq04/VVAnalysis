@@ -8,7 +8,7 @@ hist_mjj_mtwz = dir.Get("mjj_mtwz_2D_mmm")
 for i in ["eee", "eem", "emm"]:
     temp_hist = dir.Get("mjj_mtwz_2D_"+i)
     hist_mjj_mtwz.Add(temp_hist)
-    
+
 hist_mjj_mtwz.GetXaxis().SetTitle("m_{jj} (GeV)")
 hist_mjj_mtwz.GetYaxis().SetTitle("M_{T}(3\\ell, p_{T}^{\\mathrm{miss}})")
 print("Correlation factor is", hist_mjj_mtwz.GetCorrelationFactor())

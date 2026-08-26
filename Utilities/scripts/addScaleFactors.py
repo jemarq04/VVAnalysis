@@ -12,32 +12,32 @@ def addWeightsForState(original_file, state):
     elif state == "eem":
         leps = ["e1", "e2", "m"]
         mTightIso_weight = array('f', [0])
-        mTightIso_branch = tree.Branch('mTightIsoSF', mTightIso_weight, 'mTightIsoSF/F') 
+        mTightIso_branch = tree.Branch('mTightIsoSF', mTightIso_weight, 'mTightIsoSF/F')
         tree.SetBranchStatus("mTightIsoSF", 1)
     elif state == "emm":
         leps = ["e", "m1", "m2"]
         m1TightIso_weight = array('f', [0])
-        m1TightIso_branch = tree.Branch('m1TightIsoSF', m1TightIso_weight, 'm1TightIsoSF/F') 
+        m1TightIso_branch = tree.Branch('m1TightIsoSF', m1TightIso_weight, 'm1TightIsoSF/F')
         tree.SetBranchStatus("m1TightIsoSF", 1)
         m2TightIso_weight = array('f', [0])
-        m2TightIso_branch = tree.Branch('m2TightIsoSF', m2TightIso_weight, 'm2TightIsoSF/F') 
+        m2TightIso_branch = tree.Branch('m2TightIsoSF', m2TightIso_weight, 'm2TightIsoSF/F')
         tree.SetBranchStatus("m2TightIsoSF", 1)
     elif state == "mmm":
         leps = ["m1", "m2", "m3"]
         m1TightIso_weight = array('f', [0])
-        m1TightIso_branch = tree.Branch('m1TightIsoSF', m1TightIso_weight, 'm1TightIsoSF/F') 
+        m1TightIso_branch = tree.Branch('m1TightIsoSF', m1TightIso_weight, 'm1TightIsoSF/F')
         tree.SetBranchStatus("m1TightIsoSF", 1)
         m2TightIso_weight = array('f', [0])
-        m2TightIso_branch = tree.Branch('m2TightIsoSF', m2TightIso_weight, 'm2TightIsoSF/F') 
+        m2TightIso_branch = tree.Branch('m2TightIsoSF', m2TightIso_weight, 'm2TightIsoSF/F')
         tree.SetBranchStatus("m2TightIsoSF", 1)
         m3TightIso_weight = array('f', [0])
-        m3TightIso_branch = tree.Branch('m3TightIsoSF', m3TightIso_weight, 'm3TightIsoSF/F') 
+        m3TightIso_branch = tree.Branch('m3TightIsoSF', m3TightIso_weight, 'm3TightIsoSF/F')
         tree.SetBranchStatus("m3TightIsoSF", 1)
     else:
         print("That don't work :(")
         exit(1)
     pileup_weight = array('f', [0])
-    pileup_branch = tree.Branch('pileupSF', pileup_weight, 'pileupSF/F') 
+    pileup_branch = tree.Branch('pileupSF', pileup_weight, 'pileupSF/F')
     tree.SetBranchStatus("pileupSF", 1)
 
     lepTightId_weights = [array('f', [0]), array('f', [0]), array('f', [0])]
@@ -47,8 +47,8 @@ def addWeightsForState(original_file, state):
     tree.SetBranchStatus("pileupSF", 1)
     tree.SetBranchStatus("nTruePU", 1)
     for i, lep in enumerate(leps):
-        lepTightId_branches.append(tree.Branch('%sTightIDSF' % lep, lepTightId_weights[i], '%sTightIDSF/F' % lep)) 
-        lepMediumId_branches.append(tree.Branch('%sMediumIDSF' % lep, lepMediumId_weights[i], '%sMediumIDSF/F' % lep)) 
+        lepTightId_branches.append(tree.Branch('%sTightIDSF' % lep, lepTightId_weights[i], '%sTightIDSF/F' % lep))
+        lepMediumId_branches.append(tree.Branch('%sMediumIDSF' % lep, lepMediumId_weights[i], '%sMediumIDSF/F' % lep))
         tree.SetBranchStatus("%sPt" % lep, 1)
         tree.SetBranchStatus("%sEta" % lep, 1)
         tree.SetBranchStatus("%sTightIDSF" % lep, 1)
@@ -61,7 +61,7 @@ def addWeightsForState(original_file, state):
             if "e" in lep:
                 lepTightId_weights[i][0] = ROOT.electronTightIdSF(absEta, pt)
                 lepMediumId_weights[i][0] = ROOT.electronMedIdSF(absEta, pt)
-            else: 
+            else:
                 lepTightId_weights[i][0] = ROOT.muonTightIdSF(absEta, pt)
                 lepMediumId_weights[i][0] = ROOT.muonMedIdSF(absEta, pt)
             lepTightId_branches[i].Fill()
@@ -121,4 +121,3 @@ original_file = ROOT.TFile(args.input_file, "UPDATE")
 states = ['eee', 'eem', 'emm', 'mmm']
 for state in states:
     addWeightsForState(original_file, state)
-

@@ -271,7 +271,7 @@ Int_t RooUnfoldTestHarness::Train()
     Double_t xt= (*&xtrue)[i];    // work round CINT crash on xtrue[i] (MacOSX x86_64 ROOT bug #75874)
     Double_t xto= Overflow (xt, ntx, xlo, xhi);
     hTrainTrue->Fill (xto);
-    if (Eff (xt, xlo, xhi, effxlo, effxhi)) {    
+    if (Eff (xt, xlo, xhi, effxlo, effxhi)) {
       Double_t x=  Smear   (xt, ntx, xlo, xhi, xbias, xsmear);
       Double_t xo= Overflow (x, nmx, xlo, xhi);
       hTrain  ->Fill (xo);
@@ -396,7 +396,7 @@ Int_t RooUnfoldTestHarness::Unfold ()
   unfold->SetNToys(ntoys);
   unfold->IncludeSystematics(dosys);
   SetMeasuredCov();
-  
+
 #ifdef USE_TUNFOLD_H
   if (method == RooUnfold::kTUnfold) (dynamic_cast<RooUnfoldTUnfold*>(unfold))->SetRegMethod((TUnfold::ERegMode)regmethod);
 #endif
@@ -416,7 +416,7 @@ Int_t RooUnfoldTestHarness::Unfold ()
   }
 
   // Calculate pulls and residuals
-  hRes=   dynamic_cast<TH1*>(hReco->Clone ("res"));   
+  hRes=   dynamic_cast<TH1*>(hReco->Clone ("res"));
   hRes  ->Reset();
   hRes  ->SetTitle ("Residuals");
   hPulls= dynamic_cast<TH1*>(hReco->Clone ("pulls"));
@@ -558,25 +558,25 @@ void RooUnfoldTestHarness::PlotParms()
   if (minparm!=-1e30)  parms->SetMinParm(minparm);
   if (stepsize>0)      parms->SetStepSizeParm(stepsize);
   hParmChi2= parms->GetChi2();
-  hParmChi2->Draw("P");    
+  hParmChi2->Draw("P");
   canvas->Update();
 
   if (onepage && ipad>=onepage) return;
   if (onepage) canvas->cd(++ipad);
   hParmErr= parms->GetRMSError();
-  hParmErr->Draw("P");    
+  hParmErr->Draw("P");
   canvas->Update();
 
   if (onepage && ipad>=onepage) return;
   if (onepage) canvas->cd(++ipad);
   hParmRes= parms->GetMeanResiduals();
-  hParmRes->Draw("P"); 
+  hParmRes->Draw("P");
   canvas->Update();
 
   if (onepage && ipad>=onepage) return;
   if (onepage) canvas->cd(++ipad);
   hParmRms= parms->GetRMSResiduals();
-  hParmRms->Draw("P"); 
+  hParmRms->Draw("P");
   canvas->Update();
 }
 
@@ -843,7 +843,7 @@ Double_t RooUnfoldTestHarness::Smear (Double_t x, Int_t nt, Double_t lo, Double_
   // Apply a gaussian smearing and systematic translation to the truth.
 
   Double_t xsigma = (hi-lo) * smear / Double_t(nt);     // smear sigma
-  
+
   if (!addbias || x < lo || x > hi)
     bias= 0.0;
   else {
@@ -853,7 +853,7 @@ Double_t RooUnfoldTestHarness::Smear (Double_t x, Int_t nt, Double_t lo, Double_
     Double_t xm= (2*x-(hi+lo)) / (hi-lo), xm2= xm*xm;
     bias *= 1.0-(xm2*xm2);
   }
-  
+
   Double_t delta= xsigma <= 0.0 ? bias : gRandom->Gaus (bias, xsigma);     // bias and smear
   if (verbose>=3) cout << "SMEAR " << x << " " << xsmear << " " << xsigma << endl;
   return x+delta;

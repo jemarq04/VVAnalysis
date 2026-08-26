@@ -33,7 +33,7 @@ class RooUnfoldParms : public TNamed {
     void SetMinParm(double min);
     void SetMaxParm(double max);
     void SetStepSizeParm(double size);
-    
+
     private:
     bool _done_math;
     TH1* hrms; // Output plot

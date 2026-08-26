@@ -1,6 +1,6 @@
 {
     "Object" : {
-        "e" : [ 
+        "e" : [
             "{object_name}Pt > 10",
             "abs({object_name}Eta) <  2.5",
             "{object_name}IsCBVIDTight > 0.5",
@@ -28,5 +28,3 @@
     "Event" : [
     ]
 }
-
-

@@ -7,7 +7,7 @@
 
 class ZZGenSelector : public SelectorBase {
 public :
-    
+
     float GendPhiZZ; //DeltaPhi between Z1 and Z2
     Float_t GenMass;
     Float_t GenPt;
@@ -19,7 +19,7 @@ public :
     Float_t GenZ2pt;
     Float_t GenZ1Phi;
     Float_t GenZ2Phi;
- 
+
     Float_t Genl1Pt;
     Float_t Genl2Pt;
     Float_t Genl3Pt;
@@ -32,7 +32,7 @@ public :
     Float_t Genl2Phi;
     Float_t Genl3Phi;
     Float_t Genl4Phi;
-    
+
     TBranch* b_GenZ1mass;
     TBranch* b_GenZ2mass;
     TBranch* b_GenZ1pt;
@@ -54,7 +54,7 @@ public :
     TBranch* b_Genl1Phi;
     TBranch* b_Genl2Phi;
     TBranch* b_Genl3Phi;
-    TBranch* b_Genl4Phi; 
+    TBranch* b_Genl4Phi;
 
     // Readers to access the data (delete the ones you do not need).
     ZZGenSelector(TTree * /*tree*/ =0) { }
@@ -68,8 +68,8 @@ protected:
     void LoadBranchesNanoAOD(Long64_t entry, std::pair<Systematic, std::string> variation) override;
     virtual void    SetBranchesNanoAOD() override;
     virtual void    SetBranchesUWVV() override;
-    
-    void SetVariables(Long64_t entry); 
+
+    void SetVariables(Long64_t entry);
     bool ZZSelection();
     bool Z4lSelection();
     bool ZSelection();
@@ -78,4 +78,3 @@ protected:
 };
 
 #endif
-

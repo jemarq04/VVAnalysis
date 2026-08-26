@@ -5,11 +5,11 @@ import sys,json,os
 def getTextBox(x,y,axisLabel,size=0.2,rotated=False):
     texS = r.TLatex(x,y,axisLabel)
     texS.SetNDC()
-    #rotate for y-axis                                                                                                                                                                                             
+    #rotate for y-axis
     if rotated:
         texS.SetTextAngle(90)
     texS.SetTextFont(42)
-    #texS.SetTextColor(ROOT.kBlack)                                                                                                                                                                                
+    #texS.SetTextColor(ROOT.kBlack)
     texS.SetTextSize(size)
     texS.Draw()
     return texS
@@ -57,10 +57,10 @@ for var in varlist:
     r.SetOwnership(fb,False)
     hunfa = fa.Get(unfname)#.Clone()
     hunfb = fb.Get(unfname)#+";1").Clone()
-    
+
     checkZeroBin(hunfb, 'Unfolded hist before')
     checkZeroBin(hunfa, 'Unfolded hist after')
-    
+
     hunf_a_b = hunfa.Clone()
     hunfaNorm = hunfa*(1./hunfa.Integral(1,hunfa.GetNbinsX()))
     hunfbNorm = hunfb*(1./hunfb.Integral(1,hunfa.GetNbinsX()))
@@ -75,7 +75,7 @@ for var in varlist:
     print("Difference:{}%".format(diff))
 
     hists.append(hunf_a_b) #append in the orders of labels
-    
+
     colors = [3]
     markers = [1]
     maxs = []
@@ -102,7 +102,7 @@ for var in varlist:
     for i in range(len(hists)):
         hists[i].SetMaximum(max(maxs)*1.2)
         hists[i].SetMarkerStyle(1)
-        if i == 0:   
+        if i == 0:
             #hists[i].Draw("HIST P")
             if nostat:
                 hists[i].Draw("HIST")
@@ -110,7 +110,7 @@ for var in varlist:
                 hists[i].Draw()
             r.gStyle.SetLegendFont(42)
             r.gStyle.SetLegendTextSize(0.03)
-            
+
             legend = r.TLegend (0.6 ,0.75 ,0.75 ,0.90)
         else:
             #hists[i].SetMarkerStyle(markers[i])

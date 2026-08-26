@@ -188,7 +188,7 @@ prettyVars = {
     'zHigherPt' : 'p_\\text{T}^{\\text{Z}_{\\text{lead}}}',
     'zLowerPt' : 'p_\\text{T}^{\\text{Z}_{\\text{sublead}}}',
     'leppt' : 'p_{T}^{\\ell}',
-    'l1Pt' : 'p_\\text{T}^{\\ell_1}', 
+    'l1Pt' : 'p_\\text{T}^{\\ell_1}',
     'dphiz1z2': '\\Delta\\phi_{Z_{1},Z_{2}}',
     'drz1z2':'\\Delta\\text{R}_{Z_{1},Z_{2}}}',
     }
@@ -379,15 +379,15 @@ def getPrettyLegend(hTrue, data_hist, hAltTrue, error_hist, coords,hTrueNNLO=Non
     legend.SetTextSize(0.047) #0.033 #0.025
     #legend.SetMargin(0.1)
     if "Full" in hTrue.GetName():
-        legend.SetTextSize(0.042)    
+        legend.SetTextSize(0.042)
     legend.SetTextColor(ROOT.kBlack)
     with open('listFile.json') as list_json_file:
         mylist_dict = json.load(list_json_file)
-    sigLabel = mylist_dict["sigLabel"] #"POWHEG+MCFM+Pythia8" 
+    sigLabel = mylist_dict["sigLabel"] #"POWHEG+MCFM+Pythia8"
     sigLabelAlt = mylist_dict["sigLabelAlt"] #"MG5_aMC@NLO+MCFM+Pythia8"
     if data_hist:
         legend.AddEntry(data_hist, "Data + stat. unc.", "PE")#"lep")
-    
+
     #A histogram purely for adjusting total error legend behavior
     h_legend_help = ROOT.TH1D("legendAssit","legendAssist",1,0,1)
     h_legend_help.SetLineColor(ROOT.kBlack)
@@ -400,10 +400,10 @@ def getPrettyLegend(hTrue, data_hist, hAltTrue, error_hist, coords,hTrueNNLO=Non
     legend.AddEntry(hTrue, sigLabel,"le")
     legend.AddEntry(hAltTrue, sigLabelAlt,"lep") #intended to use "le" but this makes the legend ugly in pdf, but with "lep" looks ok
     if include_MiNNLO:
-        legend.AddEntry(hTrueNNLO, "nNNLO+PS","le")   
+        legend.AddEntry(hTrueNNLO, "nNNLO+PS","le")
         if EW_corr:
-            legend.AddEntry(hTrueEWC, "(nNNLO+PS)#times K_{EW}","le")  
-            #legend.AddEntry(hTrueEWC, "(nNNLO+PS) no GenWgt","lep")  
+            legend.AddEntry(hTrueEWC, "(nNNLO+PS)#times K_{EW}","le")
+            #legend.AddEntry(hTrueEWC, "(nNNLO+PS) no GenWgt","lep")
 
     #legend.AddEntry(hTrue, sigLabel,"lf")
     #legend.AddEntry(hAltTrue, sigLabelAlt,"l")
@@ -437,9 +437,9 @@ def createPad2(canvas):
     # Lower ratio plot is pad2
     canvas.cd()  # returns to main canvas before defining pad2
     canvas.GetListOfPrimitives().SetOwner(True)
-    
+
     pad2 = ROOT.TPad("pad2", "pad2", 0.01, pbpts[-2], 0.99, pbpts[-1])
-   
+
     pad2.Draw()
     pad2.cd()
     pad2.SetFillColor(0)
@@ -460,9 +460,9 @@ def createPad2(canvas):
 def createPad3(canvas):
     # Lower ratio plot is pad3
     canvas.cd()  # returns to main canvas before defining pad3
-    
+
     pad3 = ROOT.TPad("pad3", "pad3", 0.01, pbpts[-3], 0.99, pbpts[-2])
-    
+
     pad3.Draw()
     pad3.cd()
     pad3.SetFillColor(0)
@@ -476,7 +476,7 @@ def createPad3(canvas):
         pad3.SetBorderMode(0)
         pad3.SetBottomMargin(0)
     pad3.SetTopMargin(0)  # joins upper and lower plot
-    
+
     #pad3.SetBottomMargin(0)
     if "Full" in varName:
         pad3.SetLogx()
@@ -520,9 +520,9 @@ def createPad5(canvas): #For MiNNLO EWK m4l
     #pad5.SetFrameFillStyle(4000)
     pad5.SetBorderMode(0)
     pad5.SetTopMargin(0.)  # joins upper and lower plot
-    
+
     pad5.SetBottomMargin(bmg) #This is currently the bottommost pad
-  
+
     if "Full" in varName:
         pad5.SetLogx()
 
@@ -536,7 +536,7 @@ def rebin(hist,varName): #didn't handle error, but this function not actually us
     #No need to rebin certain variables but still might need overflow check
     if varName not in ['eta']:
         bins=array.array('d',_binning[varName])
-        Nbins=len(bins)-1 
+        Nbins=len(bins)-1
         hist=hist.Rebin(Nbins,"",bins)
     else:
         Nbins = hist.GetSize() - 2
@@ -567,7 +567,7 @@ def getRYaxis(hUnf1,ratioErrorBand1,lastP):
     Ryaxis.Draw("SAME")
 
     return Ryaxis
-    
+
 def getLumiTextBox():
     texS = ROOT.TLatex(0.68,0.945, str(int(round(args['lumi'])))+" fb^{-1} (13 TeV)")
     texS.SetNDC()
@@ -599,24 +599,24 @@ def getSigTextBox(x,y,sigLabel,size): #check whether actually used
     texS.SetTextFont(42)
     texS.SetTextSize(size)
     texS.Draw()
-    #return texS 
+    #return texS
     #doesn't work without this last line. Uncomment it if want to use this function
 
 def getAxisTextBox(x,y,axisLabel,size,rotated):
     texS = ROOT.TLatex(x,y,axisLabel)
     texS.SetNDC()
-    #rotate for y-axis                                                                                                                                                                                             
+    #rotate for y-axis
     if rotated:
         texS.SetTextAngle(90)
     texS.SetTextFont(42)
-    #texS.SetTextColor(ROOT.kBlack)                                                                                                                                                                                
+    #texS.SetTextColor(ROOT.kBlack)
     texS.SetTextSize(size)
     texS.Draw()
     return texS
 
 ratioBand_count =0
 def RatioErrorBand(Ratio,hUncUp,hUncDn,hTrueNoErrs,varName):
-        global ratioBand_count 
+        global ratioBand_count
         ratioBand_count+=1
         ratioGraph=ROOT.TGraphAsymmErrors(Ratio)
         ROOT.SetOwnership(ratioGraph,False)
@@ -629,7 +629,7 @@ def RatioErrorBand(Ratio,hUncUp,hUncDn,hTrueNoErrs,varName):
             tru=hTrueNoErrs.GetBinContent(i)
             #print "eUp: ",eUp, "","eDn: ",eDn
             errorUp = tmpData.GetBinContent(i) + math.sqrt(math.pow(tmpData.GetBinError(i),2) + math.pow((eUp/tru),2))
-            errorUp -= Ratio.GetBinContent(i) 
+            errorUp -= Ratio.GetBinContent(i)
             errorDn = max(tmpData.GetBinContent(i) - math.sqrt(math.pow(tmpData.GetBinError(i),2) + math.pow((eDn/tru),2)),0)
             errorDn = Ratio.GetBinContent(i) - errorDn
             #print "Ratio (bin): ",i
@@ -637,7 +637,7 @@ def RatioErrorBand(Ratio,hUncUp,hUncDn,hTrueNoErrs,varName):
             #print "eUp/tru: ",eUp/tru
             #print "eDn/tru: ",eDn/tru
             #print "TotErrorUp: ",errorUp, "","TotErrorDn: ",errorDn
-            
+
             #if "Mass" in varName and not "Full" in varName:
             #    if i==0:
             #        print("=======Test stat+sys vs stat========")
@@ -667,7 +667,7 @@ def RatioErrorBand(Ratio,hUncUp,hUncDn,hTrueNoErrs,varName):
         ratioGraph.GetXaxis().SetLimits(Ratio.GetXaxis().GetXmin(),Ratio.GetXaxis().GetXmax())
         with open('varsFile.json') as var_json_file:
             myvar_dict = json.load(var_json_file)
-        
+
         if varName=="drz1z2":
             ratioGraph.SetMaximum(myvar_dict[my_varName]['ratio_max'])
             ratioGraph.SetMinimum(myvar_dict[my_varName]['ratio_min'])
@@ -689,7 +689,7 @@ def MainErrorBand(hMain,hUncUp,hUncDn,varName,norm,normFb):
             eDn=hUncDn.GetBinContent(i)
             #print "eUp: ",eUp, "","eDn: ",eDn
             errorUp = tmpData.GetBinContent(i) + math.sqrt(math.pow(tmpData.GetBinError(i),2) + math.pow(eUp,2))
-            errorUp -= hMain.GetBinContent(i) 
+            errorUp -= hMain.GetBinContent(i)
             errorDn = max(tmpData.GetBinContent(i) - math.sqrt(math.pow(tmpData.GetBinError(i),2) + math.pow(eDn,2)),0)
             errorDn = hMain.GetBinContent(i) - errorDn
             #print "Main (bin): ",i
@@ -763,12 +763,12 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
         reset_EW_corr = True
     with open('varsFile.json') as var_json_file:
         myvar_dict = json.load(var_json_file)
-    
+
     top_xy = myvar_dict[varName]['top_xy'] #for MC labels positioning
     bottom_xy = myvar_dict[varName]['bottom_xy']
     xyP3 = myvar_dict[varName]['xyP3'] #for MC labels positioning
     xyP4 = myvar_dict[varName]['xyP4']
-    
+
     top_fontsize=myvar_dict[varName]['top_size']
     bottom_fontsize=myvar_dict[varName]['bottom_size']
     fontsizeP3=myvar_dict[varName]['size_P3']  #Font sizes for 3rd and 4th ratio panel label
@@ -785,14 +785,14 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
     hUnf = hUnfolded.Clone()
     hUnf.SetLineWidth(3)
     hTrue = hTruth.Clone()
-    #Alt Signal 
+    #Alt Signal
     hTrueAlt = hTruthAlt.Clone()
     hTrueLeg = hTruthAlt.Clone() #doesn't seem to get used
 
     if include_MiNNLO:
         hTrueNNLO = hTruthNNLO.Clone()
         if EW_corr:
-            hTrueEWC = hTruthEWC.Clone()    
+            hTrueEWC = hTruthEWC.Clone()
     #lumi provided already in fb-1
     lumifb = lumi
     print("======================hUnf Integral before normalization: %s========================"%hUnf.Integral(1,hUnf.GetNbinsX()))
@@ -813,7 +813,7 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
         c.SetCanvasSize(1000, 1300)
         Unfmaximum = hUnf.GetMaximum()
         #hTrue.SetFillColor(ROOT.TColor.GetColor("#99ccff"))
-        #hTrue.SetLineColor(ROOT.TColor.GetColor('#000099')) 
+        #hTrue.SetLineColor(ROOT.TColor.GetColor('#000099'))
         hTrue.SetFillColor(ROOT.TColor.GetColor("#add8e6"))
         hTrue.SetLineColor(ROOT.TColor.GetColor('#377eb8'))
         hTrue.SetMarkerColor(ROOT.TColor.GetColor('#377eb8'))
@@ -842,7 +842,7 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
                 hTrueEWC.SetLineColor(ROOT.kOrange)
                 hTrueEWC.SetMarkerColor(ROOT.kOrange)
                 hTrueEWC.SetMarkerSize(0.)
-                
+
         print("Total Unf Data Integral",hUnf.Integral())
         Truthmaximum = hTrue.GetMaximum()
         Truthmaximum2 = hTrueAlt.GetMaximum()
@@ -876,7 +876,7 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
         if quicksave:
             if os.path.isfile("HEPData_extraction.root"): #redundant check
                 extractionFile = ROOT.TFile("HEPData_extraction.root","UPDATE")
-            else: 
+            else:
                 extractionFile = ROOT.TFile("HEPData_extraction.root","RECREATE")
 
             extractionFile.cd()
@@ -905,7 +905,7 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
 
                     if varName == "MassAllj": #If m4l inclusive, after normalization, replace EWK with noEWK plot directly scaled by ratio [1.02244, etc.]
                         EWkfac = [1.02244,0.98414,0.97058,0.95705,0.95456,0.92758,0.91712,0.87614,0.81093]
-                        
+
                         #for ifac in range(1,hTrueEWC.GetNbinsX()+1):
                         #    hTrueEWC.SetBinContent(ifac,hTrueNNLO.GetBinContent(ifac)*EWkfac[ifac-1])
 
@@ -917,7 +917,7 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
             if include_MiNNLO:
                 hTrueNNLO.Scale(1.0/lumifb)
                 if EW_corr:
-                    hTrueEWC.Scale(1.0/lumifb)    
+                    hTrueEWC.Scale(1.0/lumifb)
         else:
             print("no special normalization")
 
@@ -937,13 +937,13 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
                     print("==================%s normalization check========================"%hTrueEWC.GetName())
                     print(hTrueEWC.Integral(1,hTrueEWC.GetNbinsX()))
 
-                    normalizeBins(hTrueEWC)    
+                    normalizeBins(hTrueEWC)
 
         #Don't know why draw twice. Commented the following two lines.
         #hTrue.Draw("HIST")
         #hTrueAlt.Draw("HIST")
         #pdb.set_trace()
-        
+
         #if(Unfmaximum > Truthmaximum):
         #    hTrue.SetMaximum(Unfmaximum*args["scaleymax"]*ymax_fac)
         #else:
@@ -965,7 +965,7 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
         UnfErrBand = MainErrorBand(hUnf,hUncUp,hUncDn,varName,norm,normFb)
         if varName=="mass":
             UnfErrBand.SetMaximum(0.01*args['scaleymax']*ymax_fac)
-        
+
         hTrue.GetXaxis().SetLabelSize(0)
         hTrue.GetXaxis().SetTitleSize(0)
         #hTrue.GetYaxis().SetTitle("Events")
@@ -973,26 +973,26 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
         hTrueAlt.GetXaxis().SetLabelSize(0)
         hTrueAlt.GetXaxis().SetTitleSize(0)
         #hTrueAlt.Draw("E1 SAME") #drawing second time, for updating?
-        
+
         #UnfErrBand.SetLineColor(error_color)
         #UnfErrBand.SetLineWidth(error_width)
         setErrGrStyle(UnfErrBand)
         UnfErrBand.Draw("a2")
         UnfErrBand.Draw(error_drawopt) #somehow have to draw "a2" first to draw the frame, then draw with the desired option
 
-        hTrueAlt.Draw("E SAME") 
+        hTrueAlt.Draw("E SAME")
         hTrue.Draw("E SAME") #("PE1SAME")
 
         if include_MiNNLO:
             hTrueNNLO.GetXaxis().SetLabelSize(0)
             hTrueNNLO.GetXaxis().SetTitleSize(0)
-            hTrueNNLO.Draw("E SAME") 
-           
+            hTrueNNLO.Draw("E SAME")
+
             if EW_corr:
                 hTrueEWC.GetXaxis().SetLabelSize(0)
                 hTrueEWC.GetXaxis().SetTitleSize(0)
-                hTrueEWC.Draw("E SAME") 
-                
+                hTrueEWC.Draw("E SAME")
+
 #        hTrueAlt.Draw("HISTSAME") #drawing second time, for updating?
 #        hTrue.Draw("HISTSAME")
         #hUnf.Sumw2(False)
@@ -1009,9 +1009,9 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
         if include_MiNNLO:
             axismaximum = max(axismaximum,hTrueNNLO.GetMaximum())
             if EW_corr:
-                axismaximum = max(axismaximum,hTrueEWC.GetMaximum())    
-            
-        
+                axismaximum = max(axismaximum,hTrueEWC.GetMaximum())
+
+
         hTrue.SetMaximum(axismaximum*args["scaleymax"]*ymax_fac)
         hTrueAlt.SetMaximum(axismaximum*args["scaleymax"]*ymax_fac)
         if include_MiNNLO:
@@ -1020,7 +1020,7 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
                 hTrueEWC.SetMaximum(axismaximum*args["scaleymax"]*ymax_fac)
         hUnf.SetMaximum(axismaximum*args["scaleymax"]*ymax_fac)
         UnfErrBand.SetMaximum(axismaximum*args["scaleymax"]*ymax_fac)
-        
+
         axisminimum = min([hUnf.GetMinimum(),hTrue.GetMinimum(),hTrueAlt.GetMinimum(),UnfErrBand.GetMinimum()])
         if include_MiNNLO:
             axisminimum = min(axisminimum,hTrueNNLO.GetMinimum())
@@ -1035,22 +1035,22 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
                     hTrueEWC.SetMinimum(axisminimum*ymin_fac_extra)
             hUnf.SetMinimum(axisminimum*ymin_fac_extra)
             UnfErrBand.SetMinimum(axisminimum*ymin_fac_extra)
-      
+
         #ROOT.dotrootImport('uhussain/CMSPlotDecorations')
         #scale_label = "Normalized to Unity" if args['lumi'] < 0 else \
         #    "%0.1f fb^{-1}" % args['lumi']
         #
         #lumi_text = ""
         #if args['thesis']:
-        #    lumi_text = "Thesis" 
+        #    lumi_text = "Thesis"
         #elif args['preliminary']:
-        #    lumi_text = "Preliminary" 
+        #    lumi_text = "Preliminary"
         #
         #ROOT.CMSlumi(c, 0, 0, "%s (13 TeV)" % scale_label,lumi_text)
                 #"Preliminary Simulation" if args.simulation else "Preliminary")
-        
+
         offset = ROOT.gPad.GetLeftMargin() - 0.07 if args['legend_left'] else \
-            ROOT.gPad.GetRightMargin() - 0.07 
+            ROOT.gPad.GetRightMargin() - 0.07
         width = .33
         width *= args['scalelegx']
         xdist = 0.1 if args['legend_left'] else 0.91
@@ -1076,7 +1076,7 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
                 legend = getPrettyLegend(hTrue, hUnf, hTrueAlt, UnfErrBand, coords,hTrueNNLO)
             else:
                 legend = getPrettyLegend(hTrue, hUnf, hTrueAlt, UnfErrBand, coords,hTrueNNLO,hTrueEWC)
-                
+
         legend.Draw()
         #texS,texS1,texS2=getLumiTextBox()
         sigLabel = "POWHEG+MCFM+Pythia8" #used?
@@ -1087,7 +1087,7 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
                 nJetsText=getAxisTextBox(0.17,0.1,"Events with #geq 1 jet",0.06,False)
             if varName in ["jetPt[1]","absjetEta[1]","mjj","dEtajj"]:
                 nJetsText=getAxisTextBox(0.17,0.1,"Events with #geq 2 jets",0.06,False)
-        
+
         if "Mass" in varName:
             if "0" in varName:
                 nJetsText=getAxisTextBox(0.17,0.1,"Events with 0 jet",0.06,False)
@@ -1121,9 +1121,9 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
         #leg.SetTextSize(0.025)
         #leg.Draw()
 
-     
+
         texS,texS1,texS2=getLumiTextBox()
-     
+
 
         #SecondPad
         #nominal sample
@@ -1154,10 +1154,10 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
         setErrGrStyle(ratioErrorBand)
         ratioErrorBand.Draw("a2")
         ratioErrorBand.Draw(error_drawopt) #a2
-        Ratio.Draw(crossDrawOpt) # This redraw is to make it on top of the syst error 
-        
+        Ratio.Draw(crossDrawOpt) # This redraw is to make it on top of the syst error
+
         sigTex = getSigTextBox(0.15,0.8,sigLabel,0.14) #used?
-        
+
         line.SetLineColor(ROOT.kBlack)
         #line.SetLineColor(ROOT.TColor.GetColor('#377eb8'))
         line.Draw("same")
@@ -1176,7 +1176,7 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
             tmpy = 0.0
         axText2=getAxisTextBox(0.06,tmpy,"Data/Pred.",dataTheoSize,True)
         MCTextNom=getAxisTextBox(top_xy[0],top_xy[1],ratioName_nom,top_fontsize,False)
-        
+
 
         #Altyaxis.SetTitle("#scale[1.2]{Data/%s}"%ratioName_nom)
         Altyaxis.SetTickLength(yrtl)
@@ -1192,10 +1192,10 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
         #Altyaxis.ChangeLabel(2,-1,0.189,-1,-1,-1,"2")
         Altyaxis.Draw("SAME")
         AltyaxisR = getRYaxis(hUnf,ratioErrorBand,False)
-        
+
         #ThirdPad
         pad3 = createPad3(c)
-        
+
 
 
         hTrueAltNoErrs = hTrueAlt.Clone() # need central value only to keep ratio uncertainties consistent
@@ -1208,7 +1208,7 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
         #hTrueNoErrs.SetError(array.array('d',[0.]*nbins))
         #Starting the ratio proceedure
         AltRatio,Altline = createRatio(hUnf, hTrueAltNoErrs)
-        AltRatioErrorBand = RatioErrorBand(AltRatio,hUncUp,hUncDn,hTrueAltNoErrs,varName) 
+        AltRatioErrorBand = RatioErrorBand(AltRatio,hUncUp,hUncDn,hTrueAltNoErrs,varName)
         AltRatioErrorBand.GetYaxis().SetLabelSize(0)
         AltRatioErrorBand.GetYaxis().SetTitleSize(0)
 
@@ -1221,12 +1221,12 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
         #if varName == "nJets":
         #    AltRatio.GetXaxis().SetNdivisions(505)
         #    AltRatio.GetXaxis().CenterLabels(True)
-        
-        AltRatio.Draw(crossDrawOpt) # This redraw is to make it on top of the syst error 
+
+        AltRatio.Draw(crossDrawOpt) # This redraw is to make it on top of the syst error
         #ratioErrorBand.Draw("p")
         Altline.SetLineColor(ROOT.kBlack)
         Altline.Draw("same")
-        
+
         if include_MiNNLO:
             MCTextAlt=getAxisTextBox(bottom_xy[0],bottom_xy[1],ratioName_alt,bottom_fontsize,False)
         else:
@@ -1250,13 +1250,13 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
         yaxis.SetTitleSize(0.12)
         yaxis.SetTitleOffset(0.365)
         yaxis.Draw("SAME")
-        
+
         yaxisR = getRYaxis(hUnf,ratioErrorBand,not include_MiNNLO)
 
         if include_MiNNLO:
             #Fourth pad
             pad4 = createPad4(c)
-            
+
             hTrueNNLONoErrs = hTrueNNLO.Clone() # need central value only to keep ratio uncertainties consistent
             if EW_corr:
                 hTrueEWCNoErrs = hTrueEWC.Clone() # need central value only to keep ratio uncertainties consistent
@@ -1274,17 +1274,17 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
                 EWCRatio,EWCline = createRatio(hUnf,hTrueEWCNoErrs)
                 #EWCRatio,EWCline = createRatio(hTrueEWCNoErrs, hTrueNNLONoErrs)
 
-            NNLORatioErrorBand = RatioErrorBand(NNLORatio,hUncUp,hUncDn,hTrueNNLONoErrs,varName) 
+            NNLORatioErrorBand = RatioErrorBand(NNLORatio,hUncUp,hUncDn,hTrueNNLONoErrs,varName)
             NNLORatioErrorBand.GetYaxis().SetLabelSize(0)
             NNLORatioErrorBand.GetYaxis().SetTitleSize(0)
             #NNLORatio.Draw(crossDrawOpt)
             setErrGrStyle(NNLORatioErrorBand)
             NNLORatioErrorBand.Draw("a2")
             NNLORatioErrorBand.Draw(error_drawopt)#"a2")
-            NNLORatio.Draw(crossDrawOpt) # This redraw is to make it on top of the syst error 
+            NNLORatio.Draw(crossDrawOpt) # This redraw is to make it on top of the syst error
 
             if EW_P4 and EW_corr:
-                EWCRatioErrorBand = RatioErrorBand(EWCRatio,hUncUp,hUncDn,hTrueEWCNoErrs,varName) 
+                EWCRatioErrorBand = RatioErrorBand(EWCRatio,hUncUp,hUncDn,hTrueEWCNoErrs,varName)
                 EWCRatioErrorBand.GetYaxis().SetLabelSize(0)
                 EWCRatioErrorBand.GetYaxis().SetTitleSize(0)
 
@@ -1295,7 +1295,7 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
             #ratioErrorBand.Draw("p")
             NNLOline.SetLineColor(ROOT.kBlack)
             NNLOline.Draw("same")
-            
+
             ratioName_NNLO = "nNNLO+PS"
             sigLabelNNLO = "nNNLO+PS"
             MCTextNNLO=getAxisTextBox(xyP3[0],xyP3[1],ratioName_NNLO,fontsizeP3,False)
@@ -1305,7 +1305,7 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
             NNLOyaxis.SetNdivisions(yrdiv)
             NNLOyaxis.SetTickLength(yrtl)
             if not (EW_corr and EW_P4):
-                NNLOyaxis.SetTickLength(yrtl/(1.-bmg))    
+                NNLOyaxis.SetTickLength(yrtl/(1.-bmg))
             #axText3=getAxisTextBox(0.06,0.0,"Data/%s"%ratioName_alt,0.23,True)
             #NNLOyaxis.SetTitle("#scale[1.2]{Data/%s}"%ratioName_alt)
             #NNLOyaxis.SetTitle("Data/Theo.")
@@ -1330,7 +1330,7 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
                 setErrGrStyle(EWCRatioErrorBand)
                 EWCRatioErrorBand.Draw("a2")
                 EWCRatioErrorBand.Draw(error_drawopt)#"a2")
-                EWCRatio.Draw(crossDrawOpt) # This redraw is to make it on top of the syst error 
+                EWCRatio.Draw(crossDrawOpt) # This redraw is to make it on top of the syst error
                 EWCline.SetLineColor(ROOT.kBlack)
                 EWCline.Draw("same")
 
@@ -1358,7 +1358,7 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
         #redraw axis
         if "Full" in varName and "Mass" in varName:
             xaxis = ROOT.TGaxis(hUnf.GetXaxis().GetXmin(),ratioErrorBand.GetMinimum(),hUnf.GetXaxis().GetXmax(),ratioErrorBand.GetMinimum(),hUnf.GetXaxis().GetXmin(),hUnf.GetXaxis().GetXmax(),510,"G")
-        
+
             xaxis.SetMoreLogLabels(True)
             xaxis.SetTickLength(0.07)
             #xaxis.SetLabelSize(0.025)
@@ -1405,7 +1405,7 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
             xaxis.SetNoExponent(True)
         xaxis.Draw("SAME")
 
-        
+
         c.Update()
         print("CanvasWidth: ", c.GetWw())
         print("CanvasHeight: ", c.GetWh())
@@ -1428,7 +1428,7 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
 
     if reset_include_MiNNLO:
         include_MiNNLO = True
-        
+
     if reset_EW_corr:
         EW_corr = True
 def mkdir(plotDir):
@@ -1470,7 +1470,7 @@ elif analysis=="ZZ4l2018":
         #fUse = ROOT.TFile("UnfHistsFinal-18Apr2020-ZZ4l2018.root","read")
     else:
         fUse = ROOT.TFile(mylist_dict['fFull'],"read")
-        #fUse = ROOT.TFile("allyear_UnfHist.root","read") 
+        #fUse = ROOT.TFile("allyear_UnfHist.root","read")
         #fUse = ROOT.TFile("UnfHistsFinal-18Apr2020-ZZ4lFullRun2.root","read")
 #fUse = ROOT.TFile.Open("UnfHistsFull09Nov2019-ZZ4l2018.root","update")
 
@@ -1478,7 +1478,7 @@ elif analysis=="ZZ4l2018":
 my_varName = ''
 for varName in runVariables:
 
-    my_varName = varName 
+    my_varName = varName
     print("varName:", varNames[varName])
     # save unfolded distributions by channel, then systematic
     hUnfolded = {}
@@ -1502,26 +1502,26 @@ for varName in runVariables:
         #print("returning truth? ",hTrue[chan])
         #print("returning Alt truth? ",hTrueAlt[chan])
         #Get the total UncUp and total UncDown histograms from the file as well
-        hUncUp = fUse.Get(chan+"_"+varName+"_totUncUp") 
+        hUncUp = fUse.Get(chan+"_"+varName+"_totUncUp")
         hUncDn = fUse.Get(chan+"_"+varName+"_totUncDown")
         #print "UnfoldOutDir:",UnfoldOutDir
         print("Somehow channel plots get called")
         sys.exit()
         generatePlots(hUnfolded[chan],hUncUp,hUncDn,hTrue[chan],hTrueAlt[chan],varName,norm,normFb,args['lumi'],UnfoldOutDir)
-    
+
     if args['makeTotals']:
         #Now access the histograms for all channels combined together
         #While saving in makeResponseMatrix.py, make a "total" category as wel
-        hUnfTot = fUse.Get("tot_"+varName+"_unf") 
+        hUnfTot = fUse.Get("tot_"+varName+"_unf")
         hTrueTot = fUse.Get("tot_"+varName+"_true")
-        hTrueAltTot = fUse.Get("tot_"+varName+"_trueAlt") 
+        hTrueAltTot = fUse.Get("tot_"+varName+"_trueAlt")
         if include_MiNNLO:
-            hTrueNNLOTot = fUse.Get("tot_"+varName+"_trueNNLO")    
+            hTrueNNLOTot = fUse.Get("tot_"+varName+"_trueNNLO")
             if EW_corr:
-                hTrueEWCTot = fUse.Get("tot_"+varName+"_trueEWC")    
-                #hTrueEWCTot = fUse.Get("tot_"+varName+"_trueNNLONoGenW") 
+                hTrueEWCTot = fUse.Get("tot_"+varName+"_trueEWC")
+                #hTrueEWCTot = fUse.Get("tot_"+varName+"_trueNNLONoGenW")
         hTotUncUp = fUse.Get("tot_"+varName+"_totUncUp")
-        hTotUncDn = fUse.Get("tot_"+varName+"_totUncDown") 
+        hTotUncDn = fUse.Get("tot_"+varName+"_totUncDown")
         UnfoldOutDir=UnfoldDir+"/"+"tot"+"/plots"
         if "tot" not in UnfoldOutDirs:
             UnfoldOutDirs["tot"]=UnfoldOutDir
@@ -1536,8 +1536,8 @@ for varName in runVariables:
                 generatePlots(hUnfTot,hTotUncUp,hTotUncDn,hTrueTot,hTrueAltTot,varName,norm,normFb,args['lumi'],UnfoldOutDir,hTrueNNLOTot,hTrueEWCTot)
 
 #Show plots nicely on my webpages
-for cat in ["tot"]:   
-#for cat in ["eeee","eemm","mmmm","tot"]:   
+for cat in ["tot"]:
+#for cat in ["eeee","eemm","mmmm","tot"]:
     #This is where we put all the plots in html format for quick access/debugging
     makeSimpleHtml.writeHTML(os.path.expanduser(UnfoldOutDirs[cat].replace("/plots", "")), "Unfolded Distributions (from MC)")
 fUse.Close()

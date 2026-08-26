@@ -3,14 +3,14 @@
 //      $Id$
 //
 // Description:
-//      Unfolding class using the bin by bin method of conversion factors. 
+//      Unfolding class using the bin by bin method of conversion factors.
 //
 // Authors: Richard Claridge <richard.claridge@stfc.ac.uk> & Tim Adye <T.J.Adye@rl.ac.uk>
 //
 //==============================================================================
 
 //____________________________________________________________
-/*! \class RooUnfoldBinByBin 
+/*! \class RooUnfoldBinByBin
   \brief Uses the correction factor method to unfold the distribution by looking at each bin individually.
 <p> This method cannot account for bin migration and as such cannot unfold reliably if a bias/smearing effects are applied.</p>
 <p>Can only handle 1 dimensional distributions
@@ -33,10 +33,10 @@ RooUnfoldBinByBin::RooUnfoldBinByBin (const RooUnfoldBinByBin& rhs)
   : RooUnfold (rhs)
 {
   // Copy constructor.
-  GetSettings();  
+  GetSettings();
 }
 
-RooUnfoldBinByBin::RooUnfoldBinByBin (const RooUnfoldResponse* res, const TH1* meas, 
+RooUnfoldBinByBin::RooUnfoldBinByBin (const RooUnfoldResponse* res, const TH1* meas,
                             const char* name, const char* title)
   : RooUnfold (res, meas, name, title)
 {

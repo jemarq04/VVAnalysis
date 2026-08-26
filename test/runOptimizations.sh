@@ -18,7 +18,7 @@ for mjj in `seq 400 50 600`; do
        cd $CMSSW_BASE/src/Analysis/WZAnalysis
        if [ ! -f $frfile ]; then
             ./Utilities/scripts/makeFakeRates.py -s 3LooseLeptons -l $lumi -o $frfile
-            python ScaleFactors/setupScaleFactors.py -t $frfile 
+            python ScaleFactors/setupScaleFactors.py -t $frfile
         fi
         echo ./Utilities/scripts/makeHistFile.py -l $lumi \
             -s $input -o $histfile --output_selection $output \
@@ -30,4 +30,3 @@ for mjj in `seq 400 50 600`; do
             --folder_name ${jetselec}/mjj${mjj}-dEtajj${dEtajj/./p}/${DATE}
     done
 done
-

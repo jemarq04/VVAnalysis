@@ -27,7 +27,7 @@ scale_facs = {
 #    "emm" : 0.42,
 #    "mmm" : 0.47,
 #}
- 
+
 # Taken from inclusive + 2j pt > 50
 #scale_facs = {
 #    "eee" : 0.12,
@@ -66,4 +66,3 @@ for chan in ["eee", "eem", "emm", "mmm"]:
         hist_chan_var.SetName(hist_var.GetName()+"_"+chan)
         hist_chan_var.Scale(scale_fac)
         print(hist_chan_var.Write())
-

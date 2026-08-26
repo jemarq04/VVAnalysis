@@ -10,7 +10,7 @@
 //==============================================================================
 
 //____________________________________________________________
-/*! \class RooUnfoldResponse 
+/*! \class RooUnfoldResponse
   \brief Class to create response object as used in RooUnfold
  <p> Contains measured and truth distributions as TH1s and the response matrix as a TH2. Also contains methods for handling these data</p>
 <p> Can handle 1,2 or 3 dimensional histograms and return vectors and matrices of their bin content and error (1 and 2D distributions respectively).
@@ -143,7 +143,7 @@ private:
   mutable TVectorD _fvals;
   Int_t _ndim;
 };
-#endif  
+#endif
 
 ClassImp (RooUnfoldResponse);
 

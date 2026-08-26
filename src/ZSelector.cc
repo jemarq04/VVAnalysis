@@ -11,7 +11,7 @@ void ZSelector::Init(TTree *tree)
 
     b.SetTree(tree);
     SelectorBase::Init(tree);
-    
+
     singleLepton_ = false;
     if (!isMC_ && name_.find("Single") != std::string::npos)
         singleLepton_ = true;
@@ -19,23 +19,23 @@ void ZSelector::Init(TTree *tree)
 
 void ZSelector::SetScaleFactors() {
     pileupSF_ = (ScaleFactor *) GetInputList()->FindObject("pileupSF");
-    if (pileupSF_ == nullptr ) 
+    if (pileupSF_ == nullptr )
         std::invalid_argument("Must pass pileup weights SF");
     eIdSF_ = (ScaleFactor *) GetInputList()->FindObject("electronTightIdSF");
-    if (eIdSF_ == nullptr ) 
+    if (eIdSF_ == nullptr )
         std::invalid_argument("Must pass electron ID SF");
     eGsfSF_ = (ScaleFactor *) GetInputList()->FindObject("electronGsfSF");
-    if (eGsfSF_ == nullptr ) 
+    if (eGsfSF_ == nullptr )
         std::invalid_argument("Must pass electron GSF SF");
     mIdSF_ = (ScaleFactor *) GetInputList()->FindObject("muonTightIdSF");
-    if (mIdSF_ == nullptr ) 
+    if (mIdSF_ == nullptr )
         std::invalid_argument("Must pass muon ID SF");
     mIsoSF_ = (ScaleFactor *) GetInputList()->FindObject("muonIsoSF");
-    if (mIsoSF_ == nullptr ) 
+    if (mIsoSF_ == nullptr )
         std::invalid_argument("Must pass muon Iso SF");
 
     prefireEff_ = (TEfficiency*) GetInputList()->FindObject("prefireEfficiencyMap");
-    if (prefireEff_ == nullptr ) 
+    if (prefireEff_ == nullptr )
         std::invalid_argument("Must pass prefiring efficiency map");
 }
 
@@ -106,10 +106,10 @@ void ZSelector::SetBranchesNanoAOD() {
     }
 }
 
-void ZSelector::LoadBranchesNanoAOD(Long64_t entry, std::pair<Systematic, std::string> variation) { 
+void ZSelector::LoadBranchesNanoAOD(Long64_t entry, std::pair<Systematic, std::string> variation) {
     weight = 1;
     b.SetEntry(entry);
-    
+
     if (nElectron > N_KEEP_MU_E_ || nMuon > N_KEEP_MU_E_) {
         std::string message = "Found more electrons or muons than max read number.\n    Found ";
         message += std::to_string(nElectron);
@@ -168,7 +168,7 @@ void ZSelector::LoadBranchesNanoAOD(Long64_t entry, std::pair<Systematic, std::s
                 return;
             }
         }
-        else 
+        else
             goodIndices = {0, 1};
         if (Muon_charge[goodIndices[0]] != Muon_charge[goodIndices[1]]) {
             l1Pt = Muon_pt[goodIndices[0]];
@@ -194,7 +194,7 @@ void ZSelector::LoadBranchesNanoAOD(Long64_t entry, std::pair<Systematic, std::s
             if (goodIndices.size() < 2)
                 return;
         }
-        else 
+        else
             goodIndices = {0, 1};
         if (Electron_charge[goodIndices[0]] != Electron_charge[goodIndices[1]]) {
             l1Pt = Electron_pt[goodIndices[0]];
@@ -238,7 +238,7 @@ void ZSelector::LoadBranchesNanoAOD(Long64_t entry, std::pair<Systematic, std::s
         jet.SetM(Jet_mass[i]);
         if (jet.pt() > 30 && !helpers::overlapsCollection(jet, leptons, 0.4, leptons.size()))
             jets.push_back(jet);
-    } 
+    }
     SetComposite();
 
     if (isMC_) {
@@ -263,7 +263,7 @@ void ZSelector::LoadBranchesNanoAOD(Long64_t entry, std::pair<Systematic, std::s
     passesLeptonVeto = (nCBVIDTightElec == 2 || nTightIdMuon == 2);
 }
 
-void ZSelector::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::string> variation){ 
+void ZSelector::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::string> variation){
     weight = 1;
     b_l1Pt->GetEntry(entry);
     b_l2Pt->GetEntry(entry);
@@ -280,7 +280,7 @@ void ZSelector::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::stri
     b_MET->GetEntry(entry);
     b_nCBVIDTightElec->GetEntry(entry);
     b_nTightIdMuon ->GetEntry(entry);
-    
+
     passesTrigger = true;
     passesLeptonVeto = (nCBVIDTightElec == 2 || nTightIdMuon == 2);
 }
@@ -325,22 +325,22 @@ void ZSelector::SetComposite() {
 // Meant to be a wrapper for the tight ID just in case it changes
 // To be a function of multiple variables
 bool ZSelector::zlep1IsTight() {
-    return l1IsTight; 
+    return l1IsTight;
 }
 
 bool ZSelector::zlep2IsTight() {
-    return l2IsTight; 
+    return l2IsTight;
 }
 
 bool ZSelector::tightZLeptons() {
-    return zlep1IsTight() && zlep2IsTight(); 
+    return zlep1IsTight() && zlep2IsTight();
 }
 
-void ZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::string> variation) { 
+void ZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::string> variation) {
     int step = 0;
     SafeHistFill(histMap1D_, getHistName("CutFlow", variation.second), step++, weight);
 
-    if (channel_ != mm && channel_ != ee) 
+    if (channel_ != mm && channel_ != ee)
         return;
     SafeHistFill(histMap1D_, getHistName("CutFlow", variation.second), step++, weight);
 
@@ -386,7 +386,7 @@ void ZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::string
             SafeHistFill(histMap1D_, getHistName("ptj"+std::to_string(i), variation.second), jet.pt(), weight);
             SafeHistFill(histMap1D_, getHistName("etaj"+std::to_string(i), variation.second), jet.eta(), weight);
             SafeHistFill(histMap1D_, getHistName("phij"+std::to_string(i), variation.second), jet.phi(), weight);
-        }  
+        }
     }
 }
 

@@ -13,11 +13,11 @@ parser.add_option("-c", "--chan", dest="channel",
 def getTextBox(x,y,axisLabel,size=0.2,color=1,rotated=False):
     texS = r.TLatex(x,y,'#color[%s]{%s}'%(color,axisLabel))
     texS.SetNDC()
-    #rotate for y-axis                                                                                                                                                                                             
+    #rotate for y-axis
     if rotated:
         texS.SetTextAngle(90)
     texS.SetTextFont(42)
-    #texS.SetTextColor(ROOT.kBlack)                                                                                                                                                                                
+    #texS.SetTextColor(ROOT.kBlack)
     texS.SetTextSize(size)
     texS.Draw()
     return texS
@@ -36,7 +36,7 @@ def checkZeroBin(hist,label,histn):
         if hist.GetBinContent(i)<0.:
             print("WARNING: %s contains negative value in bin %s"%(label,i))
 
-def rebin(hist, binning):        
+def rebin(hist, binning):
     bins = array.array('d', binning)
     hist = hist.Rebin(len(bins)-1, "", bins)
     #add overflow
@@ -61,7 +61,7 @@ fullkfac = [1.0835,1.7,1.7,1.7,1.7,1.7]
 fullxsec = [1.218, 0.001586, 0.001586, 0.001586,0.003194,0.003194]
 lumi = 59.7*1000 #name by format
 if '17' in sys.argv[1]:
-    lumi = 41.5*1000    
+    lumi = 41.5*1000
 fullfac = []
 channel = ''
 if options.channel:
@@ -79,7 +79,7 @@ else:
 
 
 suffix = "_"+sys.argv[3].replace(',','_') #name by format
-if 'Extra4eCut' in sys.argv[1]: 
+if 'Extra4eCut' in sys.argv[1]:
     suffix = suffix+'_4eCut'
 if '2e' in sys.argv[1]:
     suffix = suffix+'_2eCut'
@@ -117,9 +117,9 @@ for var in varlist:
         unfname=['%s_eeee'%var]
     else:
         unfname=['%s_eemm'%var,'%s_mmee'%var]
-   
 
-    
+
+
     num = 0.
     den = 0.
 
@@ -131,7 +131,7 @@ for var in varlist:
     if not 'Data' in samples[0]:
         sumweights_hist = fa.Get(str("/".join([samples[0], "sumweights"]))) #provided first hist is not data
     #sumweights_hist2 = fb.Get(str("/".join([samples[0], "sumweights"])))
-    
+
         r.SetOwnership(sumweights_hist, False)
         totWgt = sumweights_hist.Integral(0,sumweights_hist.GetNbinsX()+1)
     #totWgt2 = sumweights_hist2.Integral(0,sumweights_hist.GetNbinsX()+1)
@@ -150,7 +150,7 @@ for var in varlist:
         factor = xsec*kfac*lumi/totWgt
 
     if 'DataMC' in samples:
-        
+
         for s,sample in enumerate(fullsamples):
             swgt_hist = fa.Get(str("/".join([fullsamples[s], "sumweights"])))
             r.SetOwnership(swgt_hist, False)
@@ -158,7 +158,7 @@ for var in varlist:
             sfac = fullxsec[s]*fullkfac[s]* lumi/swgt
             fullfac.append(sfac)
 
-    
+
     for i in range(len(samples)):
         if not 'DataMC' in samples[i]:
             if len(unfname) ==1:
@@ -190,7 +190,7 @@ for var in varlist:
                 if not channel == 'eemm' and not channel == 'mmee':
                     hunfbt.Add(htmpbt)
                 fullhistsb.append(hunfbt)
-            
+
             hunfa = fullhistsa[0]*fullfac[0]
             hunfb = fullhistsb[0]*fullfac[0]
             for s in range(1,len(fullsamples)):
@@ -202,13 +202,13 @@ for var in varlist:
         hunfa = rebin(hunfa,binnings)
         hunfb = rebin(hunfb,binnings)
         checkZeroBin(hunfb, 'denominator',hunfa)
-        
+
         hunf_a_b = hunfa.Clone()
                                     #hunf_amb = hunfa.Clone()
         hunf_a_b.Divide(hunfb)
                                     #hunf_amb.Add(hunfb,-1) #this hist is not used
         hists.append(hunf_a_b) #append in the orders of labels
-        
+
         if i==0:
             if not 'Data' in samples[0]:
                 num = hunfa.Integral(1,hunfa.GetNbinsX()+1)*factor #only take amcnlo numerator and denominator for two MC comparison case
@@ -221,18 +221,18 @@ for var in varlist:
                 print("==========MC bins=================")
                 print([round(hunfa.GetBinContent(j),3) for j in range(1,hunfa.GetNbinsX()+1)])
                 #print([round(hunfb.GetBinContent(j),3) for j in range(1,hunfb.GetNbinsX()+1)])
-        
+
         if i == 1 and 'Data' in samples[i]:
             numd = hunfa.Integral(1,hunfa.GetNbinsX()+1)
             dend = hunfb.Integral(1,hunfb.GetNbinsX()+1)
             print("==========Data bins=================")
             print([round(hunfa.GetBinContent(j),3) for j in range(1,hunfa.GetNbinsX()+1)])
             #print([round(hunfb.GetBinContent(j),3) for j in range(1,hunfb.GetNbinsX()+1)])
-        
-        
 
-        
-    
+
+
+
+
 
     maxs = []
 
@@ -259,7 +259,7 @@ for var in varlist:
         hists[i].SetMaximum(1.2)
         hists[i].SetMinimum(0.)
         hists[i].SetMarkerStyle(1)
-        if i == 0:   
+        if i == 0:
             #hists[i].Draw("HIST P")
             if nostat:
                 hists[i].Draw("HIST")
@@ -267,7 +267,7 @@ for var in varlist:
                 hists[i].Draw()
             r.gStyle.SetLegendFont(42)
             r.gStyle.SetLegendTextSize(0.03)
-            
+
             legend = r.TLegend (0.7 ,0.3 ,0.85 ,0.4)
             legend.SetFillStyle(0)
         else:

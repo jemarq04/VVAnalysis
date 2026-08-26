@@ -25,10 +25,10 @@ public :
     ScaleFactor* eGapIdSF_;
     ScaleFactor* mIdSF_;
     //ScaleFactor* mIsoSF_;
-    
+
 
     //bool isVBS_;
-    //MC variable to check for duplication(this is a flag to differentiate between channels) 
+    //MC variable to check for duplication(this is a flag to differentiate between channels)
     UInt_t run;
     UInt_t lumi;
     ULong64_t evt;
@@ -37,7 +37,7 @@ public :
     Float_t genWeight;
     Float_t nTruePU;
     Float_t Z1mass;
-    Float_t Z2mass; 
+    Float_t Z2mass;
     //Float_t Zamass;
     //Float_t Zbmass;
     Float_t Z1pt;
@@ -64,7 +64,7 @@ public :
     Bool_t l2IsGap;
     Bool_t l3IsGap;
     Bool_t l4IsGap;
-    
+
     Float_t l1Pt;
     Float_t l2Pt;
     Float_t l3Pt;
@@ -98,16 +98,16 @@ public :
     Float_t l2PVDZ;
     Float_t l3PVDZ;
     Float_t l4PVDZ;
-    
+
     Float_t l3MtToMET;
-    
+
     TBranch* b_pdfWeights;
     TBranch* b_scaleWeights;
     //TBranch* b_duplicated;
     TBranch* b_genWeight;
     TBranch* b_Z1mass;
     TBranch* b_Z2mass;
-    //Smart cut on 4e/4mu 
+    //Smart cut on 4e/4mu
     //TBranch* b_Zamass;
     //TBranch* b_Zbmass;
     TBranch* b_Z1pt;
@@ -121,7 +121,7 @@ public :
     TBranch* b_l2GenPt;
     TBranch* b_l3GenPt;
     TBranch* b_l4GenPt;
-    
+
     TBranch* b_run;
     TBranch* b_lumi;
     TBranch* b_evt;
@@ -129,7 +129,7 @@ public :
     TBranch* b_l1IsTight;
     TBranch* b_l2IsTight;
     TBranch* b_l3IsTight;
-    TBranch* b_l4IsTight; 
+    TBranch* b_l4IsTight;
     TBranch* b_l1IsIso;
     TBranch* b_l2IsIso;
     TBranch* b_l3IsIso;
@@ -151,7 +151,7 @@ public :
     TBranch* b_l1Phi;
     TBranch* b_l2Phi;
     TBranch* b_l3Phi;
-    TBranch* b_l4Phi; 
+    TBranch* b_l4Phi;
     TBranch* b_l1SIP3D;
     TBranch* b_l2SIP3D;
     TBranch* b_l3SIP3D;
@@ -209,4 +209,3 @@ protected:
 };
 
 #endif
-

@@ -38,9 +38,9 @@ for var in varlist:
     if nj in ['All','0','1']:
         dict[var]["_binning"] = [100.] + [200.+50.*i for i in range(5)] + [500.,600.,800.,1000.]
     else:
-        dict[var]["_binning"] = [100.,200.,400.,600.,1000.] 
+        dict[var]["_binning"] = [100.,200.,400.,600.,1000.]
 
-    if nj in ['0','1']:    
+    if nj in ['0','1']:
         dict[var]["prettyVars"] = 'm_{4\\ell}' #+ "(%s jet)"%nj
     elif nj == "All":
         dict[var]["prettyVars"] = 'm_{4\\ell}' #+ "(%sJets)"%nj
@@ -71,7 +71,7 @@ for var in varlistFull:
         dict[var]["prettyVars"] = 'm_{4\\ell}' #+ "(%s jets)"%nj
 
     dict[var]["responseClassNames"] = 'testJet'
-#====================================================================================    
+#====================================================================================
 
 #jet variables=======================================================================
 var2="nJets"
@@ -113,8 +113,8 @@ for i,var in enumerate(["jetPt[0]","jetPt[1]","absjetEta[0]","absjetEta[1]"]):
     if i==3:
         dict[var]["_binning"] = [0.,1.5,3.,4.7]
         dict[var]["prettyVars"] = '|\\eta_{j2}|'
-    
-    dict[var]["responseClassNames"] = 'testJet'    
+
+    dict[var]["responseClassNames"] = 'testJet'
 
 #change axis range and MC symbol location
 for key in dict.keys():
@@ -161,7 +161,7 @@ for key in dict.keys():
         dict[key]['ratio_max'] = 1.2
         dict[key]['ratio_min'] = 0.2
         if not "All" in key:
-            dict[key]['ratio_max'] = 1.8  
+            dict[key]['ratio_max'] = 1.8
             dict[key]['top_xy']=(0.2,0.78)
             dict[key]['top_size']=0.25
             dict[key]['bottom_xy']=(0.2,0.78) #top and bottom different pad settings
@@ -169,18 +169,18 @@ for key in dict.keys():
             dict[key]['xyP3']=(0.2,round(bmg+(1-bmg)*0.78,2))
             dict[key]['bottom_size']=0.25
             dict[key]['size_P4']=0.2
-            dict[key]['size_P3']=round(dict[key]['bottom_size']*(1-bmg),2)  
+            dict[key]['size_P3']=round(dict[key]['bottom_size']*(1-bmg),2)
             dict[key]['ratio_min'] = 0.3
             if "0" in key:
                 dict[key]['ratio_max'] = 1.6
                 dict[key]['ratio_min'] = 0.2
-            
+
             if "1" in key or "2" in key:
                 dict[key]['ratio_max'] = 1.8
                 dict[key]['top_size']=0.25
                 dict[key]['bottom_size']=0.25
-                dict[key]['size_P3']=round(dict[key]['bottom_size']*(1-bmg),2)      
-                
+                dict[key]['size_P3']=round(dict[key]['bottom_size']*(1-bmg),2)
+
 
 #Adjust settings for individual variables
 dict['jetPt[0]']['ratio_max'] = 2.99

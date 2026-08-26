@@ -11,7 +11,7 @@ ROOT.gROOT.SetBatch(True)
 channels = ["eee", "eem", "emm", "mmm"]
 def getComLineArgs():
     parser = UserInput.getDefaultParser()
-    parser.add_argument("--proof", "-p", 
+    parser.add_argument("--proof", "-p",
         action='store_true', help="Don't use proof")
     parser.add_argument("--lumi", "-l", type=float,
         default=35.87, help="luminosity value (in fb-1)")
@@ -21,7 +21,7 @@ def getComLineArgs():
 
 def getHistNames(channels):
     base_hists = [x+y for x in ["passingLoose", "passingTight"] \
-            for y in "1DEta", "1DPt", "2D"]
+            for y in ["1DEta", "1DPt", "2D"]]
     if len(channels) == 0:
         return base_hists
     return [x+"_"+y for x in base_hists for y in channels]
@@ -45,16 +45,16 @@ def makeCompositeHists(name, members, addRatios=True, overflow=False):
                     for i in range(1,xbins):
                         setbin = hist.GetBin(i, ybins)
                         obin = hist.GetBin(i, ybins+1)
-                        hist.SetBinContent(setbin, 
+                        hist.SetBinContent(setbin,
                             hist.GetBinContent(obin)+hist.GetBinContent(setbin))
                     for i in range(1, ybins):
                         setbin = hist.GetBin(xbins, i)
                         obin = hist.GetBin(xbins+1, i)
-                        hist.SetBinContent(setbin, 
+                        hist.SetBinContent(setbin,
                             hist.GetBinContent(obin)+hist.GetBinContent(setbin))
                     setbin = hist.GetBin(xbins, ybins)
                     obin = hist.GetBin(xbins+1, ybins+1)
-                    hist.SetBinContent(setbin, 
+                    hist.SetBinContent(setbin,
                         hist.GetBinContent(obin)+hist.GetBinContent(setbin))
             else:
                 raise RuntimeError("hist %s was not produced for "
@@ -76,7 +76,7 @@ def makeCompositeHists(name, members, addRatios=True, overflow=False):
     if addRatios:
         ratios = getRatios(composite)
         for ratio in ratios:
-            composite.Add(ratio) 
+            composite.Add(ratio)
     return composite
 
 def getRatios(hists):
@@ -111,7 +111,7 @@ pileupSF = fScales.Get('pileupSF')
 sf_inputs = [electronTightIdSF, electronGsfSF, muonIsoSF, muonIdSF, pileupSF]
 
 SelectorTools.applySelector(args["filenames"],
-        "FakeRateSelector", args['selection'], fOut, 
+        "FakeRateSelector", args['selection'], fOut,
         extra_inputs=sf_inputs, proof=args['proof'],
         addSumweights=True)
 

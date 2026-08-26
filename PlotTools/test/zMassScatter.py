@@ -108,4 +108,3 @@ for ana in ['full', 'z4l']:
     style.setCMSStyle(c, "", True, "", 13, lumi)
 
     c.Print(join(outDir, 'mZ2VsmZ1_{}.png'.format(ana)))
-

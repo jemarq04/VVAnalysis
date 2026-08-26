@@ -8,15 +8,15 @@ nocorr_file = ROOT.TFile("/afs/cern.ch/user/k/kelong/public/SMP-18-001/Higgs/NoC
 corr_file = ROOT.TFile("/afs/cern.ch/user/k/kelong/public/SMP-18-001/Higgs/WithPrefiringCorrection/VBSselection_Loose_Full-04Oct2018_Higgs_WithPrefireCorrection_wCR.root")
 jakobs_file = ROOT.TFile("Jakob/higgs30/wz3l3lHig_input_13TeV2016.root")
 
-corrections_file = ROOT.TFile("VBSselection_LooseSelection_Higgs_prefiringCorrections.root", "RECREATE") 
+corrections_file = ROOT.TFile("VBSselection_LooseSelection_Higgs_prefiringCorrections.root", "RECREATE")
 output_file = ROOT.TFile("VBSselection_Higgs_fromJakob_withCorrections.root", "Recreate")
 var = "MTWZ_wCR"
 
-names = {"EWWZ" : "EW-WZjj", 
-        "WZ" :"QCD-WZjj", 
-        "VVV" : "top-ewk", 
-        "ZZ" : "vv", 
-        "Fake" : "DataEWKCorrected", 
+names = {"EWWZ" : "EW-WZjj",
+        "WZ" :"QCD-WZjj",
+        "VVV" : "top-ewk",
+        "ZZ" : "vv",
+        "Fake" : "DataEWKCorrected",
         "Zg" : "zg"
 }
 
@@ -64,7 +64,7 @@ for folder in names.values():
     ratio.Draw("hist e1")
     ratio.GetXaxis().SetTitle("m_{T}(WZ) [GeV]")
     ratio.GetYaxis().SetTitle("Prefire corr. / uncorr.")
-    filename = "/afs/cern.ch/user/k/kelong/www/ChargedHiggs/Kenneth/PrefireCorrRatios/%s.pdf" % folder 
+    filename = "/afs/cern.ch/user/k/kelong/www/ChargedHiggs/Kenneth/PrefireCorrRatios/%s.pdf" % folder
     if flatScaleFac:
         filename = filename.replace(".pdf", "_flat.pdf")
     canvas.Print(filename)

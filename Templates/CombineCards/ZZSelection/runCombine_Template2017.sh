@@ -1,3 +1,5 @@
+#!/bin/bash
+
 combineCards.py eeee=ZZ2017_eeee.txt eemm=ZZ2017_eemm.txt mmee=ZZ2017_mmee.txt mmmm=ZZ2017_mmmm.txt > ZZ2017.txt
 text2workspace.py ZZ2017.txt -m 999 -o ZZ2017.root
 
@@ -14,4 +16,3 @@ if [[ $$1 == "impacts" ]]; then
 else
     combine -M MaxLikelihoodFit -d ZZ2017.root $$1
 fi
-

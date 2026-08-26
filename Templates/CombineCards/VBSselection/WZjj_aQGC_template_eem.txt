@@ -4,33 +4,33 @@ kmax ${nuisances} number of nuisance parameters (sources of systematical uncerta
 ------------
 
 shapes EW-WZjj   * ${output_file} ${signal_name}/${fit_variable}_$$CHANNEL  ${signal_name}/${fit_variable}_$$SYSTEMATIC_$$CHANNEL
-shapes QCD-WZjj  * ${output_file} QCD-WZjj/${fit_variable}_$$CHANNEL       QCD-WZjj/${fit_variable}_$$SYSTEMATIC_$$CHANNEL 
-shapes vv        * ${output_file} vv/${fit_variable}_$$CHANNEL             vv/${fit_variable}_$$SYSTEMATIC_$$CHANNEL 
-shapes top-ewk   * ${output_file} top-ewk/${fit_variable}_$$CHANNEL        top-ewk/${fit_variable}_$$SYSTEMATIC_$$CHANNEL 
-shapes zg        * ${output_file} zg/${fit_variable}_$$CHANNEL             zg/${fit_variable}_$$SYSTEMATIC_$$CHANNEL 
+shapes QCD-WZjj  * ${output_file} QCD-WZjj/${fit_variable}_$$CHANNEL       QCD-WZjj/${fit_variable}_$$SYSTEMATIC_$$CHANNEL
+shapes vv        * ${output_file} vv/${fit_variable}_$$CHANNEL             vv/${fit_variable}_$$SYSTEMATIC_$$CHANNEL
+shapes top-ewk   * ${output_file} top-ewk/${fit_variable}_$$CHANNEL        top-ewk/${fit_variable}_$$SYSTEMATIC_$$CHANNEL
+shapes zg        * ${output_file} zg/${fit_variable}_$$CHANNEL             zg/${fit_variable}_$$SYSTEMATIC_$$CHANNEL
 
-shapes wzjj-aqgcfm__fm0-8_fm1-m4        * ${output_file} wzjj-aqgcfm__fm0-8_fm1-m4/${fit_variable}_$$CHANNEL wzjj-aqgcfm__fm0-8_fm1-m4/${fit_variable}_$$SYSTEMATIC_$$CHANNEL 
-shapes wzjj-aqgcft__ft0-0_ft1-0_ft2-3   * ${output_file} wzjj-aqgcft__ft0-0_ft1-0_ft2-3/${fit_variable}_$$CHANNEL wzjj-aqgcft__ft0-0_ft1-0_ft2-3/${fit_variable}_$$SYSTEMATIC_$$CHANNEL 
-shapes wzjj-aqgcfs__fs0-32_fs1-16       * ${output_file} wzjj-aqgcfs__fs0-32_fs1-16/${fit_variable}_$$CHANNEL wzjj-aqgcfs__fs0-32_fs1-16/${fit_variable}_$$SYSTEMATIC_$$CHANNEL 
+shapes wzjj-aqgcfm__fm0-8_fm1-m4        * ${output_file} wzjj-aqgcfm__fm0-8_fm1-m4/${fit_variable}_$$CHANNEL wzjj-aqgcfm__fm0-8_fm1-m4/${fit_variable}_$$SYSTEMATIC_$$CHANNEL
+shapes wzjj-aqgcft__ft0-0_ft1-0_ft2-3   * ${output_file} wzjj-aqgcft__ft0-0_ft1-0_ft2-3/${fit_variable}_$$CHANNEL wzjj-aqgcft__ft0-0_ft1-0_ft2-3/${fit_variable}_$$SYSTEMATIC_$$CHANNEL
+shapes wzjj-aqgcfs__fs0-32_fs1-16       * ${output_file} wzjj-aqgcfs__fs0-32_fs1-16/${fit_variable}_$$CHANNEL wzjj-aqgcfs__fs0-32_fs1-16/${fit_variable}_$$SYSTEMATIC_$$CHANNEL
 
 shapes nonprompt * ${output_file} DataEWKCorrected/${fit_variable}_Fakes_$$CHANNEL DataEWKCorrected/${fit_variable}_Fakes_$$SYSTEMATIC_$$CHANNEL
 shapes data_obs  *  ${output_file} AllData/${fit_variable}_$$CHANNEL
 
-bin          eem   
-observation  -1.0 
+bin          eem
+observation  -1.0
 
 ------------
 # now we list the expected events for signal and all backgrounds in that bin
 # the second 'process' line must have a positive number for backgrounds, and 0 for signal
 # then we list the independent sources of uncertainties, and give their effect (syst. error)
 # on each process and bin
-bin                             eem                          eem                          eem                              eem             eem             eem         eem             eem         eem         
-process                         wzjj-aqgcfm__fm0-8_fm1-m4    wzjj-aqgcfs__fs0-32_fs1-16   wzjj-aqgcft__ft0-0_ft1-0_ft2-3  EW-WZjj         QCD-WZjj        vv          top-ewk         zg          nonprompt   
-process                         -2                           -1                            0                               6               1               2           3               4           5           
-rate                            -1                           -1                           -1                               ${signal_yield}  ${QCD_WZjj}     ${vv}       ${top_ewk}      ${zg}       ${nonprompt} 
-------------                                                                                                                                                                                                                                                                                                            
-lumi2016_13TeV          lnN     1.025                        1.025                        1.025                            1.025           1.025           1.025       1.025           1.025       -          
-CMS_norm_QCD-WZjj       lnN     -                            -                            -                                -               1.10            -           -               -           -          
+bin                             eem                          eem                          eem                              eem             eem             eem         eem             eem         eem
+process                         wzjj-aqgcfm__fm0-8_fm1-m4    wzjj-aqgcfs__fs0-32_fs1-16   wzjj-aqgcft__ft0-0_ft1-0_ft2-3  EW-WZjj         QCD-WZjj        vv          top-ewk         zg          nonprompt
+process                         -2                           -1                            0                               6               1               2           3               4           5
+rate                            -1                           -1                           -1                               ${signal_yield}  ${QCD_WZjj}     ${vv}       ${top_ewk}      ${zg}       ${nonprompt}
+------------
+lumi2016_13TeV          lnN     1.025                        1.025                        1.025                            1.025           1.025           1.025       1.025           1.025       -
+CMS_norm_QCD-WZjj       lnN     -                            -                            -                                -               1.10            -           -               -           -
 CMS_norm_nonprompt_eee  lnN     -                            -                            -                                -               -               -           -               -           -
 CMS_norm_nonprompt_eem  lnN     -                            -                            -                                -               -               -           -               -           1.3
 CMS_norm_nonprompt_emm  lnN     -                            -                            -                                -               -               -           -               -           -
@@ -54,4 +54,3 @@ pdf_zg                  lnN     -                            -                  
 CMS_scale_j             shape   1                            1                            1                                1               1               1           1               0           1
 CMS_res_j               shape   1                            1                            1                                1               1               1           1               0           1
 CMS_pileup              shape   1                            1                            1                                1               1               1           1               0           0
-

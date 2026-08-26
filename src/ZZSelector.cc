@@ -13,9 +13,9 @@ void ZZSelector::Init(TTree *tree)
         {muonEfficiencyDown, "CMS_eff_mDown"},
         //{pileupUp, "CMS_pileupUp"},
         //{pileupDown, "CMS_pileupDown"},
-    }; 
+    };
     doSystematics_ = true;
-    
+
     //This would be set true inside ZZBackground Selector
     isNonPrompt_ = false;
 
@@ -36,9 +36,9 @@ void ZZSelector::Init(TTree *tree)
         //"nTruePU",
     };
     //hists1D_ = {
-    //     "yield", "backgroundControlYield","nTruePU","nvtx","ZMass","Z1Mass","Z2Mass","ZZPt",  
+    //     "yield", "backgroundControlYield","nTruePU","nvtx","ZMass","Z1Mass","Z2Mass","ZZPt",
     //     "Z1Pt","Z2Pt","Z1Phi","Z2Phi","dPhiZ1Z2","ZPt","LepPt","LepEta","Lep12Pt","Lep12Eta",
-    //     "Lep34Pt","Lep34Eta","Z1lep1_Eta","Z1lep1_Phi","Z1lep1_Pt","Z1lep1_PdgId","Z1lep2_Eta", 
+    //     "Lep34Pt","Lep34Eta","Z1lep1_Eta","Z1lep1_Phi","Z1lep1_Pt","Z1lep1_PdgId","Z1lep2_Eta",
     //     "Z1lep2_Phi","Z1lep2_Pt","Z1lep2_PdgId","Z2lep1_Eta","Z2lep1_Phi","Z2lep1_Pt","Z2lep1_PdgId",
     //     "Z2lep2_Eta","Z2lep2_Phi","Z2lep2_Pt","Z2lep2_PdgId","Mass","nJets",
     //};
@@ -78,7 +78,7 @@ unsigned int ZZSelector::GetLheWeightInfo() {
     };
     std::vector<std::string> scaleAndPdfWeights = {
         "wz3lnu-powheg", "wz3lnu-mg5amcnlo",
-        "ZZZ", "WZZ", "WWZ", 
+        "ZZZ", "WZZ", "WWZ",
         "zz4l-powheg", "zz4l-amcatnlo",
         "ZZJJTo4L-EWK"
     };
@@ -114,7 +114,7 @@ void ZZSelector::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::str
       //if(TightZZLeptons()){//i don't think this condition is needed even though it might save time but it messes up sf application for CRs in eemm,mmee states
       if(TightZZLeptons()){
         SetVariables(entry);}
-    } 
+    }
     if (isMC_) {
         ApplyScaleFactors();
       }
@@ -126,7 +126,7 @@ void ZZSelector::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::str
                 if (weight_info_ == 2) {
                     b_pdfWeights->GetEntry(entry);
                     // Only keep NNPDF weights
-                    lheWeights.insert(lheWeights.end(), pdfWeights->begin(), 
+                    lheWeights.insert(lheWeights.end(), pdfWeights->begin(),
                         pdfWeights->begin()+std::min(static_cast<size_t>(103), pdfWeights->size()));
                 }
                 else if (weight_info_ == 3) {
@@ -139,7 +139,7 @@ void ZZSelector::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::str
     else if (isMC_) {
       //Systematic uncertainties and creating shiftUp and shiftDown histograms
       //Starting with lepton Efficiencies
-        if (variation.first == electronEfficiencyUp || variation.first == electronEfficiencyDown || variation.first == electronRecoEffUp || variation.first == electronRecoEffDown || 
+        if (variation.first == electronEfficiencyUp || variation.first == electronEfficiencyDown || variation.first == electronRecoEffUp || variation.first == electronRecoEffDown ||
             variation.first == muonEfficiencyUp || variation.first == muonEfficiencyDown) {
               ShiftEfficiencies(variation.first);
         }
@@ -207,28 +207,28 @@ void ZZSelector::ApplyScaleFactors() {
         }
         if (eRecoSF_ != nullptr and eLowRecoSF_ != nullptr ) {
           //Applying Electron Reco SFs
-          if(l1Pt < 20){ 
+          if(l1Pt < 20){
             weight *= eLowRecoSF_->Evaluate2D(std::abs(l1Eta), l1Pt);
           }
-          else{ 
+          else{
             weight *= eRecoSF_->Evaluate2D(std::abs(l1Eta), pt_e1);
           }
-          if(l2Pt < 20){ 
+          if(l2Pt < 20){
             weight *= eLowRecoSF_->Evaluate2D(std::abs(l2Eta), l2Pt);
           }
-          else{ 
+          else{
             weight *= eRecoSF_->Evaluate2D(std::abs(l2Eta), pt_e2);
           }
-          if(l3Pt < 20){ 
+          if(l3Pt < 20){
             weight *= eLowRecoSF_->Evaluate2D(std::abs(l3Eta), l3Pt);
           }
-          else{ 
+          else{
             weight *= eRecoSF_->Evaluate2D(std::abs(l3Eta), pt_e3);
           }
-          if(l4Pt < 20){ 
+          if(l4Pt < 20){
             weight *= eLowRecoSF_->Evaluate2D(std::abs(l4Eta), l4Pt);
           }
-          else{ 
+          else{
             weight *= eRecoSF_->Evaluate2D(std::abs(l4Eta), pt_e4);
           }
       }
@@ -255,16 +255,16 @@ void ZZSelector::ApplyScaleFactors() {
         }
         //Applying Electron Reco SFs
         if (eRecoSF_ != nullptr and eLowRecoSF_ != nullptr ) {
-          if(l1Pt < 20){ 
+          if(l1Pt < 20){
             weight *= eLowRecoSF_->Evaluate2D(std::abs(l1Eta), l1Pt);
           }
-          else{ 
+          else{
             weight *= eRecoSF_->Evaluate2D(std::abs(l1Eta), pt_e1);
           }
-          if(l2Pt < 20){ 
+          if(l2Pt < 20){
             weight *= eLowRecoSF_->Evaluate2D(std::abs(l2Eta), l2Pt);
           }
-          else{ 
+          else{
             weight *= eRecoSF_->Evaluate2D(std::abs(l2Eta), pt_e2);
           }
         }
@@ -298,16 +298,16 @@ void ZZSelector::ApplyScaleFactors() {
         }
         //Applying Electron Reco SFs
         if (eRecoSF_ != nullptr and eLowRecoSF_ != nullptr ) {
-          if(l3Pt < 20){ 
+          if(l3Pt < 20){
             weight *= eLowRecoSF_->Evaluate2D(std::abs(l3Eta), l3Pt);
           }
-          else{ 
+          else{
             weight *= eRecoSF_->Evaluate2D(std::abs(l3Eta), pt_e3);
           }
-          if(l4Pt < 20){ 
+          if(l4Pt < 20){
             weight *= eLowRecoSF_->Evaluate2D(std::abs(l4Eta), l4Pt);
           }
-          else{ 
+          else{
             weight *= eRecoSF_->Evaluate2D(std::abs(l4Eta), pt_e4);
           }
         }
@@ -399,7 +399,7 @@ void ZZSelector::ShiftEfficiencies(Systematic variation) {
     if (variation == electronEfficiencyDown || variation == electronRecoEffDown || variation == muonEfficiencyDown)
         shift = ScaleFactor::Variation::ShiftDown;
 
-    if (channel_ == eeee){ 
+    if (channel_ == eeee){
       float pt_e1 = l1Pt < EleSF_MAX_PT_ ? l1Pt : EleSF_MAX_PT_ - 0.01;
       float pt_e2 = l2Pt < EleSF_MAX_PT_ ? l2Pt : EleSF_MAX_PT_ - 0.01;
       float pt_e3 = l3Pt < EleSF_MAX_PT_ ? l3Pt : EleSF_MAX_PT_ - 0.01;
@@ -409,28 +409,28 @@ void ZZSelector::ShiftEfficiencies(Systematic variation) {
         if (eRecoSF_ != nullptr and eLowRecoSF_ != nullptr ) {
           //std::cout<<"Is it a null ptr"<<std::endl;
         //Applying Electron Reco SFs Up/Down for ElectronRecoSyst
-        if(l1Pt < 20){ 
+        if(l1Pt < 20){
           weight *= eLowRecoSF_->Evaluate2D(std::abs(l1Eta), l1Pt,shift)/eLowRecoSF_->Evaluate2D(std::abs(l1Eta), l1Pt);
         }
-        else{ 
+        else{
           weight *= eRecoSF_->Evaluate2D(std::abs(l1Eta), pt_e1,shift)/eRecoSF_->Evaluate2D(std::abs(l1Eta), pt_e1);
         }
-        if(l2Pt < 20){ 
+        if(l2Pt < 20){
           weight *= eLowRecoSF_->Evaluate2D(std::abs(l2Eta), l2Pt,shift)/eLowRecoSF_->Evaluate2D(std::abs(l2Eta), l2Pt);
         }
-        else{ 
+        else{
           weight *= eRecoSF_->Evaluate2D(std::abs(l2Eta), pt_e2,shift)/eRecoSF_->Evaluate2D(std::abs(l2Eta), pt_e2);
         }
-        if(l3Pt < 20){ 
+        if(l3Pt < 20){
           weight *= eLowRecoSF_->Evaluate2D(std::abs(l3Eta), l3Pt,shift)/eLowRecoSF_->Evaluate2D(std::abs(l3Eta), l3Pt);
         }
-        else{ 
+        else{
           weight *= eRecoSF_->Evaluate2D(std::abs(l3Eta), pt_e3,shift)/eRecoSF_->Evaluate2D(std::abs(l3Eta), pt_e3) ;
         }
-        if(l4Pt < 20){ 
+        if(l4Pt < 20){
           weight *= eLowRecoSF_->Evaluate2D(std::abs(l4Eta), l4Pt,shift)/eLowRecoSF_->Evaluate2D(std::abs(l4Eta), l4Pt);
         }
-        else{ 
+        else{
           weight *= eRecoSF_->Evaluate2D(std::abs(l4Eta), pt_e4,shift)/eRecoSF_->Evaluate2D(std::abs(l4Eta), pt_e4);
         }
       }
@@ -473,16 +473,16 @@ void ZZSelector::ShiftEfficiencies(Systematic variation) {
       float pt_m4 = l4Pt < MuSF_MAX_PT_ ? l4Pt : MuSF_MAX_PT_ - 0.01;
       if (variation == electronRecoEffUp || variation == electronRecoEffDown) {
         //Applying Electron Reco SFs Up/Down for ElectronRecoEffSyst
-        if(l1Pt < 20){ 
+        if(l1Pt < 20){
           weight *= eLowRecoSF_->Evaluate2D(std::abs(l1Eta), l1Pt,shift)/eLowRecoSF_->Evaluate2D(std::abs(l1Eta), l1Pt);
         }
-        else{ 
+        else{
           weight *= eRecoSF_->Evaluate2D(std::abs(l1Eta), pt_e1,shift)/eRecoSF_->Evaluate2D(std::abs(l1Eta), pt_e1);
         }
-        if(l2Pt < 20){ 
+        if(l2Pt < 20){
           weight *= eLowRecoSF_->Evaluate2D(std::abs(l2Eta), l2Pt,shift)/eLowRecoSF_->Evaluate2D(std::abs(l2Eta), l2Pt);
         }
-        else{ 
+        else{
           weight *= eRecoSF_->Evaluate2D(std::abs(l2Eta), pt_e2,shift)/eRecoSF_->Evaluate2D(std::abs(l2Eta), pt_e2);
         }
       }
@@ -516,17 +516,17 @@ void ZZSelector::ShiftEfficiencies(Systematic variation) {
           weight *= mIdSF_->Evaluate2D(std::abs(l2Eta), pt_m2, shift)/mIdSF_->Evaluate2D(std::abs(l2Eta), pt_m2);
       }
       else if (variation == electronRecoEffUp || variation == electronRecoEffDown) {
-        //Applying Electron Reco SFs Up/Down for ElectronRecoEffSyst 
-        if(l3Pt < 20){ 
+        //Applying Electron Reco SFs Up/Down for ElectronRecoEffSyst
+        if(l3Pt < 20){
           weight *= eLowRecoSF_->Evaluate2D(std::abs(l3Eta), l3Pt,shift)/eLowRecoSF_->Evaluate2D(std::abs(l3Eta), l3Pt);
         }
-        else{ 
+        else{
           weight *= eRecoSF_->Evaluate2D(std::abs(l3Eta), pt_e3,shift)/eRecoSF_->Evaluate2D(std::abs(l3Eta), pt_e3) ;
         }
-        if(l4Pt < 20){ 
+        if(l4Pt < 20){
           weight *= eLowRecoSF_->Evaluate2D(std::abs(l4Eta), l4Pt,shift)/eLowRecoSF_->Evaluate2D(std::abs(l4Eta), l4Pt);
         }
-        else{ 
+        else{
           weight *= eRecoSF_->Evaluate2D(std::abs(l4Eta), pt_e4,shift)/eRecoSF_->Evaluate2D(std::abs(l4Eta), pt_e4);
         }
       }
@@ -644,7 +644,7 @@ bool ZZSelector::TestMuons(){
         return false;
 }
 
-void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::string> variation) { 
+void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::string> variation) {
     //bool noBlind = true;
     //Applying the ZZ Selection here
     //std::cout<<"Is fillHistograms working?"<<std::endl;
@@ -675,7 +675,7 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
     SafeHistFill(histMap1D_, getHistName("ZPt", variation.second), Z2pt, weight);
     SafeHistFill(histMap1D_, getHistName("dPhiZ1Z2", variation.second), dPhiZZ, weight);
     SafeHistFill(histMap1D_, getHistName("ZZPt", variation.second), Pt, weight);
-    
+
     //Making LeptonPt and Eta plots
     SafeHistFill(histMap1D_, getHistName("LepPt", variation.second), l1Pt, weight);
     SafeHistFill(histMap1D_, getHistName("LepPt", variation.second), l2Pt, weight);
@@ -755,6 +755,6 @@ void ZZSelector::SetupNewDirectory()
     //std::cout<<"selection in ZZSelector: "<<selection_<<std::endl;
     applyFullSelection_ = (selection_ == ZZselection);
     //std::cout<<applyFullSelection_<<std::endl;
-    InitializeHistogramsFromConfig();   
+    InitializeHistogramsFromConfig();
     //std::cout<<"Do Histos get initialized"<<std::endl;
 }

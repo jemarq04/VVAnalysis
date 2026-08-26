@@ -1,3 +1,5 @@
+#!/bin/bash
+
 variables="jetPt0" #"pt mass zpt leppt dphiz1z2 drz1z2"
 #variables="pt"
 for var in $variables;do

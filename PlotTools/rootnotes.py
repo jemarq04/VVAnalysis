@@ -1,6 +1,6 @@
 """
 Helper module for displaying ROOT canvases in ipython notebooks
- 
+
 Usage example:
 # Save this file as rootnotes.py to your working directory.
 import rootnotes
@@ -10,21 +10,21 @@ c1.SetGridx()
 c1.SetGridy()
 fun1.Draw()
 c1
- 
+
 More examples: http://mazurov.github.io/webfest2013/
- 
+
 @author alexander.mazurov@cern.ch
 @author andrey.ustyuzhanin@cern.ch
 @date 2013-08-09
 """
- 
+
 import ROOT
 ROOT.gROOT.SetBatch()
- 
+
 import tempfile
 from IPython.core import display
- 
- 
+
+
 def canvas(name="icanvas", size=(800, 600)):
     """Helper method for creating canvas"""
 
@@ -37,20 +37,20 @@ def canvas(name="icanvas", size=(800, 600)):
     #if canvas:
     #    delete canvas
     return ROOT.TCanvas(name, name, size[0], size[1])
- 
- 
+
+
 def default_canvas(name="icanvas", size=(800, 600)):
     """ deprecated """
     return canvas(name=name, size=size)
- 
- 
+
+
 def _display_canvas(canvas):
     file = tempfile.NamedTemporaryFile(suffix=".png")
     canvas.SaveAs(file.name)
     ip_img = display.Image(filename=file.name, format='png', embed=True)
     return ip_img._repr_png_()
- 
- 
+
+
 def _display_any(obj):
     file = tempfile.NamedTemporaryFile(suffix=".png")
     obj.Draw()

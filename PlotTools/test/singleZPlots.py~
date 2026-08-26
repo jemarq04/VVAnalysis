@@ -19,15 +19,15 @@ mcWeight = {
     'mm' : 'm1EffScaleFactor * m2EffScaleFactor',
     }
 dyByChan = {
-    c : MCSample('DYJets', c, 
-                 '/data/nawoods/ntuples/singleZ_mc_11aug2016/results/DYJets*.root', 
+    c : MCSample('DYJets', c,
+                 '/data/nawoods/ntuples/singleZ_mc_11aug2016/results/DYJets*.root',
                  True, lumi) for c in channels
     }
 dy = SampleGroup('DYJets', 'z', dyByChan, True)
 
 ttByChan = {
-    c : MCSample('TTJets', c, 
-                 '/data/nawoods/ntuples/singleZ_mc_11aug2016/results/TTJets*.root', 
+    c : MCSample('TTJets', c,
+                 '/data/nawoods/ntuples/singleZ_mc_11aug2016/results/TTJets*.root',
                  True, lumi) for c in channels
     }
 tt = SampleGroup('TTJets', 'z', ttByChan, True)
@@ -39,7 +39,7 @@ dataByChan = {}
 for c in channels:
     samplesByEra = {}
     for era in ['b','c','d']:
-        samplesByEra['2016{}'.format(era)] = DataSample('data2016{}_{}'.format(era, c), c, 
+        samplesByEra['2016{}'.format(era)] = DataSample('data2016{}_{}'.format(era, c), c,
                                                         '/data/nawoods/ntuples/singleZ_data2016{}_11aug2016/results/*.root'.format(era)
                                                         )
 
@@ -60,4 +60,3 @@ leg.Draw("same")
 
 style.setCMSStyle(c, '', dataType='Preliminary', intLumi=lumi)
 c.Print('/afs/cern.ch/user/n/nawoods/www/ZTestPlot.png')
-                       

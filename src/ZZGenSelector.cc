@@ -78,15 +78,15 @@ void ZZGenSelector::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::
     else if(channel_ == eemm) {
       if(!(e1e2IsZ1()))
         Genweight=0.0;
-        //Makes Genweight 0 if Z1 is mm hence should not go in _eemm 
-    } 
+        //Makes Genweight 0 if Z1 is mm hence should not go in _eemm
+    }
     b_GenMass->GetEntry(entry);
     b_GenPt->GetEntry(entry);
     b_GenEta->GetEntry(entry);
     //std::cout<<"channel in LoadBranches function: "<<channel_<<std::endl;
     if(channel_ == eemm || channel_ == mmee){
       SetVariables(entry);
-    } 
+    }
     auto deltaPhiZZ = [](float phi1, float phi2) {
       float pi = TMath::Pi();
       float dphi = std::abs(phi1-phi2);
@@ -250,7 +250,7 @@ bool ZZGenSelector::e1e2IsZ1(){
   return (std::abs(GenZ1mass-91.1876) < std::abs(GenZ2mass-91.1876));
 }
 
-void ZZGenSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::string> variation) { 
+void ZZGenSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::string> variation) {
     if (!ZZSelection())
         return;
     SafeHistFill(histMap1D_, getHistName("Genyield", variation.second), 1, Genweight);

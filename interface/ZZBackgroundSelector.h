@@ -9,7 +9,7 @@ class ZZBackgroundSelector : public ZZSelector {
 public :
     ScaleFactor * fakeRate_allE_;
     ScaleFactor * fakeRate_allMu_;
-  
+
     //PPPF represents 3P1F CR and PPFF represents 2P1F CR
     TH1D* Z1MassHistPPPF_;
     TH1D* Z1MassHistPPFF_;
@@ -21,7 +21,7 @@ public :
 
     TH1D* WeightsHistmmee_;
     TH1D* WeightsHisteemm_;
-    
+
     virtual void    SetupNewDirectory() override;
     virtual void    SlaveBegin(TTree *tree) override;
 

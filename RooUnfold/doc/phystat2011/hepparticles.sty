@@ -38,11 +38,11 @@
 %% A set of macros for typesetting high energy particle names, to
 %% meet the following criteria:
 %%
-%% 1. The main particle name is a Roman or Greek symbol, to be 
+%% 1. The main particle name is a Roman or Greek symbol, to be
 %%    typeset in upright font in normal contexts. Note that this
-%%    follows from the mathematical convention that italics are 
+%%    follows from the mathematical convention that italics are
 %%    only used to designate *variables* and that concrete particle
-%%    names are not variables. However, if a symbol is being used 
+%%    names are not variables. However, if a symbol is being used
 %%    to represent a whole class of possible concrete particles then
 %%    that symbol should be italicised as befits a genuine variable.
 %%
@@ -58,13 +58,13 @@
 %% 4. The particle names are expected to be used both in and out
 %%    of mathematical contexts.
 %%
-%% 5. If the surrounding text is bold or italic then the particle 
+%% 5. If the surrounding text is bold or italic then the particle
 %%    name should adapt to that context as best as possible (this
 %%    may not be possible for Greek symbols).
 %%
 %% 6. Over-lines and over-tildes are used to indicate anti-particles
 %%    and supersymmetric (SUSY) particles respectively. The line and/or
-%%    tilde are only placed above the main symbol, NOT the accompanying 
+%%    tilde are only placed above the main symbol, NOT the accompanying
 %%    sub- and super-scripts.
 %%
 %% 7. Sub- and super-scripts should be at the same heights for particles,
@@ -72,7 +72,7 @@
 %%
 %% A consequence of point 5 is that the well-known problems with
 %% boldness of particle names in section titles, headers and
-%% tables of contents automatically disappear if these macros are 
+%% tables of contents automatically disappear if these macros are
 %% used.
 %%
 %%
@@ -91,13 +91,13 @@
 %%   \HepGenSusyParticle{main}{subscript}{superscript}
 %%   \HepSusyAntiParticle{main}{subscript}{superscript}
 %%   \HepGenSusyAntiParticle{main}{subscript}{superscript}
-%% 
+%%
 %% For resonance specifiers (just the extra terms):
 %%   \HepResonanceMassTerm{mainTermInParenths}{subscript}{superscript}
 %%   \HepResonanceSpecTerm{mainSpecTerm}{subscript}{superscript}
-%% 
+%%
 %% For the total particle name and resonance specifications: the
-%% ``formal'' definitions include the spectroscopic term and the 
+%% ``formal'' definitions include the spectroscopic term and the
 %% ``full'' versions pf each require the main particle name to be
 %% explicitly specified rather than just pass a \HepParticle as the first arg:
 %%   \HepParticleResonance{name}{mass}{massSub}{massSup}
@@ -107,21 +107,21 @@
 %%   \HepParticleResonanceFormalFull{name}{sub}{sup}\
 %%                                  {mass}{massSub}{massSup}\
 %%                                  {spec}{specSub}{specSup}
-%% 
-%% And finally, for containing processes describing the evolution 
+%%
+%% And finally, for containing processes describing the evolution
 %% of these particles:
 %%   \HepProcess{iParticles \HepTo fParticles}
 %% where \HepTo is a normal \to arrow with a bit of extra space.
-%% Help on increasing horizontal math spacing in this environment 
+%% Help on increasing horizontal math spacing in this environment
 %% would be welcome!
-%% 
+%%
 %% There are probably some missing cases but they can be handled
 %% as explicit exceptions. You might also be interested in the
-%% ``heppennames'' package, which updates the "pennames" set of 
+%% ``heppennames'' package, which updates the "pennames" set of
 %% typeset concrete particle names to use this more flexible scheme.
 %%
 %%
-%% This material is subject to the LaTeX Project Public License. 
+%% This material is subject to the LaTeX Project Public License.
 %% See http://www.ctan.org/tex-archive/help/Catalogue/licenses.lppl.html
 %% for the details of that license.
 %%
@@ -152,7 +152,7 @@
 }
 
 %% Concrete particle style (normal style with upright and forced italic handling)
-%% HepNormStyle can't be used in the first portion as it's important that sf be the 
+%% HepNormStyle can't be used in the first portion as it's important that sf be the
 %% innermost operator and that bm is the outermost so the rm must be sandwiched.
 %% The choice has been made to have forced-italics override the sf option, as you
 %% presumably have no sense of style if you use forced-it anyway :P
@@ -178,7 +178,7 @@
 \DeclareRobustCommand{\@dummysuper}{{\vphantom{\ast}}}
 %\DeclareRobustCommand{\@dummysuper}{\ast}
 
-%% Internal command for typesetting conditionally-bold terms with optional 
+%% Internal command for typesetting conditionally-bold terms with optional
 %% following sub- and super-scripts. Used by most other commands
 \DeclareRobustCommand{\@HepMainSubSupTerm}[3]{%
   {\def\myargtwo{#2}}%
@@ -270,7 +270,7 @@
 %% For generic antiparticles
 \DeclareRobustCommand{\HepGenAntiParticle}[3]{%
   {\def\myargtwo{#2}}%
-  {\def\myargthree{#3}}% 
+  {\def\myargthree{#3}}%
   \ifx\myargtwo\@empty%
     \HepGenParticle%
     {\overline{#1}}%
@@ -393,8 +393,8 @@
 }
 
 
-%% Resonances and other such structures. These are actually pretty 
-%% complicated since the most general structure has a main particle 
+%% Resonances and other such structures. These are actually pretty
+%% complicated since the most general structure has a main particle
 %% term, a mass term and a spectroscopic term: in total 9 possible arguments
 %% if we let each main term have optional following sub- and super-scripts!
 %% The mass and spectroscopic terms seem to be mixed up quite often... *sigh*

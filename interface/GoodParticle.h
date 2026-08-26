@@ -8,9 +8,9 @@
 struct GoodPart {
   LorentzVector v;
   int pdgId;
-  
+
   GoodPart(double pt, double eta, double phi, double m ) : v(pt, eta, phi, m) {
-  
+
   }
 
   void SetPdgId(int pdg) {

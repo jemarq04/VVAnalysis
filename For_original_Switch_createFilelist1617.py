@@ -21,7 +21,7 @@ dict['EWK']= [
         "ggZZ2e2mu",
         "ggZZ2e2tau",
         "ggZZ2mu2tau",
-"ggHZZ","vbfHZZ","WplusHToZZ","WminusHToZZ","ZHToZZ_4L","ttH_HToZZ_4L",
+        "ggHZZ","vbfHZZ","WplusHToZZ","WminusHToZZ","ZHToZZ_4L","ttH_HToZZ_4L",
       ]
 
 dict['altEWK']=[
@@ -32,7 +32,7 @@ dict['altEWK']=[
   "ggZZ2e2mu",
   "ggZZ2e2tau",
   "ggZZ2mu2tau",
-"ggHZZ","vbfHZZ","WplusHToZZ","WminusHToZZ","ZHToZZ_4L","ttH_HToZZ_4L",
+    "ggHZZ","vbfHZZ","WplusHToZZ","WminusHToZZ","ZHToZZ_4L","ttH_HToZZ_4L",
     ]
 
 with open(outputname,'w') as output_file:

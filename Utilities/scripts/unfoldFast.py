@@ -1495,13 +1495,13 @@ def _generatePlots(hUnfolded, hUncUp, hUncDn,
     hUnf.color = 'black'
     hUnf.drawstyle = 'PE1'
     hUnf.legendstyle = 'LPE1'
-    hUnf.title = '\\textbf{Data + stat.\ unc.}'
+    hUnf.title = '\\textbf{Data + stat. unc.}'
     if not norm:
         print("Inclusive {} fiducial cross section = {} fb".format(chan, hUnf.Integral(0,hUnf.GetNbinsX()+1)))
     _normalizeBins(hUnf)
 
     signalName = 'POWHEG+MCFM+Pythia8'
-    signalNameAlt = 'MG5\_aMC@NLO+MCFM'
+    signalNameAlt = 'MG5\\_aMC@NLO+MCFM'
     if ana == 'full':
         signalNameAlt += '+POWHEG'
     signalNameAlt += '+Pythia8'
@@ -2166,4 +2166,3 @@ if __name__ == "__main__":
          args.puWeightFile, args.lumi, args.nIter, args.amcatnlo,
          not args.noNorm, args.logy, args.looseSIP, args.noSIP, args.sfRemake,
          args.redo, *args.variables)
-

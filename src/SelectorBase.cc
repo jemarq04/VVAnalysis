@@ -23,7 +23,7 @@ void SelectorBase::Init(TTree *tree)
 {
     if (!tree) return;
     fChain = tree;
-    
+
     TString option = GetOption();
 
     if (GetInputList() != nullptr) {
@@ -60,7 +60,7 @@ void SelectorBase::Init(TTree *tree)
 	if(year != nullptr) {
 	    year_ = yearMap_[year->GetTitle()];
 	}
-	
+
 	if (chan != nullptr) {
 	    channelName_ = chan->GetTitle();
 	}
@@ -76,7 +76,7 @@ void SelectorBase::Init(TTree *tree)
     }
     else
         throw std::invalid_argument("Invalid selection!");
-    
+
     isMC_ = false;
     if (name_.find("data") == std::string::npos){
         isMC_ = true;
@@ -96,7 +96,7 @@ void SelectorBase::Init(TTree *tree)
             message += chan.first + ", " ;
         throw std::invalid_argument(message);
     }
-    
+
     if ( currentHistDir_ == nullptr ) {
         currentHistDir_ = new TList();
         currentHistDir_->SetName(name_.c_str());
@@ -160,7 +160,7 @@ float SelectorBase::GetPrefiringEfficiencyWeight(
 void SelectorBase::Terminate()
 {
 }
-    
+
 void SelectorBase::SlaveTerminate()
 {
 }
@@ -191,25 +191,25 @@ void SelectorBase::InitializeHistMap(std::vector<std::string>& labels, std::map<
 
 void SelectorBase::InitializeHistogramsFromConfig() {
     TList* histInfo = (TList *) GetInputList()->FindObject("histinfo");
-    if (histInfo == nullptr ) 
+    if (histInfo == nullptr )
         throw std::domain_error("Can't initialize histograms without passing histogram information to TSelector");
 
     InitializeHistMap(hists1D_, histMap1D_);
     InitializeHistMap(weighthists1D_, weighthistMap1D_);
 
-    for (auto && entry : *histInfo) {  
+    for (auto && entry : *histInfo) {
         TNamed* currentHistInfo = dynamic_cast<TNamed*>(entry);
         std::string name = currentHistInfo->GetName();
         std::vector<std::string> histData = ReadHistDataFromConfig(currentHistInfo->GetTitle());
-        
+
         std::vector<std::string> channels = {channelName_};
         if (channel_ == Inclusive) {
             channels = allChannels_;
         }
 
         for (auto& chan : channels) {
-            auto histName = getHistName(name, "", chan); 
-            if (hists2D_.find(histName) != hists2D_.end() || histMap1D_.find(histName) != histMap1D_.end()) { 
+            auto histName = getHistName(name, "", chan);
+            if (hists2D_.find(histName) != hists2D_.end() || histMap1D_.find(histName) != histMap1D_.end()) {
                 InitializeHistogramFromConfig(name, chan, histData);
             }
             //No need to print warning for every channel
@@ -228,7 +228,7 @@ void SelectorBase::InitializeHistogramFromConfig(std::string name, std::string c
         exit(1);
     }
     std::string histName = getHistName(name, "", channel);
-    
+
     int nbins = std::stoi(histData[1]);
     float xmin = std::stof(histData[2]);
     float xmax = std::stof(histData[3]);
@@ -244,12 +244,12 @@ void SelectorBase::InitializeHistogramFromConfig(std::string name, std::string c
                 //std::cout<<"systHists getting filled?"<<std::endl;
                 std::string syst_histName = getHistName(name, syst.second, channel);
                 histMap1D_[syst_histName] = {};
-                AddObject<TH1D>(histMap1D_[syst_histName], syst_histName.c_str(), 
+                AddObject<TH1D>(histMap1D_[syst_histName], syst_histName.c_str(),
                     histData[0].c_str(),nbins, xmin, xmax);
                 // TODO: Cleaner way to determine if you want to store systematics for weighted entries
-                //if (isaQGC_ && doaQGC_ && (weighthistMap1D_.find(name) != weighthistMap1D_.end())) { 
+                //if (isaQGC_ && doaQGC_ && (weighthistMap1D_.find(name) != weighthistMap1D_.end())) {
                 //    std::string weightsyst_histName = name+"_lheWeights_"+syst.second;
-                //    AddObject<TH2D>(weighthistMap1D_[syst_histName], 
+                //    AddObject<TH2D>(weighthistMap1D_[syst_histName],
                 //        (weightsyst_histName+"_"+channel).c_str(), histData[0].c_str(),
                 //        nbins, xmin, xmax, 1000, 0, 1000);
                 //}
@@ -257,9 +257,9 @@ void SelectorBase::InitializeHistogramFromConfig(std::string name, std::string c
         }
         // Weight hists must be subset of 1D hists!
         //std::cout<<"size of weighthistMap1D_: "<<weighthistMap1D_.size()<<std::endl;
-        if (isMC_ && (weighthistMap1D_.find(histName) != weighthistMap1D_.end())) { 
+        if (isMC_ && (weighthistMap1D_.find(histName) != weighthistMap1D_.end())) {
            //std::cout<<"Is weightHists getting filled?"<<std::endl;
-            AddObject<TH2D>(weighthistMap1D_[histName], 
+            AddObject<TH2D>(weighthistMap1D_[histName],
                 (name+"_lheWeights_"+channel).c_str(), histData[0].c_str(),
                 nbins, xmin, xmax, 1000, 0, 1000);
         }
@@ -274,13 +274,13 @@ void SelectorBase::InitializeHistogramFromConfig(std::string name, std::string c
             for (auto& syst : systematics_) {
                 std::string syst_hist_name = name+"_"+syst.second + "_" + channel;
                 hists2D_[syst_hist_name] = {};
-                AddObject<TH2D>(hists2D_[syst_hist_name], syst_hist_name.c_str(), 
+                AddObject<TH2D>(hists2D_[syst_hist_name], syst_hist_name.c_str(),
                     histData[0].c_str(),nbins, xmin, xmax, nbinsy, ymin, ymax);
             }
         }
         // 3D weight hists must be subset of 2D hists!
-        if (isMC_ && (weighthistMap2D_.find(histName) != weighthistMap2D_.end())) { 
-            AddObject<TH3D>(weighthistMap2D_[histName], 
+        if (isMC_ && (weighthistMap2D_.find(histName) != weighthistMap2D_.end())) {
+            AddObject<TH3D>(weighthistMap2D_[histName],
                 (name+"_lheWeights_"+channel).c_str(), histData[0].c_str(),
                 nbins, xmin, xmax, nbinsy, ymin, ymax, 1000, 0, 1000);
         }
@@ -293,14 +293,14 @@ std::vector<std::string> SelectorBase::ReadHistDataFromConfig(std::string histDa
     std::vector<std::string> binInfo;
     if (histData.size() != 2)
         return {};
-    
+
     boost::split(binInfo, histData[1], boost::is_any_of(","));
-   
+
     histData.pop_back();
     for (const auto& x : binInfo) {
         histData.push_back(x);
     }
-    
+
     return histData;
 }
 
@@ -321,4 +321,3 @@ std::string SelectorBase::getHistName(std::string histName, std::string variatio
         return histName + "_" + variationName + "_" + channel;
     return histName + "_" + channel;
 }
-

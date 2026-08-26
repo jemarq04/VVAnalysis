@@ -31,14 +31,14 @@ def sep_up_dn(lu,ld):
     for x,y in zip(lu,ld):
         lun.append(max(x,y))
         ldn.append(min(x,y))
-    
+
     return lun,ldn
 
 def analyzeYear(var,foldername,froot=None):
     dict = {}
     area = 0.
     fname = foldername+"/ErrorInfo_%s.log"%var
-    
+
     hvar = froot.Get("tot_%s_unf"%var)
     area1 = hvar.Integral(1,hvar.GetNbinsX())
     #print("area from hist:%s"%area1)
@@ -51,7 +51,7 @@ def analyzeYear(var,foldername,froot=None):
         if "Source Up" in line:
             ln= line.strip().replace("Source Up ","")
             sys = ln.split(":")[0]
-            contstr = (ln.split(":")[1][1:-1]).split(",") 
+            contstr = (ln.split(":")[1][1:-1]).split(",")
             cont = [float(x) for x in contstr]
             dict[sys]={} #Up occurs before Dn, so initialize here
             dict[sys]["Up"] = cont
@@ -59,24 +59,24 @@ def analyzeYear(var,foldername,froot=None):
         if "Source Dn" in line:
             ln= line.strip().replace("Source Dn ","")
             sys = ln.split(":")[0]
-            contstr = (ln.split(":")[1][1:-1]).split(",") 
+            contstr = (ln.split(":")[1][1:-1]).split(",")
             cont = [float(x) for x in contstr]
             dict[sys]["Dn"] = cont
 
         if "Source Stat unc" in line:
             ln= line.strip()
             sys = "stat"
-            contstr = (ln.split(":")[1][1:-1]).split(",") 
+            contstr = (ln.split(":")[1][1:-1]).split(",")
             cont = [float(x) for x in contstr]
             dict["stat"] = cont
-        
+
         if "Source pdf unc" in line:
             ln= line.strip()
             sys = "pdf"
-            contstr = (ln.split(":")[1][1:-1]).split(",") 
+            contstr = (ln.split(":")[1][1:-1]).split(",")
             cont = [float(x) for x in contstr]
             dict["pdf"] = cont
-    
+
     if area == 0.:
         area = area1
     return area,dict
@@ -100,7 +100,7 @@ dicComb = {}
 jes_list = []
 years = ["16","17","18"]
 for var in vars:
-    
+
     totarea = sum(areas[var])
     w16 = areas[var][0]/totarea
     w17 = areas[var][1]/totarea
@@ -170,7 +170,7 @@ for var in vars:
 
             #change up/down properly for tot unc. calculation
             #A concern is that the combined uncorrelated unc. loses the sign due to sqrt,
-            #so sep_up_dn may not determine up/down properly.  
+            #so sep_up_dn may not determine up/down properly.
             #But the only affected unc is JER (uncorrelated), and in general up/down unc should be similar
             upcorr,dncorr = sep_up_dn(upcorr,dncorr)
             upuncorr, dnuncorr = sep_up_dn(upuncorr,dnuncorr)
@@ -230,12 +230,12 @@ vars_sort = np.take(vars_sort,indjes)
 #====================================================================================
 printTable = False
 if printTable:
-    
+
     #uncomment 1 of the 3 needed
     varP="nJets mjj dEtajj jetPt[0] jetPt[1] absjetEta[0] absjetEta[1]"
     varP2="MassAllj Mass0j Mass1j Mass2j Mass34j"
     varP3="MassFull Mass0jFull Mass1jFull Mass2jFull Mass34jFull"
-    keysReorder = [ 'eEff','mEff', 'jer', 'jes', 'fake','pu','lumi','generator', 'ggZZxsec','QCD_scales','pdf','alpha_s', ]  
+    keysReorder = [ 'eEff','mEff', 'jer', 'jes', 'fake','pu','lumi','generator', 'ggZZxsec','QCD_scales','pdf','alpha_s', ]
 
     #jet variables error range
     for n,var in enumerate(varP.split(" ")):
@@ -256,7 +256,7 @@ if printTable:
                     sysdict[nsys][2] = fn_uncorr[k]
                 if fn_uncorr[k]>sysdict[nsys][3]:
                     sysdict[nsys][3] = fn_uncorr[k]
-    
+
     for key in keysReorder:
         if 'jer' in key:
             erange = sysdict[key][2:]
@@ -269,7 +269,7 @@ if printTable:
 
     #Mass variables error summary numbers
     for varPi in [varP2,varP3]:
-        
+
         for key in keysReorder:
             pstr = ""
             for n,var in enumerate(varPi.split(" ")):
@@ -299,7 +299,7 @@ for var in vars_sort:
     fn_sys,fn_corr,fn_uncorr,final_corr,final_uncorr = dicComb[var]
     for i in range(0,len(fn_sys)):
         print("%-10s %.4f %.4f"%(fn_sys[i],fn_corr[i],fn_uncorr[i]))
-    
+
     print("Total uncertainty with jes correlated:%.4f uncorrelated:%.4f, relative diff %.4f"%(final_corr,final_uncorr, abs(final_corr-final_uncorr)/final_corr))
 
 
@@ -350,11 +350,6 @@ for var in vars:
     tmpHists = [olddata,oldtrue,oldtrueAlt,oldBkg,oldUnf,olddSigMC,hUncUp,hUncDn]
     for h in tmpHists:
         h.Write()
-  
+
 
 fr2.Close()
-
-
-
-        
-    

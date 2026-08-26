@@ -114,7 +114,7 @@ public :
     Bool_t Flag_goodVerticesPass;
     Bool_t Flag_eeBadScFilterPass;
     Bool_t Flag_globalTightHalo2016FilterPass;
-    
+
     // Readers to access the data (delete the ones you do not need).
     virtual void    SetScaleFactors() override;
     virtual void    Init(TTree *tree) override;
@@ -151,4 +151,3 @@ protected:
 };
 
 #endif
-

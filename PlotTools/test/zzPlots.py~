@@ -34,7 +34,7 @@ lumi = 12900.
 channels = ['eeee','eemm', 'mmmm']
 
 puWeight = WeightStringMaker('puWeight')
-fPU = root_open(_path.join(environ['zzt'], 'data', 'pileup', 
+fPU = root_open(_path.join(environ['zzt'], 'data', 'pileup',
                            'pileup_MC_80x_271036-276811_69200.root'))
 hPU = fPU.puweight
 strPU = puWeight.makeWeightStringFromHist(hPU, 'nTruePU')
@@ -49,34 +49,34 @@ mcWeight = {
 
 if test:
     qqZZByChan = {
-        c : MCSample('ZZTo4L', c, 
-                     '/data/nawoods/ntuples/uwvvNtuples_mc_test/ZZTo4L*.root', 
+        c : MCSample('ZZTo4L', c,
+                     '/data/nawoods/ntuples/uwvvNtuples_mc_test/ZZTo4L*.root',
                      True, lumi) for c in channels
         }
     qqZZByChan2P2F = {
-        c : MCSample('ZZTo4L', c, 
-                     '/data/nawoods/ntuples/uwvvNtuples_mc_test/2P2F/ZZTo4L*.root', 
+        c : MCSample('ZZTo4L', c,
+                     '/data/nawoods/ntuples/uwvvNtuples_mc_test/2P2F/ZZTo4L*.root',
                      True, lumi) for c in channels
         }
     qqZZByChan3P1F = {
-        c : MCSample('ZZTo4L', c, 
-                     '/data/nawoods/ntuples/uwvvNtuples_mc_test/3P1F/ZZTo4L*.root', 
+        c : MCSample('ZZTo4L', c,
+                     '/data/nawoods/ntuples/uwvvNtuples_mc_test/3P1F/ZZTo4L*.root',
                      True, lumi) for c in channels
         }
 else:
     qqZZByChan = {
-        c : MCSample('ZZTo4L', c, 
-                     '/data/nawoods/ntuples/uwvvNtuples_mc_23aug2016/results_smp/ZZTo4L*.root', 
+        c : MCSample('ZZTo4L', c,
+                     '/data/nawoods/ntuples/uwvvNtuples_mc_23aug2016/results_smp/ZZTo4L*.root',
                      True, lumi) for c in channels
         }
     qqZZByChan2P2F = {
-        c : MCSample('ZZTo4L', c, 
-                     '/data/nawoods/ntuples/uwvvNtuples_mc_23aug2016/results_smp_2P2F/ZZTo4L*.root', 
+        c : MCSample('ZZTo4L', c,
+                     '/data/nawoods/ntuples/uwvvNtuples_mc_23aug2016/results_smp_2P2F/ZZTo4L*.root',
                      True, lumi) for c in channels
         }
     qqZZByChan3P1F = {
-        c : MCSample('ZZTo4L', c, 
-                     '/data/nawoods/ntuples/uwvvNtuples_mc_23aug2016/results_smp_3P1F/ZZTo4L*.root', 
+        c : MCSample('ZZTo4L', c,
+                     '/data/nawoods/ntuples/uwvvNtuples_mc_23aug2016/results_smp_3P1F/ZZTo4L*.root',
                      True, lumi) for c in channels
         }
 
@@ -90,19 +90,19 @@ ggZZByChan3P1F = {}
 if test:
     for c in channels:
         ggZZByFS = {
-            fs : MCSample('GluGluZZTo{}'.format(fs), c, 
+            fs : MCSample('GluGluZZTo{}'.format(fs), c,
                           '/data/nawoods/ntuples/uwvvNtuples_mc_test/GluGluZZTo{}*.root'.format(fs),
                           True, lumi) for fs in ['4e', '4mu', '2e2mu']
             }
         ggZZByChan[c] = SampleGroup('GluGluZZ', c, ggZZByFS, True)
         ggZZByFS2P2F = {
-            fs : MCSample('GluGluZZTo{}'.format(fs), c, 
+            fs : MCSample('GluGluZZTo{}'.format(fs), c,
                           '/data/nawoods/ntuples/uwvvNtuples_mc_test/2P2F/GluGluZZTo{}*.root'.format(fs),
                           True, lumi) for fs in ['4e', '4mu', '2e2mu']
             }
         ggZZByChan3P1F[c] = SampleGroup('GluGluZZ', c, ggZZByFS3P1F, True)
         ggZZByFS3P1F = {
-            fs : MCSample('GluGluZZTo{}'.format(fs), c, 
+            fs : MCSample('GluGluZZTo{}'.format(fs), c,
                           '/data/nawoods/ntuples/uwvvNtuples_mc_test/3P1F/GluGluZZTo{}*.root'.format(fs),
                           True, lumi) for fs in ['4e', '4mu', '2e2mu']
             }
@@ -110,19 +110,19 @@ if test:
 else:
     for c in channels:
         ggZZByFS = {
-            fs : MCSample('GluGluZZTo{}'.format(fs), c, 
+            fs : MCSample('GluGluZZTo{}'.format(fs), c,
                           '/data/nawoods/ntuples/uwvvNtuples_mc_23aug2016/results_smp/GluGluZZTo{}*.root'.format(fs),
                           True, lumi) for fs in ['4e', '4mu', '2e2mu']
             }
         ggZZByChan[c] = SampleGroup('GluGluZZ', c, ggZZByFS, True)
         ggZZByFS2P2F = {
-            fs : MCSample('GluGluZZTo{}'.format(fs), c, 
+            fs : MCSample('GluGluZZTo{}'.format(fs), c,
                           '/data/nawoods/ntuples/uwvvNtuples_mc_23aug2016/results_smp_2P2F/GluGluZZTo{}*.root'.format(fs),
                           True, lumi) for fs in ['4e', '4mu', '2e2mu']
             }
         ggZZByChan2P2F[c] = SampleGroup('GluGluZZ', c, ggZZByFS2P2F, True)
         ggZZByFS3P1F = {
-            fs : MCSample('GluGluZZTo{}'.format(fs), c, 
+            fs : MCSample('GluGluZZTo{}'.format(fs), c,
                           '/data/nawoods/ntuples/uwvvNtuples_mc_23aug2016/results_smp_3P1F/GluGluZZTo{}*.root'.format(fs),
                           True, lumi) for fs in ['4e', '4mu', '2e2mu']
             }
@@ -139,12 +139,12 @@ dataByChan = {}
 for c in channels:
     samplesByEra = {}
     if test:
-        samplesByEra['test'] = DataSample('test', c, 
+        samplesByEra['test'] = DataSample('test', c,
                                           '/data/nawoods/ntuples/singleZ_data_test/*.root',
                                           )
     else:
         for era in ['b','c','d']:
-            samplesByEra['2016{}'.format(era)] = DataSample('data2016{}_{}'.format(era, c), c, 
+            samplesByEra['2016{}'.format(era)] = DataSample('data2016{}_{}'.format(era, c), c,
                                                             '/data/nawoods/ntuples/singleZ_data2016{}_11aug2016/results/*.root'.format(era)
                                                             )
 
@@ -212,7 +212,7 @@ for chan in ['z', 'ze', 'zm']:
 
         hStack = stack.makeHist(var, '', binning2l[varName], mcWeight)
         dataPts = data.makeHist(var, '', binning2l[varName], poissonErrors=True)
-        
+
         # for ratio
         dataHist = data.makeHist(var, '', binning2l[varName])
 
@@ -226,14 +226,14 @@ for chan in ['z', 'ze', 'zm']:
         pad1, pad2 = addPadBelow(c, .23)
 
         pad1.cd()
-        (xaxis, yaxis), (xmin,xmax,ymin,ymax) = draw([hStack, dataPts], pad1, 
-                                                     xtitle='{}'.format(varName)+(' ({})'.format(units[varName]) if units[varName] else ''), 
+        (xaxis, yaxis), (xmin,xmax,ymin,ymax) = draw([hStack, dataPts], pad1,
+                                                     xtitle='{}'.format(varName)+(' ({})'.format(units[varName]) if units[varName] else ''),
                                                      ytitle='Events')
         leg.Draw("same")
 
         pad2.cd()
         ratio, unity = makeRatio(dataHist, hStack)
-        (ratioX, ratioY), ratioLimits = draw(ratio, pad2, ytitle='Data / MC', 
+        (ratioX, ratioY), ratioLimits = draw(ratio, pad2, ytitle='Data / MC',
                                              xlimits=(xmin,xmax),
                                              ylimits=(0.7,1.3), ydivisions=5)
         unity.Draw("same")
@@ -267,14 +267,14 @@ for chan in ['l', 'e', 'm']:
         pad1, pad2 = addPadBelow(c, .23)
 
         pad1.cd()
-        (xaxis, yaxis), (xmin,xmax,ymin,ymax) = draw([hStack, dataPts], pad1, 
-                                                     xtitle='{}'.format(varName)+(' ({})'.format(units[varName]) if units[varName] else ''), 
+        (xaxis, yaxis), (xmin,xmax,ymin,ymax) = draw([hStack, dataPts], pad1,
+                                                     xtitle='{}'.format(varName)+(' ({})'.format(units[varName]) if units[varName] else ''),
                                                      ytitle='Leptons')
         leg.Draw("same")
 
         pad2.cd()
         ratio, unity = makeRatio(dataHist, hStack)
-        (ratioX, ratioY), ratioLimits = draw(ratio, pad2, ytitle='Data / MC', 
+        (ratioX, ratioY), ratioLimits = draw(ratio, pad2, ytitle='Data / MC',
                                              xlimits=(xmin,xmax),
                                              ylimits=(0.7,1.3), ydivisions=5)
         unity.Draw("same")
@@ -287,4 +287,3 @@ for chan in ['l', 'e', 'm']:
 
         style.setCMSStyle(c, '', dataType='Preliminary', intLumi=lumi)
         c.Print('{}/{}{}.png'.format(outdir, chan, varName))
-                       

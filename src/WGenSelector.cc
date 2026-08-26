@@ -9,10 +9,10 @@ void WGenSelector::Init(TTree *tree)
     hists1D_ = {"CutFlow", "mW", "yW", "ptW", "ptl", "etal", "phil", "MET", "MET_phi",};
 
     NanoGenSelectorBase::Init(tree);
-    
+
 }
 
-void WGenSelector::LoadBranchesNanoAOD(Long64_t entry, std::pair<Systematic, std::string> variation) { 
+void WGenSelector::LoadBranchesNanoAOD(Long64_t entry, std::pair<Systematic, std::string> variation) {
     NanoGenSelectorBase::LoadBranchesNanoAOD(entry, variation);
 
     if (leptons.size() > 0 && std::abs(leptons.at(0).pdgId()) == 11) {
@@ -36,11 +36,11 @@ void WGenSelector::SetComposite() {
 }
 
 
-void WGenSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::string> variation) { 
+void WGenSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::string> variation) {
     int step = 0;
     SafeHistFill(histMap1D_, getHistName("CutFlow", variation.second), step++, weight);
 
-    if (channel_ != m && channel_ != e) 
+    if (channel_ != m && channel_ != e)
         return;
     SafeHistFill(histMap1D_, getHistName("CutFlow", variation.second), step++, weight);
 

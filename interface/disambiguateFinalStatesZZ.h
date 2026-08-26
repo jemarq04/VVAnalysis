@@ -2,9 +2,9 @@
  *
  * TSelector deduplicate events in combinatorical ntuple
  * by choosing event with l1_l2_Mass pairing closest to
- * M_PDG(Z) = 91.1876 
+ * M_PDG(Z) = 91.1876
  * with the highest scalar Pt sum of the remaining leptons
- * used as a tiebreaker. 
+ * used as a tiebreaker.
  *
  * Modified from K. Long, U. Wisconsin
  *
@@ -34,7 +34,7 @@ public :
   UInt_t           run;
 
   TBranch        *b_l1_l2_Mass;
-  TBranch        *b_l1_Pt; 
+  TBranch        *b_l1_Pt;
   TBranch        *b_l2_Pt;
   TBranch        *b_l3_l4_Mass;
   TBranch        *b_l3_Pt;
@@ -44,8 +44,8 @@ public :
   TBranch        *b_run;
 
   TEntryList     *fBestCandidateEntryList;
-  
-  // TODO Add TTreeFormula, fix issue when using chain.Process 
+
+  // TODO Add TTreeFormula, fix issue when using chain.Process
   // over multiple files (currently segfaults)
   TTreeFormula   *fCutFormula;
 
@@ -67,13 +67,13 @@ public :
   virtual TList  *GetOutputList() const { return fOutput; }
   virtual void    SlaveTerminate();
   virtual void    Terminate();
-  void setZCandidateBranchName(const char* name1,const char* name2, const char* name3,const char* name4,const char* name5,const char* name6) { 
-    l1_l2_Cand_mass = const_cast<char*>(name1);  
-    l1_Cand_pt = const_cast<char*>(name2);  
-    l2_Cand_pt = const_cast<char*>(name3); 
-    l3_l4_Cand_mass = const_cast<char*>(name4); 
+  void setZCandidateBranchName(const char* name1,const char* name2, const char* name3,const char* name4,const char* name5,const char* name6) {
+    l1_l2_Cand_mass = const_cast<char*>(name1);
+    l1_Cand_pt = const_cast<char*>(name2);
+    l2_Cand_pt = const_cast<char*>(name3);
+    l3_l4_Cand_mass = const_cast<char*>(name4);
     l3_Cand_pt = const_cast<char*>(name5);
-    l4_Cand_pt = const_cast<char*>(name6); 
+    l4_Cand_pt = const_cast<char*>(name6);
   }
 
   ClassDef(disambiguateFinalStatesZZ,0);
@@ -83,15 +83,14 @@ private :
   UInt_t fCurrentRun;
   ULong64_t fCurrentEvt;
   std::vector<Long64_t> fEntriesToCompare;
-  std::vector<float> fEntryDiscriminants; 
+  std::vector<float> fEntryDiscriminants;
   std::vector<float> fEntryZ2PtSum;
-  char* l1_l2_Cand_mass; 
+  char* l1_l2_Cand_mass;
   char* l1_Cand_pt;
-  char* l2_Cand_pt; 
-  char* l3_l4_Cand_mass; 
+  char* l2_Cand_pt;
+  char* l3_l4_Cand_mass;
   char* l3_Cand_pt;
-  char* l4_Cand_pt; 
+  char* l4_Cand_pt;
 };
 
 #endif
-

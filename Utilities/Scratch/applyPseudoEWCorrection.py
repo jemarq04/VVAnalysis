@@ -5,14 +5,14 @@ rtfile = ROOT.TFile("/eos/user/k/kelong/WZAnalysisData/CombineData/VBSselection_
 
 ew_folder = rtfile.Get("EW-WZjj")
 
-scale_facs = { 
+scale_facs = {
         500 : 0.95,
         1000: 0.9,
         1500: 0.85,
         2000: 0.8,
 }
 
-scale_facs = { 
+scale_facs = {
         500 : 0.8,
         1000: 0.733,
         1500: 0.666,

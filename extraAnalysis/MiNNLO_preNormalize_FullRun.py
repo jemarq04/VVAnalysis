@@ -1,4 +1,4 @@
-import ROOT 
+import ROOT
 import array
 import pdb
 import json
@@ -16,7 +16,7 @@ def rebin(hist,varName):
     #No need to rebin certain variables but still might need overflow check
     if varName not in ['eta']:
         bins=array.array('d',_binning[varName])
-        Nbins=len(bins)-1 
+        Nbins=len(bins)-1
         hist=hist.Rebin(Nbins,hist.GetName()+"NoConfusion",bins)
     else:
         Nbins = hist.GetSize() - 2
@@ -92,21 +92,21 @@ for i,var in enumerate(vars2):
     hqq = fqq.Get(var)
     hgg = fgg.Get(var)
     if var != "m4l":
-        
+
         hqqEW = fqq.Get(var+"E")
         hggEW = fgg.Get(var+"E")
-        
+
     else:
-        
+
         hqqEW = fqq.Get(var+"EW")
         hggEW = fgg.Get(var+"EW")
-       
-      
+
+
     hqq = rebin(hqq,var1)
     hgg = rebin(hgg,var1)
     hqqEW = rebin(hqqEW,var1)
     hggEW = rebin(hggEW,var1)
-    
+
     hqq.Scale(qqfac)
     hgg.Scale(ggfac)
     hqqEW.Scale(qqfac)
@@ -137,20 +137,20 @@ for i,var in enumerate(vars2):
 
     print(var1)
     if var=="m4l":
-        
+
         hmissedqq = fqq.Get("4lMissed")
         hqqLHE = fqq.Get("m4lLHETotNo4l")
 
         missedqq = hmissedqq.GetBinContent(1)
         totLHEqq = hqqLHE.GetBinContent(1)
-        
+
         hmissedgg = fgg.Get("4lMissed")
         hggLHE = fgg.Get("m4lLHETotNo4l")
-        
+
         missedgg = hmissedgg.GetBinContent(1)
         totLHEgg = hggLHE.GetBinContent(1)
-        
-        
+
+
         print("nevt lost by 4l requirement: qq,gg and ratio over total LHE")
         print(missedqq,missedqq/totLHEqq)
         print(missedgg,missedgg/totLHEgg)
@@ -162,11 +162,11 @@ for i,var in enumerate(vars2):
     lhsum = listNh(hsum)
     lhsumEW = listNh(hsumEW)
         #lhsumNoGen = listNh(hsumNoGen)
-        
+
     printr(lhsumEW,7)
     printr(lhsum,7)
     printr(Ratiol(lhsumEW,lhsum),7)
-    #paperNorm = [0.17590936266589538, 0.3781595634643841, 0.1963998830023097, 0.10069941959681805, 0.05568004727354278, 0.052217673625462646, 0.02160027834458957, 0.01459272741863249, 0.006666502098751068]    
+    #paperNorm = [0.17590936266589538, 0.3781595634643841, 0.1963998830023097, 0.10069941959681805, 0.05568004727354278, 0.052217673625462646, 0.02160027834458957, 0.01459272741863249, 0.006666502098751068]
     #printr(paperNorm,7)
     #printr(Ratiol(lhsum,paperNorm),7)
     #printr(Ratiol(lhsum,lhsumNoGen),7)
@@ -174,11 +174,11 @@ for i,var in enumerate(vars2):
     #printTH1N(hsum)
     #printTH1N(hsumEW)
     #printTH1N(hsumNoGen)
-    
+
     #Print group for checkin with paper
     '''
     print("Normalized hsum, hsumNoGen and paperNorm, followed by two ratios")
-    paperNorm = [0.17590936266589538, 0.3781595634643841, 0.1963998830023097, 0.10069941959681805, 0.05568004727354278, 0.052217673625462646, 0.02160027834458957, 0.01459272741863249, 0.006666502098751068]    
+    paperNorm = [0.17590936266589538, 0.3781595634643841, 0.1963998830023097, 0.10069941959681805, 0.05568004727354278, 0.052217673625462646, 0.02160027834458957, 0.01459272741863249, 0.006666502098751068]
     lhsum = listNh(hsum)
     lhsumNoGen = listNh(hsumNoGen)
     printr(lhsum,7)
@@ -187,7 +187,7 @@ for i,var in enumerate(vars2):
     printr(Ratiol(lhsum,paperNorm),7)
     printr(Ratiol(lhsumNoGen,paperNorm),7)
     '''
-    
+
     print("")
 
 
@@ -225,5 +225,3 @@ if compare:
     print("Ratio with/without")
     print([round(hc2EW.GetBinContent(i)/hc2EW.Integral(1,9)/hc2.GetBinContent(i)*hc2.Integral(1,9)/kfacs[i-1],9) for i in range(1,hc2.GetNbinsX()+1)])
     '''
-
-

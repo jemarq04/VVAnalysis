@@ -24,7 +24,7 @@ cd install_path
 git clone git@github.com:uhussain/ZZ4lRun2DatasetManager.git
 ```
 
-  
+
 ## Running analysis code
 
 ```
@@ -32,6 +32,3 @@ cd CMSSW_8_0_26/src/Analysis/VVAnalysis
 source setup.sh
 ./createResponseMatrix16.sh
 ```
-
-
-

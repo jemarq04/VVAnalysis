@@ -53,31 +53,31 @@ class RooUnfoldResponse(object):
         if (overflow):
             nb += 2
         v= ROOT.TVectorD(nb)
-        if (not h): 
+        if (not h):
             return v
         for i in range(0,nb):
             v[i]= h.GetBinContent( RooUnfoldResponse.GetBin(h, i, overflow))
-  
+
         return v
-    
+
     def Vtruth(self):
     #Truth distribution as a TVectorD
         if (not self._vTru):
             self._vTru= RooUnfoldResponse.H2V(self._tru, self._nt, self._overflow)
             self._cached= True if self._vTru else False
         return self._vTru
-    
+
     def Vfakes(self):
     #Fakes distribution as a TVectorD
         if (not self._vFak):
             self._vFak= RooUnfoldResponse.H2V(self._fak, self._nm, self._overflow)
-            self._cached= True if self._vFak else False 
+            self._cached= True if self._vFak else False
         return self._vFak
 
     def GetNbinsMeasured(self):
     # Total number of bins in the measured distribution
         return self._nm
-    
+
     def GetNbinsTruth(self):
     #Total number of bins in the truth distribution
         return self._nt
@@ -96,7 +96,7 @@ class RooUnfoldResponse(object):
     def Htruth(self):
     #Truth distribution, used for normalisation
         return self._tru
-    
+
     def Hmeasured(self):
     #Measured distribution, including fakes ->? isn't fake stored in separate _fak?
         return self._mes
@@ -120,29 +120,29 @@ class RooUnfoldResponse(object):
         oldstat= ROOT.TH1.AddDirectoryStatus()
         ROOT.TH1.AddDirectory(False)
         self._res= response.Clone()
-        if (measured): 
+        if (measured):
             self._mes=  measured.Clone()
             self._fak=  measured.Clone("fakes")
             self._fak.Reset()
             self._fak.SetTitle("Fakes")
             self._mdim= self._mes.GetDimension()
-    
-        if (truth): 
+
+        if (truth):
             self._tru=   truth.Clone()
             self._tdim= self._tru.GetDimension()
-    
+
         ROOT.TH1.AddDirectory (oldstat)
         if (self._overflow and (self._mdim > 1 or self._tdim > 1)):
-            print("UseOverflow setting ignored for multi-dimensional distributions") 
+            print("UseOverflow setting ignored for multi-dimensional distributions")
             self._overflow= 0
-    
+
         self._nm= self._mes.GetNbinsX() * self._mes.GetNbinsY() * self._mes.GetNbinsZ()
         self._nt= self._tru.GetNbinsX() * self._tru.GetNbinsY() * self._tru.GetNbinsZ()
         if (self._nm != self._res.GetNbinsX() or self._nt != self._res.GetNbinsY()):
             print( "Warning: RooUnfoldResponse measured X truth is " ,self._nm ," X ", self._nt,
             ", but matrix is ",self._res.GetNbinsX()," X ",self._res.GetNbinsY())
             raise Exception('Something wrong in dimension')
-    
+
         first=1
         nm= self._nm
         nt= self._nt
@@ -152,7 +152,7 @@ class RooUnfoldResponse(object):
             first= 0
             nm += 2
             nt += 2
-    
+
 
         if (not measured or self._mes.GetEntries() == 0.0):
             raise Exception("No measured hist content")
@@ -166,23 +166,23 @@ class RooUnfoldResponse(object):
                 wmes= 0.0
                 for j in range(0,self._nt+2):
                     nmes += self._res.GetBinContent (i+first, j)
-                    if (s): 
+                    if (s):
                         wmes += pow (self._res.GetBinError(i+first, j), 2)
-        
+
                 bin= RooUnfoldResponse.GetBin(self._mes, i, self._overflow)
                 fake= self._mes.GetBinContent (bin) - nmes
             #cout<<i+1<<":inside"<<self._mes.GetBinContent (bin)<<endl
-                if (fake!=0.0): 
+                if (fake!=0.0):
                     nfake+=1
                 if (not s):
                     wmes= nmes
                 self._fak.SetBinContent (bin, fake)
                 self._fak.SetBinError(bin, math.sqrt(wmes + (pow(self._mes.GetBinError(bin),2) if sm else self._mes.GetBinContent(bin))))
-        
+
             #if ROOT_VERSION_CODE >= ROOT_VERSION(5,13,0)
             self._fak.SetEntries(self._fak.GetEffectiveEntries())  # 0 entries if 0 fakes
 
-    
+
 
         if (not truth or self._tru.GetEntries() == 0.0):
             raise Exception("No truth hist content")
@@ -204,7 +204,7 @@ class RooUnfold(object):
         self._withError= 'kDefault'
         self._NToys=50
         self.GetSettings()
-    
+
     def GetSettings(self):
     #Gets maximum and minimum parameters and step size
         self._minparm=0
@@ -228,7 +228,7 @@ class RooUnfold(object):
         del self._covMes
         del self._covL
         del self._resmine
-    
+
     def SetResponse (self,res):
     # Set response matrix for unfolding.
         self._resmine= 0
@@ -239,7 +239,7 @@ class RooUnfold(object):
         if (self._overflow):
             self._nm += 2
             self._nt += 2
-    
+
     def SetMeasured (self,meas):
     #Set measured distribution and errors. RooUnfold does not own the histogram.
         self._meas= meas
@@ -252,7 +252,7 @@ class RooUnfold(object):
     #1: Errors from the square root of the diagonals of the covariance matrix given by the unfolding
     #2: Errors from the square root of of the covariance matrix given by the unfolding
     #3: Errors from the square root of the covariance matrix from the variation of the results in toy MC tests
-    
+
         reco= self._res.Htruth().Clone('Bayes_reco')
         reco.Reset()
         reco.SetTitle('Bayes_reco_title')
@@ -277,10 +277,10 @@ class RooUnfold(object):
                 raise Exception('Error type not implemented')
                 #reco.SetBinError (j, math.sqrt (abs (_err_mat(i,i))));
         return reco
-    
+
     def UnfoldWithErrors(self,withError,getWeights=False):
 
-        if (not self._unfolded): 
+        if (not self._unfolded):
             if (self._fail):
                 return False
             rmeas= self._res.Hmeasured().Clone()
@@ -300,12 +300,12 @@ class RooUnfold(object):
 
         if (getWeights and (withError=='kErrors' or withError=='kCovariance')):
             raise Exception('GetWeight not implemented') #shouldn't enter this case by current settings
-            #if (not self._haveWgt):      
+            #if (not self._haveWgt):
             #    GetWgt()
             #ok= self._haveWgt
-        else: 
+        else:
             if withError=='kErrors':
-                if (not self._haveErrors):   
+                if (not self._haveErrors):
                     #
                     #waiting for implementation
                     #
@@ -319,7 +319,7 @@ class RooUnfold(object):
         if (not ok):
             self._fail= True
         return ok
-    
+
     def Unfold(self):
         pass
 
@@ -341,13 +341,13 @@ class RooUnfoldBayes(RooUnfold):
         self._nc= self._ne= 0
         self._nbartrue= self._N0C= 0.0
         self.GetSettings_Bayes()
-    
+
     def GetSettings_Bayes(self):
         self._minparm=1
         self._maxparm=15
         self._stepsizeparm=1
         self._defaultparm=4
-    
+
     def Unfold(self):
         self.setup() #lower case version
         if (self._verbose >= 2):
@@ -370,7 +370,7 @@ class RooUnfoldBayes(RooUnfold):
     @staticmethod
     def H2M (h, m, overflow):
     # TH2 -> TMatrixD
-        if (not h): 
+        if (not h):
             return m
         first= 0 if overflow else 1
         nm= m.GetNrows()
@@ -399,16 +399,16 @@ class RooUnfoldBayes(RooUnfold):
         if (self._res.FakeEntries()):
             fakes= self._res.Vfakes().Clone()
             nfakes= fakes.Sum()
-            if (self._verbose>=0): 
+            if (self._verbose>=0):
                 print("Add truth bin for ",nfakes, " fakes")
             self._nc+=1
             self._nCi.ResizeTo(self._nc)
             self._nCi[self._nc-1]= nfakes
             self._Nji.ResizeTo(self._ne,self._nc)
-    
+
             for i in range (0, self._nm):
                 self._Nji[i,self._nc-1]= fakes[i]
-  
+
         self._nbarCi = ROOT.TVectorD()
         self._efficiencyCi = ROOT.TVectorD()
         self._Mij= ROOT.TMatrixD()
@@ -428,7 +428,7 @@ class RooUnfoldBayes(RooUnfold):
         if (self._dosys!=2):
             self._dnCidnEj.ResizeTo(self._nc,self._ne)
         #endif
-        if (self._dosys):    
+        if (self._dosys):
             self._dnCidPjk.ResizeTo(self._nc,self._ne*self._nc)
 
         #Initial distribution
@@ -443,7 +443,7 @@ class RooUnfoldBayes(RooUnfold):
         chi2= 0.0
         n= prob1.GetNrows()
         if (self._verbose>=2):
-            print("chi2 ",n," ",nevents) 
+            print("chi2 ",n," ",nevents)
         for i in range(0,n):
             psum  = (prob1[i] + prob2[i])*nevents
             pdiff = (prob1[i] - prob2[i])*nevents
@@ -460,7 +460,7 @@ class RooUnfoldBayes(RooUnfold):
         PEjCi = ROOT.TMatrixD(self._ne,self._nc)
         PEjCiEff = ROOT.TMatrixD(self._ne,self._nc)
         for i in range(0,self._nc):
-            if (self._nCi[i] <= 0.0): 
+            if (self._nCi[i] <= 0.0):
                 self._efficiencyCi[i] = 0.0
                 continue
 
@@ -469,17 +469,17 @@ class RooUnfoldBayes(RooUnfold):
                 response = self._Nji(j,i) / self._nCi[i]
                 PEjCi[j,i] = PEjCiEff[j,i] = response  #efficiency of detecting the cause Ci in Effect Ej
                 eff += response
-        
+
             self._efficiencyCi[i] = eff
             effinv = 1.0/eff if eff > 0.0 else 0.0   #reset PEjCiEff if eff=0
             for j in range(0,self._ne):
                 PEjCiEff[j,i] = PEjCiEff(j,i)*effinv
-  
+
 
         PbarCi= ROOT.TVectorD(self._nc)
 
         for kiter in range(0, self._niter):
-            
+
             if (self._verbose>=1):
                 print("Iteration : %s"%kiter)
 
@@ -487,14 +487,14 @@ class RooUnfoldBayes(RooUnfold):
             if (kiter>0):
                 self._P0C = PbarCi.Clone()
                 self._N0C = self._nbartrue
-    
 
-            for j in range(0,self._ne): 
+
+            for j in range(0,self._ne):
                 Uj = 0.0
                 for i in range(0, self._nc):
                     Uj += PEjCi(j,i) * self._P0C[i]
                 self._UjInv[j] =  1.0/Uj if Uj > 0.0 else 0.0
-            
+
 
             #Unfolding matrix M
             self._nbartrue = 0.0
@@ -504,18 +504,18 @@ class RooUnfoldBayes(RooUnfold):
                     Mij = self._UjInv[j] * PEjCiEff(j,i) * self._P0C[i]
                     self._Mij[i,j]= Mij
                     nbarC += Mij * self._nEstj[j]
-            
+
                 self._nbarCi[i] = nbarC
                 self._nbartrue += nbarC  # best estimate of true number of events
-            
+
 
             # new estimate of true distribution
             PbarCi= self._nbarCi.Clone()
             PbarCi *= 1.0/self._nbartrue
 
         #ifndef OLDERRS
-            if (self._dosys!=2): 
-                if (kiter <= 0): 
+            if (self._dosys!=2):
+                if (kiter <= 0):
                     self._dnCidnEj= self._Mij.Clone()
                 else:
         #ifndef OLDMULT
@@ -523,13 +523,13 @@ class RooUnfoldBayes(RooUnfold):
                     nr = ROOT.TVectorD(self._nc)
                     for i in range(0, self._nc):
                         #print("Check 0 nc0:",i,":",nr[i])
-                        if (self._P0C[i]<=0.0): 
+                        if (self._P0C[i]<=0.0):
                             continue
                         ni= 1.0/(self._N0C*self._P0C[i])
                         en[i]= -ni*self._efficiencyCi[i]
                         nr[i]=  ni*self._nbarCi[i]
                         #print("Check 0 nc0 after update:",i,":",nr[i])
-                    
+
                     M1= self._dnCidnEj.Clone()
                     M1.NormByColumn(nr,"M")
                     M2 = ROOT.TMatrixD(ROOT.TMatrixD.kTransposed, self._Mij)
@@ -551,14 +551,3 @@ class RooUnfoldBayes(RooUnfold):
                 print("Chi^2 of change %s"%chi2)
 
             # and repeat
-       
-
-
-
-  
-
-  
-        
-
-  
-

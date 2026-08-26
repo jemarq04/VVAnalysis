@@ -29,14 +29,14 @@ def writeHTML(path, name):
                 '  <table>\n'.format(title=name)
         )
         if "Nonprompt" in path:
-            relative_path = path.split("/")[-1].replace("Nonprompt", "MC") 
+            relative_path = path.split("/")[-1].replace("Nonprompt", "MC")
             index.write('  <div style="text-align: center;">Monte Carlo based plots: \n'
                     '  <a href="../%s">[MC plots]</a>' % relative_path +
                     '</div>\n'
                     '  <table>\n'
             )
         elif "MC" in path:
-            relative_path = path.split("/")[-1].replace("MC", "Nonprompt") 
+            relative_path = path.split("/")[-1].replace("MC", "Nonprompt")
             index.write('  <div style="text-align: center;">Plots with data driven background: \n'
                     '  <a href="../%s">[Nonprompt plots]</a>' % relative_path +
                     '</div>\n'
@@ -61,22 +61,22 @@ def writeHTML(path, name):
                     '  <table>\n'
             )
         for i, image_file in enumerate(image_files):
-            file_name = image_file.strip().split('/')[-1].strip() 
-            if i % 3 == 0: 
+            file_name = image_file.strip().split('/')[-1].strip()
+            if i % 3 == 0:
                 index.write('  <tr style="text-align: center;">\n')
             index.write(getTableRow(image_file.split("/")[-1]))
-            if (i+1) % 3 == 0: 
+            if (i+1) % 3 == 0:
                 index.write('  </tr>\n')
         index.write( '</body>\n'
                 '</html>' )
 def getTableRow(image_file):
     return '''    <td style="text-align: center;">
         <img src="plots/{image}" class="autoResizeImage" /><br/>
-        <a href="logs/{name}_event_info.log">[log]</a> - 
-        <a href="logs/{name}_event_info-verbose.log">[verbose log]</a> - 
+        <a href="logs/{name}_event_info.log">[log]</a> -
+        <a href="logs/{name}_event_info-verbose.log">[verbose log]</a> -
         <a href="plots/{name}.pdf">[pdf]</a>
     </td>\n'''.format(image=image_file, name=image_file.split(".")[-2])
-    
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-p', '--path_to_files', type=str, required=True)

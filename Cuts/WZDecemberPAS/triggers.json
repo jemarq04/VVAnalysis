@@ -1,4 +1,4 @@
-{ 
+{
     "DoubleMuon" : "doubleMuPass",
     "DoubleEG" : "doubleEPass && !doubleMuPass",
     "MuonEG" : "(singleESingleMuPass || singleMuSingleEPass) && !doubleMuPass && !doubleEPass"

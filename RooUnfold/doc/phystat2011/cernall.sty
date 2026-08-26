@@ -21,17 +21,17 @@
 %    - Preface and Foreword environments: title in 14pt bold   %
 %    - Include slashed package for generating slashed commands %
 %  1.04 (10/07/2005)  MG                                       %
-%    - \subsubsection bold itshape (+ boldmath)                % 
+%    - \subsubsection bold itshape (+ boldmath)                %
 %    - \paragraph     itshape                                  %
 %    - Add some utility commands, e.g., \Unit, \UGeV, \UGeVcc  %
 %  1.05 (20/07/2005)  MG                                       %
-%    - Add commands \rmd, \rme, \rmi                           % 
+%    - Add commands \rmd, \rme, \rmi                           %
 %  1.06 (24/07/2005)  MG                                       %
-%    - Add commands \Eref, \Fref, \Sref, \Tref                 % 
+%    - Add commands \Eref, \Fref, \Sref, \Tref                 %
 %  1.07 (25/07/2005)  MG                                       %
-%    - Add commands \Ref, \Refs, \Bref                         % 
+%    - Add commands \Ref, \Refs, \Bref                         %
 %  1.08 (28/07/2005)  MG                                       %
-%    - Add working lengths \Mylena, \Mylenb, \Mylenc           % 
+%    - Add working lengths \Mylena, \Mylenb, \Mylenc           %
 %  1.09 (30/07/2005)  MG                                       %
 %    - Add momentum unit \UeVc, \UkeVc, \UMeVc, \UGeVc,        %
 %                        \UTeVc, \UPeVc                        %
@@ -153,14 +153,14 @@
 
 %%% Text font : Times Roman
 \renewcommand{\rmdefault}{ptm}
- 
+
 %it uses the following info
 %   \typist{..}  (may be filename) printed at top left of title page
-%   \title{..}   
+%   \title{..}
 %   \author{..}
 %   \date{..}  optional
 %   \documentlabel{..}  printed at top right of title page
- 
+
 %%% Customization of visible document elements
 
 \renewcommand\thesection      {\@arabic\c@section}
@@ -181,14 +181,14 @@
 \renewcommand{\appendixname}{Appendices}
 \renewcommand{\abstractname}{Abstract}
 
-% 
+%
 %  **************************
 %  *   List environements   *
 %  **************************
 %
- 
+
 % Prevent infinite loops
-\let\Otemize =\itemize  
+\let\Otemize =\itemize
 \let\Onumerate =\enumerate
 \let\Oescription =\description
 % Zero the vertical spacing parameters
@@ -229,7 +229,7 @@
 %  *       Appendix bookkeeping           *
 %  ****************************************
 %
- 
+
 \renewcommand\appendix[1][relax]{\csname #1\endcsname
   \section*{\appendixname}
   \setcounter{section}{0}%
@@ -248,7 +248,7 @@
   \@addtoreset {figure}{section}%
 }
 
-% 
+%
 %  ************************************
 %  *   thebibliography environement   *
 %  ************************************
@@ -279,7 +279,7 @@
 \renewcommand\newblock{\hskip .11em\@plus.33em\@minus.07em}
 \let\@openbib@code\@empty
 
-% 
+%
 %  *******************
 %  *   Frontmatter   *
 %  *******************
@@ -321,7 +321,7 @@
 %  *            PAGE LAYOUT               *
 %  ****************************************
 %
- 
+
 \textheight 24cm       % Height of text (including footnotes and figures,
                        % excluding running head and foot).
 \textwidth 16cm        % Width of text line.
@@ -336,12 +336,12 @@
 %%% hoffset :           =   1 in =  72 pt
 %%% textwidth           = 160 mm = 454 pt
 
-% SIDE MARGINS:  %%%% A4 : pagewidth=160mm 
+% SIDE MARGINS:  %%%% A4 : pagewidth=160mm
 \if@twoside   % Values for two-sided printing:
       %%% margins : inner     =  30 mm =  79.78 pt
       %%%           outer     =  20 mm =  53.19 pt
-      %%%           difference   10 mm =  26.59 pt 
-      %%%           half difference    =  13.30 pt     
+      %%%           difference   10 mm =  26.59 pt
+      %%%           half difference    =  13.30 pt
       %%% \odd/evensidemargin are with respect to hoffset -->
    \oddsidemargin   13.3pt  %   Left margin on odd-numbered pages.
    \evensidemargin -13.3pt  %   Left margin on even-numbered pages.
@@ -353,12 +353,12 @@
 % PARAGRAPH INDENTATION
 \setlength{\parindent}{1cm}
 \setlength{\parskip}{3pt}
- 
+
 %    ****************************************
 %    *             SECTIONS                 *
 %    ****************************************
 %
- 
+
 % \@startsection {NAME}{LEVEL}{INDENT}{BEFORESKIP}{AFTERSKIP}{STYLE}
 %            optional * [ALTHEADING]{HEADING}
 %    Generic command to start a section.
@@ -377,7 +377,7 @@
 %  If '*' missing, then increments the counter.  If it is present, then
 %  there should be no [ALTHEADING] argument.  A sectioning command
 %  is normally defined to \@startsection + its first six arguments.
- 
+
 %%% make footnote robust (if it appears in argument of, e.g., \section)
 \let\oldfootnote\footnote
 \def\footnote{\protect\oldfootnote}
@@ -448,7 +448,7 @@
 % The value of the counter secnumdepth gives the depth of the
 % highest-level sectioning command that is to produce section numbers.
 \setcounter{secnumdepth}{4}
- 
+
 \def\institute#1{\gdef\@institute{#1}}          % see \@maketitle
 \gdef\@institute{\hbox{}}
 % Redefine title block
@@ -473,14 +473,14 @@
                 \end{flushleft}
                 \mbox{}\\[-11mm]
                 \begin{flushleft}
-                    {\normalsize\itshape\@author}\\ 
+                    {\normalsize\itshape\@author}\\
                     {\normalsize\rmfamily\@institute}
                 \end{flushleft}
                 \thispagestyle{empty}
                }
 %-----------------------------------------------------------------------
 % The abstract Environment is modelled on the quotation environment
- 
+
 \def\abstract{\list{}{\listparindent 0pt
     \setlength{\leftmargin}{2cm}
 %   \setlength{\topsep}{1pt}                              %EJNW 12/5/92
@@ -700,7 +700,7 @@
 % The command \@minisanitize changes the catcode of $ & # ^ _ % ~ % to other
 % except for braces to 'other'.  It it used by many commands in cernman.sty
 % this command should only be executed within a group, or chaos will ensue.
- 
+
 \def\@minisanitize{\@makeother\$\@makeother\&%$
 \@makeother\#\@makeother\^\@makeother\_\@makeother\%\@makeother\~}
 \def\Lit{\begingroup\@minisanitize\@Lit}
@@ -719,4 +719,3 @@
 \newlength{\Mylenb}
 \newlength{\Mylenc}
 \endinput
-

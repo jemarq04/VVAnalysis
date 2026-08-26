@@ -1,6 +1,6 @@
 {
     "Object" : {
-        "e" : [ 
+        "e" : [
             "{object_name}IsCBVIDTight > 0.5"
         ],
         "m" : [
@@ -19,4 +19,3 @@
     "Event" : [
     ]
 }
-

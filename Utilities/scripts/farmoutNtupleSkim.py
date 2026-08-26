@@ -39,7 +39,7 @@ def callFarmout(output_dir, script_name, noSubmit):
             '\n    %s\n' % ' '.join(sys.argv))
         log.write('Using VVAnalysis code by Kenneth Long (U. Wisconsin):\n')
         log.write('https://github.com/kdlong/VVAnalysis\n\n')
-        log.write('The git hash of the commit used and the output of git diff is below\n') 
+        log.write('The git hash of the commit used and the output of git diff is below\n')
         log.write('-'*80 + '\n')
         log.write('-'*80 + '\n')
     with open(log_file_name, 'a') as log:
@@ -62,11 +62,11 @@ def callFarmout(output_dir, script_name, noSubmit):
 def farmoutNtupleSkim(sample_name, selection, analysis, version, scaleFacs, noSubmit, extraArgs):
     farmout_dict = {}
     farmout_dict['input_files_path'] = ConfigureJobs.getInputFilesPath(
-        sample_name, 
-        ConfigureJobs.getPreviousStep(selection, analysis), 
+        sample_name,
+        ConfigureJobs.getPreviousStep(selection, analysis),
         analysis
     )
-    job_name = ConfigureJobs.getJobName(sample_name, analysis, selection, version) 
+    job_name = ConfigureJobs.getJobName(sample_name, analysis, selection, version)
     farmout_dict['base_dir'] = os.path.dirname(os.path.realpath(sys.argv[0]))
     farmout_dict['base_dir'] = farmout_dict['base_dir'].replace("/Utilities/scripts", "")
     submission_dir = '/{space}/{user}/{folder}'.format(
@@ -85,12 +85,12 @@ def farmoutNtupleSkim(sample_name, selection, analysis, version, scaleFacs, noSu
     farmout_dict['command'] = ' '.join(sys.argv)
     script_name = '/'.join([farmout_dict['job_dir'], 'farmout.sh'])
     os.mkdir(farmout_dict['job_dir'])
-    ConfigureJobs.fillTemplatedFile('/'.join([farmout_dict['base_dir'], 
+    ConfigureJobs.fillTemplatedFile('/'.join([farmout_dict['base_dir'],
         'Templates/farmout_template.sh']),
-        script_name, 
+        script_name,
         farmout_dict
     )
-    createRunJob(farmout_dict['base_dir'], 
+    createRunJob(farmout_dict['base_dir'],
         farmout_dict['job_dir'],
         selection,
         analysis,
@@ -101,7 +101,7 @@ def farmoutNtupleSkim(sample_name, selection, analysis, version, scaleFacs, noSu
     status = callFarmout(farmout_dict['job_dir'], script_name, noSubmit)
     if status == 0:
         print("Submitted jobs for %s file set to condor." % sample_name)
-    elif status == -1: 
+    elif status == -1:
         print("Test run: submit directory created but not submitted")
     else:
         print("Jobs not submitted")
@@ -122,8 +122,8 @@ def main():
     first_selection = ConfigureJobs.getPreviousStep(args['selection'], args['analysis'])
     for file_name in ConfigureJobs.getListOfFiles(args['filenames'], first_selection):
         try:
-            farmoutNtupleSkim(file_name, args['selection'], 
-                args['analysis'], args['version'], args['scaleFacs'], 
+            farmoutNtupleSkim(file_name, args['selection'],
+                args['analysis'], args['version'], args['scaleFacs'],
                 args['noSubmit'], args['extraArgs'])
         except (ValueError, OSError) as error:
             logging.warning(error)

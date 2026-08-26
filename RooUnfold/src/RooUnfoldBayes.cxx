@@ -10,7 +10,7 @@
 //==============================================================================
 
 //____________________________________________________________
-/*! \class RooUnfoldBayes 
+/*! \class RooUnfoldBayes
   \brief Links to the RooUnfoldBayesImpl class which uses Bayesian unfolding to reconstruct the truth distribution.
 <p>Works for 2 and 3 dimensional distributions
 <p>Returned errors can be either as a diagonal matrix or as a full matrix of covariances

@@ -121,7 +121,7 @@ prettyVars = {
     'zHigherPt' : 'p_\\text{T}^{\\text{Z}_{\\text{lead}}}',
     'zLowerPt' : 'p_\\text{T}^{\\text{Z}_{\\text{sublead}}}',
     'leppt' : 'p_{T}^{\\ell}',
-    'l1Pt' : 'p_\\text{T}^{\\ell_1}', 
+    'l1Pt' : 'p_\\text{T}^{\\ell_1}',
     'dphiz1z2': '\\Delta\\phi_{Z_{1},Z_{2}}',
     'drz1z2':'\\Delta\\text{R}_{Z_{1},Z_{2}}}',
     }
@@ -318,7 +318,7 @@ def rebin(hist,varName):
     #No need to rebin certain variables but still might need overflow check
     if varName not in ['eta']:
         bins=array.array('d',_binning[varName])
-        Nbins=len(bins)-1 
+        Nbins=len(bins)-1
         hist=hist.Rebin(Nbins,"",bins)
     else:
         Nbins = hist.GetSize() - 2
@@ -358,7 +358,7 @@ def RatioErrorBand(Ratio,hUncUp,hUncDn,hTrueNoErrs,varName):
             tru=hTrueNoErrs.GetBinContent(i)
             #print "eUp: ",eUp, "","eDn: ",eDn
             errorUp = tmpData.GetBinContent(i) + math.sqrt(math.pow(tmpData.GetBinError(i),2) + math.pow((eUp/tru),2))
-            errorUp -= Ratio.GetBinContent(i) 
+            errorUp -= Ratio.GetBinContent(i)
             errorDn = max(tmpData.GetBinContent(i) - math.sqrt(math.pow(tmpData.GetBinError(i),2) + math.pow((eDn/tru),2)),0)
             errorDn = Ratio.GetBinContent(i) - errorDn
             print("stat. error: ",tmpData.GetBinError(i))
@@ -393,7 +393,7 @@ def MainErrorBand(hMain,hUncUp,hUncDn,varName,norm,normFb):
             eDn=hUncDn.GetBinContent(i)
             #print "eUp: ",eUp, "","eDn: ",eDn
             errorUp = tmpData.GetBinContent(i) + math.sqrt(math.pow(tmpData.GetBinError(i),2) + math.pow(eUp,2))
-            errorUp -= hMain.GetBinContent(i) 
+            errorUp -= hMain.GetBinContent(i)
             errorDn = max(tmpData.GetBinContent(i) - math.sqrt(math.pow(tmpData.GetBinError(i),2) + math.pow(eDn,2)),0)
             errorDn = hMain.GetBinContent(i) - errorDn
             print("errorUp: ",errorUp, "","errorDn: ",errorDn)
@@ -440,7 +440,7 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
     ### plot
     hUnf = hUnfolded.Clone()
     hTrue = hTruth.Clone()
-    #Alt Signal 
+    #Alt Signal
     hTrueAlt = hTruthAlt.Clone()
     hTrueLeg = hTruthAlt.Clone()
     #lumi provided already in fb-1
@@ -462,7 +462,7 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
         c,pad1 = createCanvasPads(varName)
         Unfmaximum = hUnf.GetMaximum()
         hTrue.SetFillColor(ROOT.TColor.GetColor("#99ccff"))
-        hTrue.SetLineColor(ROOT.TColor.GetColor('#000099')) 
+        hTrue.SetLineColor(ROOT.TColor.GetColor('#000099'))
         hTrue.SetFillStyle(3010)
         #AltSignal
         hTrueAlt.SetFillColor(2)
@@ -518,7 +518,7 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
 
         hTrue.Draw("HIST")
         hTrueAlt.Draw("HIST")
-        
+
         if(Unfmaximum > Truthmaximum):
             hTrue.SetMaximum(Unfmaximum*1.2)
         else:
@@ -545,14 +545,14 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
         hUnf.GetXaxis().SetLabelSize(0)
         hUnf.GetXaxis().SetTitleSize(0)
         hUnf.Draw("PE1SAME")
-      
+
         texS,texS1=getLumiTextBox()
-        #sigLabel = "POWHEG+MCFM+Pythia8" 
-        sigLabel = "POWHEG+Pythia8" 
-        
+        #sigLabel = "POWHEG+MCFM+Pythia8"
+        sigLabel = "POWHEG+Pythia8"
+
         #sigLabelAlt = "MG5_aMC@NLO+MCFM+Pythia8"
         sigLabelAlt = "MG5_aMC@NLO+Pythia8"
-        
+
         if varName=="dphiz1z2" or varName=="drz1z2":
             leg = ROOT.TLegend(0.15,0.60,0.15+0.015*len(sigLabelAlt),0.90,"")
         elif varName=="leppt":
@@ -593,7 +593,7 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
         ratioErrorBand.GetYaxis().SetLabelSize(0)
         ratioErrorBand.GetYaxis().SetTitleSize(0)
         ratioErrorBand.Draw("a2")
-        
+
         sigTex = getSigTextBox(0.15,0.8,sigLabel,0.12)
         Ratio.Draw("PE1SAME")
         line.SetLineColor(ROOT.kBlack)
@@ -609,7 +609,7 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
         Altyaxis.SetTitleSize(0.14)
         Altyaxis.SetTitleOffset(0.30)
         Altyaxis.Draw("SAME")
-        
+
         #ThirdPad
         pad3 = createPad3(c)
 
@@ -624,7 +624,7 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
         #hTrueNoErrs.SetError(array.array('d',[0.]*nbins))
         #Starting the ratio proceedure
         AltRatio,Altline = createRatio(hUnf, hTrueAltNoErrs)
-        AltRatioErrorBand = RatioErrorBand(AltRatio,hUncUp,hUncDn,hTrueAltNoErrs,varName) 
+        AltRatioErrorBand = RatioErrorBand(AltRatio,hUncUp,hUncDn,hTrueAltNoErrs,varName)
         AltRatioErrorBand.GetYaxis().SetLabelSize(0)
         AltRatioErrorBand.GetYaxis().SetTitleSize(0)
         AltRatioErrorBand.Draw("a2")
@@ -632,12 +632,12 @@ def generatePlots(hUnfolded,hUncUp,hUncDn,hTruth,hTruthAlt,varName,norm,normFb,l
         #ratioErrorBand.Draw("p")
         Altline.SetLineColor(ROOT.kRed)
         Altline.Draw("same")
-        
+
         AltTex = getSigTextBox(0.15,0.8,sigLabelAlt,0.10)
         #redraw axis
         xaxis = ROOT.TGaxis(hUnf.GetXaxis().GetXmin(),ratioErrorBand.GetMinimum(),hUnf.GetXaxis().GetXmax(),ratioErrorBand.GetMinimum(),hUnf.GetXaxis().GetXmin(),hUnf.GetXaxis().GetXmax(),510)
         xaxis.SetTitle(prettyVars[varName]+''+units[varName])
-        #labelTex = getSigTextBox(0.9,0.8,prettyVars[varName]+''+units[varName]) 
+        #labelTex = getSigTextBox(0.9,0.8,prettyVars[varName]+''+units[varName])
         xaxis.SetLabelFont(42)
         xaxis.SetLabelOffset(0.03)
         xaxis.SetLabelSize(0.12)
@@ -711,19 +711,19 @@ for varName in runVariables:
         print("returning truth? ",hTrue[chan])
         print("returning Alt truth? ",hTrueAlt[chan])
         #Get the total UncUp and total UncDown histograms from the file as well
-        hUncUp = fUse.Get(chan+"_"+varName+"_totUncUp") 
+        hUncUp = fUse.Get(chan+"_"+varName+"_totUncUp")
         hUncDn = fUse.Get(chan+"_"+varName+"_totUncDown")
         print("UnfoldOutDir:",UnfoldOutDir)
         generatePlots(hUnfolded[chan],hUncUp,hUncDn,hTrue[chan],hTrueAlt[chan],varName,norm,normFb,args['lumi'],UnfoldOutDir)
-    
+
     if args['makeTotals']:
         #Now access the histograms for all channels combined together
         #While saving in makeResponseMatrix.py, make a "total" category as wel
-        hUnfTot = fUse.Get("tot_"+varName+"_unf") 
+        hUnfTot = fUse.Get("tot_"+varName+"_unf")
         hTrueTot = fUse.Get("tot_"+varName+"_true")
-        hTrueAltTot = fUse.Get("tot_"+varName+"_trueAlt") 
+        hTrueAltTot = fUse.Get("tot_"+varName+"_trueAlt")
         hTotUncUp = fUse.Get("tot_"+varName+"_totUncUp")
-        hTotUncDn = fUse.Get("tot_"+varName+"_totUncDown") 
+        hTotUncDn = fUse.Get("tot_"+varName+"_totUncDown")
         UnfoldOutDir=UnfoldDir+"/"+"tot"+"/plots"
         if "tot" not in UnfoldOutDirs:
             UnfoldOutDirs["tot"]=UnfoldOutDir
@@ -731,8 +731,8 @@ for varName in runVariables:
             mkdir(UnfoldOutDir)
         generatePlots(hUnfTot,hTotUncUp,hTotUncDn,hTrueTot,hTrueAltTot,varName,norm,normFb,args['lumi'],UnfoldOutDir)
 #Show plots nicely on my webpages
-#for cat in ["tot"]:   
-for cat in ["eeee","eemm","mmmm","tot"]:   
+#for cat in ["tot"]:
+for cat in ["eeee","eemm","mmmm","tot"]:
     #This is where we put all the plots in html format for quick access/debugging
     makeSimpleHtml.writeHTML(os.path.expanduser(UnfoldOutDirs[cat].replace("/plots", "")), "Unfolded Distributions (from MC)")
 fUse.Close()

@@ -83,7 +83,7 @@ class SelectorDriver(object):
         self.addTNamed("ntupleType", self.ntupleType)
         self.addTNamed("selection", self.selection)
         self.addTNamed("year", self.year)
-        
+
     def setNtupeType(self, ntupleType):
         self.ntupleType = ntupleType
         self.addTNamed("ntupleType", self.ntupleType)
@@ -110,7 +110,7 @@ class SelectorDriver(object):
             raise ValueError("The first file to process (nPerJob*jobNum) = (%i*%i)" % (nPerJob, jobNum) \
                     + " is greater than the number of entries in file %s (%s)." % (list_of_files, maxNum))
         lastEntry = min(nPerJob*(jobNum+1), maxNum)
-        
+
         for line in filelist[firstEntry:lastEntry]:
             if "@" not in line:
                 dataset = "Unknown"
@@ -130,7 +130,7 @@ class SelectorDriver(object):
                 dataset, file_path = [f.strip() for f in dataset.split("@")]
             else:
                 try:
-                    file_path = ConfigureJobs.getInputFilesPath(dataset, 
+                    file_path = ConfigureJobs.getInputFilesPath(dataset,
                         self.input_tier, self.analysis)
                 except ValueError as e:
                     logging.warning(e)
@@ -143,7 +143,7 @@ class SelectorDriver(object):
             logging.info("Processing channel %s" % chan)
             if self.numCores > 1:
                 self.processParallelByDataset(self.datasets, chan)
-            else: 
+            else:
                 for dataset, file_path in self.datasets.iteritems():
                     self.processDataset(dataset, file_path, chan)
         if len(self.channels) > 1 and self.numCores > 1:
@@ -198,7 +198,7 @@ class SelectorDriver(object):
         xrootd = "/store" in file_path.split("/hdfs/")[0][:7]
         xrootd_user = "/store/user" in file_path.split("/hdfs/")[0][:12]
         if not (xrootd or os.path.isfile(file_path) or os.path.isdir(file_path.rsplit("/", 1)[0].rstrip("/*"))):
-            raise ValueError("Invalid path! Skipping dataset. Path was %s" 
+            raise ValueError("Invalid path! Skipping dataset. Path was %s"
                 % file_path)
 
         # Assuming these are user files on HDFS, otherwise it won't work
@@ -233,7 +233,7 @@ class SelectorDriver(object):
         p = multiprocessing.Pool(processes=self.numCores)
         p.map(self, [[dataset, f, chan] for dataset, f in datasets.iteritems()])
         # Store arrays in temp files, since it can get way too big to keep around in memory
-        tempfiles = [self.tempfileName(d) for d in datasets] 
+        tempfiles = [self.tempfileName(d) for d in datasets]
         self.combineParallelFiles(tempfiles, chan)
 
     # Pool.map can only take in one argument, so expand the array
@@ -256,7 +256,7 @@ class SelectorDriver(object):
         tree = rtfile.Get(tree_name)
         if not tree:
             raise ValueError(("tree %s not found for file %s. " \
-                    "Either the file is corrupted or the ntupleType (%s) is wrong.") 
+                    "Either the file is corrupted or the ntupleType (%s) is wrong.")
                 % (tree_name, filename, self.ntupleType)
             )
         logging.debug("Processing tree %s for file %s." % (tree.GetName(), rtfile.GetName()))

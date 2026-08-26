@@ -134,7 +134,7 @@ xTitles = {
     'Iso' : 'R_{{\\text{{Iso}}}} \\, ({obj})',
     'PVDXY' : '#Delta_{{xy}} \\, ({obj}) \\, (\\text{{cm}})',
     'PVDZ' : '#Delta_{{z}} ({obj}) \\, (\\text{{cm}})',
-    'nvtx' : 'N_{{vtx}} \\, (\\text{{single-}}{obj} \, \\text{{events}})',
+    'nvtx' : 'N_{{vtx}} \\, (\\text{{single-}}{obj} \\, \\text{{events}})',
     'SIP3D' : 'SIP_{{3D}} \\, ({obj})',
     }
 
@@ -255,4 +255,3 @@ for chan in ['l', 'e', 'm']:
 
         style.setCMSStyle(c, '', dataType='   Work in Progress', intLumi=lumi)
         c.Print('{}/{}{}.png'.format(outdir, chan, varName))
-

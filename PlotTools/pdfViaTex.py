@@ -36,7 +36,7 @@ _texTemplate = '''
 \\end{{document}}
 '''
 
-def _doSub(s, (sub,exp)):
+def _doSub(s, sub, exp):
     '''
     Replace regex exp with str sub in str s.
     '''
@@ -70,7 +70,7 @@ def pdfViaTex(c, fname, texDir, pdfDir, **extraSubs):
 
     # Remove unwanted boxes from around hatched and transparent fill areas
     imgFileFixed = imgFile.replace('.tex','_fixed.tex')
-    subList.append(('\path',_reComp(r'\\draw(?= \[((pattern=)|(.+fill opacity=)))')))
+    subList.append(('\\path',_reComp(r'\\draw(?= \[((pattern=)|(.+fill opacity=)))')))
     # make transparency actually work for hatched areas
     # there's probably a way to combine with the previous regex...
     subList.append((r'',_reComp(r'(?<=\\path \[pattern=crosshatch, pattern color=c, )fill (?=opacity=[01])')))
@@ -79,7 +79,7 @@ def pdfViaTex(c, fname, texDir, pdfDir, **extraSubs):
     with open(imgFile, 'r') as fIm:
         with open(imgFileFixed, 'w') as fImFix:
             for line in fIm:
-                fImFix.write(reduce(_doSub, subList, line))
+                fImFix.write(reduce(_doSub, *subList, line))
 
     texFile = _path.join(texDir, fname+'.tex')
 
