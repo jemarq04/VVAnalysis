@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # ==============================================================================
 #
 #  Simple example usage of the RooUnfold package using toy MC.
