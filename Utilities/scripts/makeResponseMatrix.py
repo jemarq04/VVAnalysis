@@ -1708,6 +1708,8 @@ if args["test"]:
         file_path = ConfigureJobs.getInputFilesPath(dataset, selection, analysis)
         # print "file_path:",file_path
         sigSamplesPath[dataset] = file_path
+else:
+    fOut = ROOT.TFile("unfolding_output.root", "update")
 
 # Dictionary where signal samples are keys with cross-section*kfactors as values
 # sigSampleDic=ConfigureJobs.getListOfFilesWithXSec(ConfigureJobs.getListOfEWK())
