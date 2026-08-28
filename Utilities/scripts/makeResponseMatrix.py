@@ -360,7 +360,6 @@ def createRatio(h1, h2):
         ratiocontent = 0
         if datacontent != 0:
             ratiocontent = datacontent / stackcontent
-        if datacontent != 0:
             error = ratiocontent * (
                 math.sqrt(math.pow((dataerror / datacontent), 2) + math.pow((stackerror / stackcontent), 2))
             )
@@ -456,6 +455,8 @@ def createPad3(canvas):
 
 
 def generateAnalysisInputs():
+    # TODO: update to correctionlib
+
     # dictionary of SF histograms
     hSF = {}
     eLowRecoFile = ROOT.TFile.Open("data/Ele_Reco_LowEt_2016.root")
@@ -808,7 +809,7 @@ def unfold(
         del cCov
     if not args["noSyst"]:
         # luminosity
-        lumiUnc = 0.023
+        lumiUnc = 0.023  # TODO: update lumi unc
         lumiScale = {"Up": 1.0 + lumiUnc, "Down": 1.0 - lumiUnc}
         for sys, scale in lumiScale.items():
             # print "lumi uncert.",sys
@@ -1966,8 +1967,3 @@ for cat in ["eeee", "eemm", "mmmm", "tot"]:
         os.path.expanduser(UnfoldOutDirs[cat].replace("/plots", "")), "Unfolded Distributions (from MC)"
     )
     # print("it crashes already")
-
-# if args['test']:
-#    exit(0)
-
-#
