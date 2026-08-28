@@ -254,7 +254,7 @@ def getListOfFiles(filelist, selection, manager_path="", analysis=""):
             else:
                 names += allnames
         elif "ZZ4l2016" in name:
-            dataset_file = manager_path + "ZZ4lRun2DatasetManager/FileInfo/ZZ4l2016/%s.json" % selection
+            dataset_file = manager_path + "ZZ4lDatasetManager/FileInfo/ZZ4l2016/%s.json" % selection
             allnames = list(json.load(open(dataset_file)).keys())
             print(allnames)
             if "nodata" in name:
@@ -265,7 +265,7 @@ def getListOfFiles(filelist, selection, manager_path="", analysis=""):
             else:
                 names += allnames
         elif "ZZ4l2017" in name:
-            dataset_file = manager_path + "ZZ4lRun2DatasetManager/FileInfo/ZZ4l2017/%s.json" % selection
+            dataset_file = manager_path + "ZZ4lDatasetManager/FileInfo/ZZ4l2017/%s.json" % selection
             allnames = list(json.load(open(dataset_file)).keys())
             print(allnames)
             if "nodata" in name:
@@ -276,7 +276,7 @@ def getListOfFiles(filelist, selection, manager_path="", analysis=""):
             else:
                 names += allnames
         elif "ZZ4l2018" in name:
-            dataset_file = manager_path + "ZZ4lRun2DatasetManager/FileInfo/ZZ4l2018/%s.json" % selection
+            dataset_file = manager_path + "ZZ4lDatasetManager/FileInfo/ZZ4l2018/%s.json" % selection
             allnames = list(json.load(open(dataset_file)).keys())
             print(allnames)
             if "nodata" in name:

@@ -35,7 +35,7 @@ def getComLineArgs():
         "--hist_names",
         type=lambda x: [i.strip() for i in x.split(",")],
         default=["all"],
-        help="List of histograms, as defined in ZZ4lRun2DatasetManager, separated by commas",
+        help="List of histograms, as defined in ZZ4lDatasetManager, separated by commas",
     )
     return vars(parser.parse_args())
 
@@ -45,7 +45,7 @@ def makeHistFile(args):
 
     manager_path = ConfigureJobs.getManagerPath()
     if manager_path not in sys.path:
-        sys.path.insert(0, "/".join([manager_path, "ZZ4lRun2DatasetManager", "Utilities/python"]))
+        sys.path.insert(0, "/".join([manager_path, "ZZ4lDatasetManager", "Utilities/python"]))
 
     today = datetime.date.today().strftime("%d%b%Y")
 

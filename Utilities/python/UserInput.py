@@ -34,7 +34,7 @@ def getDefaultParser():
         "-f",
         "--filenames",
         type=lambda x: [i.strip() for i in x.split(",")],
-        help="List of input file names, as defined in ZZ4lRun2DatasetManager, separated by commas",
+        help="List of input file names, as defined in ZZ4lDatasetManager, separated by commas",
     )
     input_group.add_argument(
         "--inputs_from_file",
@@ -97,7 +97,7 @@ def readJson(json_file_name):
     return json_info
 
 
-# Depends on ZZ4lRun2DatasetManagerModule
+# Depends on ZZ4lDatasetManagerModule
 def getHistInfo(analysis, input_hists, noConfig=False):
     if noConfig:
         print("INFO: assuming histogram information is specified in selector")
@@ -105,7 +105,7 @@ def getHistInfo(analysis, input_hists, noConfig=False):
 
     manager_path = ConfigureJobs.getManagerPath()
     ConfigHistTools = imp.load_source(
-        "ConfigHistTools", "/".join([manager_path, "ZZ4lRun2DatasetManager/Utilities/python/ConfigHistTools.py"])
+        "ConfigHistTools", "/".join([manager_path, "ZZ4lDatasetManager/Utilities/python/ConfigHistTools.py"])
     )
     # For histograms produced with some postprocessing on the hist file
     excludedHistPatterns = ["wCR", "unrolled", "YieldByChannel"]
@@ -120,7 +120,7 @@ def getHistInfo(analysis, input_hists, noConfig=False):
 def getHistExpr(hist_names, selection):
     manager_path = ConfigureJobs.getManagerPath()
     ConfigHistTools = imp.load_source(
-        "ConfigHistTools", "/".join([manager_path, "ZZ4lRun2DatasetManager/Utilities/python/ConfigHistTools.py"])
+        "ConfigHistTools", "/".join([manager_path, "ZZ4lDatasetManager/Utilities/python/ConfigHistTools.py"])
     )
 
     info = ROOT.TList()

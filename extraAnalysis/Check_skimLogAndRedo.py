@@ -61,8 +61,8 @@ with open(f"/hdfs/store/user/hehe/Resubmit_{json_name}", "w") as output_file:
     json.dump(obj, output_file, indent=4)
 
 os.system(
-    f"mv /hdfs/store/user/hehe/Resubmit_{json_name} ~/vvanalysis_skim/CMSSW_10_3_1/src/Data_manager/ZZ4lRun2DatasetManager/FileInfo/ZZ4l{year}/ntuples.json"
+    f"mv /hdfs/store/user/hehe/Resubmit_{json_name} ~/vvanalysis_skim/CMSSW_10_3_1/src/Data_manager/ZZ4lDatasetManager/FileInfo/ZZ4l{year}/ntuples.json"
 )
 print(
-    "New json moved to ~/vvanalysis_skim/CMSSW_10_3_1/src/Data_manager/ZZ4lRun2DatasetManager/FileInfo/ZZ4l{year}/ntuples.json"
+    "New json moved to ~/vvanalysis_skim/CMSSW_10_3_1/src/Data_manager/ZZ4lDatasetManager/FileInfo/ZZ4l{year}/ntuples.json"
 )

@@ -50,7 +50,7 @@ def getComLineArgs():
         "--hist_names",
         type=lambda x: [i.strip() for i in x.split(",")],
         default=["all"],
-        help="List of histograms, as defined in ZZ4lRun2DatasetManager, separated by commas",
+        help="List of histograms, as defined in ZZ4lDatasetManager, separated by commas",
     )
     parser.add_argument("--variable", "-vr", type=str, default="all", help="variableName")
     parser.add_argument(

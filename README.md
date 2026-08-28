@@ -21,7 +21,7 @@ Once again in case of this branch and ZZ analysis you might need my version:
 
 ```console
 cd install_path
-git clone git@github.com:uhussain/ZZ4lRun2DatasetManager.git
+git clone git@github.com:jemarq04/ZZ4lDatasetManager.git
 ```
 
 
