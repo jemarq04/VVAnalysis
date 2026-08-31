@@ -1,1 +1,0 @@
-/cvmfs/cms.cern.ch/slc6_amd64_gcc530/cms/cmssw/CMSSW_8_0_26/external/slc6_amd64_gcc530/bin/../../../../../../../slc6_amd64_gcc530/external/python/2.7.11-ikhhed2

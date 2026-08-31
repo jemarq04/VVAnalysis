@@ -13,19 +13,18 @@ export zzt="${DIR}"
 #cmsenv
 #popd
 
-echo "Activating python virtual environment"
-source "$zzt"/recipe/setupPython.sh
+#echo "Activating python virtual environment"
+#source "$zzt"/recipe/setupPython.sh
 #echo $zzt
-export PYTHONPATH="$zzt":"$PYTHONPATH"
+#export PYTHONPATH="$zzt":"$PYTHONPATH"
 #echo $PYTHONPATH
 
-if [ -d "$zzt"/RooUnfold-1.1.1 ]; then
-  export LD_LIBRARY_PATH="$LD_LIBRARY_PATH":"$zzt"/RooUnfold-1.1.1
-  echo "Does it get RooUnfold 1.1"
-fi
-if [ -d "$zzt"/RooUnfold ]; then
-  export LD_LIBRARY_PATH="$LD_LIBRARY_PATH":"$zzt"/RooUnfold
-  echo "Does it get RooUnfold"
-fi
+#if [ -d "$zzt"/RooUnfold-1.1.1 ]; then
+#  export LD_LIBRARY_PATH="$LD_LIBRARY_PATH":"$zzt"/RooUnfold-1.1.1
+#  echo "Does it get RooUnfold 1.1"
+#elif [ -d "$zzt"/RooUnfold ]; then
+#  export LD_LIBRARY_PATH="$LD_LIBRARY_PATH":"$zzt"/RooUnfold
+#  echo "Does it get RooUnfold"
+#fi
 
 echo "ZZTools setup complete"
