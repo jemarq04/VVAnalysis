@@ -18,39 +18,27 @@ VFloat = Vec("float")
 style = Style()
 ROOT.gStyle.SetLineScalePS(1.8)
 
-channels = ["eeee", "eemm", "mmmm"]
+DEFAULT_CHANNELS = ["eeee", "eemm", "mmmm"]
 
 
-# channels = ["eeee"]
 def getComLineArgs():
     parser = UserInput.getDefaultParser()
     parser.add_argument("--lumi", "-l", type=float, default=41.5, help="luminosity value (in fb-1)")
-    parser.add_argument("--output_file", "-o", type=str, default="", help="Output file name")
+    parser.add_argument("--output_file", "-o", type=str, default="unfolding_output.root", help="Output file name")
     parser.add_argument("--test", action="store_true", help="Run test job (no background estimate)")
-    parser.add_argument("--uwvv", action="store_true", help="Use UWVV format ntuples in stead of NanoAOD")
-    parser.add_argument("--with_background", action="store_true", help="Don't run background selector")
-    parser.add_argument("--noHistConfig", action="store_true", help="Don't rely on config file to specify hist info")
-    parser.add_argument("-j", "--numCores", type=int, default=1, help="Number of cores to use (parallelize by dataset)")
     parser.add_argument("--input_tier", type=str, default="", help="Selection stage of input files")
     parser.add_argument("--year", type=str, default="default", help="Year of Analysis")
     parser.add_argument(
         "-c",
         "--channels",
         type=lambda x: [i.strip() for i in x.split(",")],
-        default=["eee", "eem", "emm", "mmm"],
+        default=DEFAULT_CHANNELS,
         help="List of channelsseparated by commas. NOTE: set to Inclusive for NanoAOD",
     )
     parser.add_argument("--scalefactors_file", "-sf", type=str, default="", help="ScaleFactors file name")
     parser.add_argument("--leptonSelections", "-ls", type=str, default="TightLeptons", help="Either All Loose or Tight")
     parser.add_argument(
         "--output_selection", type=str, default="", help="Selection stage of output file (Same as input if not give)"
-    )
-    parser.add_argument(
-        "-b",
-        "--hist_names",
-        type=lambda x: [i.strip() for i in x.split(",")],
-        default=["all"],
-        help="List of histograms, as defined in ZZ4lDatasetManager, separated by commas",
     )
     parser.add_argument("--variable", "-vr", type=str, default="all", help="variableName")
     parser.add_argument(
@@ -65,7 +53,7 @@ def getComLineArgs():
     )
     parser.add_argument("--makeTotals", action="store_true", help="plot total unfolded with uncertainities.")
     parser.add_argument("--noSyst", action="store_true", help="No Systematics calculations.")
-    parser.add_argument("--logy", "--logY", "--log", action="store_true", help="Put vertical axis on a log scale.")
+    # parser.add_argument("--logy", "--logY", "--log", action="store_true", help="Put vertical axis on a log scale.")
     parser.add_argument(
         "--plotDir",
         type=str,
@@ -88,6 +76,7 @@ args = getComLineArgs()
 pdb.set_trace()
 manager_path = ConfigureJobs.getManagerPath()
 selection = args["selection"]
+channels = args["channels"]
 if selection == "":
     selection = "LooseLeptons"
     print("Info: Using BasicZZSelections for hist defintions")
@@ -1709,7 +1698,7 @@ if args["test"]:
         # print "file_path:",file_path
         sigSamplesPath[dataset] = file_path
 else:
-    fOut = ROOT.TFile("unfolding_output.root", "update")
+    fOut = ROOT.TFile(args["output_file"], "update")
 
 # Dictionary where signal samples are keys with cross-section*kfactors as values
 # sigSampleDic=ConfigureJobs.getListOfFilesWithXSec(ConfigureJobs.getListOfEWK())
