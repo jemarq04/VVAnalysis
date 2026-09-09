@@ -37,9 +37,7 @@ void ZZGenSelector::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::
     if (weight_info_ == 2) {
       b_pdfWeights->GetEntry(entry);
       // Only keep NNPDF weights
-      lheWeights.insert(lheWeights.end(),
-                        pdfWeights->begin(),
-                        pdfWeights->begin() + std::min(static_cast<size_t>(103), pdfWeights->size()));
+      lheWeights.insert(lheWeights.end(), pdfWeights->begin(), pdfWeights->begin() + std::min(static_cast<size_t>(103), pdfWeights->size()));
     } else if (weight_info_ == 3) {
       b_pdfWeights->GetEntry(entry);
       lheWeights.insert(lheWeights.end(), pdfWeights->begin(), pdfWeights->end());
@@ -99,9 +97,7 @@ void ZZGenSelector::LoadBranchesNanoAOD(Long64_t entry, std::pair<Systematic, st
   throw std::domain_error("NanoAOD ntuples not supported for ZZGenSelector!");
 }
 
-void ZZGenSelector::SetBranchesNanoAOD() {
-  throw std::domain_error("NanoAOD ntuples not supported for ZZGenSelector!");
-}
+void ZZGenSelector::SetBranchesNanoAOD() { throw std::domain_error("NanoAOD ntuples not supported for ZZGenSelector!"); }
 
 unsigned int ZZGenSelector::GetLheWeightInfo() {
   std::vector<std::string> noLheWeights = {"ggZZ2e2mu",
@@ -114,8 +110,7 @@ unsigned int ZZGenSelector::GetLheWeightInfo() {
                                            "ZZJJTo2e2mu-EWK-phantom",
                                            "ZZJJTo4e-EWK-phantom",
                                            "ZZJJTo4mu-EWK-phantom"};
-  std::vector<std::string> scaleAndPdfWeights = {
-      "wz3lnu-powheg", "wz3lnu-mg5amcnlo", "ZZZ", "WZZ", "WWZ", "zz4l-powheg", "zz4l-amcatnlo", "ZZJJTo4L-EWK"};
+  std::vector<std::string> scaleAndPdfWeights = {"wz3lnu-powheg", "wz3lnu-mg5amcnlo", "ZZZ", "WZZ", "WWZ", "zz4l-powheg", "zz4l-amcatnlo", "ZZJJTo4L-EWK"};
   std::vector<std::string> allLheWeights = {
       //"wzjj-aqgcft", "wzjj-aqgcfm", "wzjj-aqgcfs",
       //"wz-atgc_pt0-200", "wz-atgc_pt200-300",
