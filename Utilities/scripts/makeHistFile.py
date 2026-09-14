@@ -173,8 +173,8 @@ def makeHistFile(args):
         selector.setOutputfile(output_name)
         combinedNames.append(output_name)
         if args["filenames"]:
-            # selector.setDatasets(args['filenames'])
-            selector.setDatasets(ConfigureJobs.getListOfGenFilenames(args["analysis"]))
+            selector.setDatasets([name + "nodata" for name in args["filenames"]])
+            # selector.setDatasets(ConfigureJobs.getListOfGenFilenames(args["analysis"]))
         else:
             selector.setFileList(*args["inputs_from_file"])
         selector.applySelector()
