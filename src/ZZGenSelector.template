@@ -3,10 +3,7 @@
 #include <boost/algorithm/string.hpp>
 
 void ZZGenSelector::Init(TTree* tree) {
-  allChannels_ = {
-      "ee",
-      "mm",
-  };
+  //allChannels_ = {"ee","mm",};
   hists1D_ = $Genhists1D;
 
   weighthists1D_ = $Genweighthists1D;

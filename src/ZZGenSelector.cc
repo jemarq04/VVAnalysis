@@ -3,18 +3,16 @@
 #include <boost/algorithm/string.hpp>
 
 void ZZGenSelector::Init(TTree* tree) {
-  allChannels_ = {
-      "ee",
-      "mm",
-  };
-  hists1D_ = {"Genyield",        "GenMass",         "GenMassFull",   "GennJets",      "GenjetPt[1]",   "GenjetPt[0]",   "GenjetEta[0]",   "GenjetEta[1]",
-              "GenabsjetEta[0]", "GenabsjetEta[1]", "Genmjj",        "GendEtajj",     "GenMass0j",     "GenMass1j",     "GenMass2j",      "GenMass3j",
-              "GenMass34j",      "GenMass4j",       "GenMass0jFull", "GenMass1jFull", "GenMass2jFull", "GenMass3jFull", "GenMass34jFull", "GenMass4jFull"};
+  //allChannels_ = {"ee","mm",};
+  hists1D_ = {"Genyield",      "GenMass",       "GenMassFull",     "GennJets",        "GennJets_central", "GenjetPt[1]",   "GenjetPt[0]",
+              "GenjetEta[0]",  "GenjetEta[1]",  "GenabsjetEta[0]", "GenabsjetEta[1]", "Genmjj",           "GendEtajj",     "GenMass0j",
+              "GenMass1j",     "GenMass2j",     "GenMass3j",       "GenMass34j",      "GenMass4j",        "GenMass0jFull", "GenMass1jFull",
+              "GenMass2jFull", "GenMass3jFull", "GenMass34jFull",  "GenMass4jFull",   "GenLepPt",         "GenLepEta"};
 
-  weighthists1D_ = {"Genyield",      "GenMass",       "GenMassFull",     "GennJets",        "GenjetPt[1]",    "GenjetPt[0]",
-                    "GenjetEta[0]",  "GenjetEta[1]",  "GenabsjetEta[0]", "GenabsjetEta[1]", "Genmjj",         "GendEtajj",
-                    "GenMass0j",     "GenMass1j",     "GenMass2j",       "GenMass3j",       "GenMass34j",     "GenMass4j",
-                    "GenMass0jFull", "GenMass1jFull", "GenMass2jFull",   "GenMass3jFull",   "GenMass34jFull", "GenMass4jFull"};
+  weighthists1D_ = {"Genyield",      "GenMass",       "GenMassFull",     "GennJets",        "GennJets_central", "GenjetPt[1]",   "GenjetPt[0]",
+                    "GenjetEta[0]",  "GenjetEta[1]",  "GenabsjetEta[0]", "GenabsjetEta[1]", "Genmjj",           "GendEtajj",     "GenMass0j",
+                    "GenMass1j",     "GenMass2j",     "GenMass3j",       "GenMass34j",      "GenMass4j",        "GenMass0jFull", "GenMass1jFull",
+                    "GenMass2jFull", "GenMass3jFull", "GenMass34jFull",  "GenMass4jFull"};
 
   // hists2D_ = {"GenZ1Mass_GenZ2Mass"};
   SelectorBase::Init(tree);
@@ -319,8 +317,7 @@ void ZZGenSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::st
     if (GenjetPt->size() > 1 && GenjetPt->size() == GenjetEta->size()) {
       SafeHistFill(weighthistMap1D_, getHistName("GenjetPt[1]", variation.second), GenjetPt->at(1), i, lheWeights[i] / lheWeights[0] * Genweight);
 
-      SafeHistFill(weighthistMap1D_, getHistName("GenjetEta[1]", variation.second), GenjetEta->at(1), i,
-                   lheWeights[i] / lheWeights[0] * Genweight);  //}
+      SafeHistFill(weighthistMap1D_, getHistName("GenjetEta[1]", variation.second), GenjetEta->at(1), i, lheWeights[i] / lheWeights[0] * Genweight);
       SafeHistFill(
           weighthistMap1D_, getHistName("GenabsjetEta[1]", variation.second), std::abs(GenjetEta->at(1)), i, lheWeights[i] / lheWeights[0] * Genweight);
 
@@ -373,14 +370,14 @@ void ZZGenSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::st
   //  SafeHistFill(histMap1D_, getHistName("GendPhiZ1Z2", variation.second), GendPhiZZ, Genweight);
   //  SafeHistFill(histMap1D_, getHistName("GendRZ1Z2", variation.second), GendRZZ, Genweight);
   // Making LeptonPt and Eta plots
-  //  SafeHistFill(histMap1D_, getHistName("GenLepPt", variation.second), Genl1Pt, Genweight);
-  //  SafeHistFill(histMap1D_, getHistName("GenLepPt", variation.second), Genl2Pt, Genweight);
-  //  SafeHistFill(histMap1D_, getHistName("GenLepPt", variation.second), Genl3Pt, Genweight);
-  //  SafeHistFill(histMap1D_, getHistName("GenLepPt", variation.second), Genl4Pt, Genweight);
-  //  SafeHistFill(histMap1D_, getHistName("GenLepEta", variation.second), Genl1Eta, Genweight);
-  //  SafeHistFill(histMap1D_, getHistName("GenLepEta", variation.second), Genl2Eta, Genweight);
-  //  SafeHistFill(histMap1D_, getHistName("GenLepEta", variation.second), Genl3Eta, Genweight);
-  //  SafeHistFill(histMap1D_, getHistName("GenLepEta", variation.second), Genl4Eta, Genweight);
+  SafeHistFill(histMap1D_, getHistName("GenLepPt", variation.second), Genl1Pt, Genweight);
+  SafeHistFill(histMap1D_, getHistName("GenLepPt", variation.second), Genl2Pt, Genweight);
+  SafeHistFill(histMap1D_, getHistName("GenLepPt", variation.second), Genl3Pt, Genweight);
+  SafeHistFill(histMap1D_, getHistName("GenLepPt", variation.second), Genl4Pt, Genweight);
+  SafeHistFill(histMap1D_, getHistName("GenLepEta", variation.second), Genl1Eta, Genweight);
+  SafeHistFill(histMap1D_, getHistName("GenLepEta", variation.second), Genl2Eta, Genweight);
+  SafeHistFill(histMap1D_, getHistName("GenLepEta", variation.second), Genl3Eta, Genweight);
+  SafeHistFill(histMap1D_, getHistName("GenLepEta", variation.second), Genl4Eta, Genweight);
 
   // if (Genmjj<=100 || GenMass<=180 ||GenjetPt->size()<2){return;}
   // std::cout<<"bug in selection?"<<std::endl;

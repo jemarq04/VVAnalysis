@@ -474,9 +474,39 @@ Genhists1D_Ori = [
     "GendEtajj",
 ]
 
+Genhists1D = [
+    "Genyield",
+    "GenMass",
+    "GenMassFull",
+    "GennJets",
+    "GennJets_central",
+    "GenjetPt[1]",
+    "GenjetPt[0]",
+    "GenjetEta[0]",
+    "GenjetEta[1]",
+    "GenabsjetEta[0]",
+    "GenabsjetEta[1]",
+    "Genmjj",
+    "GendEtajj",
+    "GenMass0j",
+    "GenMass1j",
+    "GenMass2j",
+    "GenMass3j",
+    "GenMass34j",
+    "GenMass4j",
+    "GenMass0jFull",
+    "GenMass1jFull",
+    "GenMass2jFull",
+    "GenMass3jFull",
+    "GenMass34jFull",
+    "GenMass4jFull",
+    "GenLepPt",
+    "GenLepEta",
+]
+
 
 Genodict["Genhists1D"] = Genhists1D_Ori
-Genldict["Genhists1D"] = GenBaseList
+Genldict["Genhists1D"] = Genhists1D  # GenBaseList
 Gendict["Genhists1D"] = listToStr(Genldict["Genhists1D"])
 
 Genweighthists1D_Ori = [
