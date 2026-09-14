@@ -30,6 +30,9 @@ for year in $years; do
   # For systematics
   #./Utilities/scripts/makeHistFile.py -f ZZ4l$year -a ZZ4l$year -s LooseLeptons --year $year -c eeee,eemm,mmee,mmmm -j 12 -sf --doSystematics --with_background -F $frfile
 
+  # For gen
+  #./Utilities/scripts/makeHistFile.py -f ZZ4l$year -a ZZ4l$year -s LooseLeptons --year $year -c eeee,eemm,mmee,mmmm -j 12 -sf --with_background --with_Gen -F $frfile
+
   ./Utilities/scripts/makeHistFile.py -f ZZ4l$year -a ZZ4l$year -s LooseLeptons --year $year -c eeee,eemm,mmee,mmmm -j 12 -sf --with_background -F $frfile
 
   echo "$year done!!==================================="
