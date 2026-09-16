@@ -310,7 +310,7 @@ void ZZGenSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::st
     if (GenjetPt->size() > 1 && GenjetPt->size() == GenjetEta->size()) {
       SafeHistFill(weighthistMap1D_, getHistName("GenjetPt[1]", variation.second), GenjetPt->at(1), i, lheWeights[i] / lheWeights[0] * Genweight);
 
-      SafeHistFill(weighthistMap1D_, getHistName("GenjetEta[1]", variation.second), GenjetEta->at(1), i, lheWeights[i] / lheWeights[0] * Genweight); //}
+      SafeHistFill(weighthistMap1D_, getHistName("GenjetEta[1]", variation.second), GenjetEta->at(1), i, lheWeights[i] / lheWeights[0] * Genweight);
       SafeHistFill(weighthistMap1D_, getHistName("GenabsjetEta[1]", variation.second), std::abs(GenjetEta->at(1)), i, lheWeights[i] / lheWeights[0] * Genweight);
 
       SafeHistFill(weighthistMap1D_, getHistName("GendEtajj", variation.second), std::abs(GenjetEta->at(1) - GenjetEta->at(0)), i, lheWeights[i] / lheWeights[0] * Genweight);
