@@ -90,6 +90,8 @@ systHistList = [
     "yield",
     "Mass",
     "MassFull",
+    "LepPt",
+    "LepEta",
     "nJets",
     "nJets_central",
     "jetPt[1]",
