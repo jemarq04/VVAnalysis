@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import os
+import json
 import argparse
 from python import ConfigureJobs
 
@@ -8,12 +9,19 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", "--infile", help="name of input histogram file")
     parser.add_argument("-o", "--outdir", default="combine", help="name of output directory for the datacard(s)")
+    parser.add_argument("-g", "--with-gen", action="store_true", help="save gen histograms")
     parser.add_argument("-f", "--fit-var", default="Mass", help="fit variable (default: Mass)")
     parser.add_argument(
         "--rebin",
         type=lambda x: [float(i) for i in x.split(",")],
         help="list of comma-separated floats for hist rebinning",
     )
+    parser.add_argument(
+        "--rebin-file",
+        default="$CMSSW_BASE/src/ZZPlotting/varsFile.json",
+        help="varsFile.json used in ZZPlotting to use for rebinning (secondary to '--rebin' option)",
+    )
+    parser.add_argument("--extra-vars", type=lambda val: val.split(","), default=[], help="extra variables to save")
     parser.add_argument("-l", "--lumi", help="luminosity")
     parser.add_argument(
         "--lumiMatrix", action="store_true", help="use luminosity correlation matrix instead of Run 2 prescription"
@@ -63,6 +71,19 @@ def main():
         },
     }
 
+    args.rebin_file = os.path.expandvars(args.rebin_file)
+    rebin_info = {}
+    if not os.path.isfile(args.rebin_file):
+        print(f"WARNING: invalid rebin file: {args.rebin_file}")
+    else:
+        with open(args.rebin_file) as infile:
+            temp = json.load(infile)
+            for var in [args.fit_var] + args.extra_vars:
+                if var in temp:
+                    rebin_info[var] = temp[var]["_binning"]
+    if args.rebin is not None:
+        rebin_info[args.fit_var] = args.rebin
+
     if args.infile is None:
         args.infile = f"HistFiles/SystHists-ZZ4l{args.year}.root"
     if args.lumi is None:
@@ -98,9 +119,11 @@ def main():
         args.infile,
         sig_procs,
         bkg_procs,
+        extra_variables=args.extra_vars,
         channels=args.channels,
         lumi=args.lumi,
         auto_stats=args.autoMCStats,
+        with_gen=args.with_gen,
     )
 
     systematics_lnN = {
@@ -170,7 +193,7 @@ def main():
 
     # Finally, you can create the cards by specifying the
     # output directory for them.
-    generator.GenerateCards(args.outdir, rebin=args.rebin)
+    generator.GenerateCards(args.outdir, rebin=rebin_info)
 
 
 if __name__ == "__main__":

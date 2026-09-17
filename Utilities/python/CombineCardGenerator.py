@@ -48,29 +48,31 @@ class CombineCardGenerator:
         hist_infile: Union[str, ROOT.TFile],
         sig_procs: list,
         bkg_procs: list,
+        *,
         channels: Optional[list] = None,
+        extra_variables: Optional[list] = None,
         lumi: Optional[float] = None,
         auto_stats: Optional[float] = None,
         add_overflow: bool = False,
+        with_gen: bool = False,
     ):
-        if channels is None:
-            channels = []
         self.analysis = analysis
         self.lumi = lumi
 
-        self.channels = channels  # refer to eeee,eemm,mmee,mmmm (NOT Combine channels)
+        self.channels = channels or []  # refer to eeee,eemm,mmee,mmmm (NOT Combine channels)
         self.all_channels = ["eeee", "eemm", "mmee", "mmmm"]
 
         self.hist_infile = self._GetFile(hist_infile)
         self.hist_data = {}
         self.fit_variable = fit_variable
+        self.extra_variables = extra_variables or []
 
         self.data = {"data": Process("data", self.all_channels)}
         self.sig_procs = {proc: Process(proc, self.all_channels) for proc in sig_procs}
         self.bkg_procs = {proc: Process(proc, self.all_channels) for proc in bkg_procs}
         # if "data" not in bkg_procs:
         #    self.bkg_procs.append(Process("data", channels))
-        self.systematics = {ch: [] for ch in channels + ["all"]}
+        self.systematics = {ch: [] for ch in self.channels + ["all"]}
 
         self.longest_procname = 0
         for procname in list(self.sig_procs.keys()) + list(self.bkg_procs.keys()):
@@ -79,6 +81,7 @@ class CombineCardGenerator:
 
         self.auto_stats = auto_stats
         self.add_overflow = add_overflow
+        self.with_gen = with_gen
 
     def _GetFile(self, file: Union[str, ROOT.TFile]):
         if isinstance(file, str):
@@ -129,7 +132,7 @@ class CombineCardGenerator:
                         procs[procname].AddVariations(name)
             self.has_shape_type = True
 
-    def _LoadHistInfo(self, rebin: Optional[list]):
+    def _LoadHistInfo(self, rebin: dict):
         # Access plot groups
         manager_path = ConfigureJobs.getManagerPath()
         manager_name = ConfigureJobs.getManagerName()
@@ -154,9 +157,11 @@ class CombineCardGenerator:
                 procs[procname].LoadXSecs()
 
                 # Get yields from ALL channels
-                plotnames = ["_".join([self.fit_variable, chan]) for chan in self.all_channels]
+                plotnames = [f"{self.fit_variable}_{chan}" for chan in self.all_channels]
+                if self.with_gen and all(name not in procname.lower() for name in ["data", "nonprompt"]):
+                    plotnames += [f"Gen{self.fit_variable}_{chan}Gen" for chan in self.all_channels]
                 plotnames += [
-                    "_".join([self.fit_variable, var, chan])
+                    f"{self.fit_variable}_{var}_{chan}"
                     for var in procs[procname].variations
                     for chan in self.all_channels
                 ]
@@ -167,7 +172,7 @@ class CombineCardGenerator:
                     self.lumi,
                     hists=plotnames,
                     overflow=self.add_overflow,
-                    rebin=array.array("d", rebin) if rebin is not None else None,
+                    rebin=array.array("d", rebin[self.fit_variable]) if self.fit_variable in rebin else None,
                 )
                 self.hist_data[procname] = group
 
@@ -179,6 +184,26 @@ class CombineCardGenerator:
 
                     procs[procname].yields[chan] += round(hist.Integral(), 4)  # if hist.Integral() > 0 else 0.0001
                     procs[procname].yields["all"] += procs[procname].yields[chan]
+
+                for extra_variable in self.extra_variables:
+                    plotnames = [f"{extra_variable}_{chan}" for chan in self.all_channels]
+                    if self.with_gen and all(name not in procname.lower() for name in ["data", "nonprompt"]):
+                        plotnames += [f"Gen{extra_variable}_{chan}Gen" for chan in self.all_channels]
+                    plotnames += [
+                        f"{extra_variable}_{var}_{chan}"
+                        for var in procs[procname].variations
+                        for chan in self.all_channels
+                    ]
+                    group = HistTools.makeCompositeHists(
+                        self.hist_infile,
+                        procname,
+                        procs[procname].xsecs,
+                        self.lumi,
+                        hists=plotnames,
+                        overflow=self.add_overflow,
+                        rebin=array.array("d", rebin[extra_variable]) if extra_variable in rebin else None,
+                    )
+                    self.hist_data[procname].AddAll(group)
 
     def _WriteHists(self, outdir: str):
         with ROOT.TFile.Open(f"{outdir}/{self.analysis}.root", "RECREATE") as hist_outfile:
@@ -218,9 +243,11 @@ class CombineCardGenerator:
             OutputTools.writeOutputListItem(hists, hist_outfile)
             hists.Delete()
 
-    def GenerateCards(self, outdir: str, rebin: Optional[list]):
+    def GenerateCards(self, outdir: str, rebin: Optional[dict]):
         if not os.path.isdir(outdir):
             raise ValueError("invalid directory: %s" % outdir)
+        if rebin is None:
+            rebin = {}
 
         self._LoadHistInfo(rebin)
         self._WriteHists(outdir)
