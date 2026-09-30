@@ -276,7 +276,7 @@ void ZZSelector::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::str
   // Determine Z1 and Z2 for 2e2mu channels
   if (channel_ == eemm || channel_ == mmee)
     if (TightZZLeptons())
-      SetVariables(entry);
+      SetVariables();
 
   // Calculate extra variables for analysis
   auto deltaPhiZZ = [](float phi1, float phi2) {
@@ -544,7 +544,7 @@ void ZZSelector::ApplyScaleFactors() {
     weight *= (*pileupSF_->begin()).second->evaluate({nTruePU, "nominal"});
 }
 
-void ZZSelector::SetVariables(Long64_t entry) {
+void ZZSelector::SetVariables() {
   // By default, e1e2 is Z1. if that's not true, swap Z candidate entries
   if (!(e1e2IsZ1())) {
     std::swap(Z1Mass, Z2Mass);
