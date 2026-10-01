@@ -575,7 +575,6 @@ bool ZZSelectorBase::e1e2IsZ1() {
 // Meant to be a wrapper for the tight ID just in case it changes
 // To be a function of multiple variables
 bool ZZSelectorBase::lep1IsTight() { return l1IsTight && l1IsIso; }
-
 bool ZZSelectorBase::lep2IsTight() { return l2IsTight && l2IsIso; }
 bool ZZSelectorBase::tightZ1Leptons() { return lep1IsTight() && lep2IsTight(); }
 bool ZZSelectorBase::lep3IsTight() { return l3IsTight && l3IsIso; }
