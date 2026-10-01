@@ -42,6 +42,11 @@ void ZZBackgroundSelector::SetupNewDirectory() {
   AddObject<TH1D>(Z2MassHistPPPF_, ("Z2Mass_PPPF_" + channelName_).c_str(), "Z2Mass; m_{Z_{2}} [GeV]; Events;", 60, 0, 120);
   AddObject<TH1D>(Z2MassHistPPFF_, ("Z2Mass_PPFF_" + channelName_).c_str(), "Z2Mass; m_{Z_{2}} [GeV]; Events;", 60, 0, 120);
 
+  AddObject<TH1D>(CosTheta1PPPF_, ("CosTheta1_PPPF_" + channelName_).c_str(), "CosTheta1;cos#theta_{Z1};Events;", 20, -1, 1);
+  AddObject<TH1D>(CosTheta1PPFF_, ("CosTheta1_PPFF_" + channelName_).c_str(), "CosTheta1;cos#theta_{Z1};Events;", 20, -1, 1);
+  AddObject<TH1D>(CosTheta2PPPF_, ("CosTheta2_PPPF_" + channelName_).c_str(), "CosTheta2;cos#theta_{Z2};Events;", 20, -1, 1);
+  AddObject<TH1D>(CosTheta2PPFF_, ("CosTheta2_PPFF_" + channelName_).c_str(), "CosTheta2;cos#theta_{Z2};Events;", 20, -1, 1);
+
   //AddObject<TH1D>(LepEtaPPPF_, ("LepEta_PPPF_" + channelName_).c_str(), "LepEta;Lepton #eta;Events", 15, -2.5, 2.5);
   //AddObject<TH1D>(LepEtaPPFF_, ("LepEta_PPFF_" + channelName_).c_str(), "LepEta;Lepton #eta;Events", 15, -2.5, 2.5);
   //AddObject<TH1D>(LepPhiPPPF_, ("LepPhi_PPPF_" + channelName_).c_str(), "LepPhi;Lepton #phi;Events", 20, -3.2, 3.2);
@@ -115,6 +120,9 @@ float ZZBackgroundSelector::getEventWeight(Long64_t entry) {
       //Z1LepPhiPPPF_->Fill(l2Phi, weight);
       //Z2LepPhiPPPF_->Fill(l3Phi, weight);
       //Z2LepPhiPPPF_->Fill(l4Phi, weight);
+
+      CosTheta1PPPF_->Fill(CosTheta1, weight);
+      CosTheta2PPPF_->Fill(CosTheta2, weight);
     }
     Z1MassFullHistPPPF_->Fill(Z1Mass, weight);
     Z2MassFullHistPPPF_->Fill(Z2Mass, weight);
@@ -146,6 +154,9 @@ float ZZBackgroundSelector::getEventWeight(Long64_t entry) {
       //Z1LepPhiPPFF_->Fill(l2Phi, weight);
       //Z2LepPhiPPFF_->Fill(l3Phi, weight);
       //Z2LepPhiPPFF_->Fill(l4Phi, weight);
+
+      CosTheta1PPFF_->Fill(CosTheta1, weight);
+      CosTheta2PPFF_->Fill(CosTheta2, weight);
     }
     Z1MassFullHistPPFF_->Fill(Z1Mass, weight);
     Z2MassFullHistPPFF_->Fill(Z2Mass, weight);

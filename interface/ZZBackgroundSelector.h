@@ -31,6 +31,11 @@ public:
   //TH1D* Z2LepEtaPPFF_;
   //TH1D* Z2LepPhiPPPF_;
   //TH1D* Z2LepPhiPPFF_;
+  //Polarization variables
+  TH1D* CosTheta1PPPF_;
+  TH1D* CosTheta1PPFF_;
+  TH1D* CosTheta2PPPF_;
+  TH1D* CosTheta2PPFF_;
   //Full Mass
   TH1D* Z1MassFullHistPPPF_;
   TH1D* Z1MassFullHistPPFF_;
