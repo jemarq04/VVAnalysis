@@ -89,7 +89,7 @@ for group in $jobsdir/*/; do
       fi
 
       echo Skimming $(cat $dir/$name.inputs)...
-      ./skimNtuples.py -s $selections -a $jobtype$year -t $trigger -f $dir/$name.inputs -o temp_reskim.root && mv -v temp_reskim.root $outdir/$groupname/$name.root
+      ./skimNtuples.py -s $selections -a $jobtype$year -t $trigger -f $dir/$name.inputs -o temp_reskim.root -gen && mv -v temp_reskim.root $outdir/$groupname/$name.root
       echo
     fi
   done
