@@ -12,7 +12,7 @@ ROOT.gROOT.SetBatch(True)
 def getComLineArgs():
     parser = UserInput.getDefaultParser()
     parser.add_argument("--lumi", "-l", type=float, default=None, help="luminosity value (in fb-1)")
-    parser.add_argument("--uwvv", action="store_true", help="Use UWVV format ntuples in stead of NanoAOD")
+    parser.add_argument("--nano", action="store_true", help="Use NanoAOD format ntuples in stead of UWVV")
     parser.add_argument("--noHistConfig", action="store_true", help="Don't rely on config file to specify hist info")
     parser.add_argument("--input_tier", type=str, help="Selection stage of input files")
     parser.add_argument("--year", type=str, default="default", help="Year of Analysis")
@@ -71,12 +71,12 @@ def main():
         selector.isFake()
         selector.setNumCores(args["numCores"])
 
-        if args["uwvv"]:
+        if args["nano"]:
+            selector.setNtupleType("NanoAOD")
+        else:
             selector.setNtupleType("UWVV")
             logging.debug("Processing channels %s" % args["channels"])
             selector.setChannels(args["channels"])
-        else:
-            selector.setNtupleType("NanoAOD")
 
         if args["filenames"]:
             selector.setDatasets(args["filenames"])
