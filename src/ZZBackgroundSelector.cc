@@ -282,7 +282,7 @@ void ZZBackgroundSelector::SetZ1Z2Masses() {
   //The last two conditions only matter for TTJets fakes (very small amount)
   else if (Z1FP() && Z2PF()) {
     //Make sure I am not making a Z in eemm with an e and mu!
-    if ((channel_ == eeee || channel_ == mmmm)) {
+    if (channel_ == eeee || channel_ == mmmm) {
       Z1Mass = (lepton2 + lepton3).M();
       Z2Mass = (lepton1 + lepton4).M();
       Z1Pt = (lepton2 + lepton3).Pt();
@@ -294,7 +294,7 @@ void ZZBackgroundSelector::SetZ1Z2Masses() {
     }
   } else if (Z1PF() && Z2FP()) {
     //Make sure I am not making a Z in eemm with an e and mu!
-    if ((channel_ == eeee || channel_ == mmmm)) {
+    if (channel_ == eeee || channel_ == mmmm) {
       Z1Mass = (lepton1 + lepton4).M();
       Z2Mass = (lepton2 + lepton3).M();
       Z1Pt = (lepton1 + lepton4).Pt();
@@ -305,7 +305,7 @@ void ZZBackgroundSelector::SetZ1Z2Masses() {
       std::swap(l2PdgId, l4PdgId);
     }
   } else if (Z1PF() && Z2PF()) {
-    if ((channel_ == eeee || channel_ == mmmm)) {
+    if (channel_ == eeee || channel_ == mmmm) {
       //std::cout<<"Z1PF() && Z2PF()) loop enter "<<std::endl;
       Z1Mass = (lepton1 + lepton3).M();
       Z2Mass = (lepton2 + lepton4).M();
@@ -317,7 +317,7 @@ void ZZBackgroundSelector::SetZ1Z2Masses() {
       std::swap(l2PdgId, l3PdgId);
     }
   } else if (Z1FP() && Z2FP()) {
-    if ((channel_ == eeee || channel_ == mmmm)) {
+    if (channel_ == eeee || channel_ == mmmm) {
       //std::cout<<"Z1FP() && Z2FP()) loop enter "<<std::endl;
       Z1Mass = (lepton2 + lepton4).M();
       Z2Mass = (lepton1 + lepton3).M();
