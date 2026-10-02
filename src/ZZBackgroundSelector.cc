@@ -254,15 +254,9 @@ void ZZBackgroundSelector::SetZ1Z2Masses() {
     Z2Pt = (lepton3 + lepton4).Pt();
     //In Z2 what is l3 and l4 can change the fake rate a little bit.
     if (Z2FP()) {
-      float templ3Pt = l3Pt;
-      l3Pt = l4Pt;
-      l4Pt = templ3Pt;
-      float templ3Eta = l3Eta;
-      l3Eta = l4Eta;
-      l4Eta = templ3Eta;
-      float templ3PdgId = l3PdgId;
-      l3PdgId = l4PdgId;
-      l4PdgId = templ3PdgId;
+      std::swap(l3Pt, l4Pt);
+      std::swap(l3Eta, l4Eta);
+      std::swap(l3PdgId, l4PdgId);
     }
   } else if (tightZ2Leptons() && !tightZ1Leptons()) {
     //FPPP or PFPP
@@ -271,36 +265,18 @@ void ZZBackgroundSelector::SetZ1Z2Masses() {
     Z1Pt = (lepton3 + lepton4).Pt();
     Z2Pt = (lepton1 + lepton2).Pt();
     //Fakes are l1,l2 from skims, reverse them
-    float templ1Pt = l1Pt;
-    l1Pt = l3Pt;
-    l3Pt = templ1Pt;
-    float templ2Pt = l2Pt;
-    l2Pt = l4Pt;
-    l4Pt = templ2Pt;
-    float templ1Eta = l1Eta;
-    l1Eta = l3Eta;
-    l3Eta = templ1Eta;
-    float templ2Eta = l2Eta;
-    l2Eta = l4Eta;
-    l4Eta = templ2Eta;
-    float templ1PdgId = l1PdgId;
-    l1PdgId = l3PdgId;
-    l3PdgId = templ1PdgId;
-    float templ2PdgId = l2PdgId;
-    l2PdgId = l4PdgId;
-    l4PdgId = templ2PdgId;
+    std::swap(l1Pt, l3Pt);
+    std::swap(l2Pt, l4Pt);
+    std::swap(l1Eta, l3Eta);
+    std::swap(l2Eta, l4Eta);
+    std::swap(l1PdgId, l3PdgId);
+    std::swap(l2PdgId, l4PdgId);
     //Now we have two fakes identified by l3Pt, l4Pt and l3Eta, l4Eta
     //Further special condition between l3,l4 which one to use for l4fake rate in PPPF region, their IDs still are labeled l1IsTight,l2IsTight
     if (Z1FP()) {
-      float templ3Pt = l3Pt;
-      l3Pt = l4Pt;
-      l4Pt = templ3Pt;
-      float templ3Eta = l3Eta;
-      l3Eta = l4Eta;
-      l4Eta = templ3Eta;
-      float templ3PdgId = l3PdgId;
-      l3PdgId = l4PdgId;
-      l4PdgId = templ3PdgId;
+      std::swap(l3Pt, l4Pt);
+      std::swap(l3Eta, l4Eta);
+      std::swap(l3PdgId, l4PdgId);
     }
   }
   //The last two conditions only matter for TTJets fakes (very small amount)
@@ -312,15 +288,9 @@ void ZZBackgroundSelector::SetZ1Z2Masses() {
       Z1Pt = (lepton2 + lepton3).Pt();
       Z2Pt = (lepton1 + lepton4).Pt();
       //Here the two fakes are l1,l4 and we only need to relabel l1 -> l3
-      float templ1Pt = l1Pt;
-      l1Pt = l3Pt;
-      l3Pt = templ1Pt;
-      float templ1Eta = l1Eta;
-      l1Eta = l3Eta;
-      l3Eta = templ1Eta;
-      float templ1PdgId = l1PdgId;
-      l1PdgId = l3PdgId;
-      l3PdgId = templ1PdgId;
+      std::swap(l1Pt, l3Pt);
+      std::swap(l1Eta, l3Eta);
+      std::swap(l1PdgId, l3PdgId);
     }
   } else if (Z1PF() && Z2FP()) {
     //Make sure I am not making a Z in eemm with an e and mu!
@@ -330,15 +300,9 @@ void ZZBackgroundSelector::SetZ1Z2Masses() {
       Z1Pt = (lepton1 + lepton4).Pt();
       Z2Pt = (lepton2 + lepton3).Pt();
       //Here the two fakes are l2,l3 and we only need to relabel l2 -> l4 since this only matters in PPFF region so l3,l4 are interchangeable
-      float templ2Pt = l2Pt;
-      l2Pt = l4Pt;
-      l4Pt = templ2Pt;
-      float templ2Eta = l2Eta;
-      l2Eta = l4Eta;
-      l4Eta = templ2Eta;
-      float templ2PdgId = l2PdgId;
-      l2PdgId = l4PdgId;
-      l4PdgId = templ2PdgId;
+      std::swap(l2Pt, l4Pt);
+      std::swap(l2Eta, l4Eta);
+      std::swap(l2PdgId, l4PdgId);
     }
   } else if (Z1PF() && Z2PF()) {
     if ((channel_ == eeee || channel_ == mmmm)) {
@@ -348,15 +312,9 @@ void ZZBackgroundSelector::SetZ1Z2Masses() {
       Z1Pt = (lepton1 + lepton3).Pt();
       Z2Pt = (lepton2 + lepton4).Pt();
       //Here the two fakes are l2,l4 and we only need to relabel l2 -> l3
-      float templ2Pt = l2Pt;
-      l2Pt = l3Pt;
-      l3Pt = templ2Pt;
-      float templ2Eta = l2Eta;
-      l2Eta = l3Eta;
-      l3Eta = templ2Eta;
-      float templ2PdgId = l2PdgId;
-      l2PdgId = l3PdgId;
-      l3PdgId = templ2PdgId;
+      std::swap(l2Pt, l3Pt);
+      std::swap(l2Eta, l3Eta);
+      std::swap(l2PdgId, l3PdgId);
     }
   } else if (Z1FP() && Z2FP()) {
     if ((channel_ == eeee || channel_ == mmmm)) {
@@ -366,15 +324,9 @@ void ZZBackgroundSelector::SetZ1Z2Masses() {
       Z1Pt = (lepton2 + lepton4).Pt();
       Z2Pt = (lepton1 + lepton3).Pt();
       //Here the two fakes are l1,l3 and we only need to relabel l1 -> l4
-      float templ1Pt = l1Pt;
-      l1Pt = l4Pt;
-      l4Pt = templ1Pt;
-      float templ1Eta = l1Eta;
-      l1Eta = l4Eta;
-      l4Eta = templ1Eta;
-      float templ1PdgId = l1PdgId;
-      l1PdgId = l4PdgId;
-      l4PdgId = templ1PdgId;
+      std::swap(l1Pt, l4Pt);
+      std::swap(l1Eta, l4Eta);
+      std::swap(l1PdgId, l4PdgId);
     }
   }
 }
