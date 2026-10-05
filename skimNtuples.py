@@ -306,7 +306,7 @@ def main():
         args["trigger"],
         args["filelist"],
         args["output_file_name"],
-        args["save_genTrees"],
+        args["save_genTrees"] and args["trigger"] == "MonteCarlo",
         not args["no_deduplicate"],
     )
     exit(0)
