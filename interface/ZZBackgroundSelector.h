@@ -36,6 +36,10 @@ public:
   TH1D* CosTheta1PPFF_;
   TH1D* CosTheta2PPPF_;
   TH1D* CosTheta2PPFF_;
+  TH1D* RapidityDiffPPPF_;
+  TH1D* RapidityDiffPPFF_;
+  TH1D* dPhiOSllPPPF_;
+  TH1D* dPhiOSllPPFF_;
   //Full Mass
   TH1D* Z1MassFullHistPPPF_;
   TH1D* Z1MassFullHistPPFF_;

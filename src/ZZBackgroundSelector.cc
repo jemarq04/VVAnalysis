@@ -46,6 +46,10 @@ void ZZBackgroundSelector::SetupNewDirectory() {
   AddObject<TH1D>(CosTheta1PPFF_, ("CosTheta1_PPFF_" + channelName_).c_str(), "CosTheta1;cos#theta_{Z1};Events;", 20, -1, 1);
   AddObject<TH1D>(CosTheta2PPPF_, ("CosTheta2_PPPF_" + channelName_).c_str(), "CosTheta2;cos#theta_{Z2};Events;", 20, -1, 1);
   AddObject<TH1D>(CosTheta2PPFF_, ("CosTheta2_PPFF_" + channelName_).c_str(), "CosTheta2;cos#theta_{Z2};Events;", 20, -1, 1);
+  AddObject<TH1D>(RapidityDiffPPPF_, ("RapidityDiff_PPPF_" + channelName_).c_str(), "RapidityDiff;#Deltay_{ZZ};Events;", 20, 0, 4);
+  AddObject<TH1D>(RapidityDiffPPFF_, ("RapidityDiff_PPFF_" + channelName_).c_str(), "RapidityDiff;#Deltay_{ZZ};Events;", 20, 0, 4);
+  AddObject<TH1D>(dPhiOSllPPPF_, ("dPhiOSll_PPPF_" + channelName_).c_str(), "dPhiOSll;#phi_{e^{+}#mu^{-}};Events;", 16, 0, 4);
+  AddObject<TH1D>(dPhiOSllPPFF_, ("dPhiOSll_PPFF_" + channelName_).c_str(), "dPhiOSll;#phi_{e^{+}#mu^{-}};Events;", 16, 0, 4);
 
   //AddObject<TH1D>(LepEtaPPPF_, ("LepEta_PPPF_" + channelName_).c_str(), "LepEta;Lepton #eta;Events", 15, -2.5, 2.5);
   //AddObject<TH1D>(LepEtaPPFF_, ("LepEta_PPFF_" + channelName_).c_str(), "LepEta;Lepton #eta;Events", 15, -2.5, 2.5);
@@ -123,6 +127,9 @@ float ZZBackgroundSelector::getEventWeight(Long64_t entry) {
 
       CosTheta1PPPF_->Fill(CosTheta1, weight);
       CosTheta2PPPF_->Fill(CosTheta2, weight);
+      RapidityDiffPPPF_->Fill(RapidityDiff, weight);
+      if (channel_ == eemm || channel_ == mmee)
+        dPhiOSllPPPF_->Fill(dPhiOSll, weight);
     }
     Z1MassFullHistPPPF_->Fill(Z1Mass, weight);
     Z2MassFullHistPPPF_->Fill(Z2Mass, weight);
@@ -157,6 +164,9 @@ float ZZBackgroundSelector::getEventWeight(Long64_t entry) {
 
       CosTheta1PPFF_->Fill(CosTheta1, weight);
       CosTheta2PPFF_->Fill(CosTheta2, weight);
+      RapidityDiffPPFF_->Fill(RapidityDiff, weight);
+      if (channel_ == eemm || channel_ == mmee)
+        dPhiOSllPPFF_->Fill(dPhiOSll, weight);
     }
     Z1MassFullHistPPFF_->Fill(Z1Mass, weight);
     Z2MassFullHistPPFF_->Fill(Z2Mass, weight);
