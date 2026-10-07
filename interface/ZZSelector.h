@@ -127,13 +127,13 @@ protected:
   void LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::string> variation) override;
   void FillHistograms(Long64_t entry, std::pair<Systematic, std::string> variation) override;
   void ApplyScaleFactors();
-  bool PassesZZSelection(bool nonPrompt);
-  bool PassesZZSelectionLoose(bool nonPrompt);
-  bool PassesZZSelectionTight(bool nonPrompt);
+  bool PassesZZSelection();
+  bool PassesZZSelectionLoose();
+  bool PassesZZSelectionTight();
   bool Passes4eExtraCut();
   bool Passes2e2mExtraCut(Long64_t entry);
   bool PassesZZjjSelection();
-  bool PassesHZZSelection(bool nonPrompt);
+  bool PassesHZZSelection();
   unsigned int GetLheWeightInfo();
   bool CheckQQZZ();
   void SetVariables();

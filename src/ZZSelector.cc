@@ -772,33 +772,33 @@ bool ZZSelector::Passes2e2mExtraCut(Long64_t entry) {
   return ept_arraySort[0] > 23 && ept_arraySort[1] > 12;
 }
 
-bool ZZSelector::PassesZZSelection(bool nonPrompt) {
+bool ZZSelector::PassesZZSelection() {
   // This nonPrompt boolean is for ZZBackgroundSelector
   // When running ZZBackgroundSelector, FillHistograms should run just with ZZSelection, we cannot require TightZZLeptons by definition
-  if (nonPrompt)
+  if (isNonPrompt_)
     return ZZSelection();
   else
     return ZZSelection() && TightZZLeptons();
 }
 
-bool ZZSelector::PassesZZSelectionLoose(bool nonPrompt) {
+bool ZZSelector::PassesZZSelectionLoose() {
   // This nonPrompt boolean is for ZZBackgroundSelector
   // When running ZZBackgroundSelector, FillHistograms should run just with ZZSelection, we cannot require TightZZLeptons by definition
-  if (nonPrompt)
+  if (isNonPrompt_)
     return true;
   else
     return TightZZLeptons();
 }
 
-bool ZZSelector::PassesZZSelectionTight(bool nonPrompt) {
-  if (nonPrompt)
+bool ZZSelector::PassesZZSelectionTight() {
+  if (isNonPrompt_)
     return ZZSelectionTight();
   else
     return ZZSelectionTight() && TightZZLeptons();
 }
 
-bool ZZSelector::PassesHZZSelection(bool nonPrompt) {
-  if (nonPrompt)
+bool ZZSelector::PassesHZZSelection() {
+  if (isNonPrompt_)
     return ZSelection();
   else
     return ZSelection() && TightZZLeptons();
@@ -830,7 +830,7 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
   //  std::cout << fChain->GetTree()->GetDirectory()->GetFile()->GetName() << std::endl;
 
   // require TightZZLeptons for prompt
-  if (!PassesZZSelectionLoose(isNonPrompt_))
+  if (!PassesZZSelectionLoose())
     return;
 
   //Apply extra 23/12 GeV cut to 4e channel
@@ -1053,7 +1053,7 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
   // std::cout<<"isNonPrompt_ in FillHistograms:"<<isNonPrompt_<<std::endl;
 
   // Require ZZ mass between 60,120
-  if (!PassesZZSelection(isNonPrompt_))
+  if (!PassesZZSelection())
     return;
 
   for (unsigned int ind = 0; ind < jetPt->size(); ind++) {
