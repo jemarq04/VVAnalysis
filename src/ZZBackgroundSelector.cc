@@ -266,6 +266,8 @@ void ZZBackgroundSelector::SetZ1Z2Masses() {
     if (Z2FP()) {
       std::swap(l3Pt, l4Pt);
       std::swap(l3Eta, l4Eta);
+      std::swap(l3Phi, l4Phi);
+      std::swap(l3Mass, l4Mass);
       std::swap(l3PdgId, l4PdgId);
     }
   } else if (tightZ2Leptons() && !tightZ1Leptons()) {
@@ -279,6 +281,10 @@ void ZZBackgroundSelector::SetZ1Z2Masses() {
     std::swap(l2Pt, l4Pt);
     std::swap(l1Eta, l3Eta);
     std::swap(l2Eta, l4Eta);
+    std::swap(l1Phi, l3Phi);
+    std::swap(l2Phi, l4Phi);
+    std::swap(l1Mass, l3Mass);
+    std::swap(l2Mass, l4Mass);
     std::swap(l1PdgId, l3PdgId);
     std::swap(l2PdgId, l4PdgId);
     //Now we have two fakes identified by l3Pt, l4Pt and l3Eta, l4Eta
@@ -286,8 +292,11 @@ void ZZBackgroundSelector::SetZ1Z2Masses() {
     if (Z1FP()) {
       std::swap(l3Pt, l4Pt);
       std::swap(l3Eta, l4Eta);
+      std::swap(l3Phi, l4Phi);
+      std::swap(l3Mass, l4Mass);
       std::swap(l3PdgId, l4PdgId);
     }
+    GetPolarizationVariables();
   }
   //The last two conditions only matter for TTJets fakes (very small amount)
   else if (Z1FP() && Z2PF()) {
@@ -300,7 +309,10 @@ void ZZBackgroundSelector::SetZ1Z2Masses() {
       //Here the two fakes are l1,l4 and we only need to relabel l1 -> l3
       std::swap(l1Pt, l3Pt);
       std::swap(l1Eta, l3Eta);
+      std::swap(l1Phi, l3Phi);
+      std::swap(l1Mass, l3Mass);
       std::swap(l1PdgId, l3PdgId);
+      GetPolarizationVariables();
     }
   } else if (Z1PF() && Z2FP()) {
     //Make sure I am not making a Z in eemm with an e and mu!
@@ -312,7 +324,10 @@ void ZZBackgroundSelector::SetZ1Z2Masses() {
       //Here the two fakes are l2,l3 and we only need to relabel l2 -> l4 since this only matters in PPFF region so l3,l4 are interchangeable
       std::swap(l2Pt, l4Pt);
       std::swap(l2Eta, l4Eta);
+      std::swap(l2Phi, l4Phi);
+      std::swap(l2Mass, l4Mass);
       std::swap(l2PdgId, l4PdgId);
+      GetPolarizationVariables();
     }
   } else if (Z1PF() && Z2PF()) {
     if (channel_ == eeee || channel_ == mmmm) {
@@ -324,7 +339,10 @@ void ZZBackgroundSelector::SetZ1Z2Masses() {
       //Here the two fakes are l2,l4 and we only need to relabel l2 -> l3
       std::swap(l2Pt, l3Pt);
       std::swap(l2Eta, l3Eta);
+      std::swap(l2Phi, l3Phi);
+      std::swap(l2Mass, l3Mass);
       std::swap(l2PdgId, l3PdgId);
+      GetPolarizationVariables();
     }
   } else if (Z1FP() && Z2FP()) {
     if (channel_ == eeee || channel_ == mmmm) {
@@ -336,7 +354,10 @@ void ZZBackgroundSelector::SetZ1Z2Masses() {
       //Here the two fakes are l1,l3 and we only need to relabel l1 -> l4
       std::swap(l1Pt, l4Pt);
       std::swap(l1Eta, l4Eta);
+      std::swap(l1Phi, l4Phi);
+      std::swap(l1Mass, l4Mass);
       std::swap(l1PdgId, l4PdgId);
+      GetPolarizationVariables();
     }
   }
 }
