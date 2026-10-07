@@ -144,6 +144,8 @@ protected:
   bool Z4lSelection();
   bool ZSelection();
   void ShiftEfficiencies(Systematic variation);
+  float deltaPhiZZ(float phi1, float phi2);
+  void GetPolarizationVariables();
   std::string GetEleRecoSFName(Float_t ele_pt);
 };
 

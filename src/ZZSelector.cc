@@ -294,13 +294,6 @@ void ZZSelector::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::str
       SetVariables();
 
   // Calculate extra variables for analysis
-  auto deltaPhiZZ = [](float phi1, float phi2) {
-    float pi = TMath::Pi();
-    float dphi = fabs(phi1 - phi2);
-    if (dphi > pi)
-      dphi = 2.0 * pi - dphi;
-    return dphi;
-  };
   auto deltaEtajj = [](std::vector<float>* jEta) {
     if (jEta->size() < 2)
       return -1.;
@@ -317,6 +310,18 @@ void ZZSelector::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::str
   dPhiZZ = deltaPhiZZ(Z1Phi, Z2Phi);
   dRZZ = deltaRZZ(Z1Eta, Z2Eta, dPhiZZ);
 
+  GetPolarizationVariables();
+}
+
+float ZZSelector::deltaPhiZZ(float phi1, float phi2) {
+  float pi = TMath::Pi();
+  float dphi = fabs(phi1 - phi2);
+  if (dphi > pi)
+    dphi = 2.0 * pi - dphi;
+  return dphi;
+}
+
+void ZZSelector::GetPolarizationVariables() {
   auto polCosTheta = [](const TLorentzVector& zzp4, const TLorentzVector& zp4_input, const TLorentzVector& lp4_input) {
     TLorentzVector zp4 = zp4_input;
     TLorentzVector lp4 = lp4_input;
@@ -334,49 +339,19 @@ void ZZSelector::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::str
     return zp4.Vect().Dot(zzp4.Vect()) / (zp4.Vect().Mag() * zzp4.Vect().Mag());
   };
 
-  /*
-  using FourVec = ROOT::Math::PtEtaPhiEVector;
-  auto polCosTheta_new = [](const FourVec& zzp4_input, const FourVec& zp4_input, const FourVec& lp4_input) {
-    FourVec zp4 = zp4_input;
-    FourVec lp4 = lp4_input;
-
-    ROOT::Math::VectorUtil::boost(lp4, -zp4_input.BoostToCM());   // Boost lepton to Z rest frame
-    ROOT::Math::VectorUtil::boost(zp4, -zzp4_input.BoostToCM());  // Boost Z to ZZ rest frame
-
-    return lp4.Vect().Dot(zp4.Vect()) / std::sqrt(lp4.Vect().Mag2() * zp4.Vect().Mag2());
-  };
-  auto polCosThetaStar_new = [](const FourVec& zzp4_input, const FourVec& zp4_input) {
-    FourVec zp4 = zp4_input;
-
-    ROOT::Math::VectorUtil::boost(zp4, -zzp4_input.BoostToCM());  // Boost Z to ZZ rest frame
-
-    return zp4.Vect().Dot(zzp4_input.Vect()) / std::sqrt(zp4.Vect().Mag2() * zzp4_input.Vect().Mag2());
-  };
-  */
-
   TLorentzVector lp1p4, lp2p4;
-  //FourVec lp1p4_new, lp2p4_new;
-  if (l1PdgId > 0) {
-    lp1p4.SetPtEtaPhiE(l1Pt, l1Eta, l1Phi, l1Energy);
-    //lp1p4_new = FourVec(l1Pt, l1Eta, l1Phi, l1Energy);
-  } else {
-    lp1p4.SetPtEtaPhiE(l2Pt, l2Eta, l2Phi, l2Energy);
-    //lp1p4_new = FourVec(l2Pt, l2Eta, l2Phi, l2Energy);
-  }
-  if (l3PdgId > 0) {
-    lp2p4.SetPtEtaPhiE(l3Pt, l3Eta, l3Phi, l3Energy);
-    //lp2p4_new = FourVec(l3Pt, l3Eta, l3Phi, l3Energy);
-  } else {
-    lp2p4.SetPtEtaPhiE(l4Pt, l4Eta, l4Phi, l4Energy);
-    //lp2p4_new = FourVec(l4Pt, l4Eta, l4Phi, l4Energy);
-  }
+  if (l1PdgId > 0)
+    lp1p4.SetPtEtaPhiM(l1Pt, l1Eta, l1Phi, l1Mass);
+  else
+    lp1p4.SetPtEtaPhiM(l2Pt, l2Eta, l2Phi, l2Mass);
+  if (l3PdgId > 0)
+    lp2p4.SetPtEtaPhiM(l3Pt, l3Eta, l3Phi, l3Mass);
+  else
+    lp2p4.SetPtEtaPhiM(l4Pt, l4Eta, l4Phi, l4Mass);
   TLorentzVector z1p4, z2p4, zzp4;
   z1p4.SetPtEtaPhiM(Z1Pt, Z1Eta, Z1Phi, Z1Mass);
   z2p4.SetPtEtaPhiM(Z2Pt, Z2Eta, Z2Phi, Z2Mass);
   zzp4 = z1p4 + z2p4;
-  //FourVec z1p4_new(Z1Pt, Z1Eta, Z1Phi, Z1Mass);
-  //FourVec z2p4_new(Z2Pt, Z2Eta, Z2Phi, Z2Mass);
-  //FourVec zzp4_new = z1p4_new + z2p4_new;
 
   CosTheta1 = polCosTheta(zzp4, z1p4, lp1p4);
   CosTheta2 = polCosTheta(zzp4, z2p4, lp2p4);
