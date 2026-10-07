@@ -1,7 +1,6 @@
 #include "Analysis/VVAnalysis/interface/ZZSelectorBase.h"
 #include <TStyle.h>
 #include <regex>
-#include "TParameter.h"
 #include "TString.h"
 
 std::string ZZSelectorBase::GetNameFromFile() {

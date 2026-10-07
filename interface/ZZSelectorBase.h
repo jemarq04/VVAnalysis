@@ -7,15 +7,11 @@
 #include <TSelector.h>
 #include <TH1.h>
 #include <TH2.h>
-#include <exception>
-#include <iostream>
 
 // Headers needed by this particular selector
 #include <vector>
 #include "correction.h"
-#include "Analysis/VVAnalysis/interface/ScaleFactor.h"
 #include "Analysis/VVAnalysis/interface/SelectorBase.h"
-#include "Analysis/VVAnalysis/interface/helpers.h"
 
 class ZZSelectorBase : public SelectorBase {
 public:
@@ -25,7 +21,6 @@ public:
   std::unique_ptr<correction::CorrectionSet> jetPUSF_;
   std::unique_ptr<correction::CorrectionSet> qqZZ_kfac_;
   std::string year;
-  //ScaleFactor* mIsoSF_;
 
   //bool isVBS_;
   //MC variable to check for duplication(this is a flag to differentiate between channels)

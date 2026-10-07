@@ -6,12 +6,9 @@
 #include <TFile.h>
 #include <TH1.h>
 #include <TH2.h>
-#include <exception>
-#include <iostream>
 
 // Headers needed by this particular selector
 #include "Analysis/VVAnalysis/interface/ZZSelectorBase.h"
-#include <vector>
 
 class FakeRateSelector : public ZZSelectorBase {
 public:

@@ -855,9 +855,6 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
 
     if (isMC_) {
       SafeSetBranch(ftntp_, getBranchName("genWeight", variation.second), &genWeight);
-      SafeSetBranch(ftntp_, getBranchName("L1prefiringWeight", variation.second), &L1prefiringWeight);
-      SafeSetBranch(ftntp_, getBranchName("L1prefiringWeightUp", variation.second), &L1prefiringWeightUp);
-      SafeSetBranch(ftntp_, getBranchName("L1prefiringWeightDn", variation.second), &L1prefiringWeightDn);
     }
     ftntp_->Fill();
   }
@@ -1153,9 +1150,6 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
 
     if (isMC_) {
       SafeSetBranch(ftntp_, getBranchName("genWeight", variation.second), &genWeight);
-      SafeSetBranch(ftntp_, getBranchName("L1prefiringWeight", variation.second), &L1prefiringWeight);
-      SafeSetBranch(ftntp_, getBranchName("L1prefiringWeightUp", variation.second), &L1prefiringWeightUp);
-      SafeSetBranch(ftntp_, getBranchName("L1prefiringWeightDn", variation.second), &L1prefiringWeightDn);
     }
     ftntp_->Fill();
   }

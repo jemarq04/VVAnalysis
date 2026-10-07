@@ -1,7 +1,6 @@
 #ifndef ZZBackgroundSelector_h
 #define ZZBackgroundSelector_h
 
-#include <vector>
 #include "Analysis/VVAnalysis/interface/ScaleFactor.h"
 #include "Analysis/VVAnalysis/interface/ZZSelector.h"
 
