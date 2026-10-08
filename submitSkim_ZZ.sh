@@ -11,4 +11,4 @@ fi
 year=$1
 shift 1
 
-./farmoutNtupleSkim.py -a ZZ4l$year -s loosePreselection,Zselection,Overlap,QCDVeto,smartCut,4lmass -f ZZ4l$year -e-gen $@
+./farmoutNtupleSkim.py -a ZZ4l$year -s loosePreselection,Zselection,Overlap,SIP3D,QCDVeto,smartCut,4lmass -f ZZ4l$year -e-gen $@

@@ -11,4 +11,4 @@ fi
 year=$1
 shift 1
 
-./farmoutNtupleSkim.py -a ZplusL$year -s ZplusLBase,Zselection,LepPt,LepOverlap,4lVeto -f ZplusL$year $@
+./farmoutNtupleSkim.py -a ZplusL$year -s ZplusLBase,Zselection,LepPt,LepOverlap,SIP3D,4lVeto -f ZplusL$year $@
