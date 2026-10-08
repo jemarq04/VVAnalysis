@@ -883,7 +883,8 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
     // Do jet systematics JES and JER
     if (isMC_) {
       float lheweight;
-      for (size_t i = 0; i < vjetEta.size(); i++) {  // No actual syst for full m4l but just for consistency
+      // No actual syst for full m4l but just for consistency
+      for (size_t i = 0; i < vjetEta.size(); i++) {
         SafeHistFill(jethistMap1D_, getHistName("MassFull", variation.second), Mass, i, weight);
 
         if (vnJets[i] == 0) {
