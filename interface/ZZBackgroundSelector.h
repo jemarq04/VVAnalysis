@@ -10,13 +10,17 @@ public:
   ScaleFactor* fakeRate_allMu_;
 
   //PPPF represents 3P1F CR and PPFF represents 2P1F CR
+
+  //ZMass Histograms
   TH1D* Z1MassHistPPPF_;
   TH1D* Z1MassHistPPFF_;
   TH1D* Z2MassHistPPPF_;
   TH1D* Z2MassHistPPFF_;
-  //4lMass Histogram
+
+  //4lMass Histograms
   TH1D* MassHistPPPF_;
   TH1D* MassHistPPFF_;
+
   //Lepton kinematics
   //TH1D* LepEtaPPPF_;
   //TH1D* LepEtaPPFF_;
@@ -30,6 +34,7 @@ public:
   //TH1D* Z2LepEtaPPFF_;
   //TH1D* Z2LepPhiPPPF_;
   //TH1D* Z2LepPhiPPFF_;
+
   //Polarization variables
   TH1D* CosTheta1PPPF_;
   TH1D* CosTheta1PPFF_;
@@ -39,12 +44,14 @@ public:
   TH1D* RapidityDiffPPFF_;
   TH1D* dPhiOSllPPPF_;
   TH1D* dPhiOSllPPFF_;
-  //Full Mass
+
+  //ZMass Histograms (Full)
   TH1D* Z1MassFullHistPPPF_;
   TH1D* Z1MassFullHistPPFF_;
   TH1D* Z2MassFullHistPPPF_;
   TH1D* Z2MassFullHistPPFF_;
-  //4lMass Histogram
+
+  //4lMass Histograms (Full)
   TH1D* MassFullHistPPPF_;
   TH1D* MassFullHistPPFF_;
 
