@@ -294,26 +294,14 @@ void ZZSelector::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::str
       SetVariables();
 
   // Calculate extra variables for analysis
-  auto deltaEtajj = [](std::vector<float>* jEta) {
-    if (jEta->size() < 2)
-      return -1.;
-    double etaDiff = jEta->at(0) - jEta->at(1);
-    return std::abs(etaDiff);
-  };
-
-  auto deltaRZZ = [](float eta1, float eta2, float dPhi) {
-    float dEta = eta1 - eta2;
-    return std::sqrt(dPhi * dPhi + dEta * dEta);
-  };
-
-  dEtajj = deltaEtajj(jetEta);
-  dPhiZZ = deltaPhiZZ(Z1Phi, Z2Phi);
-  dRZZ = deltaRZZ(Z1Eta, Z2Eta, dPhiZZ);
+  dEtajj = (jetEta->size() < 2) ? -1 : deltaEta(jetEta->at(0), jetEta->at(1));
+  dPhiZZ = deltaPhi(Z1Phi, Z2Phi);
+  dRZZ = deltaR(Z1Eta, Z2Eta, Z1Phi, Z2Phi);
 
   GetPolarizationVariables();
 }
 
-float ZZSelector::deltaPhiZZ(float phi1, float phi2) {
+float ZZSelector::deltaPhi(float phi1, float phi2) {
   float pi = TMath::Pi();
   float dphi = fabs(phi1 - phi2);
   if (dphi > pi)
@@ -321,7 +309,16 @@ float ZZSelector::deltaPhiZZ(float phi1, float phi2) {
   return dphi;
 }
 
+float ZZSelector::deltaEta(float eta1, float eta2) { return std::abs(eta1 - eta2); }
+
+float ZZSelector::deltaR(float eta1, float eta2, float phi1, float phi2) {
+  float dPhi = deltaPhi(phi1, phi2);
+  float dEta = deltaEta(eta1, eta2);
+  return std::sqrt(dPhi * dPhi + dEta * dEta);
+}
+
 void ZZSelector::GetPolarizationVariables() {
+  // Define functions to calculate CosTheta1, CosTheta2, and CosThetaStar
   auto polCosTheta = [](const TLorentzVector& zzp4, const TLorentzVector& zp4_input, const TLorentzVector& lp4_input) {
     TLorentzVector zp4 = zp4_input;
     TLorentzVector lp4 = lp4_input;
@@ -339,6 +336,7 @@ void ZZSelector::GetPolarizationVariables() {
     return zp4.Vect().Dot(zzp4.Vect()) / (zp4.Vect().Mag() * zzp4.Vect().Mag());
   };
 
+  // Define positive leptons from each Z (e.g. lp1p4 is fourvec for positive lep in Z1)
   TLorentzVector lp1p4, lp2p4;
   if (l1PdgId > 0)
     lp1p4.SetPtEtaPhiM(l1Pt, l1Eta, l1Phi, l1Mass);
@@ -348,6 +346,7 @@ void ZZSelector::GetPolarizationVariables() {
     lp2p4.SetPtEtaPhiM(l3Pt, l3Eta, l3Phi, l3Mass);
   else
     lp2p4.SetPtEtaPhiM(l4Pt, l4Eta, l4Phi, l4Mass);
+  // Define fourvecs for Z and ZZ candidates
   TLorentzVector z1p4, z2p4, zzp4;
   z1p4.SetPtEtaPhiM(Z1Pt, Z1Eta, Z1Phi, Z1Mass);
   z2p4.SetPtEtaPhiM(Z2Pt, Z2Eta, Z2Phi, Z2Mass);
@@ -363,26 +362,26 @@ void ZZSelector::GetPolarizationVariables() {
   if (channel_ == eemm) {
     if (l1PdgId > 0) {  //l1 is positron
       if (l3PdgId < 0)
-        dPhiOSll = deltaPhiZZ(l1Phi, l3Phi);
+        dPhiOSll = deltaPhi(l1Phi, l3Phi);
       else
-        dPhiOSll = deltaPhiZZ(l1Phi, l4Phi);
+        dPhiOSll = deltaPhi(l1Phi, l4Phi);
     } else {  //l2 is positron
       if (l3PdgId < 0)
-        dPhiOSll = deltaPhiZZ(l2Phi, l3Phi);
+        dPhiOSll = deltaPhi(l2Phi, l3Phi);
       else
-        dPhiOSll = deltaPhiZZ(l2Phi, l4Phi);
+        dPhiOSll = deltaPhi(l2Phi, l4Phi);
     }
   } else if (channel_ == mmee) {
     if (l3PdgId > 0) {  //l3 is positron
       if (l1PdgId < 0)
-        dPhiOSll = deltaPhiZZ(l3Phi, l1Phi);
+        dPhiOSll = deltaPhi(l3Phi, l1Phi);
       else
-        dPhiOSll = deltaPhiZZ(l3Phi, l2Phi);
+        dPhiOSll = deltaPhi(l3Phi, l2Phi);
     } else {  //l4 is positron
       if (l1PdgId < 0)
-        dPhiOSll = deltaPhiZZ(l4Phi, l1Phi);
+        dPhiOSll = deltaPhi(l4Phi, l1Phi);
       else
-        dPhiOSll = deltaPhiZZ(l4Phi, l2Phi);
+        dPhiOSll = deltaPhi(l4Phi, l2Phi);
     }
   } else {
     dPhiOSll = -99;
