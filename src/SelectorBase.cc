@@ -1,7 +1,6 @@
 #include "Analysis/VVAnalysis/interface/SelectorBase.h"
 #include <boost/algorithm/string.hpp>
 #include <TStyle.h>
-#include <regex>
 #include "TParameter.h"
 
 void SelectorBase::Begin(TTree* /*tree*/) { TString option = GetOption(); }

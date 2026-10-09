@@ -1,5 +1,5 @@
 #include "Analysis/VVAnalysis/interface/ZZGenSelector.h"
-#include "TLorentzVector.h"
+#include "TMath.h"
 #include <boost/algorithm/string.hpp>
 
 void ZZGenSelector::Init(TTree* tree) {
