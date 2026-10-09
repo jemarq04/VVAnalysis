@@ -8,8 +8,6 @@
 #include <TH1.h>
 #include <TH2.h>
 #include <TEfficiency.h>
-#include <exception>
-#include <iostream>
 
 // Headers needed by this particular selector
 #include <vector>
@@ -17,8 +15,6 @@
 #include "Analysis/VVAnalysis/interface/SelectorBase.h"
 #include "Analysis/VVAnalysis/interface/BranchManager.h"
 #include "Analysis/VVAnalysis/interface/GoodParticle.h"
-#include "CondFormats/BTauObjects/interface/BTagCalibration.h"
-#include "CondTools/BTau/interface/BTagCalibrationReader.h"
 typedef ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>> LorentzVector;
 
 class ThreeLepSelector : public SelectorBase {
@@ -113,8 +109,6 @@ public:
   double HT;
   int nJets, nBJets;
   bool passZVeto;
-  BTagCalibration calib;
-  BTagCalibrationReader btag_reader;  // central sys type
 
   /************************************************************/
   /* _____ __ __ __  __   ___ ______ __   ___   __  __  __    */
@@ -137,7 +131,7 @@ public:
   bool isLooseMVAElectron(size_t);
 
   bool doesNotOverlap(size_t);
-  bool passFullIso(LorentzVector&, int, int);
+  bool passFullIso(LorentzVector&, float, float);
   bool doesPassZVeto(GoodPart&, std::vector<GoodPart>&);
 
   //// General Functions

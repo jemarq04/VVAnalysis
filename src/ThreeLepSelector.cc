@@ -2,7 +2,6 @@
 
 #include <TStyle.h>
 #include <regex>
-#include "TParameter.h"
 
 #define Fill1D(NAME, VALUE_) HistFullFill(histMap1D_, NAME, variation.second, VALUE_, weight);
 //#define Fill2D(NAME, VALUE1_, VALUE2_) HistFullFill(histMap2D_, NAME, variation.second, VALUE1_, VALUE2_, weight);
@@ -24,10 +23,6 @@ std::string ThreeLepSelector::GetNameFromFile() {
 }
 
 void ThreeLepSelector::SetScaleFactors() {
-  // calib = BTagCalibration("deepcsv", "data/btag_scales.csv");
-  // btag_reader = BTagCalibrationReader(BTagEntry::OP_MEDIUM, "central");
-  // btag_reader.load(calib, BTagEntry::FLAV_B, "comb");
-
   // pileupSF_ = (ScaleFactor *) GetInputList()->FindObject("pileupSF");
   // if (pileupSF_ == nullptr )
   //   std::cout << "missing Pileup SF" << std::endl;
@@ -295,7 +290,7 @@ void ThreeLepSelector::setupChannel() {
 
 bool ThreeLepSelector::doesPassZVeto(GoodPart& lep, std::vector<GoodPart>& looseList) {
   for (auto lLep : looseList) {
-    if ((lep.Charge() * lLep.Charge() < 0) && ((abs((lLep.v + lep.v).M() - 91.188) < 15) || ((lLep.v + lep.v).M() < 12))) {
+    if ((lep.Charge() * lLep.Charge() < 0) && ((std::abs((lLep.v + lep.v).M() - 91.188) < 15) || ((lLep.v + lep.v).M() < 12))) {
       return false;
     }
   }
@@ -321,16 +316,12 @@ void ThreeLepSelector::ApplyScaleFactors() {
   if (pileupSF_ != nullptr) {
     weight *= pileupSF_->Evaluate1D(numPU);
   }
-  // for(auto jet : goodBJets) {
-  //   weight *= btag_reader.eval_auto_bounds("central",  BTagEntry::FLAV_B,
-  // 					   jet.Eta(), jet.Pt());
-  // }
 
   return;
 }
 
 bool ThreeLepSelector::isGoodMuon(size_t index) {
-  return ((Muon_pt[index] > 20) && (Muon_tightCharge[index] == 2) && (abs(Muon_eta[index]) < 2.4) && (Muon_mediumId[index]) &&
+  return ((Muon_pt[index] > 20) && (Muon_tightCharge[index] == 2) && (std::abs(Muon_eta[index]) < 2.4) && (Muon_mediumId[index]) &&
           (Muon_miniPFRelIso_all[index] < 0.16) && (Muon_dz[index] < 0.1) && (Muon_dxy[index] < 0.05) && (Muon_sip3d[index] < 4));
 }
 
@@ -339,11 +330,11 @@ bool ThreeLepSelector::isGoodElectron(size_t index) {
 
   if (selection_ == FourTopMVAEl || selection_ != FourTopCutBasedEl) {
     int caseIndex = 0;
-    if (abs(Electron_eta[index]) < 0.8)
+    if (std::abs(Electron_eta[index]) < 0.8)
       caseIndex = 0;
-    else if (abs(Electron_eta[index]) < 1.479)
+    else if (std::abs(Electron_eta[index]) < 1.479)
       caseIndex = 1;
-    else if (abs(Electron_eta[index]) < 2.5)
+    else if (std::abs(Electron_eta[index]) < 2.5)
       caseIndex = 2;
 
     if (caseIndex == 0)
@@ -380,11 +371,11 @@ bool ThreeLepSelector::isLooseElectron(size_t index) {
     else
       caseIndex += 3;
     //// ETA Splitting
-    if (abs(Electron_eta[index]) < 0.8)
+    if (std::abs(Electron_eta[index]) < 0.8)
       caseIndex += 0;
-    else if (abs(Electron_eta[index]) < 1.479)
+    else if (std::abs(Electron_eta[index]) < 1.479)
       caseIndex += 4;
-    else if (abs(Electron_eta[index]) < 2.5)
+    else if (std::abs(Electron_eta[index]) < 2.5)
       caseIndex += 8;
     /// MVA numbers. May generalize.
     if (caseIndex == 0)
@@ -419,17 +410,17 @@ bool ThreeLepSelector::isLooseElectron(size_t index) {
 }
 
 bool ThreeLepSelector::isGoodJet(size_t index) {
-  return ((Jet_pt[index] > 40.0) && (abs(Jet_eta[index]) < 2.4) && (Jet_jetId[index] >= 1) && (doesNotOverlap(index)));
+  return ((Jet_pt[index] > 40.0) && (std::abs(Jet_eta[index]) < 2.4) && (Jet_jetId[index] >= 1) && (doesNotOverlap(index)));
 }
 
 /// TODO: add toggle for different btag stuff
 bool ThreeLepSelector::isGoodBJet(size_t index) {
-  return ((Jet_pt[index] > 25.0) && (abs(Jet_eta[index]) < 2.4) && (Jet_jetId[index] >= 1) &&
+  return ((Jet_pt[index] > 25.0) && (std::abs(Jet_eta[index]) < 2.4) && (Jet_jetId[index] >= 1) &&
           // (Jet_btagCSVV2[index] > 0.8484) &&
           (Jet_btagDeepB[index] > 0.6324) && (doesNotOverlap(index)));
 }
 
-bool ThreeLepSelector::passFullIso(LorentzVector& lep, int I2, int I3) {
+bool ThreeLepSelector::passFullIso(LorentzVector& lep, float I2, float I3) {
   LorentzVector closeJet;
   double minDR = 10;
   for (size_t index = 0; index < nJet; ++index) {
@@ -516,7 +507,7 @@ void ThreeLepSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std:
     return;
   }
 
-  HistFullFill(histMap1D_, "weight", variation.second, abs(weight), 1);
+  HistFullFill(histMap1D_, "weight", variation.second, std::abs(weight), 1);
   Fill1D("Met", MET);
   Fill1D("HT", HT);
   Fill1D("ptl1", goodLeptons[0].Pt());
