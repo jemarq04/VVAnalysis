@@ -143,6 +143,7 @@ protected:
   bool ZZSelectionTight();
   bool Z4lSelection();
   bool ZSelection();
+  bool HZZSIPSelection();
   void ShiftEfficiencies(Systematic variation);
   float deltaPhiZZ(float phi1, float phi2);
   void GetPolarizationVariables();

@@ -785,6 +785,7 @@ bool ZZSelector::ZZSelectionTight() { return (Z1Mass > 81.1876 && Z1Mass < 101.1
 // We already require 4 < Z1,Z2 < 120  in the "Loose Skim"
 bool ZZSelector::ZSelection() { return Z1Mass > 40.0 && Z2Mass > 12.0; }
 bool ZZSelector::Z4lSelection() { return Mass > 80.0 && Mass < 100.0; }
+bool ZZSelector::HZZSIPSelection() { return l1SIP3D < 4 && l2SIP3D < 4 && l3SIP3D < 4 && l4SIP3D < 4; }
 
 std::string ZZSelector::GetEleRecoSFName(Float_t ele_pt) {
   std::string name;
@@ -803,6 +804,10 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
   //weight = 1; //NOTE: unweighted
   //if (entry == 0 && variation.first == Central)
   //  std::cout << fChain->GetTree()->GetDirectory()->GetFile()->GetName() << std::endl;
+
+  // Redundant SIP cut check
+  if (!HZZSIPSelection())
+    return;
 
   // require TightZZLeptons for prompt
   if (!PassesZZSelectionLoose())
