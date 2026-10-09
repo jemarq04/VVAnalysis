@@ -258,10 +258,14 @@ void ZZBackgroundSelector::SetZ1Z2Masses() {
   lepton4.SetPtEtaPhiM(l4Pt, l4Eta, l4Phi, l4Mass);
   if (tightZ1Leptons() && !tightZ2Leptons()) {
     //PPPF or PPFP
-    Z1Mass = (lepton1 + lepton2).M();
-    Z2Mass = (lepton3 + lepton4).M();
     Z1Pt = (lepton1 + lepton2).Pt();
     Z2Pt = (lepton3 + lepton4).Pt();
+    Z1Eta = (lepton1 + lepton2).Eta();
+    Z2Eta = (lepton3 + lepton4).Eta();
+    Z1Phi = (lepton1 + lepton2).Phi();
+    Z2Phi = (lepton3 + lepton4).Phi();
+    Z1Mass = (lepton1 + lepton2).M();
+    Z2Mass = (lepton3 + lepton4).M();
     //In Z2 what is l3 and l4 can change the fake rate a little bit.
     if (Z2FP()) {
       std::swap(l3Pt, l4Pt);
@@ -272,10 +276,14 @@ void ZZBackgroundSelector::SetZ1Z2Masses() {
     }
   } else if (tightZ2Leptons() && !tightZ1Leptons()) {
     //FPPP or PFPP
-    Z1Mass = (lepton3 + lepton4).M();
-    Z2Mass = (lepton1 + lepton2).M();
     Z1Pt = (lepton3 + lepton4).Pt();
     Z2Pt = (lepton1 + lepton2).Pt();
+    Z1Eta = (lepton3 + lepton4).Eta();
+    Z2Eta = (lepton1 + lepton2).Eta();
+    Z1Phi = (lepton3 + lepton4).Phi();
+    Z2Phi = (lepton1 + lepton2).Phi();
+    Z1Mass = (lepton3 + lepton4).M();
+    Z2Mass = (lepton1 + lepton2).M();
     //Fakes are l1,l2 from skims, reverse them
     std::swap(l1Pt, l3Pt);
     std::swap(l2Pt, l4Pt);
@@ -302,10 +310,14 @@ void ZZBackgroundSelector::SetZ1Z2Masses() {
   else if (Z1FP() && Z2PF()) {
     //Make sure I am not making a Z in eemm with an e and mu!
     if (channel_ == eeee || channel_ == mmmm) {
-      Z1Mass = (lepton2 + lepton3).M();
-      Z2Mass = (lepton1 + lepton4).M();
       Z1Pt = (lepton2 + lepton3).Pt();
       Z2Pt = (lepton1 + lepton4).Pt();
+      Z1Eta = (lepton2 + lepton3).Eta();
+      Z2Eta = (lepton1 + lepton4).Eta();
+      Z1Phi = (lepton2 + lepton3).Phi();
+      Z2Phi = (lepton1 + lepton4).Phi();
+      Z1Mass = (lepton2 + lepton3).M();
+      Z2Mass = (lepton1 + lepton4).M();
       //Here the two fakes are l1,l4 and we only need to relabel l1 -> l3
       std::swap(l1Pt, l3Pt);
       std::swap(l1Eta, l3Eta);
@@ -317,10 +329,14 @@ void ZZBackgroundSelector::SetZ1Z2Masses() {
   } else if (Z1PF() && Z2FP()) {
     //Make sure I am not making a Z in eemm with an e and mu!
     if (channel_ == eeee || channel_ == mmmm) {
-      Z1Mass = (lepton1 + lepton4).M();
-      Z2Mass = (lepton2 + lepton3).M();
       Z1Pt = (lepton1 + lepton4).Pt();
       Z2Pt = (lepton2 + lepton3).Pt();
+      Z1Eta = (lepton1 + lepton4).Eta();
+      Z2Eta = (lepton2 + lepton3).Eta();
+      Z1Phi = (lepton1 + lepton4).Phi();
+      Z2Phi = (lepton2 + lepton3).Phi();
+      Z1Mass = (lepton1 + lepton4).M();
+      Z2Mass = (lepton2 + lepton3).M();
       //Here the two fakes are l2,l3 and we only need to relabel l2 -> l4 since this only matters in PPFF region so l3,l4 are interchangeable
       std::swap(l2Pt, l4Pt);
       std::swap(l2Eta, l4Eta);
@@ -332,10 +348,14 @@ void ZZBackgroundSelector::SetZ1Z2Masses() {
   } else if (Z1PF() && Z2PF()) {
     if (channel_ == eeee || channel_ == mmmm) {
       //std::cout<<"Z1PF() && Z2PF()) loop enter "<<std::endl;
-      Z1Mass = (lepton1 + lepton3).M();
-      Z2Mass = (lepton2 + lepton4).M();
       Z1Pt = (lepton1 + lepton3).Pt();
       Z2Pt = (lepton2 + lepton4).Pt();
+      Z1Eta = (lepton1 + lepton3).Eta();
+      Z2Eta = (lepton2 + lepton4).Eta();
+      Z1Phi = (lepton1 + lepton3).Phi();
+      Z2Phi = (lepton2 + lepton4).Phi();
+      Z1Mass = (lepton1 + lepton3).M();
+      Z2Mass = (lepton2 + lepton4).M();
       //Here the two fakes are l2,l4 and we only need to relabel l2 -> l3
       std::swap(l2Pt, l3Pt);
       std::swap(l2Eta, l3Eta);
@@ -347,10 +367,14 @@ void ZZBackgroundSelector::SetZ1Z2Masses() {
   } else if (Z1FP() && Z2FP()) {
     if (channel_ == eeee || channel_ == mmmm) {
       //std::cout<<"Z1FP() && Z2FP()) loop enter "<<std::endl;
-      Z1Mass = (lepton2 + lepton4).M();
-      Z2Mass = (lepton1 + lepton3).M();
       Z1Pt = (lepton2 + lepton4).Pt();
       Z2Pt = (lepton1 + lepton3).Pt();
+      Z1Eta = (lepton2 + lepton4).Eta();
+      Z2Eta = (lepton1 + lepton3).Eta();
+      Z1Phi = (lepton2 + lepton4).Phi();
+      Z2Phi = (lepton1 + lepton3).Phi();
+      Z1Mass = (lepton2 + lepton4).M();
+      Z2Mass = (lepton1 + lepton3).M();
       //Here the two fakes are l1,l3 and we only need to relabel l1 -> l4
       std::swap(l1Pt, l4Pt);
       std::swap(l1Eta, l4Eta);
