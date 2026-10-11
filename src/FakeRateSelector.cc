@@ -9,8 +9,6 @@ void FakeRateSelector::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, st
 
   float pt_fillval = l3Pt;
   float eta_fillval = std::abs(l3Eta);
-  //std::cout<<"Is it filling?"<<std::endl;
-  //std::cout<<pt_fillval<<std::endl;
   float loose_weight = weight;
   //if (channel_ == eee || channel_ == emm) {
   //    loose_weight /= eIdSF_->Evaluate2D(std::abs(l3Eta), l3Pt);
@@ -18,6 +16,7 @@ void FakeRateSelector::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, st
   //else if (channel_ == eem || channel_ == mmm) {
   //    loose_weight /= mIsoSF_->Evaluate2D(std::abs(l3Eta), l3Pt);
   //}
+
   //Electron barrel up to |eta| = 1.479
   if ((channel_ == eee) || (channel_ == emm)) {
     if (eta_fillval < 1.479)
@@ -39,6 +38,7 @@ void FakeRateSelector::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, st
     passingLooseMu1DEta_->Fill(eta_fillval, loose_weight);
   }
   if (lep3IsTight()) {
+    //Electron barrel up to |eta| = 1.479
     if ((channel_ == eee) || (channel_ == emm)) {
       if (eta_fillval < 1.479)
         passingTightE1DPt_barrel_->Fill(pt_fillval, loose_weight);
