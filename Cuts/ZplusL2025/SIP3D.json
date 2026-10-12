@@ -7,9 +7,10 @@
         ]
     },
     "State" : {
-        "eeee" : [],
-        "eemm" : [],
-        "mmmm" : []
+        "eee" : [],
+        "eem" : [],
+        "emm" : [],
+        "mmm" : []
     },
     "Event" : [
     ]
