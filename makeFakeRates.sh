@@ -1,16 +1,22 @@
 #!/bin/bash
 
-if [[ $# -ne 1 ]]; then
-  echo usage: $0 YEAR/ALL
+if [[ $# -lt 1 ]]; then
+  echo "usage: $0 YEAR [YEAR ...]"
   echo
-  echo "YEAR/ALL: year for analysis or 'all' to run all Run 3"
+  echo "YEAR: year for analysis or 'all' to run all Run 3"
   exit 1
 fi
 
-years=$1
-[[ $years = all ]] && years="2022 2023 2024 2025"
+all_years="2022 2023 2024 2025"
+years="$@"
+[[ $years = all ]] && years="$all_years"
 
 for year in $years; do
+  if ! [[ $all_years = *$year* ]]; then
+    echo "invalid year: $year"
+    continue
+  fi
+
   echo "Making fake rate for $year"
   ./Utilities/scripts/makeFakeRates.py -a ZZ4l$year -f ZZ4l$year --year $year -s ZplusLSkim -j 12 --noHistConfig --output_file fakeRates-ZZ4l$year.root
   echo "$year done!!==================================="
