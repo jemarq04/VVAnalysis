@@ -82,14 +82,13 @@ while true; do
     break
     ;;
   *)
-    echo "encountered $1"
     break
     ;;
   esac
 done
 
 # Positional Arguments Check
-[[ $# -lt 1 ]] && print_help
+[[ $# -lt 1 ]] && die "not enough arguments"
 
 # Positional Arguments
 #--: @arg year [year ...]
