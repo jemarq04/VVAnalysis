@@ -110,7 +110,7 @@ for year in $years; do
   echo Running ZZ4l$year
   echo Using FR file $frtmpfile
 
-  echo ./Utilities/scripts/makeHistFile.py -f ZZ4l$year -a ZZ4l$year -s LooseLeptons --year $year -c eeee,eemm,mmee,mmmm -j 12 -sf -F $frtmpfile $extra_args
+  ./Utilities/scripts/makeHistFile.py -f ZZ4l$year -a ZZ4l$year -s LooseLeptons --year $year -c eeee,eemm,mmee,mmmm -j 12 -sf -F $frtmpfile $extra_args
 
   echo "$year done!!==================================="
 done
