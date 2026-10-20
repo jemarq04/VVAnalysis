@@ -15,6 +15,7 @@
 #include "Analysis/VVAnalysis/interface/ScaleFactor.h"
 #include "Analysis/VVAnalysis/interface/disambiguateFinalStates.h"
 #include "Analysis/VVAnalysis/interface/disambiguateFinalStatesZZ.h"
+#include "Analysis/VVAnalysis/interface/ZZResponseMatrixMaker.h"
 
 namespace {
   namespace {
@@ -35,5 +36,6 @@ namespace {
     disambiguateFinalStates pDisambiguator;
     disambiguateFinalStates pDisambiguatorZZ;
     ThreeLepSelector pThreeLepSelector;
+    ZZResponseMatrixMaker pZZResponseMatrixMaker;
   }  // namespace
 }  // namespace

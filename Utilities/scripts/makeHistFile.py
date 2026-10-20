@@ -20,8 +20,9 @@ def getComLineArgs():
     parser.add_argument("--output_file", "-o", type=str, default="test.root", help="Output file name")
     parser.add_argument("--test", action="store_true", help="Run test job (no background estimate)")
     parser.add_argument("--nano", action="store_true", help="Use NanoAOD format ntuples in stead of UWVV")
-    parser.add_argument("--with_background", action="store_true", help="Don't run background selector")
-    parser.add_argument("--with_Gen", action="store_true", help="Don't run ZZGen selector")
+    parser.add_argument("--with_background", action="store_true", help="Run background selector")
+    parser.add_argument("--with_Gen", action="store_true", help="Run ZZGen selector")
+    parser.add_argument("--responseMatrix", action="store_true", help="Run ResponseMatrix maker instead")
     parser.add_argument("--doSystematics", action="store_true", help="create and fill systematic variation plots")
     parser.add_argument("--noHistConfig", action="store_true", help="Don't rely on config file to specify hist info")
     parser.add_argument("-j", "--numCores", type=int, default=1, help="Number of cores to use (parallelize by dataset)")
@@ -147,6 +148,9 @@ def makeHistFile(args):
         selector.setChannels(args["channels"])
     selector.setNumCores(args["numCores"])
 
+    if args["responseMatrix"]:
+        selector.isResponseMatrix()
+
     if args["filenames"]:
         selector.setDatasets(args["filenames"])
     else:
@@ -187,7 +191,7 @@ def makeHistFile(args):
             list(map(os.remove, combinedNames))
 
     fOut.Close()
-    if args["test"]:
+    if args["test"] or args["responseMatrix"]:
         sys.exit(0)
 
     fOut = ROOT.TFile.Open(tmpFileName, "update")

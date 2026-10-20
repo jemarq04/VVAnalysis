@@ -16,4 +16,5 @@
   <class name="disambiguateFinalStates"/>
   <class name="disambiguateFinalStatesZZ"/>
   <class name="ThreeLepSelector"/>
+  <class name="ZZResponseMatrixMaker"/>
 </lcgdict>

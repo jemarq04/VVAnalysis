@@ -61,6 +61,9 @@ class SelectorDriver(object):
     def isFake(self):
         self.selector_name = self.selector_name.replace("ZZ", "FakeRate")
 
+    def isResponseMatrix(self):
+        self.selector_name = self.selector_name.replace("Selector", "ResponseMatrixMaker")
+
     def outputFile(self):
         return self.outfile
 
