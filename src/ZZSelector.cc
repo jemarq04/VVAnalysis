@@ -127,6 +127,16 @@ void ZZSelector::SetBranchesUWVV() {
     fChain->SetBranchAddress("nJets_jerUp", &nJets_jerUp, &b_nJets_jerUp);
     fChain->SetBranchAddress("nJets_jerDown", &nJets_jerDown, &b_nJets_jerDown);
   }
+
+  fChain->SetBranchAddress("Flag_goodVerticesPass", &Flag_goodVerticesPass, &b_Flag_goodVerticesPass);
+  fChain->SetBranchAddress("Flag_globalSuperTightHalo2016FilterPass", &Flag_globalSuperTightHalo2016FilterPass, &b_Flag_globalSuperTightHalo2016FilterPass);
+  fChain->SetBranchAddress(
+      "Flag_EcalDeadCellTriggerPrimitiveFilterPass", &Flag_EcalDeadCellTriggerPrimitiveFilterPass, &b_Flag_EcalDeadCellTriggerPrimitiveFilterPass);
+  fChain->SetBranchAddress("Flag_BadPFMuonFilterPass", &Flag_BadPFMuonFilterPass, &b_Flag_BadPFMuonFilterPass);
+  fChain->SetBranchAddress("Flag_BadPFMuonDzFilterPass", &Flag_BadPFMuonDzFilterPass, &b_Flag_BadPFMuonDzFilterPass);
+  fChain->SetBranchAddress("Flag_hfNoisyHitsFilterPass", &Flag_hfNoisyHitsFilterPass, &b_Flag_hfNoisyHitsFilterPass);
+  fChain->SetBranchAddress("Flag_eeBadScFilterPass", &Flag_eeBadScFilterPass, &b_Flag_eeBadScFilterPass);
+  //fChain->SetBranchAddress("Flag_ecalBadCalibFilterPass", &Flag_ecalBadCalibFilterPass, &b_Flag_ecalBadCalibFilterPass);
 }
 
 unsigned int ZZSelector::GetLheWeightInfo() {
@@ -312,6 +322,15 @@ void ZZSelector::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::str
   dRZZ = deltaR(Z1Eta, Z2Eta, Z1Phi, Z2Phi);
 
   GetPolarizationVariables();
+
+  b_Flag_goodVerticesPass->GetEntry(entry);
+  b_Flag_globalSuperTightHalo2016FilterPass->GetEntry(entry);
+  b_Flag_EcalDeadCellTriggerPrimitiveFilterPass->GetEntry(entry);
+  b_Flag_BadPFMuonFilterPass->GetEntry(entry);
+  b_Flag_BadPFMuonDzFilterPass->GetEntry(entry);
+  b_Flag_hfNoisyHitsFilterPass->GetEntry(entry);
+  b_Flag_eeBadScFilterPass->GetEntry(entry);
+  //b_Flag_ecalBadCalibFilterPass->GetEntry(entry);
 }
 
 float ZZSelector::deltaPhi(float phi1, float phi2) {
@@ -728,6 +747,11 @@ void ZZSelector::ShiftEfficiencies(Systematic variation) {
       weight *= mIdSF_->at(year.c_str())->evaluate({l4Eta, pt_m4, shift}) / mIdSF_->at(year.c_str())->evaluate({l4Eta, pt_m4, "nominal"});
     }
   }
+}
+
+bool ZZSelector::PassesNoiseFilters() {
+  return Flag_goodVerticesPass && Flag_globalSuperTightHalo2016FilterPass && Flag_EcalDeadCellTriggerPrimitiveFilterPass && Flag_BadPFMuonFilterPass > 0.5 &&
+         Flag_BadPFMuonDzFilterPass && Flag_hfNoisyHitsFilterPass && Flag_eeBadScFilterPass;  // && b_Flag_ecalBadCalibFilterPass;
 }
 
 bool ZZSelector::PassesZZjjSelection() { return (jetPt->size() == jetEta->size() && jetPt->size() >= 2 && mjj >= 100); }

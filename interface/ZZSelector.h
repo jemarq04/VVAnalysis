@@ -77,6 +77,16 @@ public:
   float dPhiZZ;  //DeltaPhi between Z1 and Z2
   float dRZZ;    //DeltaR between Z1 and Z2
 
+  // Noise Filters
+  Bool_t Flag_goodVerticesPass;
+  Bool_t Flag_globalSuperTightHalo2016FilterPass;
+  Bool_t Flag_EcalDeadCellTriggerPrimitiveFilterPass;
+  Float_t Flag_BadPFMuonFilterPass;
+  Bool_t Flag_BadPFMuonDzFilterPass;
+  Bool_t Flag_hfNoisyHitsFilterPass;
+  Bool_t Flag_eeBadScFilterPass;
+  //Bool_t Flag_ecalBadCalibFilterPass;
+
   std::vector<int>* jetPUID = NULL;
   std::vector<int>* isGenJetMatched = NULL;
 
@@ -116,6 +126,15 @@ public:
   TBranch* b_Pt;
   TBranch* b_Eta;
 
+  TBranch* b_Flag_goodVerticesPass;
+  TBranch* b_Flag_globalSuperTightHalo2016FilterPass;
+  TBranch* b_Flag_EcalDeadCellTriggerPrimitiveFilterPass;
+  TBranch* b_Flag_BadPFMuonFilterPass;
+  TBranch* b_Flag_BadPFMuonDzFilterPass;
+  TBranch* b_Flag_hfNoisyHitsFilterPass;
+  TBranch* b_Flag_eeBadScFilterPass;
+  //TBranch* b_Flag_ecalBadCalibFilterPass;
+
   // Readers to access the data (delete the ones you do not need).
   virtual void Init(TTree* tree) override;
   virtual void SetupNewDirectory() override;
@@ -150,6 +169,7 @@ protected:
   float deltaR(float eta1, float eta2, float phi1, float phi2);
   void GetPolarizationVariables();
   std::string GetEleRecoSFName(Float_t ele_pt);
+  bool PassesNoiseFilters();
 };
 
 #endif
