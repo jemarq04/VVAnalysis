@@ -74,7 +74,7 @@ void ThreeLepSelector::Init(TTree* tree) {
               "Met",
               "HT",
               "weight"};
-  //  hists2D_ = {"bJetvsJets"};
+  //  histMap2D_ = {"bJetvsJets"};
   // } else if(selection_ == FourTopPlots) {
   //  }
 

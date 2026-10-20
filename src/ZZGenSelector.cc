@@ -14,7 +14,7 @@ void ZZGenSelector::Init(TTree* tree) {
                     "GenMass1j",     "GenMass2j",     "GenMass3j",       "GenMass34j",      "GenMass4j",        "GenMass0jFull", "GenMass1jFull",
                     "GenMass2jFull", "GenMass3jFull", "GenMass34jFull",  "GenMass4jFull"};
 
-  // hists2D_ = {"GenZ1Mass_GenZ2Mass"};
+  // histMap2D_ = {"GenZ1Mass_GenZ2Mass"};
   SelectorBase::Init(tree);
 }
 

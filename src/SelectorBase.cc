@@ -177,6 +177,7 @@ void SelectorBase::InitializeHistogramsFromConfig() {
     throw std::domain_error("Can't initialize histograms without passing histogram information to TSelector");
 
   InitializeHistMap(hists1D_, histMap1D_);
+  InitializeHistMap(hists2D_, histMap2D_);
   InitializeHistMap(weighthists1D_, weighthistMap1D_);
   InitializeHistMap(jethists1D_, jethistMap1D_);
   InitializeHistMap(jetTest2D_, jetTestMap2D_);
@@ -193,7 +194,7 @@ void SelectorBase::InitializeHistogramsFromConfig() {
 
     for (auto& chan : channels) {
       auto histName = getHistName(name, "", chan);
-      if (hists2D_.find(histName) != hists2D_.end() || histMap1D_.find(histName) != histMap1D_.end()) {
+      if (histMap2D_.find(histName) != histMap2D_.end() || histMap1D_.find(histName) != histMap1D_.end()) {
         InitializeHistogramFromConfig(name, chan, histData);
       }
       // No need to print warning for every channel
@@ -288,12 +289,12 @@ void SelectorBase::InitializeHistogramFromConfig(std::string name, std::string c
     int nbinsy = std::stoi(histData[4]);
     float ymin = std::stof(histData[5]);
     float ymax = std::stof(histData[6]);
-    AddObject<TH2D>(hists2D_[histName], histName.c_str(), histData[0].c_str(), nbins, xmin, xmax, nbinsy, ymin, ymax);
+    AddObject<TH2D>(histMap2D_[histName], histName.c_str(), histData[0].c_str(), nbins, xmin, xmax, nbinsy, ymin, ymax);
     if (doSystematics_ && !isNonPrompt_ && std::find(systHists2D_.begin(), systHists2D_.end(), histName) != systHists2D_.end()) {
       for (auto& syst : systematics_) {
         std::string syst_hist_name = name + "_" + syst.second + "_" + channel;
-        hists2D_[syst_hist_name] = {};
-        AddObject<TH2D>(hists2D_[syst_hist_name], syst_hist_name.c_str(), histData[0].c_str(), nbins, xmin, xmax, nbinsy, ymin, ymax);
+        histMap2D_[syst_hist_name] = {};
+        AddObject<TH2D>(histMap2D_[syst_hist_name], syst_hist_name.c_str(), histData[0].c_str(), nbins, xmin, xmax, nbinsy, ymin, ymax);
       }
     }
     // 3D weight hists must be subset of 2D hists!

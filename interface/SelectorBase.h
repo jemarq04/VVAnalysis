@@ -212,14 +212,14 @@ public:
 protected:
   // Maps to the histogram pointers themselves
   std::map<std::string, TH1D*> histMap1D_ = {};
-  //TODO change the name to map and don't break things
-  std::map<std::string, TH2D*> hists2D_ = {};
+  std::map<std::string, TH2D*> histMap2D_ = {};
   std::map<std::string, TH2D*> weighthistMap1D_ = {};
   std::map<std::string, TH2D*> jethistMap1D_ = {};  //jet systematics
   std::map<std::string, TH2D*> jetTestMap2D_ = {};
   std::map<std::string, TH3D*> weighthistMap2D_{};
 
   std::vector<std::string> hists1D_ = {};
+  std::vector<std::string> hists2D_ = {};
   std::vector<std::string> weighthists1D_ = {};
   std::vector<std::string> jethists1D_ = {};
   std::vector<std::string> jetTest2D_ = {};

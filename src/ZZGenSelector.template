@@ -8,7 +8,7 @@ void ZZGenSelector::Init(TTree* tree) {
 
   weighthists1D_ = $Genweighthists1D;
 
-  // hists2D_ = {"GenZ1Mass_GenZ2Mass"};
+  // histMap2D_ = {"GenZ1Mass_GenZ2Mass"};
   SelectorBase::Init(tree);
 }
 
