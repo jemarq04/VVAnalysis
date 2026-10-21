@@ -22,6 +22,8 @@ void ZZResponseMatrixMaker::Init(TTree* tree) {
   ZZSelectorBase::Init(tree);
 
   // Create gen tree and set gen branches
+  if (!isMC_)
+    return;
   std::string genChannelName = channelName_ == "mmee" ? "eemm" : channelName_;
   genTree_ = new TChain((genChannelName + "Gen/ntuple").c_str(), (genChannelName + "Gen/ntuple").c_str());
   genTree_->Add(fChain->GetTree()->GetDirectory()->GetFile()->GetName());
@@ -117,8 +119,8 @@ void ZZResponseMatrixMaker::FillHistograms(Long64_t entry, std::pair<Systematic,
   if ((channel_ == eemm || channel_ == mmee) && skipEvent_2e2m_)
     return;
 
-  // Basic loose ZZ selections
-  if (!GetGenEvent(evt) || !HZZSIPSelection() || !PassesZZSelectionLoose())
+  // Check for MC and gen match plus basic loose ZZ selections
+  if (!isMC_ || !GetGenEvent(evt) || !HZZSIPSelection() || !PassesZZSelectionLoose())
     return;
 
   // Any "Full" histograms here (no Z mass cuts)
