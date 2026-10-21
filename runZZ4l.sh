@@ -23,7 +23,7 @@ eval set -- "$BAP_PARSED"
 
 $gen && extra_args="$extra_args --with_Gen"
 $syst && extra_args="$extra_args --doSystematics"
-$responseMatrix && extra_args="--responseMatrix"
+$responseMatrix && extra_args="--responseMatrix --doSystematics"
 
 years="$@"
 [[ $years = all ]] && years="$all_years"
