@@ -7,14 +7,14 @@ source Utilities/scripts/BashArgParse.sh
 #@optdesc Enable ZZGenSelector
 #@opt -s/--syst
 #@optdesc Enable systematic variations
-#@opt --responseMatrix
+#@opt -m/--responseMatrix
 #@optdesc Run ResponseMatrix maker instead of usual selector
 #@opt --frfile FILE
 #@optdesc Path for fake rate scale factors file (default: data/fakeScaleFactorsRun3-ZZ4l$year.root)
 #@arg year [year ...]
 #@argdesc The years for analysis or 'all' to run all of Run 3
 
-optstring="h/help*,g/gen,s/syst,/responseMatrix,/frfile:"
+optstring="h/help*,g/gen,s/syst,m/responseMatrix,/frfile:"
 extra_args="--with_background"
 all_years="2022 2023 2024 2025"
 
@@ -23,7 +23,7 @@ eval set -- "$BAP_PARSED"
 
 $gen && extra_args="$extra_args --with_Gen"
 $syst && extra_args="$extra_args --doSystematics"
-$responseMatrix && extra_args="--responseMatrix --doSystematics"
+$responseMatrix && extra_args="--responseMatrix"
 
 years="$@"
 [[ $years = all ]] && years="$all_years"
