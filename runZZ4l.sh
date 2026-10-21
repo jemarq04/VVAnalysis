@@ -21,9 +21,9 @@ all_years="2022 2023 2024 2025"
 parse_args "$0" "$optstring" 1 "$@"
 eval set -- "$BAP_PARSED"
 
+$responseMatrix && gen=false && extra_args="--responseMatrix"
 $gen && extra_args="$extra_args --with_Gen"
 $syst && extra_args="$extra_args --doSystematics"
-$responseMatrix && extra_args="--responseMatrix"
 
 years="$@"
 [[ $years = all ]] && years="$all_years"
