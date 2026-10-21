@@ -290,9 +290,9 @@ void SelectorBase::InitializeHistogramFromConfig(std::string name, std::string c
     float ymin = std::stof(histData[5]);
     float ymax = std::stof(histData[6]);
     AddObject<TH2D>(histMap2D_[histName], histName.c_str(), histData[0].c_str(), nbins, xmin, xmax, nbinsy, ymin, ymax);
-    if (doSystematics_ && !isNonPrompt_ && std::find(systHists2D_.begin(), systHists2D_.end(), histName) != systHists2D_.end()) {
+    if (doSystematics_ && !isNonPrompt_ && std::find(systHists2D_.begin(), systHists2D_.end(), name) != systHists2D_.end()) {
       for (auto& syst : systematics_) {
-        std::string syst_hist_name = name + "_" + syst.second + "_" + channel;
+        std::string syst_hist_name = getHistName(name, syst.second, channel);
         histMap2D_[syst_hist_name] = {};
         AddObject<TH2D>(histMap2D_[syst_hist_name], syst_hist_name.c_str(), histData[0].c_str(), nbins, xmin, xmax, nbinsy, ymin, ymax);
       }
