@@ -2,6 +2,7 @@
 #include <TStyle.h>
 #include <regex>
 #include "TString.h"
+#include <iostream>
 
 std::string ZZSelectorBase::GetNameFromFile() {
   std::regex expr = std::regex("20[0-9][0-9]-[0-9][0-9]-[0-9][0-9]-(.*)-ZZ4l20[0-9][0-9]");
@@ -53,6 +54,7 @@ void ZZSelectorBase::SetScaleFactors() {
     } else
       throw std::invalid_argument("");
   } catch (...) {
+    std::cerr << "ERROR: " << name_ << " Must pass valid year/basename for analysis" << std::endl;
     throw std::invalid_argument("Must pass valid year/basename for analysis");
   }
 
@@ -66,6 +68,7 @@ void ZZSelectorBase::SetScaleFactors() {
       pileupSF_ =
           correction::CorrectionSet::from_file(TString::Format("%s/LUM/%s/latest/puWeights_BCDEFGHI.json.gz", basename.c_str(), yearstring.c_str()).Data());
   } catch (...) {
+    std::cerr << "ERROR: " << name_ << " Must pass valid pileup weights SF" << std::endl;
     throw std::invalid_argument("Must pass valid pileup weights SF");
   }
   try {
@@ -73,11 +76,13 @@ void ZZSelectorBase::SetScaleFactors() {
       throw std::invalid_argument("");
     eIdSF_ = correction::CorrectionSet::from_file(((TNamed*)GetInputList()->FindObject("eIdSF"))->GetTitle());
   } catch (...) {
+    std::cerr << "ERROR: " << name_ << " Must pass valid electron Run SF" << std::endl;
     throw std::invalid_argument("Must pass valid electron Run SF");
   }
   try {
     eRecoSF_ = correction::CorrectionSet::from_file(TString::Format("%s/EGM/%s/latest/electron.json.gz", basename.c_str(), yearstring.c_str()).Data());
   } catch (...) {
+    std::cerr << "ERROR: " << name_ << " Must pass valid electron Reco SF" << std::endl;
     throw std::invalid_argument("Must pass valid electron Reco SF");
   }
   try {
@@ -85,6 +90,7 @@ void ZZSelectorBase::SetScaleFactors() {
       throw std::invalid_argument("");
     mIdSF_ = correction::CorrectionSet::from_file(((TNamed*)GetInputList()->FindObject("mIdSF"))->GetTitle());
   } catch (...) {
+    std::cerr << "ERROR: " << name_ << " Must pass valid muon ID SF" << std::endl;
     throw std::invalid_argument("Must pass valid muon ID SF");
   }
 
@@ -456,8 +462,10 @@ void ZZSelectorBase::SetBranchesUWVV() {
     fChain->SetBranchAddress("m2Mass", &l2Mass, &b_l2Mass);
     fChain->SetBranchAddress("m3Mass", &l3Mass, &b_l3Mass);
     fChain->SetBranchAddress("m3MtToMET", &l3MtToMET, &b_l3MtToMET);
-  } else
+  } else {
+    std::cerr << "ERROR: " << name_ << " Invalid channel choice in ZZSelectorBase!" << std::endl;
     throw std::invalid_argument("Invalid channel choice in ZZSelectorBase!");
+  }
 }
 
 void ZZSelectorBase::LoadBranchesNanoAOD(Long64_t entry, std::pair<Systematic, std::string> variation) {

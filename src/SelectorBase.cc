@@ -41,8 +41,10 @@ void SelectorBase::Init(TTree* tree) {
         ntupleType_ = NanoAOD;
       else if (ntupleName == "UWVV")
         ntupleType_ = UWVV;
-      else
+      else {
+        std::cerr << "ERROR: " << name_ << " Unsupported ntuple type" << std::endl;
         throw std::invalid_argument("Unsupported ntuple type!");
+      }
     } else {
       std::cerr << "INFO: Assuming NanoAOD ntuples" << std::endl;
       ntupleType_ = UWVV;
@@ -63,8 +65,10 @@ void SelectorBase::Init(TTree* tree) {
 
   if (selectionMap_.find(selectionName_) != selectionMap_.end()) {
     selection_ = selectionMap_[selectionName_];
-  } else
+  } else {
+    std::cerr << "ERROR: " << name_ << " Invalid selection!" << std::endl;
     throw std::invalid_argument("Invalid selection!");
+  }
 
   if (doSystematics_ && isMC_ && !isNonPrompt_)  // isNonpromptEstimate?
     variations_.insert(systematics_.begin(), systematics_.end());
@@ -79,6 +83,7 @@ void SelectorBase::Init(TTree* tree) {
     message += "Valid choices are: ";
     for (const auto& chan : channelMap_)
       message += chan.first + ", ";
+    std::cerr << "ERROR: " << name_ << " " << message << std::endl;
     throw std::invalid_argument(message);
   }
 
@@ -97,7 +102,8 @@ void SelectorBase::Init(TTree* tree) {
     size_t existingObjectPtrsSize = allObjects_.size();
     SetupNewDirectory();
     if (existingObjectPtrsSize > 0 && allObjects_.size() != existingObjectPtrsSize) {
-      std::invalid_argument(Form("SelectorBase: Size of allObjects has changed!: %lu to %lu", existingObjectPtrsSize, allObjects_.size()));
+      std::cerr << "ERROR: " << name_ << " Size of allObjects has changed!" << std::endl;
+      throw std::invalid_argument(Form("SelectorBase: Size of allObjects has changed!: %lu to %lu", existingObjectPtrsSize, allObjects_.size()));
     }
   }
   UpdateDirectory();
@@ -105,7 +111,10 @@ void SelectorBase::Init(TTree* tree) {
   SetBranches();
 }
 
-void SelectorBase::SetScaleFactors() { std::invalid_argument("No scale factors defined for selector!"); }
+void SelectorBase::SetScaleFactors() {
+  std::cerr << "ERROR: " << name_ << " No scale factors defined for selector!" << std::endl;
+  throw std::invalid_argument("No scale factors defined for selector!");
+}
 
 void SelectorBase::SetBranches() {
   if (ntupleType_ == UWVV)
@@ -148,11 +157,15 @@ void SelectorBase::Terminate() {}
 void SelectorBase::SlaveTerminate() {}
 void SelectorBase::UpdateDirectory() {
   for (TNamed** objPtrPtr : allObjects_) {
-    if (*objPtrPtr == nullptr)
-      std::invalid_argument("SelectorBase: Call to UpdateObject but existing pointer is null");
+    if (*objPtrPtr == nullptr) {
+      std::cerr << "ERROR: " << name_ << " Call to UpdateObject but existing pointer is null" << std::endl;
+      throw std::invalid_argument("SelectorBase: Call to UpdateObject but existing pointer is null");
+    }
     *objPtrPtr = (TNamed*)currentHistDir_->FindObject((*objPtrPtr)->GetName());
-    if (*objPtrPtr == nullptr)
-      std::invalid_argument("SelectorBase: Call to UpdateObject but current directory has no instance");
+    if (*objPtrPtr == nullptr) {
+      std::cerr << "ERROR: " << name_ << " Call to UpdateObject but current directory has no instance" << std::endl;
+      throw std::invalid_argument("SelectorBase: Call to UpdateObject but current directory has no instance");
+    }
   }
 }
 
