@@ -17,8 +17,8 @@ void ZZResponseMatrixMaker::Init(TTree* tree) {
       {pileupUp, "CMS_pileupUp"},
       {pileupDown, "CMS_pileupDown"},
   };
-  hists2D_ = {"Mass_ResponseMatrix", "LepPt1_ResponseMatrix", "LepEta1_ResponseMatrix"};
-  systHists2D_ = {"Mass_ResponseMatrix", "LepPt1_ResponseMatrix", "LepEta1_ResponseMatrix"};
+  hists2D_ = {"Mass_ResponseMatrix", "LepPt1_ResponseMatrix", "LepPt_ResponseMatrix", "LepEta_ResponseMatrix", "LepEta1_ResponseMatrix"};
+  systHists2D_ = {"Mass_ResponseMatrix", "LepPt1_ResponseMatrix", "LepPt_ResponseMatrix", "LepEta_ResponseMatrix", "LepEta1_ResponseMatrix"};
   ZZSelectorBase::Init(tree);
 
   // Create gen tree and set gen branches
@@ -141,6 +141,16 @@ void ZZResponseMatrixMaker::FillHistograms(Long64_t entry, std::pair<Systematic,
   std::sort(genleps, genleps + 4, [](Lepton a, Lepton b) { return a.pt > b.pt; });
 
   SafeHistFill(histMap2D_, getHistName("Mass_ResponseMatrix", variation.second), Mass, genMass, weight);
+
   SafeHistFill(histMap2D_, getHistName("LepPt1_ResponseMatrix", variation.second), leps[0].pt, genleps[0].pt, weight);
+  SafeHistFill(histMap2D_, getHistName("LepPt_ResponseMatrix", variation.second), leps[0].pt, genleps[0].pt, weight);
+  SafeHistFill(histMap2D_, getHistName("LepPt_ResponseMatrix", variation.second), leps[1].pt, genleps[1].pt, weight);
+  SafeHistFill(histMap2D_, getHistName("LepPt_ResponseMatrix", variation.second), leps[2].pt, genleps[2].pt, weight);
+  SafeHistFill(histMap2D_, getHistName("LepPt_ResponseMatrix", variation.second), leps[3].pt, genleps[3].pt, weight);
+
   SafeHistFill(histMap2D_, getHistName("LepEta1_ResponseMatrix", variation.second), leps[0].eta, genleps[0].eta, weight);
+  SafeHistFill(histMap2D_, getHistName("LepEta_ResponseMatrix", variation.second), leps[0].eta, genleps[0].eta, weight);
+  SafeHistFill(histMap2D_, getHistName("LepEta_ResponseMatrix", variation.second), leps[1].eta, genleps[1].eta, weight);
+  SafeHistFill(histMap2D_, getHistName("LepEta_ResponseMatrix", variation.second), leps[2].eta, genleps[2].eta, weight);
+  SafeHistFill(histMap2D_, getHistName("LepEta_ResponseMatrix", variation.second), leps[3].eta, genleps[3].eta, weight);
 }
