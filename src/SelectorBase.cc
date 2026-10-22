@@ -208,12 +208,60 @@ void SelectorBase::InitializeHistogramsFromConfig() {
     for (auto& chan : channels) {
       auto histName = getHistName(name, "", chan);
       if (histMap2D_.find(histName) != histMap2D_.end() || histMap1D_.find(histName) != histMap1D_.end()) {
-        InitializeHistogramFromConfig(name, chan, histData);
+        if (histData.size() == 3 || histData.size() == 5) {
+          // 1D/2D variable binning
+          InitializeVarBinHistogramFromConfig(name, chan, histData);
+        } else {
+          InitializeHistogramFromConfig(name, chan, histData);
+        }
       }
       // No need to print warning for every channel
       // No need to print this at all, actually
       //else if (chan == channels.front())
       //    std::cerr << "Skipping invalid histogram " << name << std::endl;
+    }
+  }
+}
+
+void SelectorBase::InitializeVarBinHistogramFromConfig(std::string name, std::string channel, std::vector<std::string> histData) {
+  if (histData.size() != 3 && histData.size() != 5) {
+    std::cerr << "Malformed data string for variably binned histogram '" << name << ".' Must have form: 'Title; (optional info) $ nbinsx, binsx'"
+              << "\n   OR form: 'Title; (optional info) $ nbinsx, binsx, nbinsy, binsy'" << std::endl;
+    exit(1);
+  }
+  std::string histName = getHistName(name, "", channel);
+
+  int nbinsx = std::stoi(histData[1]);
+  std::vector<float> binsx;
+  std::vector<std::string> sbinsx;
+  boost::split(sbinsx, histData[2], boost::is_any_of("/"));
+  for (auto sbin : sbinsx)
+    binsx.push_back(std::stof(sbin));
+
+  if (histData.size() == 3) {
+    AddObject<TH1D>(histMap1D_[histName], histName.c_str(), histData[0].c_str(), nbinsx, &binsx[0]);
+    if (doSystematics_ && !isNonPrompt_ && std::find(systHists_.begin(), systHists_.end(), name) != systHists_.end()) {
+      for (auto& syst : systematics_) {
+        std::string syst_histName = getHistName(name, syst.second, channel);
+        histMap1D_[syst_histName] = {};
+        AddObject<TH1D>(histMap1D_[syst_histName], syst_histName.c_str(), histData[0].c_str(), nbinsx, &binsx[0]);
+      }
+    }
+  } else if (histData.size() == 5) {
+    int nbinsy = std::stoi(histData[3]);
+    std::vector<float> binsy;
+    std::vector<std::string> sbinsy;
+    boost::split(sbinsy, histData[4], boost::is_any_of("/"));
+    for (auto sbin : sbinsy)
+      binsy.push_back(std::stof(sbin));
+
+    AddObject<TH2D>(histMap2D_[histName], histName.c_str(), histData[0].c_str(), nbinsx, &binsx[0], nbinsy, &binsy[0]);
+    if (doSystematics_ && !isNonPrompt_ && std::find(systHists2D_.begin(), systHists2D_.end(), name) != systHists2D_.end()) {
+      for (auto& syst : systematics_) {
+        std::string syst_hist_name = getHistName(name, syst.second, channel);
+        histMap2D_[syst_hist_name] = {};
+        AddObject<TH2D>(histMap2D_[syst_hist_name], syst_hist_name.c_str(), histData[0].c_str(), nbinsx, &binsx[0], nbinsy, &binsy[0]);
+      }
     }
   }
 }

@@ -247,6 +247,7 @@ protected:
   float GetPrefiringEfficiencyWeight(std::vector<float>* jetPt, std::vector<float>* jetEta);
   virtual std::string GetNameFromFile() { return ""; }
   void InitializeHistogramFromConfig(std::string name, std::string channel, std::vector<std::string> histData);
+  void InitializeVarBinHistogramFromConfig(std::string name, std::string channel, std::vector<std::string> histData);
   void InitializeHistogramsFromConfig();
   std::vector<std::string> ReadHistDataFromConfig(std::string histDataString);
   std::string getHistName(std::string histName, std::string variationName, std::string channel);

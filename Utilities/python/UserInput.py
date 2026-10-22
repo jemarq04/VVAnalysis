@@ -129,8 +129,17 @@ def getHistExpr(hist_names, selection):
     for hist_name in hist_names:
         bin_info = ConfigHistTools.getHistBinInfo(manager_path, selection, hist_name)
         if "TH1" in ConfigHistTools.getHistType(manager_path, selection, hist_name):
-            bin_expr = "{nbins}, {xmin}, {xmax}".format(**bin_info)
+            if "xmin" in bin_info:
+                bin_expr = "{nbins}, {xmin}, {xmax}".format(**bin_info)
+            else:
+                bin_info["binsx"] = "/".join([str(f) for f in bin_info["binsx"]])
+                bin_expr = "{nbins}, {binsx}".format(**bin_info)
         else:
-            bin_expr = "{nbinsx}, {xmin}, {xmax}, {nbinsy}, {ymin}, {ymax}".format(**bin_info)
+            if "xmin" in bin_info:
+                bin_expr = "{nbinsx}, {xmin}, {xmax}, {nbinsy}, {ymin}, {ymax}".format(**bin_info)
+            else:
+                bin_info["binsx"] = "/".join([str(f) for f in bin_info["binsx"]])
+                bin_info["binsy"] = "/".join([str(f) for f in bin_info["binsy"]])
+                bin_expr = "{nbinsx}, {binsx}, {nbinsy}, {binsy}".format(**bin_info)
         info.Add(ROOT.TNamed(hist_name, " $ ".join([hist_name, bin_expr])))
     return info
