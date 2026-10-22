@@ -131,16 +131,16 @@ void ZZResponseMatrixMaker::FillHistograms(Long64_t entry, std::pair<Systematic,
     return;
 
   // sort lepton pt
-  std::pair<Float_t, Float_t> lep_array[] = {{l1Pt, l1Eta}, {l2Pt, l2Eta}, {l3Pt, l3Eta}, {l4Pt, l4Eta}};
-  std::pair<Float_t, Float_t> genlep_array[] = {{genl1Pt, genl1Eta}, {genl2Pt, genl2Eta}, {genl3Pt, genl3Eta}, {genl4Pt, genl4Eta}};
-  std::sort(lep_array, lep_array + 4, [](std::pair<Float_t, Float_t> a, std::pair<Float_t, Float_t> b) { return a.first > b.first; });
-  std::sort(genlep_array, genlep_array + 4, [](std::pair<Float_t, Float_t> a, std::pair<Float_t, Float_t> b) { return a.first > b.first; });
-  float l1PtTmp = lep_array[0].first;
-  float l1EtaTmp = lep_array[0].second;
-  float genl1PtTmp = genlep_array[0].first;
-  float genl1EtaTmp = genlep_array[0].second;
+  struct Lepton {
+    Float_t pt;
+    Float_t eta;
+  };
+  Lepton leps[] = {{l1Pt, l1Eta}, {l2Pt, l2Eta}, {l3Pt, l3Eta}, {l4Pt, l4Eta}};
+  Lepton genleps[] = {{genl1Pt, genl1Eta}, {genl2Pt, genl2Eta}, {genl3Pt, genl3Eta}, {genl4Pt, genl4Eta}};
+  std::sort(leps, leps + 4, [](Lepton a, Lepton b) { return a.pt > b.pt; });
+  std::sort(genleps, genleps + 4, [](Lepton a, Lepton b) { return a.pt > b.pt; });
 
   SafeHistFill(histMap2D_, getHistName("Mass_ResponseMatrix", variation.second), Mass, genMass, weight);
-  SafeHistFill(histMap2D_, getHistName("LepPt1_ResponseMatrix", variation.second), l1PtTmp, genl1PtTmp, weight);
-  SafeHistFill(histMap2D_, getHistName("LepEta1_ResponseMatrix", variation.second), l1EtaTmp, genl1EtaTmp, weight);
+  SafeHistFill(histMap2D_, getHistName("LepPt1_ResponseMatrix", variation.second), leps[0].pt, genleps[0].pt, weight);
+  SafeHistFill(histMap2D_, getHistName("LepEta1_ResponseMatrix", variation.second), leps[0].eta, genleps[0].eta, weight);
 }
