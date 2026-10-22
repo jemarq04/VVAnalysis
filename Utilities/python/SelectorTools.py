@@ -336,6 +336,7 @@ class SelectorDriver(object):
                 % (tree_name, filename, self.ntupleType)
             )
         logging.debug("Processing tree %s for file %s." % (tree.GetName(), rtfile.GetName()))
+        self.addTNamed("filename", filename)
 
         # Codes for trigger test
         # aliases = UserInput.readJson("Cuts/%s/aliases.json" % self.analysis)
