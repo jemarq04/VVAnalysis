@@ -25,6 +25,8 @@ void ZZResponseMatrixMaker::Init(TTree* tree) {
   if (!isMC_)
     return;
   std::string genChannelName = channelName_ == "mmee" ? "eemm" : channelName_;
+  if (genTree_ != nullptr)
+    delete genTree_;
   genTree_ = new TChain((genChannelName + "Gen/ntuple").c_str(), (genChannelName + "Gen/ntuple").c_str());
   genTree_->Add(fChain->GetTree()->GetDirectory()->GetFile()->GetName());
   SetGenBranchesUWVV();
@@ -71,8 +73,7 @@ void ZZResponseMatrixMaker::SetGenBranchesUWVV() {
 }
 
 void ZZResponseMatrixMaker::StoreGenEvents() {
-  if (genEvents_.size())
-    return;
+  genEvents_.clear();
 
   Long64_t nentries = genTree_->GetEntries();
   for (Long64_t entry = 0; entry < nentries; entry++) {
