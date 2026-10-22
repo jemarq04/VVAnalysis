@@ -36,10 +36,6 @@ class ZZResponseMatrixMaker : public ZZSelector {
   TBranch* b_genl3Eta;
   TBranch* b_genl4Eta;
 
-  // Histograms
-  TH2D* MassResponseMatrix;
-  TH2D* LepPt1ResponseMatrix;
-
   virtual void Init(TTree* tree) override;
   ClassDefOverride(ZZResponseMatrixMaker, 0);
 
