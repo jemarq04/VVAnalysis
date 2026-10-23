@@ -1,0 +1,19 @@
+{
+    "Object" : {
+        "e" : [
+        ],
+        "m" : [
+        ]
+    },
+    "State" : {
+        "eeee" : [
+        ],
+        "eemm" : [
+        ],
+        "mmmm" : [
+        ]
+    },
+    "Event" : [
+        "(Flag_goodVerticesPass && Flag_globalSuperTightHalo2016FilterPass && Flag_EcalDeadCellTriggerPrimitiveFilterPass && Flag_BadPFMuonFilterPass && Flag_BadPFMuonDzFilterPass && Flag_hfNoisyHitsFilterPass && Flag_eeBadScFilterPass && ReFlag_ecalBadCalibFilterPass)"
+    ]
+}
