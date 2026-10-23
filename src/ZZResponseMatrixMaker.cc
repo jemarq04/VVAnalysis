@@ -86,7 +86,7 @@ bool ZZResponseMatrixMaker::GetGenEvent(ULong64_t event) {
   for (auto it : genEvents_) {
     if (it.second == event) {
       LoadGenBranchesUWVV(it.first);
-      return true;
+      return genZ1Mass > 60 && genZ1Mass < 120 && genZ2Mass > 60 && genZ2Mass < 120;
     }
   }
   return false;
