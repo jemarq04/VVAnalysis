@@ -14,24 +14,24 @@ class SelectorDriver(object):
         # logging.basicConfig(level=logging.DEBUG)
         logging.basicConfig(level=logging.WARNING)
 
-        selector_map = {
+        self.selector_map = {
             "Zstudy": "ZSelector",
             "WGen": "WGenSelector",
             "ZGen": "ZGenSelector",
             "ThreeLep": "ThreeLepSelector",
         }
-        selector_map.update({f"ZZ4l{year}": "ZZSelector" for year in ConfigureJobs.getLumiMap().keys()})
+        self.selector_map.update({f"ZZ4l{year}": "ZZSelector" for year in ConfigureJobs.getLumiMap().keys()})
 
         self.analysis = analysis
         self.selection = selection
         self.input_tier = input_tier
-        if analysis not in list(selector_map.keys()):
+        if analysis not in list(self.selector_map.keys()):
             raise ValueError(
                 "Analysis does not point to "
                 "a defined selector. Please edit "
                 "Utilities/python/SelectorTools.py to add it."
             )
-        self.selector_name = selector_map[analysis]
+        self.selector_name = self.selector_map[analysis]
         self.addSumweights = True
         self.ntupleType = "UWVV"
         self.year = year
@@ -53,16 +53,16 @@ class SelectorDriver(object):
         self.channels = channels
 
     def isBackground(self):
-        self.selector_name = self.selector_name.replace("Selector", "BackgroundSelector")
+        self.selector_name = self.selector_map[self.analysis].replace("Selector", "BackgroundSelector")
 
     def isGen(self):
-        self.selector_name = self.selector_name.replace("BackgroundSelector", "GenSelector")
+        self.selector_name = self.selector_map[self.analysis].replace("Selector", "GenSelector")
 
     def isFake(self):
-        self.selector_name = self.selector_name.replace("ZZ", "FakeRate")
+        self.selector_name = self.selector_map[self.analysis].replace("ZZ", "FakeRate")
 
     def isResponseMatrix(self):
-        self.selector_name = self.selector_name.replace("Selector", "ResponseMatrixMaker")
+        self.selector_name = self.selector_map[self.analysis].replace("Selector", "ResponseMatrixMaker")
 
     def outputFile(self):
         return self.outfile
