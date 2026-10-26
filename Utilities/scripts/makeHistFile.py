@@ -17,7 +17,7 @@ import subprocess
 def getComLineArgs():
     parser = UserInput.getDefaultParser()
     parser.add_argument("--lumi", "-l", type=float, default=None, help="luminosity value (in fb-1)")
-    parser.add_argument("--output_file", "-o", type=str, default="test.root", help="Output file name")
+    parser.add_argument("--output_file", "-o", type=str, default="test", help="Output file name")
     parser.add_argument("--test", action="store_true", help="Run test job (no background estimate)")
     parser.add_argument("--nano", action="store_true", help="Use NanoAOD format ntuples in stead of UWVV")
     parser.add_argument("--with_background", action="store_true", help="Run background selector")
