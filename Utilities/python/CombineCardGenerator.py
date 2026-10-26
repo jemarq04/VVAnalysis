@@ -187,7 +187,11 @@ class CombineCardGenerator:
 
                 for extra_variable in self.extra_variables:
                     plotnames = [f"{extra_variable}_{chan}" for chan in self.all_channels]
-                    if self.with_gen and all(name not in procname.lower() for name in ["data", "nonprompt"]):
+                    if (
+                        self.with_gen
+                        and "ResponseMatrix" not in extra_variable
+                        and all(name not in procname.lower() for name in ["data", "nonprompt"])
+                    ):
                         plotnames += [f"Gen{extra_variable}_{chan}Gen" for chan in self.all_channels]
                     plotnames += [
                         f"{extra_variable}_{var}_{chan}"
