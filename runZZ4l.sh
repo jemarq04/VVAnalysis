@@ -9,6 +9,8 @@ source Utilities/scripts/BashArgParse.sh
 #@optdesc Enable systematic variations
 #@opt -m/--responseMatrix
 #@optdesc Run ZZResponseMatrixMaker
+#@opt --no-background
+#@optdesc Disable ZZBackgroundSelector
 #@opt --test
 #@optdesc Do a debug (test) run
 #@opt --frfile FILE
@@ -16,13 +18,14 @@ source Utilities/scripts/BashArgParse.sh
 #@arg year [year ...]
 #@argdesc The years for analysis or 'all' to run all of Run 3
 
-optstring="h/help*,g/gen,s/syst,m/responseMatrix,/test,/frfile:"
+optstring="h/help*,g/gen,s/syst,m/responseMatrix,/no-background,/test,/frfile:"
 extra_args="--with_background"
 all_years="2022 2023 2024 2025"
 
 parse_args "$0" "$optstring" 1 "$@"
 eval set -- "$BAP_PARSED"
 
+$no_background && extra_args=""
 $gen && extra_args="$extra_args --with_Gen"
 $syst && extra_args="$extra_args --doSystematics"
 $responseMatrix && extra_args="$extra_args --responseMatrix"
