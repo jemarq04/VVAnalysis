@@ -128,7 +128,7 @@ def getListOfEWKFilenames(analysis=""):
         outlist = [
             # "zz4l-amcatnlo",
             "zz4l-powheg",
-            # "ZZJJTo4L-EWK",
+            "zzjj4l-ewk",
             "ggZZ4e",
             "ggZZ4m",
             "ggZZ4t",
