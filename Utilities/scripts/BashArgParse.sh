@@ -63,7 +63,7 @@ function parse_args() {
     [[ $shortopt = $longopt ]] && unset longopt
 
     [[ -n $longopt && -n $shortopt && ${fullopt: -1} = ":" ]] && local shortopt="$shortopt:" && [[ ${fullopt: -2:1} = ":" ]] && local shortopt="$shortopt:"
-    [[ ${fullopt: -1} = "*" ]] && local fullopt="${fullopt%?}"
+    [[ ${longopt: -1} = "*" ]] && local longopt="${longopt%?}"
 
     [[ -n $shortopt ]] && local optstring="$optstring$shortopt"
     [[ -n $longopt ]] && local loptstring="$loptstring,$longopt"
