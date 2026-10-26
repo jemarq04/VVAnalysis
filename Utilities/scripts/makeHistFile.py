@@ -63,7 +63,7 @@ def makeHistFile(args):
         today,
         args["output_file"] if args["selection"] == "SignalSync" or args["test"] else args["analysis"],
     )
-    toCombine = args["with_background"] or args["with_Gen"]
+    toCombine = args["with_background"] or args["with_Gen"] or args["responseMatrix"]
     fOut = ROOT.TFile(tmpFileName if not toCombine else tmpFileName.replace(".root", "sel.root"), "recreate")
     combinedNames = [fOut.GetName()]
 
@@ -148,9 +148,6 @@ def makeHistFile(args):
         selector.setChannels(args["channels"])
     selector.setNumCores(args["numCores"])
 
-    if args["responseMatrix"]:
-        selector.isResponseMatrix()
-
     if args["filenames"]:
         selector.setDatasets(args["filenames"])
     else:
@@ -160,6 +157,12 @@ def makeHistFile(args):
     print("Pause here")
     # sys.exit()
 
+    if args["responseMatrix"]:
+        selector.isResponseMatrix()
+        output_name = tmpFileName.replace(".root", "resp.root")
+        selector.setOutputfile(output_name)
+        selector.applySelector()
+        combinedNames.append(output_name)
     if args["with_background"]:
         selector.isBackground()
         selector.setInputs(sf_inputs + hist_inputs + fr_inputs)
@@ -183,7 +186,7 @@ def makeHistFile(args):
             selector.setFileList(*args["inputs_from_file"])
         selector.applySelector()
         selector.setChannels(args["channels"])
-        selector.outputFile().Close()
+    selector.outputFile().Close()
 
     if len(combinedNames) > 1:
         rval = subprocess.call(["hadd", "-f", tmpFileName] + combinedNames)
@@ -191,7 +194,7 @@ def makeHistFile(args):
             list(map(os.remove, combinedNames))
 
     fOut.Close()
-    if args["test"] or args["responseMatrix"]:
+    if args["test"]:
         sys.exit(0)
 
     fOut = ROOT.TFile.Open(tmpFileName, "update")
