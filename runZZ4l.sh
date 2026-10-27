@@ -11,6 +11,8 @@ source Utilities/scripts/BashArgParse.sh
 #@optdesc Run ZZResponseMatrixMaker
 #@opt --no-background
 #@optdesc Disable ZZBackgroundSelector
+#@opt --skip-main
+#@optdesc Skip running with ZZSelector
 #@opt --test
 #@optdesc Do a debug (test) run
 #@opt --frfile FILE
@@ -18,7 +20,7 @@ source Utilities/scripts/BashArgParse.sh
 #@arg year [year ...]
 #@argdesc The years for analysis or 'all' to run all of Run 3
 
-optstring="h/help*,g/gen,s/syst,m/responseMatrix,/no-background,/test,/frfile:"
+optstring="h/help*,g/gen,s/syst,m/responseMatrix,/no-background,/skip-main,/test,/frfile:"
 extra_args="--with_background"
 all_years="2022 2023 2024 2025"
 
@@ -29,6 +31,7 @@ $no_background && extra_args=""
 $gen && extra_args="$extra_args --with_Gen"
 $syst && extra_args="$extra_args --doSystematics"
 $responseMatrix && extra_args="$extra_args --responseMatrix"
+$skip_main && extra_args="$extra_args --skip_main"
 $test && extra_args="$extra_args --test"
 
 years="$@"

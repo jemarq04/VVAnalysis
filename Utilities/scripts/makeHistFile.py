@@ -20,6 +20,7 @@ def getComLineArgs():
     parser.add_argument("--output_file", "-o", type=str, default="test", help="Output file name")
     parser.add_argument("--test", action="store_true", help="Run test job (no background estimate)")
     parser.add_argument("--nano", action="store_true", help="Use NanoAOD format ntuples in stead of UWVV")
+    parser.add_argument("--skip_main", action="store_true", help="Skip main selector for analysis (e.g. ZZSelector)")
     parser.add_argument("--with_background", action="store_true", help="Run background selector")
     parser.add_argument("--with_Gen", action="store_true", help="Run ZZGen selector")
     parser.add_argument("--responseMatrix", action="store_true", help="Run ResponseMatrix maker instead")
@@ -152,7 +153,8 @@ def makeHistFile(args):
         selector.setDatasets(args["filenames"])
     else:
         selector.setFileList(*args["inputs_from_file"])
-    selector.applySelector()
+    if not args["skip_main"]:
+        selector.applySelector()
 
     print("Pause here")
     # sys.exit()
