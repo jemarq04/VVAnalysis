@@ -7,7 +7,7 @@ void ZZGenSelector::Init(TTree* tree) {
   hists1D_ = {"Genyield",      "GenMass",       "GenMassFull",     "GennJets",        "GennJets_central", "GenjetPt[1]",   "GenjetPt[0]",
               "GenjetEta[0]",  "GenjetEta[1]",  "GenabsjetEta[0]", "GenabsjetEta[1]", "Genmjj",           "GendEtajj",     "GenMass0j",
               "GenMass1j",     "GenMass2j",     "GenMass3j",       "GenMass34j",      "GenMass4j",        "GenMass0jFull", "GenMass1jFull",
-              "GenMass2jFull", "GenMass3jFull", "GenMass34jFull",  "GenMass4jFull",   "GenLepPt",         "GenLepEta"};
+              "GenMass2jFull", "GenMass3jFull", "GenMass34jFull",  "GenMass4jFull",   "GenLepPt",         "GenLepPt1",     "GenLepEta"};
 
   weighthists1D_ = {"Genyield",      "GenMass",       "GenMassFull",     "GennJets",        "GennJets_central", "GenjetPt[1]",   "GenjetPt[0]",
                     "GenjetEta[0]",  "GenjetEta[1]",  "GenabsjetEta[0]", "GenabsjetEta[1]", "Genmjj",           "GendEtajj",     "GenMass0j",
@@ -370,6 +370,11 @@ void ZZGenSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::st
   //  SafeHistFill(histMap1D_, getHistName("GendPhiZ1Z2", variation.second), GendPhiZZ, Genweight);
   //  SafeHistFill(histMap1D_, getHistName("GendRZ1Z2", variation.second), GendRZZ, Genweight);
   // Making LeptonPt and Eta plots
+
+  Float_t leps[] = {Genl1Pt, Genl2Pt, Genl3Pt, Genl4Pt};
+  std::sort(leps, leps + 4, std::greater<float>());
+  SafeHistFill(histMap1D_, getHistName("GenLepPt1", variation.second), leps[0], Genweight);
+
   SafeHistFill(histMap1D_, getHistName("GenLepPt", variation.second), Genl1Pt, Genweight);
   SafeHistFill(histMap1D_, getHistName("GenLepPt", variation.second), Genl2Pt, Genweight);
   SafeHistFill(histMap1D_, getHistName("GenLepPt", variation.second), Genl3Pt, Genweight);

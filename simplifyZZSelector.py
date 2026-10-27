@@ -466,6 +466,7 @@ Genhists1D_Ori = [
     "GendPhiZ1Z2",
     "GendRZ1Z2",
     "GenLepPt",
+    "GenLepPt1",
     "GenLepEta",
     "GenjetPt[0]",
     "GenjetPt[1]",
@@ -503,6 +504,7 @@ Genhists1D = [
     "GenMass34jFull",
     "GenMass4jFull",
     "GenLepPt",
+    "GenLepPt1",
     "GenLepEta",
 ]
 
