@@ -1,8 +1,8 @@
 #include "Analysis/VVAnalysis/interface/ZZResponseMatrixMaker.h"
 
 ZZResponseMatrixMaker::~ZZResponseMatrixMaker() {
-  if (genTree_ != nullptr)
-    delete genTree_;
+  if (GenTree_ != nullptr)
+    delete GenTree_;
 }
 
 void ZZResponseMatrixMaker::Init(TTree* tree) {
@@ -25,94 +25,94 @@ void ZZResponseMatrixMaker::Init(TTree* tree) {
   if (!isMC_)
     return;
   std::string genChannelName = channelName_ == "mmee" ? "eemm" : channelName_;
-  if (genTree_ != nullptr)
-    delete genTree_;
-  genTree_ = new TChain((genChannelName + "Gen/ntuple").c_str(), (genChannelName + "Gen/ntuple").c_str());
-  genTree_->Add(fChain->GetTree()->GetDirectory()->GetFile()->GetName());
+  if (GenTree_ != nullptr)
+    delete GenTree_;
+  GenTree_ = new TChain((genChannelName + "Gen/ntuple").c_str(), (genChannelName + "Gen/ntuple").c_str());
+  GenTree_->Add(fChain->GetTree()->GetDirectory()->GetFile()->GetName());
   SetGenBranchesUWVV();
   StoreGenEvents();
 }
 
 void ZZResponseMatrixMaker::SetGenBranchesUWVV() {
-  genTree_->SetBranchAddress("evt", &genEvt, &b_genEvt);
-  genTree_->SetBranchAddress("Mass", &genMass, &b_genMass);
+  GenTree_->SetBranchAddress("evt", &GenEvt, &b_GenEvt);
+  GenTree_->SetBranchAddress("Mass", &GenMass, &b_GenMass);
   if (channel_ == eeee) {
-    genTree_->SetBranchAddress("e1_e2_Mass", &genZ1Mass, &b_genZ1Mass);
-    genTree_->SetBranchAddress("e3_e4_Mass", &genZ2Mass, &b_genZ2Mass);
-    genTree_->SetBranchAddress("e1Pt", &genl1Pt, &b_genl1Pt);
-    genTree_->SetBranchAddress("e2Pt", &genl2Pt, &b_genl2Pt);
-    genTree_->SetBranchAddress("e3Pt", &genl3Pt, &b_genl3Pt);
-    genTree_->SetBranchAddress("e4Pt", &genl4Pt, &b_genl4Pt);
-    genTree_->SetBranchAddress("e1Eta", &genl1Eta, &b_genl1Eta);
-    genTree_->SetBranchAddress("e2Eta", &genl2Eta, &b_genl2Eta);
-    genTree_->SetBranchAddress("e3Eta", &genl3Eta, &b_genl3Eta);
-    genTree_->SetBranchAddress("e4Eta", &genl4Eta, &b_genl4Eta);
+    GenTree_->SetBranchAddress("e1_e2_Mass", &GenZ1Mass, &b_GenZ1Mass);
+    GenTree_->SetBranchAddress("e3_e4_Mass", &GenZ2Mass, &b_GenZ2Mass);
+    GenTree_->SetBranchAddress("e1Pt", &Genl1Pt, &b_Genl1Pt);
+    GenTree_->SetBranchAddress("e2Pt", &Genl2Pt, &b_Genl2Pt);
+    GenTree_->SetBranchAddress("e3Pt", &Genl3Pt, &b_Genl3Pt);
+    GenTree_->SetBranchAddress("e4Pt", &Genl4Pt, &b_Genl4Pt);
+    GenTree_->SetBranchAddress("e1Eta", &Genl1Eta, &b_Genl1Eta);
+    GenTree_->SetBranchAddress("e2Eta", &Genl2Eta, &b_Genl2Eta);
+    GenTree_->SetBranchAddress("e3Eta", &Genl3Eta, &b_Genl3Eta);
+    GenTree_->SetBranchAddress("e4Eta", &Genl4Eta, &b_Genl4Eta);
   } else if (channel_ == eemm || channel_ == mmee) {
-    genTree_->SetBranchAddress("e1_e2_Mass", &genZ1Mass, &b_genZ1Mass);
-    genTree_->SetBranchAddress("m1_m2_Mass", &genZ2Mass, &b_genZ2Mass);
-    genTree_->SetBranchAddress("e1Pt", &genl1Pt, &b_genl1Pt);
-    genTree_->SetBranchAddress("e2Pt", &genl2Pt, &b_genl2Pt);
-    genTree_->SetBranchAddress("m1Pt", &genl3Pt, &b_genl3Pt);
-    genTree_->SetBranchAddress("m2Pt", &genl4Pt, &b_genl4Pt);
-    genTree_->SetBranchAddress("e1Eta", &genl1Eta, &b_genl1Eta);
-    genTree_->SetBranchAddress("e2Eta", &genl2Eta, &b_genl2Eta);
-    genTree_->SetBranchAddress("m1Eta", &genl3Eta, &b_genl3Eta);
-    genTree_->SetBranchAddress("m2Eta", &genl4Eta, &b_genl4Eta);
+    GenTree_->SetBranchAddress("e1_e2_Mass", &GenZ1Mass, &b_GenZ1Mass);
+    GenTree_->SetBranchAddress("m1_m2_Mass", &GenZ2Mass, &b_GenZ2Mass);
+    GenTree_->SetBranchAddress("e1Pt", &Genl1Pt, &b_Genl1Pt);
+    GenTree_->SetBranchAddress("e2Pt", &Genl2Pt, &b_Genl2Pt);
+    GenTree_->SetBranchAddress("m1Pt", &Genl3Pt, &b_Genl3Pt);
+    GenTree_->SetBranchAddress("m2Pt", &Genl4Pt, &b_Genl4Pt);
+    GenTree_->SetBranchAddress("e1Eta", &Genl1Eta, &b_Genl1Eta);
+    GenTree_->SetBranchAddress("e2Eta", &Genl2Eta, &b_Genl2Eta);
+    GenTree_->SetBranchAddress("m1Eta", &Genl3Eta, &b_Genl3Eta);
+    GenTree_->SetBranchAddress("m2Eta", &Genl4Eta, &b_Genl4Eta);
   } else if (channel_ == mmmm) {
-    genTree_->SetBranchAddress("m1_m2_Mass", &genZ1Mass, &b_genZ1Mass);
-    genTree_->SetBranchAddress("m3_m4_Mass", &genZ2Mass, &b_genZ2Mass);
-    genTree_->SetBranchAddress("m1Pt", &genl1Pt, &b_genl1Pt);
-    genTree_->SetBranchAddress("m2Pt", &genl2Pt, &b_genl2Pt);
-    genTree_->SetBranchAddress("m3Pt", &genl3Pt, &b_genl3Pt);
-    genTree_->SetBranchAddress("m4Pt", &genl4Pt, &b_genl4Pt);
-    genTree_->SetBranchAddress("m1Eta", &genl1Eta, &b_genl1Eta);
-    genTree_->SetBranchAddress("m2Eta", &genl2Eta, &b_genl2Eta);
-    genTree_->SetBranchAddress("m3Eta", &genl3Eta, &b_genl3Eta);
-    genTree_->SetBranchAddress("m4Eta", &genl4Eta, &b_genl4Eta);
+    GenTree_->SetBranchAddress("m1_m2_Mass", &GenZ1Mass, &b_GenZ1Mass);
+    GenTree_->SetBranchAddress("m3_m4_Mass", &GenZ2Mass, &b_GenZ2Mass);
+    GenTree_->SetBranchAddress("m1Pt", &Genl1Pt, &b_Genl1Pt);
+    GenTree_->SetBranchAddress("m2Pt", &Genl2Pt, &b_Genl2Pt);
+    GenTree_->SetBranchAddress("m3Pt", &Genl3Pt, &b_Genl3Pt);
+    GenTree_->SetBranchAddress("m4Pt", &Genl4Pt, &b_Genl4Pt);
+    GenTree_->SetBranchAddress("m1Eta", &Genl1Eta, &b_Genl1Eta);
+    GenTree_->SetBranchAddress("m2Eta", &Genl2Eta, &b_Genl2Eta);
+    GenTree_->SetBranchAddress("m3Eta", &Genl3Eta, &b_Genl3Eta);
+    GenTree_->SetBranchAddress("m4Eta", &Genl4Eta, &b_Genl4Eta);
   }
 }
 
 void ZZResponseMatrixMaker::StoreGenEvents() {
-  genEvents_.clear();
+  GenEvents_.clear();
 
-  Long64_t nentries = genTree_->GetEntries();
+  Long64_t nentries = GenTree_->GetEntries();
   for (Long64_t entry = 0; entry < nentries; entry++) {
-    b_genEvt->GetEntry(entry);
-    genEvents_[entry] = genEvt;
+    b_GenEvt->GetEntry(entry);
+    GenEvents_[entry] = GenEvt;
   }
 }
 
 bool ZZResponseMatrixMaker::GetGenEvent(ULong64_t event) {
-  for (auto it : genEvents_) {
+  for (auto it : GenEvents_) {
     if (it.second == event) {
       LoadGenBranchesUWVV(it.first);
-      return genZ1Mass > 60 && genZ1Mass < 120 && genZ2Mass > 60 && genZ2Mass < 120;
+      return GenZ1Mass > 60 && GenZ1Mass < 120 && GenZ2Mass > 60 && GenZ2Mass < 120;
     }
   }
   return false;
 }
 
 void ZZResponseMatrixMaker::LoadGenBranchesUWVV(Long64_t entry) {
-  b_genEvt->GetEntry(entry);
-  b_genMass->GetEntry(entry);
-  b_genZ1Mass->GetEntry(entry);
-  b_genZ2Mass->GetEntry(entry);
-  b_genl1Pt->GetEntry(entry);
-  b_genl2Pt->GetEntry(entry);
-  b_genl3Pt->GetEntry(entry);
-  b_genl4Pt->GetEntry(entry);
-  b_genl1Eta->GetEntry(entry);
-  b_genl2Eta->GetEntry(entry);
-  b_genl3Eta->GetEntry(entry);
-  b_genl4Eta->GetEntry(entry);
+  b_GenEvt->GetEntry(entry);
+  b_GenMass->GetEntry(entry);
+  b_GenZ1Mass->GetEntry(entry);
+  b_GenZ2Mass->GetEntry(entry);
+  b_Genl1Pt->GetEntry(entry);
+  b_Genl2Pt->GetEntry(entry);
+  b_Genl3Pt->GetEntry(entry);
+  b_Genl4Pt->GetEntry(entry);
+  b_Genl1Eta->GetEntry(entry);
+  b_Genl2Eta->GetEntry(entry);
+  b_Genl3Eta->GetEntry(entry);
+  b_Genl4Eta->GetEntry(entry);
 
   // Swap gen variables in the case that Z2 should be relabeled to Z1
-  if ((channel_ == eemm || channel_ == mmee) && fabs(genZ1Mass - 91.1876) < fabs(genZ2Mass - 91.1876)) {
-    std::swap(genZ1Mass, genZ2Mass);
-    std::swap(genl1Pt, genl3Pt);
-    std::swap(genl2Pt, genl4Pt);
-    std::swap(genl1Eta, genl3Eta);
-    std::swap(genl2Eta, genl4Eta);
+  if ((channel_ == eemm || channel_ == mmee) && fabs(GenZ1Mass - 91.1876) < fabs(GenZ2Mass - 91.1876)) {
+    std::swap(GenZ1Mass, GenZ2Mass);
+    std::swap(Genl1Pt, Genl3Pt);
+    std::swap(Genl2Pt, Genl4Pt);
+    std::swap(Genl1Eta, Genl3Eta);
+    std::swap(Genl2Eta, Genl4Eta);
   }
 }
 
@@ -136,11 +136,11 @@ void ZZResponseMatrixMaker::FillHistograms(Long64_t entry, std::pair<Systematic,
     Float_t eta;
   };
   Lepton leps[] = {{l1Pt, l1Eta}, {l2Pt, l2Eta}, {l3Pt, l3Eta}, {l4Pt, l4Eta}};
-  Lepton genleps[] = {{genl1Pt, genl1Eta}, {genl2Pt, genl2Eta}, {genl3Pt, genl3Eta}, {genl4Pt, genl4Eta}};
+  Lepton genleps[] = {{Genl1Pt, Genl1Eta}, {Genl2Pt, Genl2Eta}, {Genl3Pt, Genl3Eta}, {Genl4Pt, Genl4Eta}};
   std::sort(leps, leps + 4, [](Lepton a, Lepton b) { return a.pt > b.pt; });
   std::sort(genleps, genleps + 4, [](Lepton a, Lepton b) { return a.pt > b.pt; });
 
-  SafeHistFill(histMap2D_, getHistName("Mass_ResponseMatrix", variation.second), Mass, genMass, weight);
+  SafeHistFill(histMap2D_, getHistName("Mass_ResponseMatrix", variation.second), Mass, GenMass, weight);
 
   SafeHistFill(histMap2D_, getHistName("LepPt1_ResponseMatrix", variation.second), leps[0].pt, genleps[0].pt, weight);
   SafeHistFill(histMap2D_, getHistName("LepPt_ResponseMatrix", variation.second), leps[0].pt, genleps[0].pt, weight);
