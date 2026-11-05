@@ -1307,6 +1307,8 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
 
       SafeHistFill(weighthistMap1D_, getHistName("CosTheta1", variation.second), CosTheta1, i, lheweight);
       SafeHistFill(weighthistMap1D_, getHistName("CosTheta2", variation.second), CosTheta2, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("CosThetaCombined", variation.second), CosTheta1, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("CosThetaCombined", variation.second), CosTheta2, i, lheweight);
       SafeHistFill(weighthistMap1D_, getHistName("CosThetaStar", variation.second), CosThetaStar, i, lheweight);
       SafeHistFill(weighthistMap1D_, getHistName("RapidityDiff", variation.second), RapidityDiff, i, lheweight);
       if (channel_ == eemm || channel_ == mmee) {
@@ -1402,6 +1404,8 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
   SafeHistFill(histMap1D_, getHistName("ZZEta", variation.second), Eta, weight);
   SafeHistFill(histMap1D_, getHistName("CosTheta1", variation.second), CosTheta1, weight);
   SafeHistFill(histMap1D_, getHistName("CosTheta2", variation.second), CosTheta2, weight);
+  SafeHistFill(histMap1D_, getHistName("CosThetaCombined", variation.second), CosTheta1, weight);
+  SafeHistFill(histMap1D_, getHistName("CosThetaCombined", variation.second), CosTheta2, weight);
   SafeHistFill(histMap1D_, getHistName("CosThetaStar", variation.second), CosThetaStar, weight);
   SafeHistFill(histMap1D_, getHistName("RapidityDiff", variation.second), RapidityDiff, weight);
   if (channel_ == eemm || channel_ == mmee) {

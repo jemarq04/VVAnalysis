@@ -18,10 +18,11 @@ void ZZSelector::Init(TTree* tree) {
   // This would be set true inside ZZBackground Selector
   // isNonPrompt_ = false;
 
-  systHists_ = {"yield",       "Mass",       "MassFull",     "nJets",        "nJets_central", "jetPt[1]",     "jetPt[0]",
-                "jetEta[0]",   "jetEta[1]",  "absjetEta[0]", "absjetEta[1]", "Mass0j",        "Mass1j",       "Mass2j",
-                "Mass3j",      "Mass34j",    "Mass4j",       "Mass0jFull",   "Mass1jFull",    "Mass2jFull",   "Mass3jFull",
-                "Mass34jFull", "Mass4jFull", "CosTheta1",    "CosTheta2",    "CosThetaStar",  "RapidityDiff", "dPhiOSll"};
+  systHists_ = {"yield",        "Mass",         "MassFull",    "LepPt",      "LepEta",       "nJets",        "nJets_central",
+                "jetPt[1]",     "jetPt[0]",     "jetEta[0]",   "jetEta[1]",  "absjetEta[0]", "absjetEta[1]", "Mass0j",
+                "Mass1j",       "Mass2j",       "Mass3j",      "Mass34j",    "Mass4j",       "Mass0jFull",   "Mass1jFull",
+                "Mass2jFull",   "Mass3jFull",   "Mass34jFull", "Mass4jFull", "CosTheta1",    "CosTheta2",    "CosThetaCombined",
+                "CosThetaStar", "RapidityDiff", "dPhiOSll"};
   // hists1D_ = {
   //      "yield", "backgroundControlYield","nTruePU","nvtx","ZMass","Z1Mass","Z2Mass","ZZPt",
   //      "Z1Pt","Z2Pt","Z1Phi","Z2Phi","dPhiZ1Z2","ZPt","LepPt","LepEta",
@@ -30,24 +31,48 @@ void ZZSelector::Init(TTree* tree) {
   //      "Z2lep2_Eta","Z2lep2_Phi","Z2lep2_Pt","Z2lep2_PdgId","Mass","nJets",
   // };
 
-  hists1D_ = {"yield",       "Z1Mass",        "Z2Mass",    "ZMass",        "Z1MassFull", "Z2MassFull",   "ZMassFull",    "EleZMass",   "MuZMass",
-              "LepPt",       "ElePt",         "MuPt",      "LepPt1",       "LepPt2",     "LepPt3",       "LepPt4",       "Z1LepPt",    "Z2LepPt",
-              "LepPhi",      "ElePhi",        "MuPhi",     "LepEta",       "EleEta",     "MuEta",        "Mass",         "ZZPt",       "ZPt",
-              "nJets",       "nJets_central", "MassFull",  "CosTheta1",    "CosTheta2",  "CosThetaStar", "RapidityDiff", "dPhiOSll",   "Mass0j",
-              "Mass1j",      "Mass2j",        "Mass3j",    "Mass34j",      "Mass4j",     "Mass0jFull",   "Mass1jFull",   "Mass2jFull", "Mass3jFull",
-              "Mass34jFull", "Mass4jFull",    "jetEta[0]", "absjetEta[0]", "jetEta[1]",  "absjetEta[1]", "jetPt[0]",     "jetPt[1]"};
+  hists1D_ = {"yield",        "Z1Mass",        "Z2Mass",
+              "ZMass",        "Z1MassFull",    "Z2MassFull",
+              "ZMassFull",    "EleZMass",      "MuZMass",
+              "LepPt",        "ElePt",         "MuPt",
+              "LepPt1",       "LepPt2",        "LepPt3",
+              "LepPt4",       "Z1LepPt",       "Z2LepPt",
+              "LepPhi",       "ElePhi",        "MuPhi",
+              "LepEta",       "EleEta",        "MuEta",
+              "Mass",         "ZZPt",          "ZPt",
+              "nJets",        "nJets_central", "MassFull",
+              "CosTheta1",    "CosTheta2",     "CosThetaCombined",
+              "CosThetaStar", "RapidityDiff",  "dPhiOSll",
+              "Mass0j",       "Mass1j",        "Mass2j",
+              "Mass3j",       "Mass34j",       "Mass4j",
+              "Mass0jFull",   "Mass1jFull",    "Mass2jFull",
+              "Mass3jFull",   "Mass34jFull",   "Mass4jFull",
+              "jetEta[0]",    "absjetEta[0]",  "jetEta[1]",
+              "absjetEta[1]", "jetPt[0]",      "jetPt[1]"};
 
   jetTest2D_ = {};  // also defined in hists1D_ to pass checks in InitializeHistogramsFromConfig()
   jethists1D_ = {"Mass",         "MassFull",     "nJets",      "nJets_central", "jetPt[1]",   "jetPt[0]",   "jetEta[0]",   "jetEta[1]",
                  "absjetEta[0]", "absjetEta[1]", "mjj",        "dEtajj",        "Mass0j",     "Mass1j",     "Mass2j",      "Mass3j",
                  "Mass34j",      "Mass4j",       "Mass0jFull", "Mass1jFull",    "Mass2jFull", "Mass3jFull", "Mass34jFull", "Mass4jFull"};
 
-  weighthists1D_ = {"yield",       "Z1Mass",        "Z2Mass",    "ZMass",        "Z1MassFull", "Z2MassFull",   "ZMassFull",    "EleZMass",   "MuZMass",
-                    "LepPt",       "ElePt",         "MuPt",      "LepPt1",       "LepPt2",     "LepPt3",       "LepPt4",       "Z1LepPt",    "Z2LepPt",
-                    "LepPhi",      "ElePhi",        "MuPhi",     "LepEta",       "EleEta",     "MuEta",        "Mass",         "ZZPt",       "ZPt",
-                    "nJets",       "nJets_central", "MassFull",  "CosTheta1",    "CosTheta2",  "CosThetaStar", "RapidityDiff", "dPhiOSll",   "Mass0j",
-                    "Mass1j",      "Mass2j",        "Mass3j",    "Mass34j",      "Mass4j",     "Mass0jFull",   "Mass1jFull",   "Mass2jFull", "Mass3jFull",
-                    "Mass34jFull", "Mass4jFull",    "jetEta[0]", "absjetEta[0]", "jetEta[1]",  "absjetEta[1]", "jetPt[0]",     "jetPt[1]"};
+  weighthists1D_ = {"yield",        "Z1Mass",        "Z2Mass",
+                    "ZMass",        "Z1MassFull",    "Z2MassFull",
+                    "ZMassFull",    "EleZMass",      "MuZMass",
+                    "LepPt",        "ElePt",         "MuPt",
+                    "LepPt1",       "LepPt2",        "LepPt3",
+                    "LepPt4",       "Z1LepPt",       "Z2LepPt",
+                    "LepPhi",       "ElePhi",        "MuPhi",
+                    "LepEta",       "EleEta",        "MuEta",
+                    "Mass",         "ZZPt",          "ZPt",
+                    "nJets",        "nJets_central", "MassFull",
+                    "CosTheta1",    "CosTheta2",     "CosThetaCombined",
+                    "CosThetaStar", "RapidityDiff",  "dPhiOSll",
+                    "Mass0j",       "Mass1j",        "Mass2j",
+                    "Mass3j",       "Mass34j",       "Mass4j",
+                    "Mass0jFull",   "Mass1jFull",    "Mass2jFull",
+                    "Mass3jFull",   "Mass34jFull",   "Mass4jFull",
+                    "jetEta[0]",    "absjetEta[0]",  "jetEta[1]",
+                    "absjetEta[1]", "jetPt[0]",      "jetPt[1]"};
   ZZSelectorBase::Init(tree);
   // fCutFormula = new TTreeFormula("CutFormula", fOption, fChain);
   // fCutFormula->SetQuickLoad(kTRUE);
@@ -1322,6 +1347,8 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
 
       SafeHistFill(weighthistMap1D_, getHistName("CosTheta1", variation.second), CosTheta1, i, lheweight);
       SafeHistFill(weighthistMap1D_, getHistName("CosTheta2", variation.second), CosTheta2, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("CosThetaCombined", variation.second), CosTheta1, i, lheweight);
+      SafeHistFill(weighthistMap1D_, getHistName("CosThetaCombined", variation.second), CosTheta2, i, lheweight);
       SafeHistFill(weighthistMap1D_, getHistName("CosThetaStar", variation.second), CosThetaStar, i, lheweight);
       SafeHistFill(weighthistMap1D_, getHistName("RapidityDiff", variation.second), RapidityDiff, i, lheweight);
       if (channel_ == eemm || channel_ == mmee) {
@@ -1417,6 +1444,8 @@ void ZZSelector::FillHistograms(Long64_t entry, std::pair<Systematic, std::strin
   //SafeHistFill(histMap1D_, getHistName("ZZEta", variation.second), Eta, weight);
   SafeHistFill(histMap1D_, getHistName("CosTheta1", variation.second), CosTheta1, weight);
   SafeHistFill(histMap1D_, getHistName("CosTheta2", variation.second), CosTheta2, weight);
+  SafeHistFill(histMap1D_, getHistName("CosThetaCombined", variation.second), CosTheta1, weight);
+  SafeHistFill(histMap1D_, getHistName("CosThetaCombined", variation.second), CosTheta2, weight);
   SafeHistFill(histMap1D_, getHistName("CosThetaStar", variation.second), CosThetaStar, weight);
   SafeHistFill(histMap1D_, getHistName("RapidityDiff", variation.second), RapidityDiff, weight);
   if (channel_ == eemm || channel_ == mmee) {
