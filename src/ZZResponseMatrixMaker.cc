@@ -47,6 +47,10 @@ void ZZResponseMatrixMaker::SetGenBranchesUWVV() {
     GenTree_->SetBranchAddress("e2Eta", &Genl2Eta, &b_Genl2Eta);
     GenTree_->SetBranchAddress("e3Eta", &Genl3Eta, &b_Genl3Eta);
     GenTree_->SetBranchAddress("e4Eta", &Genl4Eta, &b_Genl4Eta);
+    GenTree_->SetBranchAddress("e1Phi", &Genl1Phi, &b_Genl1Phi);
+    GenTree_->SetBranchAddress("e2Phi", &Genl2Phi, &b_Genl2Phi);
+    GenTree_->SetBranchAddress("e3Phi", &Genl3Phi, &b_Genl3Phi);
+    GenTree_->SetBranchAddress("e4Phi", &Genl4Phi, &b_Genl4Phi);
   } else if (channel_ == eemm || channel_ == mmee) {
     GenTree_->SetBranchAddress("e1_e2_Mass", &GenZ1Mass, &b_GenZ1Mass);
     GenTree_->SetBranchAddress("m1_m2_Mass", &GenZ2Mass, &b_GenZ2Mass);
@@ -58,6 +62,10 @@ void ZZResponseMatrixMaker::SetGenBranchesUWVV() {
     GenTree_->SetBranchAddress("e2Eta", &Genl2Eta, &b_Genl2Eta);
     GenTree_->SetBranchAddress("m1Eta", &Genl3Eta, &b_Genl3Eta);
     GenTree_->SetBranchAddress("m2Eta", &Genl4Eta, &b_Genl4Eta);
+    GenTree_->SetBranchAddress("e1Phi", &Genl1Phi, &b_Genl1Phi);
+    GenTree_->SetBranchAddress("e2Phi", &Genl2Phi, &b_Genl2Phi);
+    GenTree_->SetBranchAddress("m1Phi", &Genl3Phi, &b_Genl3Phi);
+    GenTree_->SetBranchAddress("m2Phi", &Genl4Phi, &b_Genl4Phi);
   } else if (channel_ == mmmm) {
     GenTree_->SetBranchAddress("m1_m2_Mass", &GenZ1Mass, &b_GenZ1Mass);
     GenTree_->SetBranchAddress("m3_m4_Mass", &GenZ2Mass, &b_GenZ2Mass);
@@ -69,6 +77,10 @@ void ZZResponseMatrixMaker::SetGenBranchesUWVV() {
     GenTree_->SetBranchAddress("m2Eta", &Genl2Eta, &b_Genl2Eta);
     GenTree_->SetBranchAddress("m3Eta", &Genl3Eta, &b_Genl3Eta);
     GenTree_->SetBranchAddress("m4Eta", &Genl4Eta, &b_Genl4Eta);
+    GenTree_->SetBranchAddress("m1Phi", &Genl1Phi, &b_Genl1Phi);
+    GenTree_->SetBranchAddress("m2Phi", &Genl2Phi, &b_Genl2Phi);
+    GenTree_->SetBranchAddress("m3Phi", &Genl3Phi, &b_Genl3Phi);
+    GenTree_->SetBranchAddress("m4Phi", &Genl4Phi, &b_Genl4Phi);
   }
 }
 
@@ -105,6 +117,10 @@ void ZZResponseMatrixMaker::LoadGenBranchesUWVV(Long64_t entry) {
   b_Genl2Eta->GetEntry(entry);
   b_Genl3Eta->GetEntry(entry);
   b_Genl4Eta->GetEntry(entry);
+  b_Genl1Phi->GetEntry(entry);
+  b_Genl2Phi->GetEntry(entry);
+  b_Genl3Phi->GetEntry(entry);
+  b_Genl4Phi->GetEntry(entry);
 
   // Swap gen variables in the case that Z2 should be relabeled to Z1
   if ((channel_ == eemm || channel_ == mmee) && fabs(GenZ1Mass - 91.1876) < fabs(GenZ2Mass - 91.1876)) {
@@ -113,6 +129,8 @@ void ZZResponseMatrixMaker::LoadGenBranchesUWVV(Long64_t entry) {
     std::swap(Genl2Pt, Genl4Pt);
     std::swap(Genl1Eta, Genl3Eta);
     std::swap(Genl2Eta, Genl4Eta);
+    std::swap(Genl1Phi, Genl3Phi);
+    std::swap(Genl2Phi, Genl4Phi);
   }
 }
 
@@ -134,9 +152,10 @@ void ZZResponseMatrixMaker::FillHistograms(Long64_t entry, std::pair<Systematic,
   struct Lepton {
     Float_t pt;
     Float_t eta;
+    Float_t phi;
   };
-  Lepton leps[] = {{l1Pt, l1Eta}, {l2Pt, l2Eta}, {l3Pt, l3Eta}, {l4Pt, l4Eta}};
-  Lepton genleps[] = {{Genl1Pt, Genl1Eta}, {Genl2Pt, Genl2Eta}, {Genl3Pt, Genl3Eta}, {Genl4Pt, Genl4Eta}};
+  Lepton leps[] = {{l1Pt, l1Eta, l1Phi}, {l2Pt, l2Eta, l2Phi}, {l3Pt, l3Eta, l3Phi}, {l4Pt, l4Eta, l4Phi}};
+  Lepton genleps[] = {{Genl1Pt, Genl1Eta, Genl1Phi}, {Genl2Pt, Genl2Eta, Genl2Phi}, {Genl3Pt, Genl3Eta, Genl3Phi}, {Genl4Pt, Genl4Eta, Genl4Phi}};
   std::sort(leps, leps + 4, [](Lepton a, Lepton b) { return a.pt > b.pt; });
   std::sort(genleps, genleps + 4, [](Lepton a, Lepton b) { return a.pt > b.pt; });
 
@@ -153,4 +172,10 @@ void ZZResponseMatrixMaker::FillHistograms(Long64_t entry, std::pair<Systematic,
   SafeHistFill(histMap2D_, getHistName("LepEta_ResponseMatrix", variation.second), leps[1].eta, genleps[1].eta, weight);
   SafeHistFill(histMap2D_, getHistName("LepEta_ResponseMatrix", variation.second), leps[2].eta, genleps[2].eta, weight);
   SafeHistFill(histMap2D_, getHistName("LepEta_ResponseMatrix", variation.second), leps[3].eta, genleps[3].eta, weight);
+
+  SafeHistFill(histMap2D_, getHistName("LepPhi1_ResponseMatrix", variation.second), leps[0].phi, genleps[0].phi, weight);
+  SafeHistFill(histMap2D_, getHistName("LepPhi_ResponseMatrix", variation.second), leps[0].phi, genleps[0].phi, weight);
+  SafeHistFill(histMap2D_, getHistName("LepPhi_ResponseMatrix", variation.second), leps[1].phi, genleps[1].phi, weight);
+  SafeHistFill(histMap2D_, getHistName("LepPhi_ResponseMatrix", variation.second), leps[2].phi, genleps[2].phi, weight);
+  SafeHistFill(histMap2D_, getHistName("LepPhi_ResponseMatrix", variation.second), leps[3].phi, genleps[3].phi, weight);
 }
