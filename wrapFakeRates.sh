@@ -15,5 +15,5 @@ infile=$1
 year=$2
 
 echo Wrapping fake rate for $year
-./ScaleFactors/wrapFakeRates.py -o data/fakeScaleFactorsRun3-ZZ4l$year.root $infile
+./ScaleFactors/wrapFakeRates.py -o fakeScaleFactorsRun3-ZZ4l$year.root $infile
 echo "$year done!!==================================="
