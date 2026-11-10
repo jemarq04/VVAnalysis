@@ -192,25 +192,17 @@ void ZZResponseMatrixMaker::FillHistograms(Long64_t entry, std::pair<Systematic,
                       {Genl4Pt, Genl4Eta, Genl4Phi, Genl4PdgId}};
   std::sort(leps, leps + 4, [](Lepton a, Lepton b) { return a.pt > b.pt; });
   std::sort(genleps, genleps + 4, [](Lepton a, Lepton b) { return a.pt > b.pt; });
-  std::map<size_t, size_t> matches;
 
+  std::map<size_t, size_t> matches;
   {
-    Float_t maxDPtRel = 1.;
-    Float_t maxDeltaR = 0.3;
     typedef std::pair<size_t, size_t> MatchPair;
 
     // sorting algorithm from PhysObjectMatcher
     std::vector<MatchPair> matchPairs;  // container of matched pairs
-    for (size_t iiLep = 0; iiLep < 4; iiLep++) {
-      for (size_t iiGenLep = 0; iiGenLep < 4; iiGenLep++) {
-        if (leps[iiLep].pdgId == genleps[iiGenLep].pdgId) {
-          Float_t dPtRel = fabs(leps[iiLep].pt - genleps[iiGenLep].pt) / genleps[iiGenLep].pt;
-          Float_t dR = deltaR(leps[iiLep].eta, leps[iiLep].phi, genleps[iiGenLep].eta, genleps[iiGenLep].phi);
-          if (dPtRel < maxDPtRel && dR < maxDeltaR)
-            matchPairs.push_back(std::make_pair(iiLep, iiGenLep));
-        }
-      }
-    }
+    for (size_t iiLep = 0; iiLep < 4; iiLep++)
+      for (size_t iiGenLep = 0; iiGenLep < 4; iiGenLep++)
+        if (leps[iiLep].pdgId == genleps[iiGenLep].pdgId)
+          matchPairs.push_back(std::make_pair(iiLep, iiGenLep));
 
     // sort and resolve ambiguities
     std::vector<bool> locked(4, false);     // locks in target collection
