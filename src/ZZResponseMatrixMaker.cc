@@ -17,8 +17,20 @@ void ZZResponseMatrixMaker::Init(TTree* tree) {
       {pileupUp, "CMS_pileupUp"},
       {pileupDown, "CMS_pileupDown"},
   };
-  hists2D_ = {"Mass_ResponseMatrix", "LepPt1_ResponseMatrix", "LepPt_ResponseMatrix", "LepEta_ResponseMatrix", "LepEta1_ResponseMatrix"};
-  systHists2D_ = {"Mass_ResponseMatrix", "LepPt1_ResponseMatrix", "LepPt_ResponseMatrix", "LepEta_ResponseMatrix", "LepEta1_ResponseMatrix"};
+  hists2D_ = {"Mass_ResponseMatrix",
+              "LepPt1_ResponseMatrix",
+              "LepPt_ResponseMatrix",
+              "LepEta_ResponseMatrix",
+              "LepEta1_ResponseMatrix",
+              "LepPhi_ResponseMatrix",
+              "LepPhi1_ResponseMatrix"};
+  systHists2D_ = {"Mass_ResponseMatrix",
+                  "LepPt1_ResponseMatrix",
+                  "LepPt_ResponseMatrix",
+                  "LepEta_ResponseMatrix",
+                  "LepEta1_ResponseMatrix",
+                  "LepPhi_ResponseMatrix",
+                  "LepPhi1_ResponseMatrix"};
   ZZSelectorBase::Init(tree);
 
   // Create gen tree and set gen branches
