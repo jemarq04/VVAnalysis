@@ -334,7 +334,7 @@ void ZZSelector::LoadBranchesUWVV(Long64_t entry, std::pair<Systematic, std::str
   // Calculate extra variables for analysis
   dEtajj = (jetEta->size() < 2) ? -1 : deltaEta(jetEta->at(0), jetEta->at(1));
   dPhiZZ = deltaPhi(Z1Phi, Z2Phi);
-  dRZZ = deltaR(Z1Eta, Z2Eta, Z1Phi, Z2Phi);
+  dRZZ = deltaR(Z1Eta, Z1Phi, Z2Eta, Z2Phi);
 
   GetPolarizationVariables();
 }
@@ -349,7 +349,7 @@ float ZZSelector::deltaPhi(float phi1, float phi2) {
 
 float ZZSelector::deltaEta(float eta1, float eta2) { return std::abs(eta1 - eta2); }
 
-float ZZSelector::deltaR(float eta1, float eta2, float phi1, float phi2) {
+float ZZSelector::deltaR(float eta1, float phi1, float eta2, float phi2) {
   float dPhi = deltaPhi(phi1, phi2);
   float dEta = deltaEta(eta1, eta2);
   return std::sqrt(dPhi * dPhi + dEta * dEta);
