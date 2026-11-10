@@ -51,6 +51,10 @@ void ZZResponseMatrixMaker::SetGenBranchesUWVV() {
     GenTree_->SetBranchAddress("e2Phi", &Genl2Phi, &b_Genl2Phi);
     GenTree_->SetBranchAddress("e3Phi", &Genl3Phi, &b_Genl3Phi);
     GenTree_->SetBranchAddress("e4Phi", &Genl4Phi, &b_Genl4Phi);
+    GenTree_->SetBranchAddress("e1PdgId", &Genl1PdgId, &b_Genl1PdgId);
+    GenTree_->SetBranchAddress("e2PdgId", &Genl2PdgId, &b_Genl2PdgId);
+    GenTree_->SetBranchAddress("e3PdgId", &Genl3PdgId, &b_Genl3PdgId);
+    GenTree_->SetBranchAddress("e4PdgId", &Genl4PdgId, &b_Genl4PdgId);
   } else if (channel_ == eemm || channel_ == mmee) {
     GenTree_->SetBranchAddress("e1_e2_Mass", &GenZ1Mass, &b_GenZ1Mass);
     GenTree_->SetBranchAddress("m1_m2_Mass", &GenZ2Mass, &b_GenZ2Mass);
@@ -66,6 +70,10 @@ void ZZResponseMatrixMaker::SetGenBranchesUWVV() {
     GenTree_->SetBranchAddress("e2Phi", &Genl2Phi, &b_Genl2Phi);
     GenTree_->SetBranchAddress("m1Phi", &Genl3Phi, &b_Genl3Phi);
     GenTree_->SetBranchAddress("m2Phi", &Genl4Phi, &b_Genl4Phi);
+    GenTree_->SetBranchAddress("e1PdgId", &Genl1PdgId, &b_Genl1PdgId);
+    GenTree_->SetBranchAddress("e2PdgId", &Genl2PdgId, &b_Genl2PdgId);
+    GenTree_->SetBranchAddress("m1PdgId", &Genl3PdgId, &b_Genl3PdgId);
+    GenTree_->SetBranchAddress("m2PdgId", &Genl4PdgId, &b_Genl4PdgId);
   } else if (channel_ == mmmm) {
     GenTree_->SetBranchAddress("m1_m2_Mass", &GenZ1Mass, &b_GenZ1Mass);
     GenTree_->SetBranchAddress("m3_m4_Mass", &GenZ2Mass, &b_GenZ2Mass);
@@ -81,6 +89,10 @@ void ZZResponseMatrixMaker::SetGenBranchesUWVV() {
     GenTree_->SetBranchAddress("m2Phi", &Genl2Phi, &b_Genl2Phi);
     GenTree_->SetBranchAddress("m3Phi", &Genl3Phi, &b_Genl3Phi);
     GenTree_->SetBranchAddress("m4Phi", &Genl4Phi, &b_Genl4Phi);
+    GenTree_->SetBranchAddress("m1PdgId", &Genl1PdgId, &b_Genl1PdgId);
+    GenTree_->SetBranchAddress("m2PdgId", &Genl2PdgId, &b_Genl2PdgId);
+    GenTree_->SetBranchAddress("m3PdgId", &Genl3PdgId, &b_Genl3PdgId);
+    GenTree_->SetBranchAddress("m4PdgId", &Genl4PdgId, &b_Genl4PdgId);
   }
 }
 
@@ -121,6 +133,10 @@ void ZZResponseMatrixMaker::LoadGenBranchesUWVV(Long64_t entry) {
   b_Genl2Phi->GetEntry(entry);
   b_Genl3Phi->GetEntry(entry);
   b_Genl4Phi->GetEntry(entry);
+  b_Genl1PdgId->GetEntry(entry);
+  b_Genl2PdgId->GetEntry(entry);
+  b_Genl3PdgId->GetEntry(entry);
+  b_Genl4PdgId->GetEntry(entry);
 
   // Swap gen variables in the case that Z2 should be relabeled to Z1
   if ((channel_ == eemm || channel_ == mmee) && fabs(GenZ1Mass - 91.1876) < fabs(GenZ2Mass - 91.1876)) {
@@ -131,6 +147,8 @@ void ZZResponseMatrixMaker::LoadGenBranchesUWVV(Long64_t entry) {
     std::swap(Genl2Eta, Genl4Eta);
     std::swap(Genl1Phi, Genl3Phi);
     std::swap(Genl2Phi, Genl4Phi);
+    std::swap(Genl1PdgId, Genl3PdgId);
+    std::swap(Genl2PdgId, Genl4PdgId);
   }
 }
 
@@ -153,9 +171,13 @@ void ZZResponseMatrixMaker::FillHistograms(Long64_t entry, std::pair<Systematic,
     Float_t pt;
     Float_t eta;
     Float_t phi;
+    Int_t pdgId;
   };
-  Lepton leps[] = {{l1Pt, l1Eta, l1Phi}, {l2Pt, l2Eta, l2Phi}, {l3Pt, l3Eta, l3Phi}, {l4Pt, l4Eta, l4Phi}};
-  Lepton genleps[] = {{Genl1Pt, Genl1Eta, Genl1Phi}, {Genl2Pt, Genl2Eta, Genl2Phi}, {Genl3Pt, Genl3Eta, Genl3Phi}, {Genl4Pt, Genl4Eta, Genl4Phi}};
+  Lepton leps[] = {{l1Pt, l1Eta, l1Phi, l1PdgId}, {l2Pt, l2Eta, l2Phi, l2PdgId}, {l3Pt, l3Eta, l3Phi, l3PdgId}, {l4Pt, l4Eta, l4Phi, l4PdgId}};
+  Lepton genleps[] = {{Genl1Pt, Genl1Eta, Genl1Phi, Genl1PdgId},
+                      {Genl2Pt, Genl2Eta, Genl2Phi, Genl2PdgId},
+                      {Genl3Pt, Genl3Eta, Genl3Phi, Genl3PdgId},
+                      {Genl4Pt, Genl4Eta, Genl4Phi, Genl4PdgId}};
   std::sort(leps, leps + 4, [](Lepton a, Lepton b) { return a.pt > b.pt; });
   std::sort(genleps, genleps + 4, [](Lepton a, Lepton b) { return a.pt > b.pt; });
 
