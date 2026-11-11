@@ -25,7 +25,7 @@ extra_args="--with_background"
 all_years="2022 2023 2024 2025"
 
 parse_args "$0" "$optstring" 1 "$@"
-eval set -- "$BAP_PARSED"
+eval set -- "$PARSED"
 
 $no_background && extra_args=""
 $gen && extra_args="$extra_args --with_Gen"

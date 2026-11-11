@@ -18,7 +18,7 @@ extra_args=""
 outdir="CombineCards"
 
 parse_args "$0" "$optstring" 1 "$@"
-eval set -- "$BAP_PARSED"
+eval set -- "$PARSED"
 
 years="$@"
 [[ $years = all ]] && years="$all_years"
