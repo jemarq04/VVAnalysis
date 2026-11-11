@@ -36,6 +36,7 @@ void ZZResponseMatrixMaker::Init(TTree* tree) {
   // Create gen tree and set gen branches
   if (!isMC_)
     return;
+  numVolunteers_ = 0;
   std::string genChannelName = channelName_ == "mmee" ? "eemm" : channelName_;
   if (GenTree_ != nullptr)
     delete GenTree_;
@@ -110,11 +111,13 @@ void ZZResponseMatrixMaker::SetGenBranchesUWVV() {
 
 void ZZResponseMatrixMaker::StoreGenEvents() {
   GenEvents_.clear();
+  GenEventsMatched_.clear();
 
   Long64_t nentries = GenTree_->GetEntries();
   for (Long64_t entry = 0; entry < nentries; entry++) {
     b_GenEvt->GetEntry(entry);
     GenEvents_[entry] = GenEvt;
+    GenEventsMatched_[entry] = false;
   }
 }
 
@@ -122,9 +125,12 @@ bool ZZResponseMatrixMaker::GetGenEvent(ULong64_t event) {
   for (auto it : GenEvents_) {
     if (it.second == event) {
       LoadGenBranchesUWVV(it.first);
-      return GenZ1Mass > 60 && GenZ1Mass < 120 && GenZ2Mass > 60 && GenZ2Mass < 120;
+      bool pass = GenZ1Mass > 60 && GenZ1Mass < 120 && GenZ2Mass > 60 && GenZ2Mass < 120;
+      GenEventsMatched_[it.first] = pass;
+      return pass;
     }
   }
+  numVolunteers_++;
   return false;
 }
 
@@ -240,4 +246,19 @@ void ZZResponseMatrixMaker::FillHistograms(Long64_t entry, std::pair<Systematic,
   SafeHistFill(histMap2D_, getHistName("LepPhi_ResponseMatrix", variation.second), leps[1].phi, genleps[matches[1]].phi, weight);
   SafeHistFill(histMap2D_, getHistName("LepPhi_ResponseMatrix", variation.second), leps[2].phi, genleps[matches[2]].phi, weight);
   SafeHistFill(histMap2D_, getHistName("LepPhi_ResponseMatrix", variation.second), leps[3].phi, genleps[matches[3]].phi, weight);
+}
+
+void ZZResponseMatrixMaker::SlaveTerminate() {
+  // Do something with number of unmatched gen events (gen-only) and volunteer events (reco-only)
+  //  to normalize the filled histograms by reco efficiency.
+  Float_t scale = 1.0;
+  for (const auto& variation : variations_) {
+    SafeHistScale(histMap2D_, getHistName("Mass_ResponseMatrix", variation.second), scale);
+    SafeHistScale(histMap2D_, getHistName("LepPt1_ResponseMatrix", variation.second), scale);
+    SafeHistScale(histMap2D_, getHistName("LepPt_ResponseMatrix", variation.second), scale);
+    SafeHistScale(histMap2D_, getHistName("LepEta1_ResponseMatrix", variation.second), scale);
+    SafeHistScale(histMap2D_, getHistName("LepEta_ResponseMatrix", variation.second), scale);
+    SafeHistScale(histMap2D_, getHistName("LepPhi1_ResponseMatrix", variation.second), scale);
+    SafeHistScale(histMap2D_, getHistName("LepPhi_ResponseMatrix", variation.second), scale);
+  }
 }

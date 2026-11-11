@@ -280,6 +280,13 @@ protected:
     SafeHistFill(container, getHistName(histname, var), args...);
     SafeHistFill(container, getHistName(histname, var, "all"), args...);
   }
+
+  // Scaling Functions
+  template <typename T, typename... Args>
+  void SafeHistScale(std::map<std::string, T*> container, std::string histname, Args... args) {
+    if (container[histname] != nullptr)
+      container[histname]->Scale(args...);
+  }
 };
 
 #endif
