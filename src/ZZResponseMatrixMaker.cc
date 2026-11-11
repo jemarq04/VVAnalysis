@@ -195,22 +195,23 @@ void ZZResponseMatrixMaker::FillHistograms(Long64_t entry, std::pair<Systematic,
 
   std::map<size_t, size_t> matches;
   {
+    // assign match pairs based on charge/flavor (PDG ID)
     typedef std::pair<size_t, size_t> MatchPair;
-
-    // sorting algorithm from PhysObjectMatcher
-    std::vector<MatchPair> matchPairs;  // container of matched pairs
+    std::vector<MatchPair> matchPairs;
     for (size_t iiLep = 0; iiLep < 4; iiLep++)
       for (size_t iiGenLep = 0; iiGenLep < 4; iiGenLep++)
         if (leps[iiLep].pdgId == genleps[iiGenLep].pdgId)
           matchPairs.push_back(std::make_pair(iiLep, iiGenLep));
 
-    // sort and resolve ambiguities
-    std::vector<bool> locked(4, false);     // locks in target collection
-    std::vector<bool> genlocked(4, false);  // locks in gen collection
+    // sort based on lowest deltaR between pairs
     std::sort(matchPairs.begin(), matchPairs.end(), [&leps, &genleps](MatchPair p1, MatchPair p2) {
       return ZZSelector::deltaR(leps[p1.first].eta, leps[p1.first].phi, genleps[p1.second].eta, genleps[p1.second].phi) <
              ZZSelector::deltaR(leps[p2.first].eta, leps[p2.first].phi, genleps[p2.second].eta, genleps[p2.second].phi);
     });
+
+    // resolve ambiguities, assigning pairs based on sorting
+    bool locked[] = {false, false, false, false};     // locks in target collection
+    bool genlocked[] = {false, false, false, false};  // locks in gen collection
     for (const auto& p : matchPairs) {
       if (locked[p.first] || genlocked[p.second])
         continue;
