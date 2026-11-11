@@ -1,31 +1,21 @@
 #!/bin/bash
 
-if [[ $# -eq 0 ]]; then
-  echo "usage: $0 INFILE [INFILE...]"
-  echo
-  echo INFILE: list of files to combine
-  exit 1
-fi
+source Utilities/scripts/BashArgParse.sh
+#@opt -h/--help
+#@optdesc Print help and exit
+#@opt -a/--analysis ANALYSIS
+#@optdesc Name of combined analysis (default: ZZ4lRun3Combined)
+#@arg infile [infile ...]
+#@argdesc Infile(s) to combine
+
+optstring="h/help*,a/analysis:"
+analysis=ZZ4lRun3Combined
+
+parse_args "$0" "$optstring" 1 "$@"
+eval set -- "$PARSED"
 
 for f in "$@"; do
-  filetype=none
-  if [[ ! -f $f ]]; then
-    echo invalid file: $f
-    exit 1
-  else
-    if [[ $filetype = none ]]; then
-      [[ $(basename $f) = Hists*.root ]] && filetype=hists || filetype=fakes
-    else
-      if [[ $filetype = hists && $(basename $f) = fake*.root ]]; then
-        echo cannot combine histogram files and fake files!
-        exit 1
-      elif [[ $filetype = fakes && $(basename $f) = Hists*.root ]]; then
-        echo cannot combine histogram files and fake files!
-        exit 1
-      fi
-    fi
-  fi
+  [[ ! -f $f ]] && die "invalid file: $f"
 done
 
-[[ $filetype = hists ]] && analysis=ZZ4lRun3Combined || analysis=ZplusLRun3Combined
 ./Utilities/scripts/combineFiles.py -f -a $analysis $@

@@ -1,19 +1,26 @@
 #!/bin/bash
 
-if [[ $# -ne 2 ]]; then
-  echo usage: $0 FILE YEAR
-  echo
-  echo "FILE: input file to wrap"
-  echo "YEAR: year for analysis"
-  exit 1
-elif [[ ! -f $1 ]]; then
-  echo invalid file: $1
-  exit 1
-fi
+source Utilities/scripts/BashArgParse.sh
+#@opt -y/--year YEAR
+#@optdesc Year for analysis
+#@opt -o/--outfile FILE
+#@optdesc Output wrapped file (default: fakeScaleFactorsRun3-ZZ4l$year.root)
+#@arg infile
+#@argdesc Input file to wrap
 
-infile=$1
-year=$2
+optstring="h/help*,y/year:,o/outfile:"
+
+parse_args "$0" "$optstring" 1 "$@"
+eval set -- "$PARSED"
+
+infile="$1"
+[[ ! -f $infile ]] && die "invalid file: $infile"
+if [[ -z $year ]]; then
+  [[ $infile =~ -ZZ4l[0-9]+.root$ ]] || die "cannot infer year from infile: $infile"
+  year=$(echo $infile | sed -E 's|.*-ZZ4l(.*).root|\1|')
+fi
+[[ -z $outfile ]] && outfile="fakeScaleFactorsRun3-ZZ4l$year.root"
 
 echo Wrapping fake rate for $year
-./ScaleFactors/wrapFakeRates.py -o fakeScaleFactorsRun3-ZZ4l$year.root $infile
+./ScaleFactors/wrapFakeRates.py -o $outfile $infile
 echo "$year done!!==================================="

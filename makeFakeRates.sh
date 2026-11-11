@@ -1,23 +1,21 @@
 #!/bin/bash
 
-if [[ $# -lt 1 ]]; then
-  echo "usage: $0 YEAR [YEAR ...]"
-  echo
-  echo "YEAR: year for analysis or 'all' to run all Run 3"
-  exit 1
-fi
+source Utilities/scripts/BashArgParse.sh
+#@opt -h/--help
+#@optdesc Print help and exit
+#@opt -o/--outfile FILE
+#@optdesc Output fake rates file (default: fakeRates-ZZ4l$year.root)
+#@arg year
+#@argdesc Target year for fake rates
 
-all_years="2022 2023 2024 2025"
-years="$@"
-[[ $years = all ]] && years="$all_years"
+optstring="h/help*,o/outfile:"
 
-for year in $years; do
-  if ! [[ $all_years = *$year* ]]; then
-    echo "invalid year: $year"
-    continue
-  fi
+parse_args "$0" "$optstring" 1 "$@"
+eval set -- "$PARSED"
 
-  echo "Making fake rate for $year"
-  ./Utilities/scripts/makeFakeRates.py -a ZZ4l$year -f ZZ4l$year --year $year -s ZplusLSkim -j 12 --noHistConfig --output_file fakeRates-ZZ4l$year.root
-  echo "$year done!!==================================="
-done
+year="$1"
+[[ -z $outfile ]] && outfile=fakeRates-ZZ4l$year.root
+
+echo "Making fake rate for $year"
+./Utilities/scripts/makeFakeRates.py -a ZZ4l$year -f ZZ4l$year --year $year -s ZplusLSkim -j 12 --noHistConfig --output_file $outfile
+echo "$year done!!==================================="
