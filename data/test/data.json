@@ -85,6 +85,10 @@
       "2024": {
         "file": "inputs/2024/HZZ_HZZ_SF_2024_RMS_mupogsystsC.root",
         "desc": "2024 HZZ muon ID SFs"
+      },
+      "2025": {
+        "file": "inputs/2025/HZZ_HZZ_SF_2025_RMS_mupogsystsC.root",
+        "desc": "2025 HZZ muon ID SFs (preliminary)"
       }
     }
   }

@@ -12,9 +12,10 @@ files=(
   https://raw.githubusercontent.com/CJLST/ZZAnalysis/Run3/AnalysisStep/data/LeptonEffScaleFactors/final_HZZ_SF_2023C_RMS_mupogsysts.root
   https://raw.githubusercontent.com/CJLST/ZZAnalysis/Run3/AnalysisStep/data/LeptonEffScaleFactors/final_HZZ_SF_2023D_RMS_mupogsysts.root
   https://raw.githubusercontent.com/CJLST/ZZAnalysis/Run3/AnalysisStep/data/LeptonEffScaleFactors/HZZ_HZZ_SF_2024_RMS_mupogsystsC.root
+  https://raw.githubusercontent.com/CJLST/ZZAnalysis/Run3/AnalysisStep/data/LeptonEffScaleFactors/HZZ_HZZ_SF_2025_RMS_mupogsystsC.root
 )
 
-for yr in 2022 2023 2024; do
+for yr in 2022 2023 2024 2025; do
   mkdir -p inputs/$yr
   for f in "${files[@]}"; do
     [[ ! ${f##*\/} = *$yr* ]] && continue
