@@ -184,7 +184,11 @@ void ZZResponseMatrixMaker::FillHistograms(Long64_t entry, std::pair<Systematic,
   if (!PassesZZSelection())
     return;
 
-  // sort lepton pt
+  // Fill event response matrices
+  SafeHistFill(histMap2D_, getHistName("Mass_ResponseMatrix", variation.second), Mass, GenMass, weight);
+
+  // Fill leading lepton response matrices
+  // TODO: currently just sorted by pt. sort each by their variable?
   struct Lepton {
     Float_t pt;
     Float_t eta;
@@ -199,6 +203,12 @@ void ZZResponseMatrixMaker::FillHistograms(Long64_t entry, std::pair<Systematic,
   std::sort(leps, leps + 4, [](Lepton a, Lepton b) { return a.pt > b.pt; });
   std::sort(genleps, genleps + 4, [](Lepton a, Lepton b) { return a.pt > b.pt; });
 
+  SafeHistFill(histMap2D_, getHistName("LepPt1_ResponseMatrix", variation.second), leps[0].pt, genleps[0].pt, weight);
+  SafeHistFill(histMap2D_, getHistName("LepEta1_ResponseMatrix", variation.second), leps[0].eta, genleps[0].eta, weight);
+  SafeHistFill(histMap2D_, getHistName("LepPhi1_ResponseMatrix", variation.second), leps[0].phi, genleps[0].phi, weight);
+
+  // Fill lepton response matrices
+  // -> Need to match leptons first
   std::map<size_t, size_t> matches;
   {
     // assign match pairs based on charge/flavor (PDG ID)
@@ -229,19 +239,16 @@ void ZZResponseMatrixMaker::FillHistograms(Long64_t entry, std::pair<Systematic,
 
   SafeHistFill(histMap2D_, getHistName("Mass_ResponseMatrix", variation.second), Mass, GenMass, weight);
 
-  SafeHistFill(histMap2D_, getHistName("LepPt1_ResponseMatrix", variation.second), leps[0].pt, genleps[0].pt, weight);
   SafeHistFill(histMap2D_, getHistName("LepPt_ResponseMatrix", variation.second), leps[0].pt, genleps[matches[0]].pt, weight);
   SafeHistFill(histMap2D_, getHistName("LepPt_ResponseMatrix", variation.second), leps[1].pt, genleps[matches[1]].pt, weight);
   SafeHistFill(histMap2D_, getHistName("LepPt_ResponseMatrix", variation.second), leps[2].pt, genleps[matches[2]].pt, weight);
   SafeHistFill(histMap2D_, getHistName("LepPt_ResponseMatrix", variation.second), leps[3].pt, genleps[matches[3]].pt, weight);
 
-  SafeHistFill(histMap2D_, getHistName("LepEta1_ResponseMatrix", variation.second), leps[0].eta, genleps[0].eta, weight);
   SafeHistFill(histMap2D_, getHistName("LepEta_ResponseMatrix", variation.second), leps[0].eta, genleps[matches[0]].eta, weight);
   SafeHistFill(histMap2D_, getHistName("LepEta_ResponseMatrix", variation.second), leps[1].eta, genleps[matches[1]].eta, weight);
   SafeHistFill(histMap2D_, getHistName("LepEta_ResponseMatrix", variation.second), leps[2].eta, genleps[matches[2]].eta, weight);
   SafeHistFill(histMap2D_, getHistName("LepEta_ResponseMatrix", variation.second), leps[3].eta, genleps[matches[3]].eta, weight);
 
-  SafeHistFill(histMap2D_, getHistName("LepPhi1_ResponseMatrix", variation.second), leps[0].phi, genleps[0].phi, weight);
   SafeHistFill(histMap2D_, getHistName("LepPhi_ResponseMatrix", variation.second), leps[0].phi, genleps[matches[0]].phi, weight);
   SafeHistFill(histMap2D_, getHistName("LepPhi_ResponseMatrix", variation.second), leps[1].phi, genleps[matches[1]].phi, weight);
   SafeHistFill(histMap2D_, getHistName("LepPhi_ResponseMatrix", variation.second), leps[2].phi, genleps[matches[2]].phi, weight);
