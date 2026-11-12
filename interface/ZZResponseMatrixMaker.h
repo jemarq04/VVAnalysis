@@ -64,7 +64,8 @@ private:
   void LoadGenBranchesUWVV(Long64_t entry);
   void FillHistograms(Long64_t entry, std::pair<Systematic, std::string> variation) override;
 
-  Int_t numVolunteers_;
+  Int_t numGenOnly_;
+  Int_t numRecoOnly_;
   std::map<Long64_t, ULong64_t> GenEvents_;
   std::map<Long64_t, bool> GenEventsMatched_;
   void StoreGenEvents();

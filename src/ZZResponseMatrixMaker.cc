@@ -36,7 +36,8 @@ void ZZResponseMatrixMaker::Init(TTree* tree) {
   // Create gen tree and set gen branches
   if (!isMC_)
     return;
-  numVolunteers_ = 0;
+  numGenOnly_ = 0;
+  numRecoOnly_ = 0;
   std::string genChannelName = channelName_ == "mmee" ? "eemm" : channelName_;
   if (GenTree_ != nullptr)
     delete GenTree_;
@@ -130,7 +131,7 @@ bool ZZResponseMatrixMaker::GetGenEvent(ULong64_t event) {
       return pass;
     }
   }
-  numVolunteers_++;
+  numRecoOnly_++;
   return false;
 }
 
@@ -258,14 +259,8 @@ void ZZResponseMatrixMaker::FillHistograms(Long64_t entry, std::pair<Systematic,
 void ZZResponseMatrixMaker::SlaveTerminate() {
   // Do something with number of unmatched gen events (gen-only) and volunteer events (reco-only)
   //  to normalize the filled histograms by reco efficiency.
-  Float_t scale = 1.0;
-  for (const auto& variation : variations_) {
-    SafeHistScale(histMap2D_, getHistName("Mass_ResponseMatrix", variation.second), scale);
-    SafeHistScale(histMap2D_, getHistName("LepPt1_ResponseMatrix", variation.second), scale);
-    SafeHistScale(histMap2D_, getHistName("LepPt_ResponseMatrix", variation.second), scale);
-    SafeHistScale(histMap2D_, getHistName("LepEta1_ResponseMatrix", variation.second), scale);
-    SafeHistScale(histMap2D_, getHistName("LepEta_ResponseMatrix", variation.second), scale);
-    SafeHistScale(histMap2D_, getHistName("LepPhi1_ResponseMatrix", variation.second), scale);
-    SafeHistScale(histMap2D_, getHistName("LepPhi_ResponseMatrix", variation.second), scale);
+  for (const auto& it : GenEventsMatched_) {
+    if (!it.second)
+      numGenOnly_++;
   }
 }
