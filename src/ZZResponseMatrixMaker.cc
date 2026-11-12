@@ -158,7 +158,7 @@ void ZZResponseMatrixMaker::LoadGenBranchesUWVV(Long64_t entry) {
   b_Genl4PdgId->GetEntry(entry);
 
   // Swap gen variables in the case that Z2 should be relabeled to Z1
-  if ((channel_ == eemm || channel_ == mmee) && fabs(GenZ1Mass - 91.1876) < fabs(GenZ2Mass - 91.1876)) {
+  if ((channel_ == eemm || channel_ == mmee) && fabs(GenZ1Mass - 91.1876) > fabs(GenZ2Mass - 91.1876)) {
     std::swap(GenZ1Mass, GenZ2Mass);
     std::swap(Genl1Pt, Genl3Pt);
     std::swap(Genl2Pt, Genl4Pt);
