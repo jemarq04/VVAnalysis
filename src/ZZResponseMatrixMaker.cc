@@ -198,6 +198,7 @@ void ZZResponseMatrixMaker::FillHistograms(Long64_t entry, std::pair<Systematic,
   //std::sort(genleps, genleps + 4, [](Lepton a, Lepton b) { return a.phi > b.phi; });
   //SafeHistFill(histMap2D_, getHistName("LepPhi1_ResponseMatrix", variation.second), leps[0].phi, genleps[0].phi, weight);
 
+  /*
   // Fill lepton response matrices
   // -> Need to match leptons first
   std::map<size_t, size_t> matches;
@@ -248,4 +249,5 @@ void ZZResponseMatrixMaker::FillHistograms(Long64_t entry, std::pair<Systematic,
   SafeHistFill(histMap2D_, getHistName("LepPhi_ResponseMatrix", variation.second), leps[1].phi, genleps[matches[1]].phi, weight);
   SafeHistFill(histMap2D_, getHistName("LepPhi_ResponseMatrix", variation.second), leps[2].phi, genleps[matches[2]].phi, weight);
   SafeHistFill(histMap2D_, getHistName("LepPhi_ResponseMatrix", variation.second), leps[3].phi, genleps[matches[3]].phi, weight);
+  */
 }
