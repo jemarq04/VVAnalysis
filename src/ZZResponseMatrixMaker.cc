@@ -213,12 +213,18 @@ void ZZResponseMatrixMaker::FillHistograms(Long64_t entry, std::pair<Systematic,
   std::map<size_t, size_t> matches;
   {
     // assign match pairs based on charge/flavor (PDG ID)
+    Float_t deltaRMax = 9999;
     typedef std::pair<size_t, size_t> MatchPair;
     std::vector<MatchPair> matchPairs;
-    for (size_t iiLep = 0; iiLep < 4; iiLep++)
-      for (size_t iiGenLep = 0; iiGenLep < 4; iiGenLep++)
-        if (leps[iiLep].pdgId == genleps[iiGenLep].pdgId)
-          matchPairs.push_back(std::make_pair(iiLep, iiGenLep));
+    for (size_t iiLep = 0; iiLep < 4; iiLep++) {
+      for (size_t iiGenLep = 0; iiGenLep < 4; iiGenLep++) {
+        if (leps[iiLep].pdgId == genleps[iiGenLep].pdgId) {
+          Float_t dR = deltaR(leps[iiLep].eta, leps[iiLep].phi, genleps[iiGenLep].eta, genleps[iiGenLep].phi);
+          if (dR < deltaRMax)
+            matchPairs.push_back(std::make_pair(iiLep, iiGenLep));
+        }
+      }
+    }
 
     // sort based on lowest deltaR between pairs
     std::sort(matchPairs.begin(), matchPairs.end(), [&leps, &genleps](MatchPair p1, MatchPair p2) {
@@ -237,8 +243,6 @@ void ZZResponseMatrixMaker::FillHistograms(Long64_t entry, std::pair<Systematic,
       genlocked[p.second] = true;
     }
   }
-
-  SafeHistFill(histMap2D_, getHistName("Mass_ResponseMatrix", variation.second), Mass, GenMass, weight);
 
   SafeHistFill(histMap2D_, getHistName("LepPt_ResponseMatrix", variation.second), leps[0].pt, genleps[matches[0]].pt, weight);
   SafeHistFill(histMap2D_, getHistName("LepPt_ResponseMatrix", variation.second), leps[1].pt, genleps[matches[1]].pt, weight);
