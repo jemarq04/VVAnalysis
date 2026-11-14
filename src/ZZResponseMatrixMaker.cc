@@ -36,8 +36,6 @@ void ZZResponseMatrixMaker::Init(TTree* tree) {
   // Create gen tree and set gen branches
   if (!isMC_)
     return;
-  numGenOnly_ = 0;
-  numRecoOnly_ = 0;
   std::string genChannelName = channelName_ == "mmee" ? "eemm" : channelName_;
   if (GenTree_ != nullptr)
     delete GenTree_;
@@ -131,7 +129,6 @@ bool ZZResponseMatrixMaker::GetGenEvent(ULong64_t event) {
       return pass;
     }
   }
-  numRecoOnly_++;
   return false;
 }
 
@@ -157,7 +154,7 @@ void ZZResponseMatrixMaker::LoadGenBranchesUWVV(Long64_t entry) {
   b_Genl3PdgId->GetEntry(entry);
   b_Genl4PdgId->GetEntry(entry);
 
-  // Swap gen variables in the case that Z2 should be relabeled to Z1
+  // Swap gen variables in the case that Z2 should be relabeled to Z1 in 2e2m
   if ((channel_ == eemm || channel_ == mmee) && fabs(GenZ1Mass - 91.1876) > fabs(GenZ2Mass - 91.1876)) {
     std::swap(GenZ1Mass, GenZ2Mass);
     std::swap(Genl1Pt, Genl3Pt);
@@ -258,13 +255,4 @@ void ZZResponseMatrixMaker::FillHistograms(Long64_t entry, std::pair<Systematic,
   SafeHistFill(histMap2D_, getHistName("LepPhi_ResponseMatrix", variation.second), leps[1].phi, genleps[matches[1]].phi, weight);
   SafeHistFill(histMap2D_, getHistName("LepPhi_ResponseMatrix", variation.second), leps[2].phi, genleps[matches[2]].phi, weight);
   SafeHistFill(histMap2D_, getHistName("LepPhi_ResponseMatrix", variation.second), leps[3].phi, genleps[matches[3]].phi, weight);
-}
-
-void ZZResponseMatrixMaker::SlaveTerminate() {
-  // Do something with number of unmatched gen events (gen-only) and volunteer events (reco-only)
-  //  to normalize the filled histograms by reco efficiency.
-  for (const auto& it : GenEventsMatched_) {
-    if (!it.second)
-      numGenOnly_++;
-  }
 }

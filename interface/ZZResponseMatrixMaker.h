@@ -53,7 +53,6 @@ class ZZResponseMatrixMaker : public ZZSelector {
   TBranch* b_Genl4PdgId;
 
   virtual void Init(TTree* tree) override;
-  virtual void SlaveTerminate() override;
   ClassDefOverride(ZZResponseMatrixMaker, 0);
 
 public:
@@ -64,8 +63,6 @@ private:
   void LoadGenBranchesUWVV(Long64_t entry);
   void FillHistograms(Long64_t entry, std::pair<Systematic, std::string> variation) override;
 
-  Int_t numGenOnly_;
-  Int_t numRecoOnly_;
   std::map<Long64_t, ULong64_t> GenEvents_;
   std::map<Long64_t, bool> GenEventsMatched_;
   void StoreGenEvents();
