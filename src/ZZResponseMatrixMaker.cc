@@ -17,20 +17,8 @@ void ZZResponseMatrixMaker::Init(TTree* tree) {
       {pileupUp, "CMS_pileupUp"},
       {pileupDown, "CMS_pileupDown"},
   };
-  hists2D_ = {"Mass_ResponseMatrix",
-              "LepPt1_ResponseMatrix",
-              "LepPt_ResponseMatrix",
-              "LepEta_ResponseMatrix",
-              "LepEta1_ResponseMatrix",
-              "LepPhi_ResponseMatrix",
-              "LepPhi1_ResponseMatrix"};
-  systHists2D_ = {"Mass_ResponseMatrix",
-                  "LepPt1_ResponseMatrix",
-                  "LepPt_ResponseMatrix",
-                  "LepEta_ResponseMatrix",
-                  "LepEta1_ResponseMatrix",
-                  "LepPhi_ResponseMatrix",
-                  "LepPhi1_ResponseMatrix"};
+  hists2D_ = {"Mass_ResponseMatrix", "LepPt1_ResponseMatrix"};
+  systHists2D_ = {"Mass_ResponseMatrix", "LepPt1_ResponseMatrix"};
   ZZSelectorBase::Init(tree);
 
   // Create gen tree and set gen branches
@@ -186,7 +174,6 @@ void ZZResponseMatrixMaker::FillHistograms(Long64_t entry, std::pair<Systematic,
   SafeHistFill(histMap2D_, getHistName("Mass_ResponseMatrix", variation.second), Mass, GenMass, weight);
 
   // Fill leading lepton response matrices
-  // TODO: currently just sorted by pt. sort each by their variable?
   struct Lepton {
     Float_t pt;
     Float_t eta;
@@ -198,12 +185,18 @@ void ZZResponseMatrixMaker::FillHistograms(Long64_t entry, std::pair<Systematic,
                       {Genl2Pt, Genl2Eta, Genl2Phi, Genl2PdgId},
                       {Genl3Pt, Genl3Eta, Genl3Phi, Genl3PdgId},
                       {Genl4Pt, Genl4Eta, Genl4Phi, Genl4PdgId}};
+
   std::sort(leps, leps + 4, [](Lepton a, Lepton b) { return a.pt > b.pt; });
   std::sort(genleps, genleps + 4, [](Lepton a, Lepton b) { return a.pt > b.pt; });
-
   SafeHistFill(histMap2D_, getHistName("LepPt1_ResponseMatrix", variation.second), leps[0].pt, genleps[0].pt, weight);
-  SafeHistFill(histMap2D_, getHistName("LepEta1_ResponseMatrix", variation.second), leps[0].eta, genleps[0].eta, weight);
-  SafeHistFill(histMap2D_, getHistName("LepPhi1_ResponseMatrix", variation.second), leps[0].phi, genleps[0].phi, weight);
+
+  //std::sort(leps, leps + 4, [](Lepton a, Lepton b) { return a.eta > b.eta; });
+  //std::sort(genleps, genleps + 4, [](Lepton a, Lepton b) { return a.eta > b.eta; });
+  //SafeHistFill(histMap2D_, getHistName("LepEta1_ResponseMatrix", variation.second), leps[0].eta, genleps[0].eta, weight);
+
+  //std::sort(leps, leps + 4, [](Lepton a, Lepton b) { return a.phi > b.phi; });
+  //std::sort(genleps, genleps + 4, [](Lepton a, Lepton b) { return a.phi > b.phi; });
+  //SafeHistFill(histMap2D_, getHistName("LepPhi1_ResponseMatrix", variation.second), leps[0].phi, genleps[0].phi, weight);
 
   // Fill lepton response matrices
   // -> Need to match leptons first
