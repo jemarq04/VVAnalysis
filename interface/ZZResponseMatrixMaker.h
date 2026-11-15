@@ -9,8 +9,11 @@ class ZZResponseMatrixMaker : public ZZSelector {
   // Values
   ULong64_t GenEvt;
   Float_t GenMass;
+  Float_t GenPt;
   Float_t GenZ1Mass;
   Float_t GenZ2Mass;
+  Float_t GenZ1Pt;
+  Float_t GenZ2Pt;
 
   Float_t Genl1Pt;
   Float_t Genl2Pt;
@@ -31,9 +34,12 @@ class ZZResponseMatrixMaker : public ZZSelector {
 
   // Branches
   TBranch* b_GenEvt;
+  TBranch* b_GenPt;
   TBranch* b_GenMass;
   TBranch* b_GenZ1Mass;
   TBranch* b_GenZ2Mass;
+  TBranch* b_GenZ1Pt;
+  TBranch* b_GenZ2Pt;
 
   TBranch* b_Genl1Pt;
   TBranch* b_Genl2Pt;

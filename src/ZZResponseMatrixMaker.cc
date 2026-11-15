@@ -17,8 +17,8 @@ void ZZResponseMatrixMaker::Init(TTree* tree) {
       {pileupUp, "CMS_pileupUp"},
       {pileupDown, "CMS_pileupDown"},
   };
-  hists2D_ = {"Mass_ResponseMatrix", "LepPt1_ResponseMatrix"};
-  systHists2D_ = {"Mass_ResponseMatrix", "LepPt1_ResponseMatrix"};
+  hists2D_ = {"Mass_ResponseMatrix", "Pt_ResponseMatrix", "Z1Pt_ResponseMatrix", "Z2Pt_ResponseMatrix", "LepPt1_ResponseMatrix", "LepPt2_ResponseMatrix"};
+  systHists2D_ = {"Mass_ResponseMatrix", "Pt_ResponseMatrix", "Z1Pt_ResponseMatrix", "Z2Pt_ResponseMatrix", "LepPt1_ResponseMatrix", "LepPt2_ResponseMatrix"};
   ZZSelectorBase::Init(tree);
 
   // Create gen tree and set gen branches
@@ -36,9 +36,12 @@ void ZZResponseMatrixMaker::Init(TTree* tree) {
 void ZZResponseMatrixMaker::SetGenBranchesUWVV() {
   GenTree_->SetBranchAddress("evt", &GenEvt, &b_GenEvt);
   GenTree_->SetBranchAddress("Mass", &GenMass, &b_GenMass);
+  GenTree_->SetBranchAddress("Pt", &GenPt, &b_GenPt);
   if (channel_ == eeee) {
     GenTree_->SetBranchAddress("e1_e2_Mass", &GenZ1Mass, &b_GenZ1Mass);
     GenTree_->SetBranchAddress("e3_e4_Mass", &GenZ2Mass, &b_GenZ2Mass);
+    GenTree_->SetBranchAddress("e1_e2_Pt", &GenZ1Pt, &b_GenZ1Pt);
+    GenTree_->SetBranchAddress("e3_e4_Pt", &GenZ2Pt, &b_GenZ2Pt);
     GenTree_->SetBranchAddress("e1Pt", &Genl1Pt, &b_Genl1Pt);
     GenTree_->SetBranchAddress("e2Pt", &Genl2Pt, &b_Genl2Pt);
     GenTree_->SetBranchAddress("e3Pt", &Genl3Pt, &b_Genl3Pt);
@@ -58,6 +61,8 @@ void ZZResponseMatrixMaker::SetGenBranchesUWVV() {
   } else if (channel_ == eemm || channel_ == mmee) {
     GenTree_->SetBranchAddress("e1_e2_Mass", &GenZ1Mass, &b_GenZ1Mass);
     GenTree_->SetBranchAddress("m1_m2_Mass", &GenZ2Mass, &b_GenZ2Mass);
+    GenTree_->SetBranchAddress("e1_e2_Pt", &GenZ1Pt, &b_GenZ1Pt);
+    GenTree_->SetBranchAddress("m1_m2_Pt", &GenZ2Pt, &b_GenZ2Pt);
     GenTree_->SetBranchAddress("e1Pt", &Genl1Pt, &b_Genl1Pt);
     GenTree_->SetBranchAddress("e2Pt", &Genl2Pt, &b_Genl2Pt);
     GenTree_->SetBranchAddress("m1Pt", &Genl3Pt, &b_Genl3Pt);
@@ -77,6 +82,8 @@ void ZZResponseMatrixMaker::SetGenBranchesUWVV() {
   } else if (channel_ == mmmm) {
     GenTree_->SetBranchAddress("m1_m2_Mass", &GenZ1Mass, &b_GenZ1Mass);
     GenTree_->SetBranchAddress("m3_m4_Mass", &GenZ2Mass, &b_GenZ2Mass);
+    GenTree_->SetBranchAddress("m1_m2_Pt", &GenZ1Pt, &b_GenZ1Pt);
+    GenTree_->SetBranchAddress("m3_m4_Pt", &GenZ2Pt, &b_GenZ2Pt);
     GenTree_->SetBranchAddress("m1Pt", &Genl1Pt, &b_Genl1Pt);
     GenTree_->SetBranchAddress("m2Pt", &Genl2Pt, &b_Genl2Pt);
     GenTree_->SetBranchAddress("m3Pt", &Genl3Pt, &b_Genl3Pt);
@@ -123,8 +130,11 @@ bool ZZResponseMatrixMaker::GetGenEvent(ULong64_t event) {
 void ZZResponseMatrixMaker::LoadGenBranchesUWVV(Long64_t entry) {
   b_GenEvt->GetEntry(entry);
   b_GenMass->GetEntry(entry);
+  b_GenPt->GetEntry(entry);
   b_GenZ1Mass->GetEntry(entry);
   b_GenZ2Mass->GetEntry(entry);
+  b_GenZ1Pt->GetEntry(entry);
+  b_GenZ2Pt->GetEntry(entry);
   b_Genl1Pt->GetEntry(entry);
   b_Genl2Pt->GetEntry(entry);
   b_Genl3Pt->GetEntry(entry);
@@ -145,6 +155,7 @@ void ZZResponseMatrixMaker::LoadGenBranchesUWVV(Long64_t entry) {
   // Swap gen variables in the case that Z2 should be relabeled to Z1 in 2e2m
   if ((channel_ == eemm || channel_ == mmee) && fabs(GenZ1Mass - 91.1876) > fabs(GenZ2Mass - 91.1876)) {
     std::swap(GenZ1Mass, GenZ2Mass);
+    std::swap(GenZ1Pt, GenZ2Pt);
     std::swap(Genl1Pt, Genl3Pt);
     std::swap(Genl2Pt, Genl4Pt);
     std::swap(Genl1Eta, Genl3Eta);
@@ -172,6 +183,17 @@ void ZZResponseMatrixMaker::FillHistograms(Long64_t entry, std::pair<Systematic,
 
   // Fill event response matrices
   SafeHistFill(histMap2D_, getHistName("Mass_ResponseMatrix", variation.second), Mass, GenMass, weight);
+  SafeHistFill(histMap2D_, getHistName("Pt_ResponseMatrix", variation.second), Pt, GenPt, weight);
+
+  // Fill Z candidate response matrices
+  Float_t zpt[] = {Z1Pt, Z2Pt};
+  Float_t genzpt[] = {GenZ1Pt, GenZ2Pt};
+
+  std::sort(zpt, zpt + 2, std::greater<float>());
+  std::sort(genzpt, genzpt + 2, std::greater<float>());
+  // TODO: rename these to clarify Z1 isn't "The Z1" and is leading Z in pt
+  SafeHistFill(histMap2D_, getHistName("Z1Pt_ResponseMatrix", variation.second), zpt[0], genzpt[0], weight);
+  SafeHistFill(histMap2D_, getHistName("Z2Pt_ResponseMatrix", variation.second), zpt[1], genzpt[1], weight);
 
   // Fill leading lepton response matrices
   struct Lepton {
@@ -189,6 +211,7 @@ void ZZResponseMatrixMaker::FillHistograms(Long64_t entry, std::pair<Systematic,
   std::sort(leps, leps + 4, [](Lepton a, Lepton b) { return a.pt > b.pt; });
   std::sort(genleps, genleps + 4, [](Lepton a, Lepton b) { return a.pt > b.pt; });
   SafeHistFill(histMap2D_, getHistName("LepPt1_ResponseMatrix", variation.second), leps[0].pt, genleps[0].pt, weight);
+  SafeHistFill(histMap2D_, getHistName("LepPt2_ResponseMatrix", variation.second), leps[1].pt, genleps[1].pt, weight);
 
   //std::sort(leps, leps + 4, [](Lepton a, Lepton b) { return a.eta > b.eta; });
   //std::sort(genleps, genleps + 4, [](Lepton a, Lepton b) { return a.eta > b.eta; });
