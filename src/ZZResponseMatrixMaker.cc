@@ -191,7 +191,6 @@ void ZZResponseMatrixMaker::FillHistograms(Long64_t entry, std::pair<Systematic,
 
   std::sort(zpt, zpt + 2, std::greater<float>());
   std::sort(genzpt, genzpt + 2, std::greater<float>());
-  // TODO: rename these to clarify Z1 isn't "The Z1" and is leading Z in pt
   SafeHistFill(histMap2D_, getHistName("Z1Pt_ResponseMatrix", variation.second), zpt[0], genzpt[0], weight);
   SafeHistFill(histMap2D_, getHistName("Z2Pt_ResponseMatrix", variation.second), zpt[1], genzpt[1], weight);
 
