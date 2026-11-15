@@ -17,8 +17,8 @@ void ZZResponseMatrixMaker::Init(TTree* tree) {
       {pileupUp, "CMS_pileupUp"},
       {pileupDown, "CMS_pileupDown"},
   };
-  hists2D_ = {"Mass_ResponseMatrix", "Pt_ResponseMatrix", "Z1Pt_ResponseMatrix", "Z2Pt_ResponseMatrix", "LepPt1_ResponseMatrix", "LepPt2_ResponseMatrix"};
-  systHists2D_ = {"Mass_ResponseMatrix", "Pt_ResponseMatrix", "Z1Pt_ResponseMatrix", "Z2Pt_ResponseMatrix", "LepPt1_ResponseMatrix", "LepPt2_ResponseMatrix"};
+  hists2D_ = {"Mass_ResponseMatrix", "ZZPt_ResponseMatrix", "Z1Pt_ResponseMatrix", "Z2Pt_ResponseMatrix", "LepPt1_ResponseMatrix", "LepPt2_ResponseMatrix"};
+  systHists2D_ = {"Mass_ResponseMatrix", "ZZPt_ResponseMatrix", "Z1Pt_ResponseMatrix", "Z2Pt_ResponseMatrix", "LepPt1_ResponseMatrix", "LepPt2_ResponseMatrix"};
   ZZSelectorBase::Init(tree);
 
   // Create gen tree and set gen branches
@@ -183,7 +183,7 @@ void ZZResponseMatrixMaker::FillHistograms(Long64_t entry, std::pair<Systematic,
 
   // Fill event response matrices
   SafeHistFill(histMap2D_, getHistName("Mass_ResponseMatrix", variation.second), Mass, GenMass, weight);
-  SafeHistFill(histMap2D_, getHistName("Pt_ResponseMatrix", variation.second), Pt, GenPt, weight);
+  SafeHistFill(histMap2D_, getHistName("ZZPt_ResponseMatrix", variation.second), Pt, GenPt, weight);
 
   // Fill Z candidate response matrices
   Float_t zpt[] = {Z1Pt, Z2Pt};
