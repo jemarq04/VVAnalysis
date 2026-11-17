@@ -14,6 +14,10 @@ class ZZResponseMatrixMaker : public ZZSelector {
   Float_t GenZ2Mass;
   Float_t GenZ1Pt;
   Float_t GenZ2Pt;
+  Float_t GenZ1Eta;
+  Float_t GenZ2Eta;
+  Float_t GenZ1Phi;
+  Float_t GenZ2Phi;
 
   Float_t Genl1Pt;
   Float_t Genl2Pt;
@@ -40,6 +44,10 @@ class ZZResponseMatrixMaker : public ZZSelector {
   TBranch* b_GenZ2Mass;
   TBranch* b_GenZ1Pt;
   TBranch* b_GenZ2Pt;
+  TBranch* b_GenZ1Eta;
+  TBranch* b_GenZ2Eta;
+  TBranch* b_GenZ1Phi;
+  TBranch* b_GenZ2Phi;
 
   TBranch* b_Genl1Pt;
   TBranch* b_Genl2Pt;
@@ -57,6 +65,10 @@ class ZZResponseMatrixMaker : public ZZSelector {
   TBranch* b_Genl2PdgId;
   TBranch* b_Genl3PdgId;
   TBranch* b_Genl4PdgId;
+
+  // Additional values
+  Float_t GenDPhiZZ;
+  Float_t GenDRZZ;
 
   virtual void Init(TTree* tree) override;
   ClassDefOverride(ZZResponseMatrixMaker, 0);
