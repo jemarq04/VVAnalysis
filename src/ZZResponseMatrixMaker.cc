@@ -168,6 +168,9 @@ void ZZResponseMatrixMaker::LoadGenBranchesUWVV(Long64_t entry) {
 }
 
 void ZZResponseMatrixMaker::FillHistograms(Long64_t entry, std::pair<Systematic, std::string> variation) {
+  if (GenEvents_.empty())
+    return;
+
   if ((channel_ == eemm || channel_ == mmee) && skipEvent_2e2m_)
     return;
 
@@ -194,7 +197,7 @@ void ZZResponseMatrixMaker::FillHistograms(Long64_t entry, std::pair<Systematic,
   SafeHistFill(histMap2D_, getHistName("Z1Pt_ResponseMatrix", variation.second), zpt[0], genzpt[0], weight);
   SafeHistFill(histMap2D_, getHistName("Z2Pt_ResponseMatrix", variation.second), zpt[1], genzpt[1], weight);
 
-  // Fill leading lepton response matrices
+  // Fill single leading lepton response matrices
   struct Lepton {
     Float_t pt;
     Float_t eta;
